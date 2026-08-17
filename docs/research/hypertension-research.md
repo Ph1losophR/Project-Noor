@@ -55,10 +55,13 @@ source_label:
 **A note on the SEML source file.** Its PDF-to-markdown conversion left orphan
 strength rows whose drug-name cell is empty — an artifact of merged cells in the
 original table. Attribution is unambiguous where the strength is characteristic
-(digoxin `0.125 mg, 0.25 mg`; amiodarone `200 mg`; furosemide `40 mg`) and
-**ambiguous** in §12.1 around verapamil and nifedipine. Where this file states a
-strength it is one of the unambiguous cases; the ambiguous ones are flagged, and both
-should be re-checked against the source PDF before any strength-dependent rule ships.
+(digoxin `0.125 mg, 0.25 mg`; amiodarone `200 mg`; furosemide `40 mg`). The two
+§12.1 ambiguous cases were resolved by the project owner against the original
+PDF on 2026-08-17: verapamil carries `Tablet: 40 mg, 80 mg` in addition to
+`Solution for injection: 2.5 mg/ml`, and nifedipine carries `Tablet: 30 mg` in
+addition to `Capsule: 10 mg`. The restored cells are annotated in the converted
+source file itself. Where this file states a strength it is one of the
+unambiguous or owner-confirmed cases.
 
 ---
 
@@ -137,17 +140,27 @@ mapping, source display, value constraints, and provenance requirements.
 ### 2.1 Blood pressure classification
 
 Noor must select and pin one source family per tenant and domain. It must not
-blend ESC and ESH target systems.
+blend NHC/SHA, ESC, and ESH target systems.
 
-**ESC 2024 candidate classification:** non-elevated, elevated, and hypertension
-using office BP. The exact boundaries and treatment target require a source
-record and explicit population scope. Out-of-office thresholds must be separate
-observables and must not be pooled with office measurements.
+**NHC/SHA 2023 — the SSOT interim default (pinned candidate 2026-08-17, see
+`guideline-pin-register.md` §1):** BP 120/80 mmHg is normal; BP >130/80 mmHg is
+hypertension; diagnosis depends on measurement method (office, ABPM, home BP —
+§3.2.1); treatment-start thresholds are higher than diagnosis thresholds
+(Table 2, §3.1); screening all adults >18 with cadence per §3.3/Table 4. In
+2026-08-17 the SSOT's interim default wins; the ESC/ESH candidates below stay
+profile-selectable only after independent pins, and only if the project owner
+keeps them in scope.
 
-**ESH 2023 candidate classification:** Grade 1, Grade 2, and Grade 3 by BP
-range, with stage/risk concepts incorporating HMOD, CKD, diabetes, and
-established CVD. The fact that diabetes places a patient in an ESH stage does
-not mean Noor should infer HMOD or an acute complication.
+**ESC 2024 candidate classification (not a default):** non-elevated, elevated,
+and hypertension using office BP. The exact boundaries and treatment target
+require a source record and explicit population scope. Out-of-office thresholds
+must be separate observables and must not be pooled with office measurements.
+
+**ESH 2023 candidate classification (not a default — requires an explicit SSOT
+decision):** Grade 1, Grade 2, and Grade 3 by BP range, with stage/risk concepts
+incorporating HMOD, CKD, diabetes, and established CVD. The fact that diabetes
+places a patient in an ESH stage does not mean Noor should infer HMOD or an
+acute complication.
 
 Every BP observation must preserve setting, posture, arm, cuff size, rest
 duration, reading ordinal, average status, device class, and timestamp. An
@@ -199,10 +212,12 @@ damage. The emergency rule must evaluate acute brain, heart, kidney, eye, or
 aortic findings. BP alone is insufficient.
 
 **Severe hypertension without acute target-organ damage** should be represented
-using the selected current terminology and source family. The legacy term
-"hypertensive urgency" and newer "severe hypertension" label must not be
-silently treated as identical pathways. No universal 24-48 hour action should
-be encoded without provider-approved policy and source support.
+using the selected current terminology and source family — NHC/SHA 2023 §3.7
+(pinned candidate, `guideline-pin-register.md` §1) until a profile
+independently selects ACC/AHA 2025 or ESC 2024. The legacy term "hypertensive
+urgency" and newer "severe hypertension" label must not be silently treated as
+identical pathways. No universal 24-48 hour action should be encoded without
+provider-approved policy and source support.
 
 Candidate emergency signals include focal neurologic deficit, altered mental
 status, seizure, acute pulmonary oedema, acute coronary syndrome, aortic
@@ -302,6 +317,13 @@ the action they will trigger, not as thresholds. Each needs an organisation,
 document, version, and locator before CI gate 2 will pass it, and each needs the
 three `.cases.yaml` rows (at / just below / just above) from SSOT §12.3 written
 *before* the rule.
+
+**Source pins (2026-08-17):** the source family for this file's three libraries
+is pinned as a candidate — NHC/SHA 2023 §3.7 for hypertensive-emergency
+terminology, ESC 2023 ACS (doi 10.1093/eurheartj/ehad191) for ACS recognition,
+and AHA/ASA F.A.S.T. + the 2026 AIS guideline for stroke recognition — with
+proposition-level records in `guideline-pin-register.md` §1, §4, §5. The values
+below stay `unpopulated` until the threshold records pass clinical approval.
 
 | Library | Emergency activation must consider | Repeat/review must remain separate |
 |---|---|---|
@@ -1480,8 +1502,8 @@ Strengths below are verbatim from `saudi-essential-medicines-list-2023.md`
 | **Metoprolol succinate** | §12.4 `Tablet: 50 mg, 100 mg` | 12.5–25 mg in Child-Pugh B/C | **`unachievable`** — 12.5 mg needs quartering; and quartering a modified-release tablet destroys the release mechanism, so even division is not a workaround. Route to pharmacist review |
 | Carvedilol | §12.1 `Tablet: 3.125 mg, 6.25 mg, 12.5 mg, 25 mg`; §12.2/12.3/12.4 list to 12.5 mg | contraindicated Child-Pugh B/C, no reduced dose | `strength_achievable` — the widest strength range in this file, and the one agent whose titration the formulary genuinely supports |
 | Propranolol | §12.3 `Tablet: 10 mg, 40 mg, 80 mg`, `Oral solution: 8 mg/ml`, `Solution for injection: 1 mg/ml` | 50% reduction in Child-Pugh B/C | `strength_achievable` — the oral solution makes any halving exact, which no tablet-only agent here can claim |
-| Verapamil | §12.1/12.2 `Solution for injection: 2.5 mg/ml`; tablet strengths **ambiguous** in the converted source — the orphan `Tablet: 40 mg, 80 mg` at §12.1 and §12.2 most likely belongs to verapamil, since it sits directly above it and carvedilol has no 40/80 mg strength | 50–70% reduction in Child-Pugh B/C | ⛔ re-check the source PDF before authoring. A 50–70% reduction is a *range*, not a dose, and needs a target before achievability can be judged at all |
-| Nifedipine | §12.1 `Capsule: 10 mg`; the orphan `Tablet: 30 mg` most likely belongs to nifedipine on the same reasoning, but is **ambiguous** in the converted source | 50% reduction of extended-release maintenance | ⛔ re-check. Note the capsule is immediate-release and the 30 mg tablet (if nifedipine's) is extended-release — **they are not interchangeable**, and a 50% ER reduction cannot be met by IR capsules |
+| Verapamil | §12.1/12.2 `Tablet: 40 mg, 80 mg` + `Solution for injection: 2.5 mg/ml` — tablet strengths owner-confirmed against the original PDF (2026-08-17) | 50–70% reduction in Child-Pugh B/C | A 50–70% reduction is a *range*, not a dose, and needs a target before achievability can be judged at all; the 40/80 mg strengths make halved doses representable (`achievable_by_division`) once the pinned label names the absolute target |
+| Nifedipine | §12.1 `Tablet: 30 mg` (extended-release) + `Capsule: 10 mg` (immediate-release) — owner-confirmed against the original PDF (2026-08-17) | 50% reduction of extended-release maintenance | The capsule is immediate-release and the 30 mg tablet is extended-release — **they are not interchangeable**, and a 50% ER reduction cannot be met by IR capsules. A label-stated 50% target of 30 mg would be 15 mg, which no listed strength delivers — `unachievable` unless the label names a different absolute target |
 | **Amlodipine** | §12.1/12.3 `Tablet: 5 mg` **only** | 2.5 mg initial in Child-Pugh A/B/C | **`achievable_by_division`** — halving the only listed strength. The hepatic starting dose for the most-prescribed antihypertensive in the catalogue cannot be dispensed as a whole tablet in Saudi Arabia |
 | **Glyceryl trinitrate** | §12.1 `Solution for injection: 5 mg/ml` **only** | anti-anginal use with a 10–12h nitrate-free window | **`unachievable` for home care** — no sublingual tablet, spray, patch, or ointment is listed. An IV-only nitrate has no home-visit dose form, so **isosorbide dinitrate `Sublingual tablet: 2.5, 5, 10, 20 mg` (§12.1) is the home-relevant nitrate** and should carry the nitrate rules |
 | Isosorbide dinitrate | §12.1 `Sublingual tablet: 2.5 mg, 5 mg, 10 mg, 20 mg` | no reduced dose specified | `strength_achievable` |
@@ -1714,9 +1736,10 @@ carries no dosing, contraindication, interaction, or monitoring content — so i
 sources the SEML columns of the matrices and the achievability table (§12), and
 nothing else in this file.
 
-Its conversion artifact is a real limitation, not a caveat to wave past: the
-orphan strength rows around verapamil and nifedipine in §12.1 are genuinely
-ambiguous, and those two rows are flagged rather than guessed.
+Its conversion artifact dropped drug-name cells on merged rows; the rows
+relevant to this catalogue were restored by the project owner against the
+original PDF on 2026-08-17 (verapamil `Tablet: 40 mg, 80 mg`; nifedipine
+`Tablet: 30 mg`; see the annotated converted source file).
 
 ### 17.2 Outstanding — one pinned label per ingredient, none yet satisfied
 

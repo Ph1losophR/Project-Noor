@@ -2,7 +2,7 @@
 
 **Status:** Proposed remediation programme
 **Date:** 2026-08-16
-**Authority:** Subordinate to `docs/cds-architecture.md` v1.0.0 (the SSOT)
+**Authority:** Subordinate to `docs/cds-architecture.md` v1.1.0 (the SSOT)
 
 ## Purpose
 
@@ -77,12 +77,12 @@ prerequisites to drafting the software implementation plan:
 
 | Role | Required responsibility | Appointment evidence |
 |---|---|---|
-| Clinical content owner | Owns clinical meaning, scope, source-family selection, and impact classification | Name, credential, SCFHS identifier where applicable, effective date, review cadence |
-| Technical custodian | Maintains schemas and executable representation without changing clinical meaning | Name, role, effective date |
-| Second clinical approver | Independently approves every `stop_and_review` rule | Name, credential, approval timestamp on each affected rule or release |
-| Terminology owner | Owns code-system editions, mappings, licences, and review cadence | Named owner in the terminology charter |
-| Provider medical director | Approves local emergency, supervision, prescribing, and escalation policies | Provider-approved policy version and effective date |
-| Privacy/security owner | Owns PDPL, hosting, key custody, access, and operational safety gates | Named owner and linked approval records |
+| Clinical content owner | Owns clinical meaning, scope, source-family selection, and impact classification | **Youssef Sabry** (Internal Medicine; SCFHS 100000, as supplied 2026-08-17), effective 2026-08-17. Review cadence pending |
+| Technical custodian | Maintains schemas and executable representation without changing clinical meaning | **Youssef Sabry, effective 2026-08-17** |
+| Second clinical approver | Independently approves every `stop_and_review` rule | **Dr. Ahmed Sabry** (Cardiologist; SCFHS 111111, as supplied 2026-08-17), effective 2026-08-17; approval timestamp on each affected rule or release |
+| Terminology owner | Owns code-system editions, mappings, licences, and review cadence | **Youssef Sabry, effective 2026-08-17**; named owner in the terminology charter |
+| Provider medical director | Approves local emergency, supervision, prescribing, and escalation policies | **Youssef Sabry, effective 2026-08-17** — interim until a real provider appoints its medical director (SSOT §15.1) |
+| Privacy/security owner | Owns PDPL, hosting, key custody, access, and operational safety gates | **Youssef Sabry, effective 2026-08-17** |
 
 Role appointments must be recorded in governed project records once the
 repository and schemas exist. Until then, record the decision in the pull
@@ -101,8 +101,14 @@ names into approver fields.
   selected. Do not claim four-eyes governance from local commits alone.
 - Appoint the roles above before their first approval is required.
 - Define how credentials are verified and how expired or changed credentials
-  invalidate future approvals without altering historical releases.
-- Define a review cadence for clinical content and terminology.
+  invalidate future approvals without altering historical releases — **decided
+  2026-08-17: expired or changed SCFHS credentials invalidate future approvals
+  only; historical approvals and releases stand; credentials are re-verified at
+  the annual review.**
+- Define a review cadence for clinical content and terminology — **decided
+  2026-08-17: annual re-review of active content by the clinical content
+  owner, plus immediate review whenever a pinned source updates (new SPC
+  version or guideline edition).**
 - Require a change rationale and clinical-impact class for every clinical
   release entry.
 - Configure CI to post the generated clinician-facing plain-language rendering
@@ -169,7 +175,7 @@ names into approver fields.
   implementation-status sections.
 - No duplicate roadmap placement inflates catalogue coverage.
 
-## Workstream 2A: Reconcile the Medication Catalogue Scope
+## Workstream 2A: Reconcile the Medication Catalogue Scope — COMPLETE 2026-08-17
 
 **Goal:** Resolve the mismatch between the roadmap's 45 distinct ingredients
 and SSOT §3.2's disclosed curated MVP target of roughly 60-80 high-severity
@@ -181,9 +187,13 @@ SSOT medication-knowledge scope.
 
 ### Actions
 
-- Have the clinical content owner define the intended first-release claim: the
-  exact patient population, medication-safety use cases, interaction classes,
-  and ingredient count the product will display.
+- **Outcome 2 chosen by the project owner on 2026-08-17: SSOT §3.2 amended to
+  the declared 45-ingredient SEML-derived set** (SSOT v1.1.0; rationale and
+  scope-disclosure implications recorded in §3.2 itself). The product may
+  display the 45-ingredient set as its disclosed scope; no general
+  interaction or polypharmacy coverage is claimed.
+- The candidate-gap inventory and per-added-ingredient requirements below remain
+  the standard for any future extension beyond the declared 45:
 - Build a candidate-gap inventory from the target population and prioritized
   rules. Include high-severity interacting partners that can enter through the
   reconciled medication list even when they are absent from the SEML.
@@ -194,36 +204,37 @@ SSOT medication-knowledge scope.
   interaction, monitoring, reproductive, complication, achievability, testing,
   and approval requirements as the original 45.
 - Record the final curated set and its version in the product scope disclosure.
-- If the project owner instead wants an MVP set of 45, obtain explicit approval
-  to amend SSOT §3.2 before planning or claiming that narrower catalogue as the
-  completed SSOT scope. Do not reinterpret "roughly 60-80" silently.
 
 ### Exit Criteria
 
-One of two outcomes is recorded:
+Outcome 2 is recorded and satisfied:
 
-1. A versioned curated set within the SSOT's roughly 60-80 target is completely
-   researched and governed.
-2. The SSOT is explicitly amended to a narrower target with rationale and
-   corresponding scope-disclosure changes.
+1. ~~A versioned curated set within the SSOT's roughly 60-80 target is
+   completely researched and governed.~~ Not chosen.
+2. **The SSOT is explicitly amended to a narrower target with rationale and
+   corresponding scope-disclosure changes** — done in SSOT v1.1.0 (§3.2).
 
 - The product disclosure states the exact covered set and does not claim general
   interaction or polypharmacy coverage.
 - Every ingredient in the declared set meets the per-ingredient completion
   criteria in Workstream 4.
 
-## Workstream 3: Resolve SEML and Formulation Ambiguities
+## Workstream 3: Resolve SEML and Formulation Ambiguities — COMPLETE 2026-08-17
 
 **Goal:** Prevent a strength-, route-, or formulation-dependent rule from using
 an ambiguous converted table row.
 
 ### Actions
 
-- Re-check the original SEML 2023 PDF rather than the converted Markdown for:
-  insulin lispro 100 IU/mL versus 200 IU/mL, gliclazide IR versus MR, verapamil
-  tablet strengths, and nifedipine immediate-release versus extended-release.
-- Record the visible PDF page, table position, drug name, formulation, strength,
-  route, and whether merged-cell attribution is definitive.
+- **All four ambiguities resolved 2026-08-17 by the project owner against the
+  original SEML 2023 PDF** (the owner confirmed the converted Markdown is the
+  same file): insulin lispro = `Suspension for injection: 100 IU/ml` **and**
+  `200 IU/ml`; gliclazide = `Tablet: 30 mg, 60 mg, 80 mg` with **no release
+  profile stated**; verapamil = `Tablet: 40 mg, 80 mg` + `Solution for
+  injection: 2.5 mg/ml`; nifedipine = `Tablet: 30 mg` + `Capsule: 10 mg`.
+  The drug-name cells are restored in `saudi-essential-medicines-list-2023.md`
+  with an annotation; consequences are recorded in roadmap §9.3 and
+  `label-pin-register.md` §7.
 - Record tablet score, divisibility, and modified-release restrictions only from
   an authoritative label or product record. A mathematically divisible dose is
   not automatically licensed or safe to divide.
@@ -233,9 +244,9 @@ an ambiguous converted table row.
 - Route pump-rate and diluent-concentration achievability to a later acute-care
   model rather than forcing it into tablet-strength logic.
 - Recalculate every existing strength-achievability draft after the source facts
-  are resolved.
+  are resolved (done in the research files 2026-08-17).
 
-### Required Decisions
+### Required Decisions — still open, owner
 
 - Whether product/formulation-level rules are in the first catalogue release.
 - Whether any divided tablet is supported by the pinned label and local
@@ -245,7 +256,8 @@ an ambiguous converted table row.
 
 ### Exit Criteria
 
-- No strength-dependent proposition relies on an orphan Markdown row.
+- ~~No strength-dependent proposition relies on an orphan Markdown row.~~ Met —
+  the four Noor-catalogue orphan rows are owner-confirmed and restored.
 - Every formulation-sensitive rule declares the narrowest defensible
   `drug_scope_level`.
 - Every target dose is classified as `strength_achievable`,
@@ -607,7 +619,7 @@ Work proceeds in parallel where governance permits:
 | Sequence | Work | Dependency |
 |---|---|---|
 | 1 | Governance foundation, roadmap repair, and catalogue-scope decision | None |
-| 2 | SEML ambiguity resolution | Access to original SEML PDF |
+| 2 | SEML ambiguity resolution | Access to original SEML PDF — **done 2026-08-17** (owner confirmation) |
 | 3 | Label retrieval and guideline pinning | Source access; may proceed ingredient/domain at a time |
 | 4 | Signal and observable curation | Terminology owner and source research |
 | 5 | Red flags, monitoring, and screening specifications | Pinned sources and approved observables |
@@ -669,9 +681,11 @@ independently validated releases while the remaining items stay visibly blocked.
 ### Catalogue Complete for the Declared Scope
 
 - All 45 currently researched ingredient profiles are pinned and reconciled.
-- The SSOT medication-scope mismatch is closed: either the governed curated set
-  reaches the roughly 60-80 target, with every added ingredient meeting the same
-  standard, or an explicitly approved SSOT amendment defines a narrower target.
+- The SSOT medication-scope mismatch is closed: **the project owner approved the
+  SSOT §3.2 amendment to the declared 45-ingredient SEML-derived set on
+  2026-08-17 (SSOT v1.1.0)**, and every declared ingredient meets the same
+  per-ingredient standard; any future extension beyond the 45 must carry the
+  same evidence.
 - Any ingredient excluded from an approved release scope is visibly excluded,
   with no product claim of coverage for it.
 - All five red-flag libraries are sourced, approved, tested, and linked to a

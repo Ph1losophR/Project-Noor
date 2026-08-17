@@ -1,8 +1,8 @@
 # Project Noor — CDS Engine Architecture
 
 **Status:** Approved. This document is the Single Source of Truth (SSOT).
-**Version:** 1.0.0
-**Date:** 2026-08-13
+**Version:** 1.1.0
+**Date:** 2026-08-13 (amended 2026-08-17 — §3.2 medication-scope declaration)
 
 ---
 
@@ -387,10 +387,22 @@ this section does not name.
 
 ### 3.2 Medication knowledge
 
-**MVP:** a bounded curated set of roughly 60–80 high-severity ingredients,
-clinician-reviewed, with its **scope and version displayed in the product**. Noor
-explicitly does not claim broad interaction coverage; non-covered cases route to
-pharmacist or clinical review (§R-3, §R-8).
+**MVP:** a bounded curated set of **45 distinct ingredients** — the 11 diabetes
+and 34 cardiovascular agents of the SEML 2023-derived catalogue (the roadmap's
+49 entries collapse to 45 once four duplicate placements are removed). The set
+is declared, not approximate: it is enumerated in
+`docs/research/cds-content-roadmap.md` §9, its SEML listing and strengths are
+verified against `docs/research/saudi-essential-medicines-list-2023.md` (the
+converted primary source; the formulation ambiguities it carried were resolved
+against the original PDF on 2026-08-17), and its per-ingredient labels are
+tracked in `docs/research/label-pin-register.md`. Clinician-reviewed, with its
+**scope and version displayed in the product**. This declaration replaces the
+earlier estimate of roughly 60–80 ingredients: the SEML-derived set covers both
+chronic-disease programmes in the product scope and keeps every catalogue
+ingredient auditable — one pinned label and one verified strength set per
+ingredient — instead of approximating coverage. Noor explicitly does not claim
+broad interaction coverage; non-covered cases route to pharmacist or clinical
+review (§R-3, §R-8).
 
 This is not a compromise dressed as a decision — 79% of unique interaction pairs
 appear in only one of three commercial products, and alert volumes vary from 25
@@ -1656,9 +1668,16 @@ are separate.
 
 ### 10.3 Role doubling is recorded, not hidden
 
-The project currently has one part-time interested clinician reviewer, not
-formalised (§1.2). A governance model that pretends otherwise is
-theatre that fails its first audit.
+The project's content-governance roles were appointed on 2026-08-17: clinical
+content owner, technical custodian, terminology owner, provider medical
+director (interim), and privacy/security owner are the project owner; the
+second clinical approver is Dr. Ahmed Sabry, a separate person. SCFHS licence
+numbers were supplied 2026-08-17 for both clinicians. Governance decisions
+recorded 2026-08-17: expired or changed credentials invalidate future
+approvals only (historical approvals and releases stand), and active clinical
+content is re-reviewed annually and immediately on pinned-source updates. A
+governance model that pretends otherwise is theatre that fails its first
+audit.
 
 `governance.role_doubling: true` is **permitted and recorded** for
 `passive_task` and `interruptive_review` rules. It is **refused** for

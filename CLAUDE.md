@@ -8,7 +8,7 @@ Saudi Arabia, aimed at chronic disease management (diabetes and hypertension).
 No application code, database, dependencies, or test suite exists yet. The repo
 holds design and research documents only.
 
-- **SSOT: `docs/cds-architecture.md`** (v1.0.0, initial release 2026-08-13).
+- **SSOT: `docs/cds-architecture.md`** (v1.1.0, initial release 2026-08-13, §3.2 amended 2026-08-17).
 - Research is complete and sourced; the closed programme is archived under
   `docs/research/archive/` and cited inline as (§R-N), with the file mapping in SSOT §17.
   There is no section-10 file — its project constraints are stated directly in
@@ -32,10 +32,12 @@ holds design and research documents only.
   (`2026-08-05-project-noor-cds-engine-design.md` and
   `2026-08-07-project-noor-clinical-workflow-design.md`) were absorbed into the
   SSOT and deleted. The SSOT is the only architectural document.
-- **Not yet a git repository.** SSOT §7.5 makes git the clinical-content
-  governance mechanism — a pull request *is* the four-eyes approval, and git
-  holds the permanent approver record. `git init` is a prerequisite for that
-  model, not housekeeping.
+- **Git repository initialized** (commit `1910530`, remote
+  `github.com/ph1losophrr/Project-Noor`). SSOT §7.5 makes git the
+  clinical-content governance mechanism — a pull request *is* the four-eyes
+  approval, and git holds the permanent approver record. Branch protection and
+  the CI rendering-posting job remain unconfigured
+  (`pre-plan-gap-remediation.md` workstream 1).
 
 Do not infer that any component, table, endpoint, or dependency exists because a
 document describes it — **including the SSOT.** It describes the target, not the

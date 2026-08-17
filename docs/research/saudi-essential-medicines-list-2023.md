@@ -4,6 +4,14 @@ www.sfda.gov.sa
 
 Saudi_FDA
 
+> **Conversion note (2026-08-17).** This Markdown conversion dropped several
+> drug-name cells on rows where the original table merges a drug across multiple
+> formulation rows. The project owner confirmed the four Noor-catalogue rows
+> affected against the original PDF on 2026-08-17; their drug names are
+> restored below: §12.1 and §12.2 `Verapamil hydrochloride — Tablet: 40 mg,
+> 80 mg`; §12.1 `Nifedipine — Tablet: 30 mg`; §15.1.1 `Insulin Lispro —
+> Suspension for injection: 100 IU/ml`. No other cells were changed.
+
 
 ## Essential Medicines List of Saudi Arabia 2023
 
@@ -427,9 +435,9 @@ Saudi_FDA
 | 12.1 Antianginal medicines |   |
 | Metoprolol tartrate | Tablet: 50 mg, 100 mg |
 | Carvedilol | Tablet: 3.125 mg, 6.25 mg, 12.5 mg, 25 mg |
-|   | Tablet: 40 mg, 80 mg |
+| Verapamil hydrochloride | Tablet: 40 mg, 80 mg |
 | Verapamil hydrochloride | Solution for injection: 2.5 mg/ml |
-|   | Tablet: 30 mg |
+| Nifedipine | Tablet: 30 mg |
 | Nifedipine | Capsule: 10 mg |
 | Amlodipine | Tablet: 5 mg |
 
@@ -440,7 +448,7 @@ Saudi_FDA
 | 12.2 Antiarrhythmic medicines |   |
 | Metoprolol tartrate | Tablet: 50 mg, 100 mg |
 | Carvedilol | Tablet: 3.125 mg, 6.25 mg, 12.5 mg |
-|   | Tablet: 40 mg, 80 mg |
+| Verapamil hydrochloride | Tablet: 40 mg, 80 mg |
 | Verapamil hydrochloride | Solution for injection: 2.5 mg/ml |
 | Adenosine | Solution for injection/infusion: 3 mg/ml |
 |   | Tablet: 200 mg |
@@ -532,7 +540,7 @@ Saudi_FDA
 | 15.1 Medicines for diabetes |   |
 | 15.1.1 Medicines for hyperglycemia |   |
 | Insulin Aspart | Suspension for injection: 100 IU/ml |
-|   | Suspension for injection: 100 IU/ml |
+| Insulin Lispro | Suspension for injection: 100 IU/ml |
 | Insulin Lispro | Suspension for injection: 200 IU/ml |
 | Isophane insulin | Suspension for injection: 100 IU/ml |
 | Insulin glargine | Solution for Injection: 100 IU/ml, 300 IU/ml |
