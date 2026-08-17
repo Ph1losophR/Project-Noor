@@ -1,8 +1,6 @@
 # Project Noor — CDS Engine Architecture
 
 **Status:** Approved. This document is the Single Source of Truth (SSOT).
-**Version:** 1.1.0
-**Date:** 2026-08-13 (amended 2026-08-17 — §3.2 medication-scope declaration)
 
 ---
 
@@ -387,22 +385,21 @@ this section does not name.
 
 ### 3.2 Medication knowledge
 
-**MVP:** a bounded curated set of **45 distinct ingredients** — the 11 diabetes
-and 34 cardiovascular agents of the SEML 2023-derived catalogue (the roadmap's
-49 entries collapse to 45 once four duplicate placements are removed). The set
-is declared, not approximate: it is enumerated in
-`docs/research/cds-content-roadmap.md` §9, its SEML listing and strengths are
-verified against `docs/research/saudi-essential-medicines-list-2023.md` (the
-converted primary source; the formulation ambiguities it carried were resolved
-against the original PDF on 2026-08-17), and its per-ingredient labels are
-tracked in `docs/research/label-pin-register.md`. Clinician-reviewed, with its
-**scope and version displayed in the product**. This declaration replaces the
-earlier estimate of roughly 60–80 ingredients: the SEML-derived set covers both
+**MVP:** a bounded curated set of **42 distinct ingredients** — the 11 diabetes
+and 31 cardiovascular agents of the SEML 2023-derived catalogue. The four
+duplicate SEML placements are counted once. Every catalogue ingredient has at
+least one SPC-bearing Saudi-registered product in the verified snapshot of the
+SFDA drug portal. The set is declared, not approximate: its SEML listing and
+strengths are verified against
+`docs/research/saudi-essential-medicines-list-2023.md` (the converted primary
+source), and each per-ingredient pin — product, registration number, and SPC
+revision date — is read from inside the SPC text of
+`docs/research/saudi-local-db.json`. Clinician-reviewed, with its
+**scope and version displayed in the product**. The declared set covers both
 chronic-disease programmes in the product scope and keeps every catalogue
 ingredient auditable — one pinned label and one verified strength set per
-ingredient — instead of approximating coverage. Noor explicitly does not claim
-broad interaction coverage; non-covered cases route to pharmacist or clinical
-review (§R-3, §R-8).
+ingredient. Noor explicitly does not claim broad interaction coverage;
+non-covered cases route to pharmacist or clinical review (§R-3, §R-8).
 
 This is not a compromise dressed as a decision — 79% of unique interaction pairs
 appear in only one of three commercial products, and alert volumes vary from 25
@@ -455,9 +452,18 @@ same principle as `canon`'s refusal to guess a unit (§6.3).
 #### The source label, and what to pin when the local SPC is unretrievable
 
 `spc_version` pins the label a dosing, monitoring, or contraindication statement
-was written against. §5.2 requires the **local SFDA SPC first**. As of 2026-08-12
-the Saudi Drug Information System (SDI) e-service that publishes per-product SPCs
-is not reachable, so for most ingredients there is no local label to pin.
+was written against. §5.2 requires the **local SFDA SPC first**. The Saudi Drug
+Information System (SDI) e-service that publishes per-product SPCs
+is not reachable directly; the local rung is populated for the
+42-ingredient set from a verified snapshot of the SFDA drug portal (uploaded
+2025-10-23) curated into `docs/research/saudi-local-db.json` (SPC + English PIL
+per product; Arabic PIL excluded by owner decision). Each pin's `revision_date`
+is read from inside the SPC text (its "date of revision of the text" section),
+not from the fetch date. These pins are `pinned` working sources with
+**official-SDI reconciliation pending**. Reconciliation is not an authoring or
+merge prerequisite while the SDI e-service is unavailable. When it becomes
+reachable, a contradiction between the snapshot text and the official SDI record
+is a content incident under §11.9, not a silent correction.
 
 This does not license writing a plausible version string. It resolves the same way
 a missing threshold source resolves — with §7.3's existing `fallback_from`
@@ -479,27 +485,29 @@ source_label:
 The ladder, in order: **local SFDA SPC → the EMA centrally-authorised SmPC →
 the SmPC of an EU national agency that authorised the product.** The third rung
 exists because it is load-bearing, not for completeness: metformin, gliclazide,
-furosemide, methyldopa, hydralazine and most of the older cardiovascular agents
-have **no EMA SmPC at all** — they were never centrally authorised — so "fall back
-to EMA" alone would leave the majority of the MVP catalogue unpinnable.
+furosemide, hydralazine and most of the older cardiovascular agents have **no
+EMA SmPC at all** — they were never centrally authorised — so "fall back to
+EMA" alone would leave the majority of the MVP catalogue unpinnable.
 
-**`status: unretrieved` is a first-class, shippable state.** A rule whose
-`source_label.status` is `unretrieved` does not merge — CI gate 2 already refuses a
-threshold missing a document, version, or locator, and the label pin is checked by
-the same gate. The consequence is intended: an unsourced rule is visibly blocked
-rather than quietly approximate, which is the §11.7 principle applied to labels
-instead of red flags.
+**`status: unretrieved` is a first-class, shippable state for a missing source.** A
+rule whose `source_label.status` is `unretrieved` does not merge. A complete local
+SPC pin is different: its product, registration number, SPC revision date, and
+locator are sufficient for authoring and CI while official-SDI reconciliation is
+pending. CI makes that provenance visible instead of treating availability of an
+external service as a substitute for a source.
 
-The SFDA's harmonisation with EMA and ICH is what makes the fallback *clinically*
-defensible, and it does not make it invisible. **Every fallback is recorded, and
-a fallback is not a substitute** — when SDI becomes reachable, each
-`fallback_from` entry is a work item, and a local SPC that contradicts the pinned
-EU label is a content incident under §11.9, not a silent correction.
+The local snapshot pin is the working local source, not an international
+fallback. The SFDA's harmonisation with EMA and ICH is what makes the fallback
+*clinically* defensible when no complete local SPC pin exists, and it does not
+make it invisible. **Every fallback is recorded, and a fallback is not a
+substitute.** Official-SDI reconciliation remains a work item; any contradiction
+is a content incident under §11.9, not a silent correction.
 
 `sfda_registration` is a **product-level** field and is legitimately null for the
 ingredient-level facts the MVP is built from (`drug_scope_level: ingredient`,
-§7.1e). SDI being unreachable therefore blocks no ingredient-level rule. It blocks
-product-level rules, and those are not in the first build target (§1.2).
+§7.1e). SDI being unreachable blocks neither ingredient-level nor product-level
+authoring when the rule carries a complete local SPC pin. A rule without that pin
+remains blocked by the source-provenance gates.
 
 #### Local formulary
 
@@ -619,7 +627,7 @@ with no licence status. Two conditions are already known and specific:
 ### 3.4 Not in the stack
 
 Redis, Celery, a message bus, GraphQL, Kubernetes, OpenTelemetry, and
-`fhir.resources`. The last is real and correct but is a Phase-2 adapter
+`fhir.resources`. The last is real and correct but is an adapter
 dependency, and there is no EMR to adapt to.
 
 **The migration trigger is stated so the decision expires on evidence rather than
@@ -1688,6 +1696,12 @@ a second credentialed clinician formally signs.** The architecture surfaces this
 constraint rather than hiding it.
 
 ### 10.4 CI gates on content
+
+For a local SPC-backed rule, a complete citation to the pinned product and its SPC
+text satisfies the source-provenance requirement while official-SDI
+reconciliation is pending. SDI availability is monitored separately; it is not a
+CI connectivity gate. A later contradiction triggers the content-incident and
+reapproval process under §11.9.
 
 A merge is refused if any of these hold:
 
@@ -2774,7 +2788,7 @@ cannot be reconstructed, for the same reason §8.2 is not retrofittable.
 The MVP preserves the option: rules are pure functions over a snapshot (§8.4.9)
 and read no encounter state (§8.4.10), so a portable evaluator remains possible.
 The invariant "local evaluation produces results identical to server evaluation"
-is a Phase-2 constraint, carried now as a design obligation on the schema rather
+is a deferred constraint, carried now as a design obligation on the schema rather
 than as an MVP build.
 
 #### The connectivity assumption, stated rather than implied
@@ -2800,8 +2814,8 @@ documents on paper and enters afterwards.* Two things follow.
    re-opens it.
 2. **It is measured during discovery, not assumed away.** Region, carrier,
    building type, and time of day are the four dimensions §R-11 §11.6 names.
-   Discovery visits collect them, and the result decides whether the Phase 2
-   offline client is a convenience or a prerequisite.
+Discovery visits collect them, and the result decides whether the deferred
+offline client is a convenience or a prerequisite.
 
 **Why defer at all.** Offline-first is not a feature added to a system; it is a
 property the whole data path either has or does not. Conflict-preserving sync,
@@ -3008,18 +3022,17 @@ separate file; its conclusions are stated directly in §1 and §10.3 of this
 document. The closed research programme (sections 1–9, 11) is archived in
 `docs/research/archive/`; nothing under it is maintained or read by the build.
 
-**Clinical-content research** is tracked separately, because it is per-ingredient
-and ongoing rather than a closed programme:
+**Clinical-content sources** — the primary files the catalogue pins against:
 
 | Subject | File |
 |---|---|
-| Content coverage and per-ingredient research checklist | `docs/research/cds-content-roadmap.md` |
-| Diabetes research (complications + pharmacotherapy) | `docs/research/diabetes-research.md` |
-| Hypertension research (complications + pharmacotherapy) | `docs/research/hypertension-research.md` |
 | Essential Medicines List of Saudi Arabia 2023 (verbatim, converted) | `docs/research/saudi-essential-medicines-list-2023.md` |
+| Curated snapshot of the SFDA drug portal (product metadata + SPC text) | `docs/research/saudi-local-db.json` |
 
-The SEML file is the only one of these that is a **primary source**, and it is the
-authority for two claims and no others: whether an ingredient is listed, and which
-strengths and dose forms are listed for it (§3.2 strength-achievability). It
-carries no dosing, contraindication, interaction, or monitoring content.
+The SEML file is a **primary source**, authoritative for two claims and no
+others: whether an ingredient is listed, and which strengths and dose forms are
+listed for it (§3.2 strength-achievability). It carries no dosing,
+contraindication, interaction, or monitoring content. `saudi-local-db.json` is
+the other primary source, authoritative for product metadata and SPC text until
+per-ingredient pins are verified against the official SDI (§3.2 source label).
 

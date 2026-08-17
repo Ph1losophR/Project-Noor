@@ -4,15 +4,6 @@ www.sfda.gov.sa
 
 Saudi_FDA
 
-> **Conversion note (2026-08-17).** This Markdown conversion dropped several
-> drug-name cells on rows where the original table merges a drug across multiple
-> formulation rows. The project owner confirmed the four Noor-catalogue rows
-> affected against the original PDF on 2026-08-17; their drug names are
-> restored below: §12.1 and §12.2 `Verapamil hydrochloride — Tablet: 40 mg,
-> 80 mg`; §12.1 `Nifedipine — Tablet: 30 mg`; §15.1.1 `Insulin Lispro —
-> Suspension for injection: 100 IU/ml`. No other cells were changed.
-
-
 ## Essential Medicines List of Saudi Arabia 2023
 
 | 1. Anaesthetics and Preoperative Medicines |   |

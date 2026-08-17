@@ -8,36 +8,30 @@ Saudi Arabia, aimed at chronic disease management (diabetes and hypertension).
 No application code, database, dependencies, or test suite exists yet. The repo
 holds design and research documents only.
 
-- **SSOT: `docs/cds-architecture.md`** (v1.1.0, initial release 2026-08-13, §3.2 amended 2026-08-17).
-- Research is complete and sourced; the closed programme is archived under
-  `docs/research/archive/` and cited inline as (§R-N), with the file mapping in SSOT §17.
-  There is no section-10 file — its project constraints are stated directly in
-  SSOT §1 and §10.3. The research checklist has been retired.
-- **Clinical content research is drafted but not authorable.**
-  `docs/research/diabetes-research.md` and `docs/research/hypertension-research.md`
-  cover the roadmap's 45 distinct ingredients
-  (11 diabetes, 34 cardiovascular — the roadmap lists 49 entries, but furosemide,
-  spironolactone, hydrochlorothiazide and losartan/losartan potassium each appear twice),
-  and every one of them has `source_label.status: unretrieved` — the SFDA SDI e-service is
-  unreachable, so no rule in either file can pass CI gate 2 yet. Each file opens with an
-  "Implementation status" header stating what is and is not authorable; read it before
-  lifting anything out of the tables. Each file also consolidates the disease-side
-  complications reference (red-flag libraries, HMOD, screening, coding) and the
-  per-ingredient drug-complication profiles; the originals were deleted on
-  consolidation. `docs/research/saudi-essential-medicines-list-2023.md`
-  (the user's own conversion of the SEML 2023 PDF) is the only primary source in the repo,
-  and it is authoritative for exactly two claims: whether an ingredient is listed, and
-  its strengths and dose forms.
-- `docs/superpowers/specs/` is empty. The two design specs it held
-  (`2026-08-05-project-noor-cds-engine-design.md` and
-  `2026-08-07-project-noor-clinical-workflow-design.md`) were absorbed into the
-  SSOT and deleted. The SSOT is the only architectural document.
+- **SSOT: `docs/cds-architecture.md`**.
+- The closed research programme is archived under `docs/research/archive/` and
+  cited inline as (§R-N), with the file mapping in SSOT §17. There is no
+  section-10 file — its project constraints are stated directly in SSOT §1 and
+  §10.3. The research checklist has been retired.
+- **The only clinical-content sources are two primary files under
+  `docs/research/`:**
+  - `saudi-essential-medicines-list-2023.md` — the user's own conversion of the
+    SEML 2023 PDF; authoritative for exactly two claims: whether an ingredient
+    is listed, and its strengths and dose forms.
+  - `saudi-local-db.json` — the curated 2025-10-23 snapshot of the SFDA drug
+    portal; authoritative for product metadata and SPC text.
+  Clinical content authoring may proceed from these local sources. Every
+  per-ingredient pin (product, registration number, and SPC revision date, read
+  from inside the SPC text) carries **official-SDI reconciliation pending** while
+  the e-service is unavailable. A complete local SPC citation can pass CI gate 2;
+  a later contradiction is a content incident under SSOT §11.9.
+- `docs/superpowers/specs/` is empty; the SSOT is the only architectural
+  document.
 - **Git repository initialized** (commit `1910530`, remote
   `github.com/ph1losophrr/Project-Noor`). SSOT §7.5 makes git the
   clinical-content governance mechanism — a pull request *is* the four-eyes
   approval, and git holds the permanent approver record. Branch protection and
-  the CI rendering-posting job remain unconfigured
-  (`pre-plan-gap-remediation.md` workstream 1).
+  the CI rendering-posting job remain unconfigured.
 
 Do not infer that any component, table, endpoint, or dependency exists because a
 document describes it — **including the SSOT.** It describes the target, not the
@@ -131,7 +125,7 @@ real. Do not copy commands from other projects or invent them.
 
 ## Testing
 
-Read `docs/testing-standards.md` (v2.0.0) before writing any test. It says *how*
+Read `docs/testing-standards.md` before writing any test. It says *how*
 to test; the SSOT says *what must be true*. Where they disagree, **the SSOT
 wins** — SSOT §12 is authoritative on the validation ladder,
 boundary-plus-pairwise case selection, and release comparison.

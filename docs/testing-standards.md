@@ -1,7 +1,5 @@
 # Project Noor — Testing Standards
 
-**Version:** 2.0.0
-**Date:** 2026-08-06
 **Status:** Reference. Subordinate to `docs/cds-architecture.md` (the SSOT).
 
 This document says *how* to test. The SSOT says *what must be true*. Where they
@@ -574,7 +572,7 @@ Not omissions — decisions recorded elsewhere.
 - **Auth and RBAC tests.** No provider is chosen (§3.5, §13.2 gate 6).
 - **Offline/field-client parity tests.** No field client is in MVP scope; the
   parity invariant is carried as a schema obligation (§8.4.9, §15.1).
-- **FHIR conformance tests.** No EMR to adapt to; `fhir.resources` is a Phase-2
+- **FHIR conformance tests.** No EMR to adapt to; `fhir.resources` is an adapter
   dependency (§3.4).
 - **Risk-model validation.** Risk models are deferred (§15.2).
 - **Synthea as a validation cohort.** Synthea is for plumbing and adversarial
