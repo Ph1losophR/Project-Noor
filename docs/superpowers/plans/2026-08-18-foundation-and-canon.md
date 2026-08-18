@@ -547,8 +547,7 @@ def test_pure_packages_never_read_the_wall_clock(package: str):
 
     # Assert
     assert not offenders, (
-        f"pure package {package} reads the wall clock; time enters as data "
-        f"(SSOT §4.2): {offenders}"
+        f"pure package {package} reads the wall clock; time enters as data (SSOT §4.2): {offenders}"
     )
 
 
@@ -565,9 +564,7 @@ def test_canon_never_names_a_treatment_threshold():
     ]
 
     # Assert
-    assert not offenders, (
-        f"canon must never read a treatment threshold (SSOT §6.4): {offenders}"
-    )
+    assert not offenders, f"canon must never read a treatment threshold (SSOT §6.4): {offenders}"
 ```
 
 - [ ] **Step 2: Run the test to verify it passes against the empty packages**
@@ -752,8 +749,6 @@ def make_capture(**overrides: Any) -> ObservationCapture:
         )
     fields.update(overrides)
     return ObservationCapture(**fields)
-
-
 ```
 
 `tests/canon/test_models.py`:
@@ -1548,9 +1543,7 @@ def test_duplicate_observable_ids_are_refused(tmp_path):
     # Arrange
     bad = tmp_path / "registry.yaml"
     bad.write_text(
-        "observables:\n"
-        "  - {observable: glucose, owner: a}\n"
-        "  - {observable: glucose, owner: b}\n",
+        "observables:\n  - {observable: glucose, owner: a}\n  - {observable: glucose, owner: b}\n",
         encoding="utf-8",
     )
 
@@ -1672,7 +1665,15 @@ class Conversion(NoorModel):
 
 
 CONTEXT_FIELDS = frozenset(
-    {"setting", "posture", "arm", "cuff_size", "rest_duration_seconds", "reading_ordinal", "is_average"}
+    {
+        "setting",
+        "posture",
+        "arm",
+        "cuff_size",
+        "rest_duration_seconds",
+        "reading_ordinal",
+        "is_average",
+    }
 )
 METHOD_FIELDS = frozenset({"device_class", "specimen", "assay"})
 
@@ -1996,7 +1997,8 @@ SSOT §6.3: `explicit | inferred_from_code | ambiguous`; ambiguous is a hard fai
 - [ ] **Step 1: Write the failing tests**
 
 `tests/canon/test_units.py`:
-```python"""Unit resolution is a hard safety control (SSOT §6.3)."""
+```python
+"""Unit resolution is a hard safety control (SSOT §6.3)."""
 
 from decimal import Decimal
 
@@ -2193,7 +2195,9 @@ def resolve_unit(
         code_unit = entry.code_unit_map.get(f"{source_code.system}|{source_code.code}")
 
     if reported_unit is not None:
-        if reported_unit in entry.accepted_units and (code_unit is None or code_unit == reported_unit):
+        if reported_unit in entry.accepted_units and (
+            code_unit is None or code_unit == reported_unit
+        ):
             return UnitResolution.explicit, reported_unit
         return UnitResolution.ambiguous, None
     if code_unit is not None:
@@ -2595,8 +2599,7 @@ def decimal_transposition_suspected(value: Decimal, entry: ObservableEntry) -> b
     """
     operational = entry.operational
     return any(
-        operational.low <= shifted <= operational.high
-        for shifted in (value * 10, value / 10)
+        operational.low <= shifted <= operational.high for shifted in (value * 10, value / 10)
     )
 ```
 
@@ -2629,7 +2632,8 @@ SSOT §6.1 layer 2 and §6.4: a physiologic envelope ("could the instrument or p
 - [ ] **Step 1: Write the failing tests**
 
 `tests/canon/test_plausibility.py`:
-```python"""The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and
+```python
+"""The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and
 declared in the canonical unit. Synthetic entry: physiologic [2, 10],
 operational [4, 8] — every boundary row is exercised (testing standards)."""
 
@@ -3075,18 +3079,34 @@ def test_a_bp_delta_requires_matching_context(registry):
     # Arrange — §6.6: BP is meaningless without posture, arm, cuff; never pooled
     entry = registry.entry("systolic_bp")
     sitting = CaptureContext(
-        posture=Posture.sitting, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=300, reading_ordinal=1, is_average=False,
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
     )
     standing = CaptureContext(
-        posture=Posture.standing, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=60, reading_ordinal=1, is_average=False,
+        posture=Posture.standing,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=60,
+        reading_ordinal=1,
+        is_average=False,
     )
-    prior = bp("systolic_bp", "160", context=sitting, setting=Setting.home,
-               effective_time=T0 - timedelta(hours=2))
+    prior = bp(
+        "systolic_bp",
+        "160",
+        context=sitting,
+        setting=Setting.home,
+        effective_time=T0 - timedelta(hours=2),
+    )
     capture = make_capture(
-        observable="systolic_bp", value="118", unit="mm[Hg]",
-        setting=Setting.home, context=standing,
+        observable="systolic_bp",
+        value="118",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=standing,
         method=MethodContext(device_class="home-bp-monitor"),
         effective_time=T0,
     )
@@ -3100,14 +3120,26 @@ def test_a_bp_delta_with_matching_context_is_recorded(registry):
     # Arrange
     entry = registry.entry("systolic_bp")
     context = CaptureContext(
-        posture=Posture.sitting, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=300, reading_ordinal=1, is_average=False,
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
     )
-    prior = bp("systolic_bp", "160", context=context, setting=Setting.home,
-               effective_time=T0 - timedelta(hours=2))
+    prior = bp(
+        "systolic_bp",
+        "160",
+        context=context,
+        setting=Setting.home,
+        effective_time=T0 - timedelta(hours=2),
+    )
     capture = make_capture(
-        observable="systolic_bp", value="118", unit="mm[Hg]",
-        setting=Setting.home, context=context,
+        observable="systolic_bp",
+        value="118",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=context,
         method=MethodContext(device_class="home-bp-monitor"),
         effective_time=T0,
     )
@@ -3125,18 +3157,34 @@ def test_a_prior_with_incomplete_context_is_not_comparable(registry):
     # Arrange — cuff size unknown on the prior: cannot claim like-with-like
     entry = registry.entry("systolic_bp")
     incomplete = CaptureContext(
-        posture=Posture.sitting, arm=Arm.left, cuff_size=None,
-        rest_duration_seconds=300, reading_ordinal=1, is_average=False,
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=None,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
     )
     complete = CaptureContext(
-        posture=Posture.sitting, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=300, reading_ordinal=1, is_average=False,
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
     )
-    prior = bp("systolic_bp", "160", context=incomplete, setting=Setting.home,
-               effective_time=T0 - timedelta(hours=2))
+    prior = bp(
+        "systolic_bp",
+        "160",
+        context=incomplete,
+        setting=Setting.home,
+        effective_time=T0 - timedelta(hours=2),
+    )
     capture = make_capture(
-        observable="systolic_bp", value="118", unit="mm[Hg]",
-        setting=Setting.home, context=complete,
+        observable="systolic_bp",
+        value="118",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=complete,
         method=MethodContext(device_class="home-bp-monitor"),
         effective_time=T0,
     )
@@ -3235,7 +3283,9 @@ def is_comparable(
             return False
     for field in entry.delta_policy.compare_context:
         prior_value = getattr(prior, field) if field == "setting" else getattr(prior.context, field)
-        new_value = getattr(capture, field) if field == "setting" else getattr(capture.context, field)
+        new_value = (
+            getattr(capture, field) if field == "setting" else getattr(capture.context, field)
+        )
         if prior_value is None or new_value is None or prior_value != new_value:
             return False
     return True
@@ -3414,9 +3464,7 @@ def test_a_converted_value_preserves_the_original_unit_and_shows_its_work(regist
     assert result.as_reported.value == "90"
     assert result.as_reported.unit == "mg/dL"
     # The stored value can be traced to the factor that produced it (§5, §6.3)
-    declared = next(
-        c for c in registry.entry("glucose").conversions if c.from_unit == "mg/dL"
-    )
+    declared = next(c for c in registry.entry("glucose").conversions if c.from_unit == "mg/dL")
     applied = result.canonical.conversion_applied
     assert applied is not None
     assert applied.from_unit == "mg/dL"
@@ -4158,9 +4206,7 @@ def test_a_concordant_repeat_confirms_a_flagged_value(registry):
 def test_a_discordant_repeat_confirms_nothing(registry):
     # Arrange — |28.0 − 30.0| = 2.0 > 0.6 tolerance
     entry = registry.entry("glucose")
-    flagged = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="30.0"
-    )
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
     repeat = make_canonical(value="28.0")
 
     # Act / Assert
@@ -4171,12 +4217,8 @@ def test_a_discordant_repeat_confirms_nothing(registry):
 def test_a_repeat_that_is_not_accepted_quality_cannot_confirm(registry):
     # Arrange — a flagged repeat is another question, not an answer
     entry = registry.entry("glucose")
-    flagged = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="30.0"
-    )
-    repeat = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="29.5"
-    )
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
+    repeat = make_canonical(state=QualityState.needs_repeat_or_verification, value="29.5")
 
     # Act / Assert
     with pytest.raises(ResolutionError):
@@ -4186,9 +4228,7 @@ def test_a_repeat_that_is_not_accepted_quality_cannot_confirm(registry):
 def test_a_repeat_of_a_different_observable_cannot_confirm(registry):
     # Arrange
     entry = registry.entry("glucose")
-    flagged = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="30.0"
-    )
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
     repeat = make_canonical(observable="pulse", value="29.5", unit="/min")
 
     # Act / Assert
@@ -4200,22 +4240,36 @@ def test_a_repeat_in_a_different_posture_cannot_confirm(registry):
     # Arrange — the reading ordinal may differ; the posture may not
     entry = registry.entry("systolic_bp")
     sitting = CaptureContext(
-        posture=Posture.sitting, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=300, reading_ordinal=1, is_average=False,
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
     )
     standing = CaptureContext(
-        posture=Posture.standing, arm=Arm.left, cuff_size=CuffSize.standard,
-        rest_duration_seconds=60, reading_ordinal=2, is_average=False,
+        posture=Posture.standing,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=60,
+        reading_ordinal=2,
+        is_average=False,
     )
     flagged = make_canonical(
         state=QualityState.needs_repeat_or_verification,
-        observable="systolic_bp", value="250", unit="mm[Hg]",
-        setting=Setting.home, context=sitting,
+        observable="systolic_bp",
+        value="250",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=sitting,
         method=MethodContext(device_class="home-bp-monitor"),
     )
     repeat = make_canonical(
-        observable="systolic_bp", value="248", unit="mm[Hg]",
-        setting=Setting.home, context=standing,
+        observable="systolic_bp",
+        value="248",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=standing,
         method=MethodContext(device_class="home-bp-monitor"),
     )
 
@@ -4232,9 +4286,7 @@ def test_a_repeat_from_a_different_device_class_cannot_confirm(registry):
         value="30.0",
         method=MethodContext(device_class="accu-chek"),
     )
-    repeat = make_canonical(
-        value="29.5", method=MethodContext(device_class="cgm-different-class")
-    )
+    repeat = make_canonical(value="29.5", method=MethodContext(device_class="cgm-different-class"))
 
     # Act / Assert
     with pytest.raises(ResolutionError):
@@ -4274,9 +4326,7 @@ def test_a_clinician_verified_envelope_rejection_becomes_clinically_exceptional(
 def test_a_clinician_verified_ordinary_flagged_value_becomes_accepted(registry):
     # Arrange — delta-flagged but the value sits inside the operational envelope
     entry = registry.entry("glucose")
-    flagged = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="6.0"
-    )
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="6.0")
 
     # Act
     resolution = verify_by_clinician(flagged, entry, clinician_id="MD-3", resolved_at=RESOLVED_AT)
@@ -4376,9 +4426,7 @@ def test_a_withdrawn_source_status_rejection_can_never_be_verified(registry):
 def test_the_resolution_timestamp_is_normalised_to_utc(registry):
     # Arrange
     entry = registry.entry("glucose")
-    flagged = make_canonical(
-        state=QualityState.needs_repeat_or_verification, value="6.0"
-    )
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="6.0")
     riyadh_noon = datetime(2026, 6, 12, 12, 0, tzinfo=timezone(timedelta(hours=3)))
 
     # Act
@@ -4609,15 +4657,29 @@ VALUELESS_REJECTIONS = {
 
 value_strings = st.one_of(
     st.decimals(
-        min_value=Decimal("-100"), max_value=Decimal("3000"), places=2,
-        allow_nan=False, allow_infinity=False,
+        min_value=Decimal("-100"),
+        max_value=Decimal("3000"),
+        places=2,
+        allow_nan=False,
+        allow_infinity=False,
     ).map(str),
     st.text(alphabet=string.ascii_letters + string.digits + ".,+- \t", max_size=12),
 )
 unit_strings = st.one_of(
     st.sampled_from(
-        ["mmol/L", "mg/dL", "%", "mm[Hg]", "/min", "kg", "Cel", "[degF]",
-         "umol/L", "mL/min/{1.73_m2}", "mmol/mol"]
+        [
+            "mmol/L",
+            "mg/dL",
+            "%",
+            "mm[Hg]",
+            "/min",
+            "kg",
+            "Cel",
+            "[degF]",
+            "umol/L",
+            "mL/min/{1.73_m2}",
+            "mmol/mol",
+        ]
     ),
     st.text(alphabet=string.ascii_letters + string.digits + "/%[]", max_size=10),
 )
@@ -4806,6 +4868,4 @@ lost:
   `not_comparable_reason`, `suspicions`, and the resolution records — but the
   counters themselves are queries over stored data, so they are computed where
   the data lives.
-
-
 

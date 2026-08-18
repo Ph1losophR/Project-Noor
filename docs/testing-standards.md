@@ -124,7 +124,7 @@ def test_metformin_rule_is_indeterminate_when_egfr_is_older_than_its_window():
     snapshot = snapshot_with(
         observations=[egfr(value=52, effective_time="2025-11-04T08:00:00+03:00")],
         medications=["metformin"],
-        evaluated_at="2026-06-12T09:00:00+03:00",   # 220 days later
+        evaluated_at="2026-06-12T09:00:00+03:00",  # 220 days later
     )
 
     # Act
@@ -455,7 +455,7 @@ async def db_session(async_engine):
         await conn.begin_nested()
         session = AsyncSession(bind=conn)
         yield session
-        await session.rollback()      # DB state never changes
+        await session.rollback()  # DB state never changes
 ```
 
 Each test runs inside a transaction that rolls back. Fast, isolated, no cleanup.
