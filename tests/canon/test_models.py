@@ -1,0 +1,194 @@
+"""The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants."""
+
+from datetime import UTC, datetime, timedelta, timezone
+from decimal import Decimal
+
+import pytest
+from pydantic import ValidationError
+
+from noor.canon.models import (
+    AcceptedVia,
+    CanonicalObservation,
+    DeltaVerdict,
+    EntryMode,
+    Informant,
+    InformantRole,
+    NotComparableReason,
+    QualityState,
+    QualityVerdict,
+    RejectionReason,
+    ReportedValue,
+    SuspicionReason,
+    UnitResolution,
+)
+from tests.conftest import make_capture
+
+
+def test_effective_time_is_normalised_to_utc():
+    # Arrange / Act
+    capture = make_capture(
+        effective_time=datetime(2026, 6, 12, 11, 20, tzinfo=timezone(timedelta(hours=3)))
+    )
+
+    # Assert — 11:20 at +03:00 is 08:20 UTC (§2.6)
+    assert capture.effective_time.tzinfo is UTC
+    assert capture.effective_time.hour == 8
+    assert capture.effective_time.minute == 20
+
+
+def test_a_naive_datetime_is_refused():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        make_capture(effective_time=datetime(2026, 6, 12, 8, 20))
+
+
+def test_patient_reported_entry_requires_an_informant():
+    # Arrange / Act / Assert — §5.4: this is not optional
+    with pytest.raises(ValidationError):
+        make_capture(entry_mode=EntryMode.patient_reported, informant=None)
+
+
+def test_patient_reported_entry_with_an_informant_is_accepted():
+    # Arrange / Act
+    capture = make_capture(
+        entry_mode=EntryMode.patient_reported,
+        informant=Informant(role=InformantRole.medicine_manager, person_id="MM-17"),
+    )
+
+    # Assert
+    assert capture.informant is not None
+    assert capture.informant.role is InformantRole.medicine_manager
+
+
+def test_absent_reason_is_set_instead_of_a_value_never_alongside_one():
+    # Arrange / Act / Assert — §5: absence with a stated reason is not a value
+    with pytest.raises(ValidationError):
+        make_capture(
+            as_reported=ReportedValue(value="5.5", unit="mmol/L"),
+            absent_reason="not_done",
+        )
+
+
+def test_the_model_is_closed_to_undeclared_fields():
+    # Arrange / Act / Assert — the §4.2 closed-contract discipline, applied to captures
+    with pytest.raises(ValidationError):
+        make_capture(ward="north")
+
+
+def test_the_model_is_immutable():
+    # Arrange
+    capture = make_capture()
+
+    # Act / Assert — observations are write-once (§5); the model makes it literal
+    with pytest.raises(ValidationError):
+        capture.observable = "pulse"  # type: ignore[misc]
+
+
+def test_an_accepted_verdict_must_carry_how_it_got_there():
+    # Arrange / Act / Assert — §6.2: accepted_via is not optional
+    with pytest.raises(ValidationError):
+        QualityVerdict(state=QualityState.accepted, unit_resolution=UnitResolution.explicit)
+
+
+def test_a_rejected_verdict_must_name_why():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(state=QualityState.rejected, unit_resolution=UnitResolution.explicit)
+
+
+def test_a_flagged_verdict_must_name_what_is_suspected():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.needs_repeat_or_verification,
+            unit_resolution=UnitResolution.explicit,
+        )
+
+
+def test_a_consistent_rejected_verdict_is_accepted():
+    # Arrange / Act
+    verdict = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=UnitResolution.ambiguous,
+        rejection_reasons=[RejectionReason.unit_ambiguous],
+    )
+
+    # Assert
+    assert verdict.state is QualityState.rejected
+    assert verdict.accepted_via is None
+
+
+def test_a_consistent_flagged_verdict_is_accepted():
+    # Arrange / Act
+    verdict = QualityVerdict(
+        state=QualityState.needs_repeat_or_verification,
+        unit_resolution=UnitResolution.explicit,
+        suspicions=[SuspicionReason.delta_exceeded],
+    )
+
+    # Assert
+    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
+
+
+def test_accepted_via_unremarkable_round_trips():
+    # Arrange / Act
+    verdict = QualityVerdict(
+        state=QualityState.accepted,
+        unit_resolution=UnitResolution.explicit,
+        accepted_via=AcceptedVia.unremarkable,
+    )
+
+    # Assert
+    assert verdict.accepted_via is AcceptedVia.unremarkable
+
+
+def test_an_accepted_observation_must_carry_a_canonical_value():
+    # Arrange
+    capture = make_capture()
+    quality = QualityVerdict(
+        state=QualityState.accepted,
+        unit_resolution=UnitResolution.explicit,
+        accepted_via=AcceptedVia.unremarkable,
+    )
+
+    # Act / Assert — §6.3 as a type invariant, not a convention: nothing accepted
+    # reaches the engine without a canonical value
+    with pytest.raises(ValidationError):
+        CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+
+def test_a_comparable_delta_names_its_baseline_and_its_change():
+    # Arrange / Act
+    delta = DeltaVerdict(comparable=True, compared_to="OBS-0", change=Decimal("0.6"))
+
+    # Assert — the delta is a recorded fact, not a flag (§5)
+    assert delta.suspicious is False
+    assert delta.not_comparable_reason is None
+
+
+def test_a_comparable_delta_without_a_baseline_is_refused():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        DeltaVerdict(comparable=True, change=Decimal("0.6"))
+
+
+def test_an_incomparable_delta_records_why_nothing_was_compared():
+    # Arrange / Act — §11.9's delta-check rate needs "not compared" to be a fact
+    delta = DeltaVerdict(
+        comparable=False,
+        not_comparable_reason=NotComparableReason.no_prior_observation,
+    )
+
+    # Assert
+    assert delta.compared_to is None
+    assert delta.change is None
+
+
+def test_an_incomparable_delta_that_names_a_baseline_is_refused():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        DeltaVerdict(
+            comparable=False,
+            compared_to="OBS-0",
+            not_comparable_reason=NotComparableReason.no_comparable_prior,
+        )
