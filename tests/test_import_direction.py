@@ -60,12 +60,20 @@ def _python_files(package: str) -> list[Path]:
 
 def _imported_modules(path: Path) -> list[str]:
     tree = ast.parse(path.read_text(encoding="utf-8"))
+    package_parts = ("noor", *path.relative_to(SRC).parts[:-1])
     modules: list[str] = []
     for node in ast.walk(tree):
         if isinstance(node, ast.Import):
             modules.extend(alias.name for alias in node.names)
-        elif isinstance(node, ast.ImportFrom) and node.module is not None:
-            modules.append(node.module)
+        elif isinstance(node, ast.ImportFrom):
+            base_parts = package_parts[: len(package_parts) - node.level + 1] if node.level else ()
+            if node.module is not None:
+                module = ".".join((*base_parts, *node.module.split(".")))
+                modules.append(module)
+                if not node.level and node.module == "noor":
+                    modules.extend(f"{module}.{alias.name}" for alias in node.names)
+            else:
+                modules.extend(".".join((*base_parts, alias.name)) for alias in node.names)
     return modules
 
 
@@ -90,9 +98,7 @@ def _identifiers(path: Path) -> list[str]:
             names.append(node.attr)
         elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
             names.append(node.name)
-        elif isinstance(node, ast.Import):
-            names.extend(alias.name for alias in node.names)
-        elif isinstance(node, ast.ImportFrom):
+        elif isinstance(node, (ast.Import, ast.ImportFrom)):
             names.extend(alias.name for alias in node.names)
     return names
 
@@ -139,8 +145,7 @@ def test_pure_packages_never_read_the_wall_clock(package: str):
 
     # Assert
     assert not offenders, (
-        f"pure package {package} reads the wall clock; time enters as data "
-        f"(SSOT §4.2): {offenders}"
+        f"pure package {package} reads the wall clock; time enters as data (SSOT §4.2): {offenders}"
     )
 
 
@@ -157,6 +162,4 @@ def test_canon_never_names_a_treatment_threshold():
     ]
 
     # Assert
-    assert not offenders, (
-        f"canon must never read a treatment threshold (SSOT §6.4): {offenders}"
-    )
+    assert not offenders, f"canon must never read a treatment threshold (SSOT §6.4): {offenders}"
