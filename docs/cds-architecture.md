@@ -15,7 +15,7 @@ and ask for a resolution. Never silently bypass it.
 **Security-critical constants** are architectural decisions, not implementation
 details. In this project they are: authentication timeouts, RBAC definitions,
 break-glass and access-log invariants (all three defined in §2.6),
-audit-record content, fail-open/fail-closed policies, the severity ladder
+audit-record content, fail-open/fail-closed policies (§8.5), the severity ladder
 (§9.1), the degradation invariant (§8.3), the erasure model (§2.5), the device
 boundary's data contract (§4.2), the visit state machine and its transition gates
 (§11.2), the obligation closure invariant (§11.8), the emergency-hatch invariant
@@ -72,7 +72,8 @@ enforced by a test (§4.2), not by convention.
 - **§7 Rule schema and catalogue** — the rule (§7.1); authored prose and the card
   (§7.2); thresholds (§7.3); content layout (§7.4); storage and approval (§7.5).
 - **§8 Evaluation** — the call (§8.1); the evaluation record (§8.2); the
-  degradation invariant (§8.3); engine invariants (§8.4).
+  degradation invariant (§8.3); engine invariants (§8.4); engine failure
+  semantics (§8.5).
 - **§9 Findings, alerts, overrides** — three severities (§9.1); overrides (§9.2);
   safety surveillance (§9.3).
 - **§10 Clinical content governance** — release lifecycle (§10.1); roles (§10.2);
@@ -301,8 +302,8 @@ purposes. Noor already builds two of them well; this section is the third.
 | **Clinical provenance** | Which data, which rule and catalogue versions, what was concluded | The evaluation record (§8.2) |
 | **Workflow/action** | What a human was shown, chose, deferred, or closed | Overrides (§9.2), planned actions (§11.6), obligations (§11.8) |
 
-**One `correlation_id` joins all three.** It is minted when `evaluate()` is called
-(§8.1), stored on the evaluation record (§8.2), and carried by every downstream
+**One `correlation_id` joins all three.** It is minted by `app/` at the start of a
+run, stamped on the evaluation run header (§8.2), and carried by every downstream
 workflow event. Without it, "who saw this recommendation and what did they do
 about it" is a manual reconstruction across three tables — which is the question
 a PDPL access request and an SFDA investigation both open with.
@@ -647,6 +648,14 @@ procurement gate (§13.2).**
 The stack is plain PostgreSQL plus containers with no proprietary managed
 services precisely so that this decision stays cheap when a provider is named.
 
+**The demo runtime is a different question, and it has an answer.** §2.3 constrains
+*production* — Saudi-resident hosting exists to protect patient data, and §1.2's
+first build target has none: it runs on synthetic cases (§12.4). So the demo runs
+**locally, via containers, against a local PostgreSQL**, and needs no provider, no
+region, and no procurement gate. Nothing about the undecided production host blocks
+anything in §14. Recording this is not a hosting decision creeping in early; it is
+the reason the hosting decision can wait.
+
 ---
 
 ## 4. Module architecture
@@ -906,8 +915,24 @@ Three rules follow, and each closes a way a blocking rule could fire or fail to
 fire on nothing:
 
 1. **Only `verification_status: confirmed` with `severity: severe` satisfies
-   "verified severe allergy."** Anything else degrades under §8.3 — the finding
-   still surfaces, at `interruptive_review`, never blocking an order on hearsay.
+   "verified severe allergy."** But "anything else" is four different facts, and
+   collapsing them is how a delabelled patient keeps getting warned:
+
+   | `verification_status` | Outcome | Why |
+   |---|---|---|
+   | `confirmed` | `triggered`. Blocks only at `severity: severe`; otherwise capped at `interruptive_review` | A verified reaction. Grade the response to the documented severity |
+   | `unconfirmed` | `triggered`, capped at `interruptive_review` (§8.3) | Present data of lower grade, not missing data. The finding surfaces carrying its provenance, and never blocks an order on hearsay |
+   | `refuted` | **`not_triggered`** | The record affirmatively states the allergy is not real |
+   | `entered_in_error` | **`not_triggered`** | The record states the entry should not exist. Evaluating it is evaluating a typo |
+
+   **`refuted` and `entered_in_error` never surface, at any severity.** An alert
+   that outlives formal delabelling undoes the clinical work that cleared the
+   patient: it pushes prescribing to a worse second line for a patient nobody
+   needed to protect, and it trains override reflex on the one alert class that
+   must never become reflexive. Formal delabelling is expensive to obtain, and a
+   CDS that ignores its result is why clinicians stop trusting allergy lists.
+   These two values are the only place in §5.5 where a *more* complete record
+   produces a *quieter* engine, and that is correct.
 2. **"No known allergy" is a recorded state, never inferred from an empty list**
    (§R-5). `allergy_status: no_known_allergy | not_asked | recorded` is a patient
    attribute with its own recorder and timestamp. An unasked patient and a cleared
@@ -949,7 +974,7 @@ medicine_manager:
   name: "..."
   contact: {method: phone | whatsapp, value: "...", language: ar | en}
   consent_ref: ...           # required before any patient_contact obligation (§11.8)
-  literacy_note: null        # free text; never a score (§9.4)
+  literacy_note: null        # free text; never a score (§15.2)
   effective_from: 2026-08-07
 ```
 
@@ -1407,22 +1432,30 @@ section owns only the call and its purity.
 
 Not just the ones that fired.
 
+Two shapes, and the split is load-bearing: a **run header** written by `app/`,
+and the **per-rule records** returned by `engine/`.
+
 ```yaml
-evaluation_record:
-  correlation_id: 01J8...        # the run's id — joins all three logs (§2.6)
+evaluation_run:                  # one per evaluate() call, stamped by app/
+  correlation_id: 01J8...        # joins all three logs (§2.6)
+  trigger: visit                 # visit | data | calendar (§8.1)
+  latency_ms: 41                 # wall time around the call (§R-9)
+
+evaluation_record:               # one per rule considered, returned by engine/
   rule_id: metformin-egfr-contraindicated
   rule_version: 1.0.0
   outcome: indeterminate    # triggered | not_triggered | indeterminate
                             # | out_of_scope | suppressed_by_governed_policy
+                            # | evaluation_failed (§8.5)
   authored_severity:  stop_and_review     # what the rule declares
   effective_severity: interruptive_review # what was presented, after §8.3
   degraded_because: requirements_unmet
+                            # requirements_unmet | evidence_grade | rule_raised (§8.3)
   requirement_verdicts:
     - observable: egfr
       verdict: unusable
       reason: no_result_within_90d
       latest_age_days: 214
-  latency_ms: 41                 # wall time inside evaluate(), per run (§R-9)
   pins:
     catalogue_release: 2026.09.1
     profile: riyadh-hh@3
@@ -1432,13 +1465,27 @@ evaluation_record:
     terminology_version: ...
 ```
 
-**`correlation_id` and `latency_ms`.** §R-9 asks a CDS log to answer two
-operational questions the clinical fields cannot: *what else happened around this
-decision*, and *was the engine fast enough to be used*. `correlation_id` is minted
-once at `evaluate()` (§2.6) and stamped on every record the run produces, so a
-single value joins the security log, this record, and the workflow log. `latency_ms`
-is measured per run against §14's ≤ 500 ms p95 target — a number nobody records
-is a target nobody can miss.
+**`correlation_id` and `latency_ms`, and why they sit in the header.** §R-9 asks a
+CDS log to answer two operational questions the clinical fields cannot: *what else
+happened around this decision*, and *was the engine fast enough to be used*.
+`correlation_id` is minted once per run and stamped on the header, so a single
+value joins the security log, these records, and the workflow log (§2.6).
+`latency_ms` is measured around the call because §R-9 requires the engine's speed
+to be observable — **not against a budget this document asserts.** §R-9 names no
+figure, none has been measured, and inventing one here would be the extrapolation
+§13.3 refuses. The instrument ships first and the threshold is set from its own
+baseline once the catalogue is real; a distribution nobody can see is the failure
+worth closing now.
+
+Both are stamped by `app/`, not by the evaluator, and both are excluded from the
+per-rule record. **Either one inside the record would break two invariants at
+once** (§8.4). It would break invariant 6, because a wall-clock reading and a
+freshly minted id differ on every run, so no two evaluations of one snapshot could
+ever compare equal — and invariant 6 is the whole basis of the pinned review a
+supervisor sees in §11.2. It would also break invariant 8: measuring elapsed time
+requires a clock, and a time-ordered id *is* a clock reading, so an engine that
+minted either would fail the §4.2 seam test. The run header is where a value that
+belongs to the run rather than to the reasoning lives.
 
 **What is deliberately *not* here: `displayed` and `opened`.** §R-9 wants to know
 whether an alert was seen, not merely computed. Noor records that — in the
@@ -1449,15 +1496,17 @@ the engine wait on its own presentation layer. The `correlation_id` closes the g
 without crossing the boundary: *was this card seen* is a join, not a column.
 
 **Outcomes.** Three come from the evaluator (§R-9); `out_of_scope` and
-`suppressed_by_governed_policy` are Noor's, both forced by §R-11 §11.9.
+`suppressed_by_governed_policy` are Noor's, forced by §R-11 §11.9, and
+`evaluation_failed` is Noor's, forced by §8.5.
 
 | Outcome | Meaning |
 |---|---|
-| `triggered` | In scope, requirements met, conditions matched |
+| `triggered` | In scope, requirements met, conditions matched. `effective_severity` may still sit below `authored_severity` where evidence grade caps it (§8.3) |
 | `not_triggered` | In scope, evaluated with usable data; conditions did not match |
 | `indeterminate` | In scope, but one or more requirements were unusable. **Never conflated with `not_triggered`.** |
 | `out_of_scope` | The rule's `scope` excluded this patient. Requirements were never checked. **Never conflated with `not_triggered`.** |
 | `suppressed_by_governed_policy` | A governance-approved disablement applied (§10.5) |
+| `evaluation_failed` | The rule raised. A defect in the rule or the engine, never a statement about the patient. **Never conflated with `indeterminate`** (§8.5) |
 
 **Scope is resolved before requirements, and the order is load-bearing.** A rule
 that excludes a patient records `out_of_scope` and stops. It does not read its
@@ -1505,6 +1554,46 @@ written here.
 Authors cannot opt out. Blocking on data you do not have is how clinicians are
 trained to route around blocks (§R-11 §11.5).
 
+**Two different things degrade a rule, and they are not the same outcome.**
+
+| Cause | Outcome | `degraded_because` |
+|---|---|---|
+| Input absent or unusable | `indeterminate` | `requirements_unmet` |
+| Input present, of lower evidentiary grade | `triggered` | `evidence_grade` |
+| The rule raised (§8.5) | `evaluation_failed` | `rule_raised` |
+
+**Evidence grade caps effective severity. It never manufactures indeterminacy.**
+An unverified allergy (§5.5), a medication list from a cognitively impaired
+informant (§5.4), a Noor-derived value where the laboratory's was expected
+(§5.2) — each is data Noor *has*, graded. The rule reached a conclusion; the grade
+of the evidence caps how forcefully that conclusion may be presented, and caps it
+below `stop_and_review`.
+
+Reporting "cannot assess safely" about a finding the engine did in fact reach is
+false, and it is the more dangerous falsehood. *"The system cannot assess this"*
+reads as a defect and invites a clinician to substitute judgment for a finding
+Noor is holding. *"Reported anaphylaxis to this ingredient — 2019,
+patient-reported, unverified"* is a clinical fact that a clinician must act on, and
+it is what Noor actually knows. §7.2's disclosure order exists to carry exactly
+that pairing of a finding with the grade of its evidence; collapsing a graded
+finding into a data-quality complaint discards the more useful half.
+
+**`indeterminate` is reserved for questions a human can close.** `allergy_status:
+not_asked` is unanswered and closable — someone asks (§5.5), and the obligation
+shuts. An allergy unverified since 2019 is not closable in a home visit; it needs
+an allergist and possibly challenge testing. Routing it to the ledger anyway would
+open a `carried_forward` obligation on nearly every patient that nobody can ever
+close — the failure §8.2 already refused for `out_of_scope`, where the ledger fills
+with work nobody owes. §15.3 rejected the timer that would have hidden it, so those
+rows would age open forever and drown the signal that an open obligation is
+supposed to be.
+
+**Why three `degraded_because` values and not one.** "This blocking rule has not
+blocked in ninety days" has three different answers — a broken data feed, records
+that are merely unverified, and a rule that has been crashing — and only the first
+and third are defects. A single value makes them indistinguishable in surveillance
+(§11.9), which is §8.2's discriminability argument applied one level down.
+
 **Interaction with `on_unusable`.** `on_unusable: silent` is refused for
 `stop_and_review` rules (§10.4 gate 10). A rule severe enough to block an order is
 never allowed to fail silently when its inputs are unusable — silence there is
@@ -1525,7 +1614,11 @@ Each is a test.
 3. No rule loads referencing an `unpopulated` threshold.
 4. `stop_and_review` rules cannot be tenant-disabled.
 5. Evaluation order never affects output.
-6. Identical snapshot + identical catalogue release ⇒ byte-identical records.
+6. Identical snapshot + identical catalogue release ⇒ byte-identical evaluation
+   *records*. Scoped to the per-rule record of §8.2 — outcome, both severities,
+   `degraded_because`, `requirement_verdicts`, and `pins`. The run header is
+   excluded by construction, because `correlation_id` and `latency_ms` are stamped
+   by `app/` and are not engine output.
 7. No rule reads another rule's output.
 8. The engine performs no I/O and reads no clock (§4.2).
 9. A rule is a pure function of the snapshot and the catalogue — preserving
@@ -1533,10 +1626,73 @@ Each is a test.
 10. No rule reads encounter state or free-text narrative. A rule cannot ask which visit state, trigger,
     or workflow step invoked it, and it cannot see the patient's textual complaint. §11 is a consumer of evaluation, never an input
     to it.
+11. A raising rule never ends the run, and a failed run never blocks (§8.5).
 
 Invariant 10 is what keeps §11 outside the device boundary. The moment a rule
 branches on visit state, the workflow becomes part of the regulated device and
 every UI change re-opens clinical validation.
+
+### 8.5 Engine failure semantics
+
+§0 names fail-open/fail-closed policy a security-critical constant. This is that
+policy. It has one shape at each of two levels.
+
+**A single rule raises.** The evaluator catches it, records
+`outcome: evaluation_failed` for that rule with the exception type and the rule
+version, and **continues with every remaining rule.** One malformed threshold must
+not silence the other fifty-nine — that is §8.2's silent-non-firing failure at
+maximum blast radius.
+
+The record then behaves exactly as an unanswered question, because that is what it
+is:
+
+- **It degrades, it never blocks.** §8.3 applies unchanged: an authored
+  `stop_and_review` presents as `interruptive_review` carrying "cannot assess
+  safely", with `degraded_because: rule_raised` — the third of §8.3's three
+  causes, so the record says which one happened. Invariant 1
+  already forbids anything else — a rule that did not finish
+  executing has not established the condition a hard stop requires.
+- **It opens a `carried_forward` obligation** (§11.8), so the question leaves the
+  encounter with a named owner rather than evaporating.
+- **It emits a surveillance event** (§9.3, §11.9). This is the half an obligation
+  cannot carry: the obligation gets the question to a clinician, the surveillance
+  event gets the defect to an engineer.
+- **It never holds submission** (§11.2). An `interruptive_review` finding requires
+  acknowledgement, and acknowledging is one structured reason — a clinician is
+  never trapped in a visit by a software fault.
+
+**Why not `indeterminate`.** §8.2 exists to make one discrimination: a rule that
+fires zero times because nobody matched, versus a rule that fires zero times
+because something is broken. Folding a crash into `indeterminate` destroys exactly
+that discrimination — a broken rule would be indistinguishable from a broken lab
+feed, and both would read as ordinary missing data. `requirement_verdicts` also has
+nothing truthful to say about a rule that raised before it read them.
+
+**The whole run raises.** If `evaluate()` itself fails — a malformed snapshot, a
+catalogue that loaded but cannot execute — the run **fails closed to "cannot
+assess safely"**: `app/` records the failure against the run header, presents no
+findings, and states plainly that the engine did not answer. It fails closed on
+*advice* and open on *work*: no finding may be inferred from a run that did not
+happen, and no gate anywhere may be held shut by one.
+
+The consequences that follow are not restatements — each is the specific thing a
+failed run must not be allowed to do:
+
+- **Capture continues.** `canon` is upstream of the evaluator (§6). Observations
+  are clinical facts and do not require the engine's opinion to be recorded.
+- **Submission is not held** (§11.2). The submission gate holds on unacknowledged
+  findings; a run that produced none holds nothing. A clinician in a home is never
+  stranded by an engine fault.
+- **The hatch is untouched** (§11.7). "One tap. Any state. No gate of any kind"
+  admits no exception, and an engine fault is not one. The hatch does not consult
+  the evaluator and never has.
+- **No visit silently completes unassessed.** The failed run is a surveillance
+  event and opens a `carried_forward` obligation against the encounter, so a visit
+  Noor could not assess is visible as such rather than looking like a clean one.
+
+**A failed run is never retried silently.** A retry that succeeds on a second
+attempt against an unchanged snapshot has disproved invariant 6, which makes it a
+defect report, not a recovery.
 
 ---
 
@@ -1986,6 +2142,27 @@ This closes the one durable-work gap the ledger had left open. §11.8 guarantees
 that unresolved *clinical findings* survive; until now an unresolved *review*
 survived only as a row nobody owned. Both are now work with a name attached.
 
+#### One patient has at most one `in_progress` visit
+
+Every rule above governs a single visit's path. Nothing in them bounds how many
+visits one patient may have at once, and unbounded is wrong: two simultaneous
+`in_progress` encounters would both write clinical facts for one patient through
+`canon`, each evaluating against a snapshot that does not contain the other's
+captures. The resulting record is not merely confusing — the two visits disagree
+about the patient, and neither is identifiable as the stale one.
+
+**The constraint is a database guarantee, not application logic:** a partial unique
+index on patient where state is `in_progress`. The state machine is enforced per
+visit and cannot see a sibling encounter; a check performed in the request handler
+loses the race it exists to prevent.
+
+**The bound is `in_progress` specifically, not "non-terminal".** A patient may
+legitimately hold several live visits in other states — an `escalated` visit
+awaiting its named person while the returned work proceeds as a **new visit** is
+the flow this section already specifies above, and a broader constraint would
+forbid it. One state creates clinical facts, so one state is the one that must be
+exclusive.
+
 #### Refused transitions
 
 Each is a test (§12.6).
@@ -2000,6 +2177,7 @@ Each is a test (§12.6).
 | `completed → *` | Terminal. Corrections are new addendum encounters (§5) |
 | `cancelled → in_progress` | A cancelled visit is not resumable; schedule a new one |
 | Any observation write outside `in_progress` | One state creates clinical facts |
+| A second `in_progress` visit for one patient | Two live encounters write conflicting facts against snapshots blind to each other (§11.2) |
 | Any transition that gates the emergency hatch | Hard invariant (§11.7) |
 
 ### 11.3 Triggers in operation
@@ -2265,7 +2443,7 @@ timestamp, so it does not take the lock.
 | Kind | Created when | Closes when | Status |
 |---|---|---|---|
 | `pending_result` | A `lab_order` planned action is finalised for a result Noor expects back (§11.6) | The result lands, re-evaluation is recorded, and the change is routed | **MVP** |
-| `carried_forward` | A finding is deferred (§9.2 `defer_or_escalate`), or an outcome is `indeterminate` (§8.3) | The finding resolves with usable data, or a named human closes it with a reason | **MVP** |
+| `carried_forward` | A finding is deferred (§9.2 `defer_or_escalate`), or an outcome is `indeterminate` (§8.3), or a rule or run failed (§8.5) | The finding resolves with usable data, or a named human closes it with a reason | **MVP** |
 | `role_routing` | A tenant profile routes a finding to another role (§10.5), or a `submitted` visit ages past the profile's review threshold and a backup reviewer is named (§11.2) | The named role acts | **Plumbing only for profile routing.** Default: no routing. §13.2 item 6 forbids encoding a job-title rule; a medical director supplies one in writing. The review-ageing use is MVP |
 | `patient_contact` | The plan changed after the clinician left the home | Teach-back is confirmed with the medicine-manager (§5.7) | **MVP, gated.** Requires `consent_ref` (§5.7); Arabic patient-facing wording is §13.2 item 9 |
 
@@ -2457,13 +2635,13 @@ Each row is a test written before the corresponding code.
 | 1 | Only `in_progress` writes observations | Attempt an observation write in each of the other seven states → refused | §11.2 |
 | 2 | `indeterminate` never blocks submission | A visit with an unmet data requirement submits successfully | §8.3 |
 | 3 | Unacknowledged `interruptive_review` holds submission | The gate refuses; acknowledging with a structured reason releases it | §11.2 |
-| 4 | `stop_and_review` degrades, never disappears | Remove a required datum → outcome becomes `interruptive_review`, not `not_triggered` | §8.3 |
+| 4 | `stop_and_review` degrades, never disappears | Remove a required datum → `outcome: indeterminate` with `effective_severity: interruptive_review`; the outcome is never `not_triggered` and nothing blocks | §8.3 |
 | 5 | The emergency hatch cannot be blocked | From `in_progress` with an unacknowledged `stop_and_review`, a blocked `final` action, and an empty required field → the hatch still opens | §11.7 |
 | 6 | An abandoned severe value survives and is owned | Abandon a visit holding BP 210/120 → the observation persists and an obligation opens | §11.2, §11.8 |
 | 7 | An obligation survives `indeterminate` | Age a rule's data out of its window → the obligation stays open | §11.8 |
 | 8 | The reviewer sees the pinned evaluation | Land new data after submission → the reviewer sees the original plus a separate "new since submission" panel | §11.2 |
 | 9 | `submitted → in_progress` is refused | Attempt the rewind → refused | §11.2 |
-| 10 | Every rule considered writes a record | Evaluate → record count equals every rule in the active catalogue under this profile, with no exclusions: `triggered`, `not_triggered`, `indeterminate`, `out_of_scope`, and `suppressed_by_governed_policy` together account for all of them | §8.2 |
+| 10 | Every rule considered writes a record | Evaluate → record count equals every rule in the active catalogue under this profile, with no exclusions: `triggered`, `not_triggered`, `indeterminate`, `out_of_scope`, `suppressed_by_governed_policy`, and `evaluation_failed` together account for all of them | §8.2 |
 | 11 | Every visit passes through `submitted` | Attempt `in_progress → completed` → refused | §11.2 |
 | 12 | `escalated` exits only to `submitted` | Attempt `escalated → completed` → refused | §11.2 |
 | 13 | Escalation ends capture | Escalate from `in_progress`, then attempt an observation write → refused | §11.2 |
@@ -2487,7 +2665,7 @@ Each row is a test written before the corresponding code.
 | 31 | Baseline promotion records who and what | Move a patient `establishing_baseline → active` → the record names the deciding clinician and captures the data present at that moment | §11.1, §11.9 |
 | 32 | An obligation-default override records its reason | Decline to open a `pending_result` obligation for a kind whose profile default is open → the override, its reason, and its author are recorded | §11.6, §11.9 |
 | 33 | A break-glass access is never blocked and never silent | Access a patient outside the roster → access proceeds, and a break-glass record naming person, patient, reason, and time exists before the data is returned | §2.6 |
-| 34 | An unverified allergy does not block | Author a `stop_and_review` allergy rule, evaluate against an allergy whose `verification_status` is `unconfirmed` → the outcome degrades to `interruptive_review` | §5.5, §8.3, §9.1 |
+| 34 | An unverified allergy surfaces without blocking | Author a `stop_and_review` allergy rule, evaluate against an allergy whose `verification_status` is `unconfirmed` → `outcome: triggered`, `effective_severity: interruptive_review`, `degraded_because: evidence_grade`; the outcome is never `indeterminate`, no order action is blocked, and no obligation opens on the verification status alone | §5.5, §8.3, §9.1 |
 | 35 | "No known allergy" is recorded, never inferred | Evaluate a patient with an empty allergy list and `allergy_status: not_asked` → outcome is `indeterminate` and an obligation opens; it is never treated as `no_known_allergy` | §5.5, §11.8 |
 | 36 | A missing weight does not become a silent eGFR | Evaluate a CrCl-based renal rule with no weight → outcome is `indeterminate`; no eGFR value is substituted | §5.2 |
 | 37 | `stage` never closes an obligation | Set a `pending_result` to `not_received` or `cancelled` → `state` stays `open` and a named human is still required to close it | §11.8 |
@@ -2496,6 +2674,12 @@ Each row is a test written before the corresponding code.
 | 40 | A card cannot be rendered against the wrong patient | Render a card whose patient id does not match the encounter → refused | §7.2 |
 | 41 | Unit conversion is reversible | For every registry conversion, convert a value out and back → the original is recovered within the declared precision | §6.3 |
 | 42 | Free text does not enter the snapshot | Attempt to compile a rule referencing the encounter narrative text → refused by the compiler; attempt to load text into the snapshot → rejected by Pydantic | §5, §8.4 |
+| 43 | A raising rule does not silence the catalogue | Make one rule of N raise → its outcome is `evaluation_failed`, the other N−1 still produce records, an authored `stop_and_review` presents as `interruptive_review`, an obligation opens, and a surveillance event is emitted | §8.5 |
+| 44 | A failed run blocks nothing | Make `evaluate()` raise mid-visit → no findings are presented, observation capture continues, the visit submits, the hatch opens, and the encounter carries an obligation rather than reading as assessed | §8.5, §11.7 |
+| 45 | Determinism excludes the run header | Evaluate one snapshot twice → the per-rule records compare byte-identical while `correlation_id` and `latency_ms` differ | §8.2, §8.4 |
+| 46 | One patient holds one `in_progress` visit | Attempt two concurrent `in_progress` visits for one patient → exactly one succeeds, refused at the database, not the handler | §11.2 |
+| 47 | A delabelled allergy goes quiet | Evaluate an allergy rule against `verification_status: refuted`, then against `entered_in_error` → `outcome: not_triggered` in both; no card renders at any severity, and no obligation opens | §5.5 |
+| 48 | Evidence grade caps, it never makes indeterminate | For each graded input — unverified allergy (§5.5), medicine-manager-reported list from an impaired patient (§5.4), Noor-derived value where the laboratory's was expected (§5.2) → `outcome: triggered` with `degraded_because: evidence_grade`, never `indeterminate`; and the same rule with the input *absent* → `indeterminate` with `degraded_because: requirements_unmet` | §8.3 |
 
 ### 12.7 Shadow mode
 
@@ -2640,13 +2824,24 @@ verifies.
 
 4. **`engine`: evaluator, outcome taxonomy, degradation invariant, evaluation
    records.**
-   *Verify:* invariants §8.4 (1)–(10), each as a test. Determinism proven by
-   running an identical snapshot twice in shuffled rule order. §12.6 claims 19,
+   *Verify:* invariants §8.4 (1)–(11), each as a test. Determinism proven by
+   running an identical snapshot twice in shuffled rule order — §12.6 claim 45:
+   the per-rule records compare byte-identical while the run header differs.
+   §12.6 claim 43: one raising rule yields `evaluation_failed` without silencing
+   the rest of the catalogue (§8.5). §12.6 claims 19,
    20 — scope resolves before requirements, and the snapshot refuses an
    undeclared field. §12.6 claims 34, 35, 36: an unconfirmed allergy degrades a
    `stop_and_review` rather than blocking; an unasked allergy history is
    `indeterminate` and never reads as "no known allergy"; a CrCl rule with no
-   weight is `indeterminate` and never silently substitutes an eGFR.
+   weight is `indeterminate` and never silently substitutes an eGFR. §12.6
+   claims 47, 48: a `refuted` or `entered_in_error` allergy is `not_triggered`
+   and renders nothing at any severity (§5.5); and evidence grade caps
+   `effective_severity` without ever producing `indeterminate`, which the
+   absent-input case still does (§8.3). §12.6 claims 4, 10: removing a required
+   datum degrades a `stop_and_review` to `indeterminate` at
+   `interruptive_review` and never to `not_triggered`; and the record count
+   equals every rule the active catalogue considered under this profile, with no
+   outcome excluded (§8.2).
 
 5. **`catalogue`: loader, compiler, validator, CI gates.**
    *Verify:* the compiler refuses an uncited rule, an unpopulated threshold
@@ -2654,7 +2849,9 @@ verifies.
    `role_doubling`, a rule referencing encounter state, a rule naming a field
    absent from the snapshot schema, an unrecognised operator, and a content file
    carrying an object-constructing YAML tag — each refusal is a test (§10.4,
-   §12.6 claims 20, 21). §12.6 claim 29: a tenant profile omitting an
+   §12.6 claims 18, 20, 21). §12.6 claim 42: a rule referencing the encounter
+   narrative is refused by the compiler and free text is rejected by the snapshot
+   model. §12.6 claim 29: a tenant profile omitting an
    operational policy is refused at load, never silently defaulted (§10.5).
 
 6. **Content: the first workflow — renal-risk medication safety on new
@@ -2680,7 +2877,9 @@ verifies.
    patient lifecycle.**
    *Verify:* §12.6 claims 1, 9, 11, 12, 13 — every valid transition succeeds and
    every refused transition is refused. Observation writes are rejected in all
-   seven non-`in_progress` states. §12.6 claims 27, 28, 30, 31: entering
+   seven non-`in_progress` states. §12.6 claim 46: two concurrent `in_progress`
+   visits for one patient resolve to exactly one, refused by a partial unique
+   index rather than by the handler (§11.2). §12.6 claims 27, 28, 30, 31: entering
    `escalated` without a named person and a due time is refused; a passed due
    time leaves the escalation untouched; a visit held in `submitted` past any
    ageing threshold does not auto-complete; promoting a patient
@@ -2697,7 +2896,9 @@ verifies.
    on one subject render as one merged card at the highest effective severity,
    each contributing rule still holding its own evaluation record. §12.6 claim
    40: a card whose patient id does not match the encounter is refused rather
-   than rendered (§7.2). Blocked on
+   than rendered (§7.2). §12.6 claim 8: data landing after submission reaches the
+   reviewer as a separate "new since submission" panel, never by mutating the
+   pinned record (§11.2). Blocked on
    §16 item 9 — the merge policy needs the clinician reviewer.
 
 10. **`app`: planned-actions loop and the submission gate.**
@@ -2727,8 +2928,10 @@ verifies.
 
 13. **`app`: the emergency hatch.**
     *Verify:* §12.6 claim 5 — the hatch opens from the most hostile state the
-    suite can construct. This is deliberately built after the gates it must
-    defeat, so the test is meaningful.
+    suite can construct. §12.6 claim 44: a run whose `evaluate()` raised presents
+    no findings, holds no gate, and leaves the encounter carrying an obligation
+    rather than reading as assessed (§8.5). This is deliberately built after the
+    gates it must defeat, so the test is meaningful.
 
 14. **Content: second workflow — BP measurement quality, repeat, and severe-BP
     escalation with red-flag triage.**
@@ -2752,6 +2955,17 @@ verifies.
     explained before any clinician-facing use. This is a run, not a build step:
     its duration is provider data, and step 15 exists to make its output
     readable.
+
+**Where §1.2's first build target ends.** Steps 1–14 are it, in full: `canon`, the
+evaluator, the catalogue, evaluation records, the visit state machine, the
+obligation ledger, and the demo UI on synthetic cases. The obligation ledger is
+inside that target, not after it — §1.2 names it, because a ledger is what makes
+the safety case demonstrable rather than described. Step 15 straddles the line: its
+release-comparison harness completes §1.2's validation harness and is buildable
+now, while its open-question instruments measure a real provider's operations and
+only emit once one exists. Step 16 is outside it entirely — shadow mode consumes a
+provider's live data by definition. Nothing in steps 1–14 waits on a provider, a
+named host (§3.5), or an EMR.
 
 Steps 6 and 14 establish the content pattern. The remaining diabetes and
 hypertension catalogue extends it incrementally — the schema and engine are

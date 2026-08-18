@@ -1,0 +1,15 @@
+C:\Users\youss\Projects\cds_engine\AGENTS.md
+C:\Users\youss\Projects\cds_engine\CLAUDE.md
+C:\Users\youss\Projects\cds_engine\docs\cds-architecture.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\cds-safety-and-human-factors.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\clinical-guidelines-and-thresholds.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\competitive-and-market-landscape.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\design-interview-topics.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\drug-knowledge-base.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\interoperability-and-fhir.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\risk-models-and-bp-trajectory.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\saudi-regulatory-pdpl-sfda.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\technical-architecture.md
+C:\Users\youss\Projects\cds_engine\docs\research\archive\terminology-and-units.md
+C:\Users\youss\Projects\cds_engine\docs\research\saudi-essential-medicines-list-2023.md
+C:\Users\youss\Projects\cds_engine\docs\testing-standards.md

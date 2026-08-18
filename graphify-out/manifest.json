@@ -1,0 +1,82 @@
+{
+  "docs/research/saudi-local-db.json": {
+    "mtime": 1787002113.68968,
+    "ast_hash": "20d6e4cc4f08092e2d848ec651f9fbc4",
+    "semantic_hash": ""
+  },
+  "AGENTS.md": {
+    "mtime": 1787008403.7727225,
+    "ast_hash": "729959ddd27d2ed5f30a885c48c2d532",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1787008403.7727225,
+    "ast_hash": "729959ddd27d2ed5f30a885c48c2d532",
+    "semantic_hash": ""
+  },
+  "docs/cds-architecture.md": {
+    "mtime": 1787055286.985923,
+    "ast_hash": "5d986e0e29f2aa34ccc7baeb1af910af",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/cds-safety-and-human-factors.md": {
+    "mtime": 1786097784.388262,
+    "ast_hash": "df870e3112b6c836e68335d9ae8ecda4",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/clinical-guidelines-and-thresholds.md": {
+    "mtime": 1786097784.277618,
+    "ast_hash": "ecdbdd143dff5f7d88edb5acb832ebbe",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/competitive-and-market-landscape.md": {
+    "mtime": 1786097784.396935,
+    "ast_hash": "bd6e54221b48970843c4ca7c4d256fda",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/design-interview-topics.md": {
+    "mtime": 1786097784.2930307,
+    "ast_hash": "beca788dddf3400f25d52051ab143f59",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/drug-knowledge-base.md": {
+    "mtime": 1786097784.3329082,
+    "ast_hash": "5ca8a698ae82798d6dde081aeaacafc2",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/interoperability-and-fhir.md": {
+    "mtime": 1786097784.356322,
+    "ast_hash": "07f83663df492c1cb18dbbc257124247",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/risk-models-and-bp-trajectory.md": {
+    "mtime": 1786097784.3721602,
+    "ast_hash": "a7793a727d8ad87de8ad18ec1f3b3409",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/saudi-regulatory-pdpl-sfda.md": {
+    "mtime": 1786097784.3194494,
+    "ast_hash": "b6b93e3f0f18ba9a6d94b2cd5db4cea2",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/technical-architecture.md": {
+    "mtime": 1786097784.4102247,
+    "ast_hash": "905b358ddc303cdff540321d45e62587",
+    "semantic_hash": ""
+  },
+  "docs/research/archive/terminology-and-units.md": {
+    "mtime": 1786097784.3446176,
+    "ast_hash": "02509d1b3d15e02b30c0c25876f13609",
+    "semantic_hash": ""
+  },
+  "docs/research/saudi-essential-medicines-list-2023.md": {
+    "mtime": 1787008370.9147067,
+    "ast_hash": "98a3ad47a3fb355a69d8e695f245569f",
+    "semantic_hash": ""
+  },
+  "docs/testing-standards.md": {
+    "mtime": 1787008399.5570729,
+    "ast_hash": "8f3bfc8c510abc5dbd6ce980b1cf602c",
+    "semantic_hash": ""
+  }
+}
