@@ -1307,7 +1307,10 @@ rather than assumed solved.
 ```yaml
 - ref: metformin.egfr_absolute_contraindication
   value: 30
-  unit: "mL/min/1.73m2"
+  unit: "mL/min/{1.73_m2}"   # braces are a UCUM annotation carrying no arithmetic
+                             # meaning. "mL/min/1.73m2" is not the same unit: UCUM
+                             # reads "." as multiplication, so it resolves to
+                             # per-73 m2. LOINC and FHIR use the annotated form.
   source_family: ada-kdigo
   citation:
     organisation: "ADA / KDIGO"
@@ -2680,6 +2683,7 @@ Each row is a test written before the corresponding code.
 | 46 | One patient holds one `in_progress` visit | Attempt two concurrent `in_progress` visits for one patient → exactly one succeeds, refused at the database, not the handler | §11.2 |
 | 47 | A delabelled allergy goes quiet | Evaluate an allergy rule against `verification_status: refuted`, then against `entered_in_error` → `outcome: not_triggered` in both; no card renders at any severity, and no obligation opens | §5.5 |
 | 48 | Evidence grade caps, it never makes indeterminate | For each graded input — unverified allergy (§5.5), medicine-manager-reported list from an impaired patient (§5.4), Noor-derived value where the laboratory's was expected (§5.2) → `outcome: triggered` with `degraded_because: evidence_grade`, never `indeterminate`; and the same rule with the input *absent* → `indeterminate` with `degraded_because: requirements_unmet` | §8.3 |
+| 49 | A renal rule names which renal metric it means | Author a renal-dosing rule omitting `renal_metric` → the catalogue compiler refuses it; author one declaring `renal_metric: egfr` whose cited label states the threshold in creatinine clearance → refused for the mismatch, not warned | §5.2, §10.4 gate 15 |
 
 ### 12.7 Shadow mode
 
@@ -2847,9 +2851,11 @@ verifies.
    *Verify:* the compiler refuses an uncited rule, an unpopulated threshold
    reference, a blended `source_family`, a `stop_and_review` with
    `role_doubling`, a rule referencing encounter state, a rule naming a field
-   absent from the snapshot schema, an unrecognised operator, and a content file
+   absent from the snapshot schema, an unrecognised operator, a renal-dosing rule
+   that omits `renal_metric` or names an eGFR observable where its cited label
+   states creatinine clearance, and a content file
    carrying an object-constructing YAML tag — each refusal is a test (§10.4,
-   §12.6 claims 18, 20, 21). §12.6 claim 42: a rule referencing the encounter
+   §12.6 claims 18, 20, 21, 49). §12.6 claim 42: a rule referencing the encounter
    narrative is refused by the compiler and free text is rejected by the snapshot
    model. §12.6 claim 29: a tenant profile omitting an
    operational policy is refused at load, never silently defaulted (§10.5).

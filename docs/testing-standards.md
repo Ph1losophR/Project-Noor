@@ -210,7 +210,7 @@ cases:
     boundary: just_below                 # at | just_below | just_above
     given:
       observations:
-        - {observable: egfr, value: 29, ucum: "mL/min/1.73m2", age_days: 14,
+        - {observable: egfr, value: 29, ucum: "mL/min/{1.73_m2}", age_days: 14,
            source_status: final, quality: accepted}
       medications: [metformin]
       context: [ckd_chronicity_confirmed]
@@ -224,7 +224,7 @@ cases:
     boundary: at
     given:
       observations:
-        - {observable: egfr, value: 30, ucum: "mL/min/1.73m2", age_days: 14,
+        - {observable: egfr, value: 30, ucum: "mL/min/{1.73_m2}", age_days: 14,
            source_status: final, quality: accepted}
       medications: [metformin]
     expect:
@@ -233,7 +233,7 @@ cases:
   - description: "eGFR stale beyond the rule's 90-day window → indeterminate"
     given:
       observations:
-        - {observable: egfr, value: 29, ucum: "mL/min/1.73m2", age_days: 214,
+        - {observable: egfr, value: 29, ucum: "mL/min/{1.73_m2}", age_days: 214,
            source_status: final, quality: accepted}
       medications: [metformin]
     expect:

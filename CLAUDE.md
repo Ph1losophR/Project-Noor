@@ -25,10 +25,15 @@ holds design and research documents only.
   from inside the SPC text) carries **official-SDI reconciliation pending** while
   the e-service is unavailable. A complete local SPC citation can pass CI gate 2;
   a later contradiction is a content incident under SSOT §11.9.
+  **A pin is valid only if the SPC text names the pinned product in its own §1
+  and §4.1.** At least one snapshot document is spliced: registration
+  `82-171-20` (NORACTONE, spironolactone 25 mg) carries a real spironolactone
+  §1–§3 and then the entire AVORES 400 mg moxifloxacin label from §4.1 onward.
+  Do not pin it — the other three spironolactone products are clean.
 - `docs/superpowers/specs/` is empty; the SSOT is the only architectural
   document.
 - **Git repository initialized** (commit `1910530`, remote
-  `github.com/ph1losophrr/Project-Noor`). SSOT §7.5 makes git the
+  `github.com/Ph1losophR/Project-Noor`). SSOT §7.5 makes git the
   clinical-content governance mechanism — a pull request *is* the four-eyes
   approval, and git holds the permanent approver record. Branch protection and
   the CI rendering-posting job remain unconfigured.

@@ -1,16 +1,16 @@
 # Graph Report - cds_engine  (2026-08-18)
 
 ## Corpus Check
-- 16 files · ~4,193,549 words
+- 17 files · ~4,212,083 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 454 nodes · 439 edges · 22 communities
+- 474 nodes · 458 edges · 24 communities
 - Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `bc55cdcf`
+- Built from commit: `bab8a3d5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -37,18 +37,20 @@
 - [[_COMMUNITY_6. `canon` — the data-validity layer|6. `canon` — the data-validity layer]]
 - [[_COMMUNITY_10. Clinical content governance|10. Clinical content governance]]
 - [[_COMMUNITY_7. Rule schema and catalogue|7. Rule schema and catalogue]]
+- [[_COMMUNITY_File structure|File structure]]
+- [[_COMMUNITY_12. Testing and validation|12. Testing and validation]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Project Noor — Testing Standards` - 21 edges
 2. `Project Noor — CDS Engine Architecture` - 19 edges
 3. `11. Topics raised during the design interview` - 17 edges
-4. `5. Interoperability and integration` - 12 edges
-5. `4. Terminology, coding, and identifiers` - 12 edges
-6. `11. Clinical operations` - 11 edges
-7. `1. Clinical guidelines — the content source of truth` - 11 edges
-8. `3. Drug knowledge base — the build-vs-license decision` - 11 edges
-9. `6. Risk models and scores (only those we might actually compute)` - 11 edges
-10. `11.2 The visit state machine` - 10 edges
+4. `File structure` - 13 edges
+5. `5. Interoperability and integration` - 12 edges
+6. `4. Terminology, coding, and identifiers` - 12 edges
+7. `11. Clinical operations` - 11 edges
+8. `1. Clinical guidelines — the content source of truth` - 11 edges
+9. `3. Drug knowledge base — the build-vs-license decision` - 11 edges
+10. `6. Risk models and scores (only those we might actually compute)` - 11 edges
 
 ## Surprising Connections (you probably didn't know these)
 - None detected - all connections are within the same source files.
@@ -56,11 +58,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (22 total, 0 thin omitted)
+## Communities (24 total, 0 thin omitted)
 
 ### Community 0 - "Project Noor — CDS Engine Architecture"
-Cohesion: 0.04
-Nodes (44): 0.1 Document map, 0.2 Table of contents, 0. How to use this document, 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 Synthetic data, 12.5 Calibrated-reliance audit (+36 more)
+Cohesion: 0.05
+Nodes (36): 0.1 Document map, 0.2 Table of contents, 0. How to use this document, 13.1 Blocks code (2), 13.2 Blocks patient use, not code (14), 13.3 Explicitly unresolved, 13. Gates, 14. Build sequence (+28 more)
 
 ### Community 1 - "11. Topics raised during the design interview"
 Cohesion: 0.06
@@ -146,23 +148,31 @@ Nodes (7): 10.1 Release lifecycle, 10.2 Roles, 10.3 Role doubling is recorded, n
 Cohesion: 0.29
 Nodes (7): 7.1 The rule, 7.2 Authored prose is three fields; the card renders seven, 7.3 Thresholds, 7.4 Content layout, 7.5 Storage and approval: YAML in git, 7. Rule schema and catalogue, The card names its patient
 
+### Community 22 - "File structure"
+Cohesion: 0.10
+Nodes (19): Assumptions and interpretations (read before executing), Claims the persistence plan must carry, Exit verification — SSOT §14 steps 1–3, File structure, Foundation + `canon` Implementation Plan, Global Constraints, Task 10: The `canonicalise` pipeline, Task 11: Quality resolution — repeat confirmation and clinician verification (+11 more)
+
+### Community 23 - "12. Testing and validation"
+Cohesion: 0.25
+Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 Synthetic data, 12.5 Calibrated-reliance audit, 12.6 Clinical-operations verification claims, 12.7 Shadow mode, 12. Testing and validation
+
 ## Knowledge Gaps
-- **343 isolated node(s):** `Current State`, `SSOT Integrity Rules`, `1. Think Before Coding`, `2. Simplicity First`, `3. Surgical Changes` (+338 more)
+- **359 isolated node(s):** `Current State`, `SSOT Integrity Rules`, `1. Think Before Coding`, `2. Simplicity First`, `3. Surgical Changes` (+354 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Project Noor — CDS Engine Architecture` connect `Project Noor — CDS Engine Architecture` to `11. Clinical operations`, `2. Regulatory and compliance posture`, `3.2 Medication knowledge`, `5. The observation model`, `6. `canon` — the data-validity layer`, `10. Clinical content governance`, `7. Rule schema and catalogue`?**
-  _High betweenness centrality (0.070) - this node is a cross-community bridge._
+- **Why does `Project Noor — CDS Engine Architecture` connect `Project Noor — CDS Engine Architecture` to `11. Clinical operations`, `2. Regulatory and compliance posture`, `3.2 Medication knowledge`, `5. The observation model`, `6. `canon` — the data-validity layer`, `10. Clinical content governance`, `7. Rule schema and catalogue`, `12. Testing and validation`?**
+  _High betweenness centrality (0.065) - this node is a cross-community bridge._
 - **Why does `11. Clinical operations` connect `11. Clinical operations` to `Project Noor — CDS Engine Architecture`?**
-  _High betweenness centrality (0.027) - this node is a cross-community bridge._
+  _High betweenness centrality (0.025) - this node is a cross-community bridge._
 - **Why does `2. Regulatory and compliance posture` connect `2. Regulatory and compliance posture` to `Project Noor — CDS Engine Architecture`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `Current State`, `SSOT Integrity Rules`, `1. Think Before Coding` to the rest of the system?**
-  _343 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _359 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Project Noor — CDS Engine Architecture` be split into smaller, more focused modules?**
-  _Cohesion score 0.044444444444444446 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.05405405405405406 - nodes in this community are weakly interconnected._
 - **Should `11. Topics raised during the design interview` be split into smaller, more focused modules?**
   _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
 - **Should `Project Noor — Testing Standards` be split into smaller, more focused modules?**
