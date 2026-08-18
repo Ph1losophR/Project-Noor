@@ -7,9 +7,11 @@ disagree, the SSOT wins and this file is wrong — fix it here, not there.
 
 Section references in the form (§N) point at the SSOT.
 
-**Nothing described here exists yet.** No test, module, fixture, or database.
-These are the standards the suite will be built to, not a description of a suite
-that runs. Verify against the filesystem before assuming otherwise.
+**The full suite described here does not exist yet.** The repository now has the
+foundation smoke test and device-boundary seam test, but no clinical canon tests,
+fixtures, or database. These are the standards the suite will be built to, not a
+description of a complete suite that runs. Verify against the filesystem before
+assuming otherwise.
 
 ---
 
