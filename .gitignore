@@ -1,0 +1,11 @@
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+*.egg-info/
+
+# .hypothesis/ is COMMITTED on purpose: hypothesis is seeded and its example
+# database is part of the repo (docs/testing-standards.md).
