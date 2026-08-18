@@ -4,16 +4,101 @@ Every model is frozen and closed: an observation is written once and never
 overwritten, and an undeclared field cannot enter the record.
 """
 
+from collections.abc import Iterable
 from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
-from typing import Self
+from typing import Any, NoReturn, Self, SupportsIndex
 
 from pydantic import AwareDatetime, BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 class NoorModel(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
+
+
+class _FrozenList(list[Any]):
+    def _raise_immutable(self) -> NoReturn:
+        raise TypeError("model collections are immutable")
+
+    def __setitem__(self, index: int | slice, item: Any) -> NoReturn:  # type: ignore[override]
+        self._raise_immutable()
+
+    def __delitem__(self, index: int | slice) -> NoReturn:  # type: ignore[override]
+        self._raise_immutable()
+
+    def __iadd__(self, items: Iterable[Any]) -> Self:  # type: ignore[misc]
+        self._raise_immutable()
+
+    def __imul__(self, count: SupportsIndex) -> Self:
+        self._raise_immutable()
+
+    def append(self, item: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def clear(self) -> NoReturn:
+        self._raise_immutable()
+
+    def extend(self, items: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def insert(self, index: SupportsIndex, item: Any) -> None:
+        self._raise_immutable()
+
+    def pop(self, index: SupportsIndex = -1) -> Any:
+        self._raise_immutable()
+
+    def remove(self, item: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def reverse(self) -> NoReturn:
+        self._raise_immutable()
+
+    def sort(self, *args: Any, **kwargs: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def __deepcopy__(self, memo: dict[int, Any]) -> Self:
+        return self
+
+
+class _FrozenDict(dict[str, object]):
+    def _raise_immutable(self) -> NoReturn:
+        raise TypeError("model mappings are immutable")
+
+    def __setitem__(self, key: str, value: object) -> NoReturn:
+        self._raise_immutable()
+
+    def __delitem__(self, key: str) -> NoReturn:
+        self._raise_immutable()
+
+    def __ior__(self, other: Any) -> Self:  # type: ignore[override, misc]
+        self._raise_immutable()
+
+    def clear(self) -> NoReturn:
+        self._raise_immutable()
+
+    def pop(self, *args: Any, **kwargs: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def popitem(self) -> NoReturn:
+        self._raise_immutable()
+
+    def setdefault(self, key: str, default: object = None) -> NoReturn:
+        self._raise_immutable()
+
+    def update(self, *args: Any, **kwargs: Any) -> NoReturn:
+        self._raise_immutable()
+
+    def __deepcopy__(self, memo: dict[int, Any]) -> Self:
+        return self
+
+
+def _freeze_payload(value: object) -> object:
+    if isinstance(value, dict):
+        return _FrozenDict({key: _freeze_payload(item) for key, item in value.items()})
+    if isinstance(value, list):
+        return _FrozenList(_freeze_payload(item) for item in value)
+    return value
 
 
 class UnitResolution(StrEnum):
@@ -201,8 +286,8 @@ class ObservationCapture(NoorModel):
     as_reported: ReportedValue
     absent_reason: str | None = None
     mapping: MappingInfo = MappingInfo()
-    context_flags: list[str] = []
-    raw_payload: dict[str, object] = {}
+    context_flags: list[str] = Field(default_factory=list, validate_default=True)
+    raw_payload: dict[str, object] = Field(default_factory=dict, validate_default=True)
 
     @field_validator("effective_time", "issued_at", "received_at")
     @classmethod
@@ -220,6 +305,16 @@ class ObservationCapture(NoorModel):
         if self.absent_reason is not None and self.as_reported.value is not None:
             raise ValueError("absent_reason is set INSTEAD of a value, never alongside it (§5)")
         return self
+
+    @field_validator("context_flags", mode="after")
+    @classmethod
+    def _freeze_context_flags(cls, values: list[str]) -> list[str]:
+        return _FrozenList(values)
+
+    @field_validator("raw_payload", mode="after")
+    @classmethod
+    def _freeze_raw_payload(cls, payload: dict[str, object]) -> dict[str, object]:
+        return _FrozenDict({key: _freeze_payload(value) for key, value in payload.items()})
 
 
 class ConversionApplied(NoorModel):
@@ -278,6 +373,7 @@ class DeltaVerdict(NoorModel):
         elif (
             self.compared_to is not None
             or self.change is not None
+            or self.suspicious
             or self.not_comparable_reason is None
         ):
             raise ValueError("an incomparable delta names its reason and nothing else")
@@ -290,9 +386,14 @@ class QualityVerdict(NoorModel):
     state: QualityState
     unit_resolution: UnitResolution
     accepted_via: AcceptedVia | None = None
-    rejection_reasons: list[RejectionReason] = []
-    suspicions: list[SuspicionReason] = []
+    rejection_reasons: list[RejectionReason] = Field(default_factory=list, validate_default=True)
+    suspicions: list[SuspicionReason] = Field(default_factory=list, validate_default=True)
     delta: DeltaVerdict | None = None
+
+    @field_validator("rejection_reasons", "suspicions", mode="after")
+    @classmethod
+    def _freeze_verdict_collections(cls, values: list[Any]) -> list[Any]:
+        return _FrozenList(values)
 
     @model_validator(mode="after")
     def _the_verdict_explains_itself(self) -> Self:
@@ -302,6 +403,11 @@ class QualityVerdict(NoorModel):
             raise ValueError("a rejected observation names why")
         if self.state is QualityState.needs_repeat_or_verification and not self.suspicions:
             raise ValueError("a flagged observation names what is suspected")
+        if self.unit_resolution is UnitResolution.ambiguous and (
+            self.state is not QualityState.rejected
+            or RejectionReason.unit_ambiguous not in self.rejection_reasons
+        ):
+            raise ValueError("ambiguous unit resolution is rejected as unit_ambiguous (§6.3)")
         return self
 
 
@@ -322,4 +428,6 @@ class CanonicalObservation(ObservationCapture):
     def _an_accepted_observation_carries_a_canonical_value(self) -> Self:
         if self.quality.state in ACCEPTED_FAMILY and self.canonical is None:
             raise ValueError("an accepted observation carries a canonical value (§6.3)")
+        if self.quality.unit_resolution is UnitResolution.ambiguous and self.canonical is not None:
+            raise ValueError("an ambiguous unit resolution carries no canonical value (§6.3)")
         return self

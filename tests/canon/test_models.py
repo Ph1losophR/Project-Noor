@@ -1,5 +1,6 @@
 """The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants."""
 
+import copy
 from datetime import UTC, datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -9,6 +10,7 @@ from pydantic import ValidationError
 from noor.canon.models import (
     AcceptedVia,
     CanonicalObservation,
+    CanonicalQuantity,
     DeltaVerdict,
     EntryMode,
     Informant,
@@ -84,6 +86,58 @@ def test_the_model_is_immutable():
         capture.observable = "pulse"  # type: ignore[misc]
 
 
+def test_capture_collections_are_immutable_in_place():
+    # Arrange
+    capture = make_capture(
+        context_flags=["home"],
+        raw_payload={"details": {"source": "meter"}, "readings": ["5.5"]},
+    )
+
+    # Act / Assert
+    with pytest.raises(TypeError):
+        capture.context_flags.append("clinic")
+    with pytest.raises(TypeError):
+        capture.raw_payload["details"]["source"] = "manual"
+    with pytest.raises(TypeError):
+        capture.raw_payload["readings"].append("6.0")
+
+    # Assert — nested payload data remains write-once as well
+    assert capture.context_flags == ["home"]
+    assert capture.raw_payload["details"]["source"] == "meter"
+    assert capture.raw_payload["readings"] == ["5.5"]
+    assert copy.deepcopy(capture.context_flags) is capture.context_flags
+    assert copy.deepcopy(capture.raw_payload) is capture.raw_payload
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda values: values.__setitem__(0, "clinic"), id="setitem"),
+        pytest.param(lambda values: values.__delitem__(0), id="delitem"),
+        pytest.param(lambda values: values.__iadd__(["clinic"]), id="iadd"),
+        pytest.param(lambda values: values.__imul__(2), id="imul"),
+        pytest.param(lambda values: values.append("clinic"), id="append"),
+        pytest.param(lambda values: values.clear(), id="clear"),
+        pytest.param(lambda values: values.extend(["clinic"]), id="extend"),
+        pytest.param(lambda values: values.insert(0, "clinic"), id="insert"),
+        pytest.param(lambda values: values.pop(), id="pop"),
+        pytest.param(lambda values: values.remove("home"), id="remove"),
+        pytest.param(lambda values: values.reverse(), id="reverse"),
+        pytest.param(lambda values: values.sort(), id="sort"),
+    ],
+)
+def test_capture_list_mutations_are_refused(mutate):
+    # Arrange
+    capture = make_capture(context_flags=["home"])
+
+    # Act / Assert
+    with pytest.raises(TypeError):
+        mutate(capture.context_flags)
+
+    # Assert
+    assert capture.context_flags == ["home"]
+
+
 def test_an_accepted_verdict_must_carry_how_it_got_there():
     # Arrange / Act / Assert — §6.2: accepted_via is not optional
     with pytest.raises(ValidationError):
@@ -142,6 +196,50 @@ def test_accepted_via_unremarkable_round_trips():
     assert verdict.accepted_via is AcceptedVia.unremarkable
 
 
+def test_quality_verdict_collections_are_immutable_in_place():
+    # Arrange
+    verdict = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=UnitResolution.explicit,
+        rejection_reasons=[RejectionReason.parse_failure],
+        suspicions=[SuspicionReason.delta_exceeded],
+    )
+
+    # Act / Assert
+    with pytest.raises(TypeError):
+        verdict.rejection_reasons.append(RejectionReason.unit_ambiguous)
+    with pytest.raises(TypeError):
+        verdict.suspicions.append(SuspicionReason.unit_changed_from_prior)
+
+    # Assert
+    assert verdict.rejection_reasons == [RejectionReason.parse_failure]
+    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
+
+
+@pytest.mark.parametrize(
+    "mutate",
+    [
+        pytest.param(lambda values: values.__delitem__("source"), id="delitem"),
+        pytest.param(lambda values: values.__ior__({"other": "value"}), id="ior"),
+        pytest.param(lambda values: values.clear(), id="clear"),
+        pytest.param(lambda values: values.pop("source"), id="pop"),
+        pytest.param(lambda values: values.popitem(), id="popitem"),
+        pytest.param(lambda values: values.setdefault("other", "value"), id="setdefault"),
+        pytest.param(lambda values: values.update(other="value"), id="update"),
+    ],
+)
+def test_capture_mapping_mutations_are_refused(mutate):
+    # Arrange
+    capture = make_capture(raw_payload={"source": "meter"})
+
+    # Act / Assert
+    with pytest.raises(TypeError):
+        mutate(capture.raw_payload)
+
+    # Assert
+    assert capture.raw_payload == {"source": "meter"}
+
+
 def test_an_accepted_observation_must_carry_a_canonical_value():
     # Arrange
     capture = make_capture()
@@ -155,6 +253,66 @@ def test_an_accepted_observation_must_carry_a_canonical_value():
     # reaches the engine without a canonical value
     with pytest.raises(ValidationError):
         CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+
+def test_an_accepted_observation_with_a_canonical_value_is_accepted():
+    # Arrange
+    capture = make_capture()
+    quality = QualityVerdict(
+        state=QualityState.accepted,
+        unit_resolution=UnitResolution.explicit,
+        accepted_via=AcceptedVia.unremarkable,
+    )
+    canonical = CanonicalQuantity(value=Decimal("5.5"), ucum="mmol/L")
+
+    # Act
+    observation = CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
+
+    # Assert
+    assert observation.canonical == canonical
+    assert observation.quality.state is QualityState.accepted
+
+
+def test_ambiguous_unit_resolution_cannot_produce_an_accepted_verdict():
+    # Arrange / Act / Assert — ambiguous units are a hard failure (§6.3)
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.accepted,
+            unit_resolution=UnitResolution.ambiguous,
+            accepted_via=AcceptedVia.unremarkable,
+        )
+
+
+def test_an_ambiguous_rejected_observation_carries_no_canonical_value():
+    # Arrange
+    capture = make_capture()
+    quality = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=UnitResolution.ambiguous,
+        rejection_reasons=[RejectionReason.unit_ambiguous],
+    )
+
+    # Act
+    observation = CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+    # Assert
+    assert observation.quality.rejection_reasons == [RejectionReason.unit_ambiguous]
+    assert observation.canonical is None
+
+
+def test_an_ambiguous_observation_with_a_canonical_value_is_refused():
+    # Arrange
+    capture = make_capture()
+    quality = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=UnitResolution.ambiguous,
+        rejection_reasons=[RejectionReason.unit_ambiguous],
+    )
+    canonical = CanonicalQuantity(value=Decimal("5.5"), ucum="mmol/L")
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
 
 
 def test_a_comparable_delta_names_its_baseline_and_its_change():
@@ -191,4 +349,14 @@ def test_an_incomparable_delta_that_names_a_baseline_is_refused():
             comparable=False,
             compared_to="OBS-0",
             not_comparable_reason=NotComparableReason.no_comparable_prior,
+        )
+
+
+def test_an_incomparable_suspicious_delta_is_refused():
+    # Arrange / Act / Assert — incomparable means reason only
+    with pytest.raises(ValidationError):
+        DeltaVerdict(
+            comparable=False,
+            suspicious=True,
+            not_comparable_reason=NotComparableReason.no_prior_observation,
         )
