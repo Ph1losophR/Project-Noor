@@ -111,6 +111,16 @@ def test_capture_collections_are_immutable_in_place():
     assert capture.raw_payload["readings"] == ["5.5"]
 
 
+def test_raw_payload_rejects_a_cyclic_container():
+    # Arrange
+    raw_payload: dict[str, object] = {}
+    raw_payload["self"] = raw_payload
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        make_capture(raw_payload=raw_payload)
+
+
 @pytest.mark.parametrize(
     "raw_payload",
     [
@@ -243,7 +253,11 @@ def test_an_accepted_observation_with_a_canonical_value_is_accepted(quality_stat
     # Arrange
     capture = make_capture(
         context_flags=["home_visit"],
-        raw_payload={"device": {"serial": "BP-17"}, "readings": ["5.5", "5.6"]},
+        raw_payload={
+            "device": {"serial": "BP-17"},
+            "readings": ["5.5", "5.6"],
+            "temperature_c": 36.5,
+        },
     )
     quality = QualityVerdict(
         state=quality_state,
@@ -263,6 +277,7 @@ def test_an_accepted_observation_with_a_canonical_value_is_accepted(quality_stat
     assert capture_dump["raw_payload"] == {
         "device": {"serial": "BP-17"},
         "readings": ["5.5", "5.6"],
+        "temperature_c": 36.5,
     }
     assert observation.context_flags == ["home_visit"]
     assert observation.raw_payload["device"]["serial"] == "BP-17"

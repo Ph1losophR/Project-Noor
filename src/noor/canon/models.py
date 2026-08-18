@@ -32,20 +32,27 @@ class _FrozenSequence(tuple[Any, ...]):
         return isinstance(other, (list, tuple)) and tuple(self) == tuple(other)
 
 
-def _freeze_payload(value: object) -> object:
+def _freeze_payload(value: object, active_ids: set[int]) -> object:
     if isinstance(value, float) and not math.isfinite(value):
         raise ValueError("raw_payload floats must be finite")
     if value is None or isinstance(value, (bool, int, float, str)):
         return value
-    if isinstance(value, Mapping):
-        frozen_items: dict[str, object] = {}
-        for key, item in value.items():
-            if not isinstance(key, str):
-                raise ValueError("raw_payload mapping keys must be strings")
-            frozen_items[key] = _freeze_payload(item)
-        return MappingProxyType(frozen_items)
-    if isinstance(value, (list, tuple)):
-        return _FrozenSequence(_freeze_payload(item) for item in value)
+    if isinstance(value, (Mapping, list, tuple)):
+        container_id = id(value)
+        if container_id in active_ids:
+            raise ValueError("raw_payload contains a cyclic container")
+        active_ids.add(container_id)
+        try:
+            if isinstance(value, Mapping):
+                frozen_items: dict[str, object] = {}
+                for key, item in value.items():
+                    if not isinstance(key, str):
+                        raise ValueError("raw_payload mapping keys must be strings")
+                    frozen_items[key] = _freeze_payload(item, active_ids)
+                return MappingProxyType(frozen_items)
+            return _FrozenSequence(_freeze_payload(item, active_ids) for item in value)
+        finally:
+            active_ids.remove(container_id)
     raise ValueError("raw_payload contains an unsupported JSON value")
 
 
@@ -265,12 +272,12 @@ class ObservationCapture(NoorModel):
     @field_validator("raw_payload", mode="before")
     @classmethod
     def _validate_raw_payload(cls, payload: object) -> object:
-        return _freeze_payload(payload)
+        return _freeze_payload(payload, set())
 
     @field_validator("raw_payload", mode="after")
     @classmethod
     def _freeze_raw_payload(cls, payload: Mapping[str, object]) -> Mapping[str, object]:
-        return cast(Mapping[str, object], _freeze_payload(payload))
+        return cast(Mapping[str, object], _freeze_payload(payload, set()))
 
     @field_validator("context_flags", mode="after")
     @classmethod
