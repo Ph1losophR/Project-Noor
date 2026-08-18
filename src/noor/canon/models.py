@@ -9,7 +9,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
 from types import MappingProxyType
-from typing import Self, cast
+from typing import Any, Self, cast
 
 from pydantic import (
     AwareDatetime,
@@ -26,12 +26,24 @@ class NoorModel(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
 
+class _FrozenSequence(tuple[Any, ...]):
+    def __eq__(self, other: object) -> bool:
+        return isinstance(other, (list, tuple)) and tuple(self) == tuple(other)
+
+
 def _freeze_payload(value: object) -> object:
+    if value is None or isinstance(value, (bool, int, float, str)):
+        return value
     if isinstance(value, Mapping):
-        return MappingProxyType({key: _freeze_payload(item) for key, item in value.items()})
+        frozen_items: dict[str, object] = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ValueError("raw_payload mapping keys must be strings")
+            frozen_items[key] = _freeze_payload(item)
+        return MappingProxyType(frozen_items)
     if isinstance(value, (list, tuple)):
-        return tuple(_freeze_payload(item) for item in value)
-    return value
+        return _FrozenSequence(_freeze_payload(item) for item in value)
+    raise ValueError("raw_payload contains an unsupported JSON value")
 
 
 def _thaw_payload(value: object) -> object:
@@ -247,10 +259,24 @@ class ObservationCapture(NoorModel):
             raise ValueError("absent_reason is set INSTEAD of a value, never alongside it (§5)")
         return self
 
+    @field_validator("raw_payload", mode="before")
+    @classmethod
+    def _validate_raw_payload(cls, payload: object) -> object:
+        return _freeze_payload(payload)
+
     @field_validator("raw_payload", mode="after")
     @classmethod
     def _freeze_raw_payload(cls, payload: Mapping[str, object]) -> Mapping[str, object]:
         return cast(Mapping[str, object], _freeze_payload(payload))
+
+    @field_validator("context_flags", mode="after")
+    @classmethod
+    def _freeze_context_flags(cls, values: tuple[str, ...]) -> tuple[str, ...]:
+        return _FrozenSequence(values)
+
+    @field_serializer("context_flags")
+    def _serialise_context_flags(self, values: tuple[str, ...]) -> list[str]:
+        return list(values)
 
     @field_serializer("raw_payload")
     def _serialise_raw_payload(self, payload: Mapping[str, object]) -> dict[str, object]:
@@ -331,6 +357,15 @@ class QualityVerdict(NoorModel):
     )
     suspicions: tuple[SuspicionReason, ...] = Field(default_factory=tuple, validate_default=True)
     delta: DeltaVerdict | None = None
+
+    @field_validator("rejection_reasons", "suspicions", mode="after")
+    @classmethod
+    def _freeze_verdict_collections(cls, values: tuple[Any, ...]) -> tuple[Any, ...]:
+        return _FrozenSequence(values)
+
+    @field_serializer("rejection_reasons", "suspicions")
+    def _serialise_verdict_collections(self, values: tuple[Any, ...]) -> list[Any]:
+        return list(values)
 
     @model_validator(mode="after")
     def _the_verdict_explains_itself(self) -> Self:

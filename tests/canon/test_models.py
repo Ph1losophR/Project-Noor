@@ -105,9 +105,25 @@ def test_capture_collections_are_immutable_in_place():
         capture.raw_payload["readings"].append("6.0")
 
     # Assert — nested payload data remains write-once as well
-    assert capture.context_flags == ("home",)
+    assert capture.context_flags == ["home"]
     assert capture.raw_payload["details"]["source"] == "meter"
-    assert capture.raw_payload["readings"] == ("5.5",)
+    assert capture.raw_payload["readings"] == ["5.5"]
+
+
+@pytest.mark.parametrize(
+    "raw_payload",
+    [
+        pytest.param({1: "meter"}, id="non_string_top_level_key"),
+        pytest.param({"details": {1: "meter"}}, id="non_string_nested_key"),
+        pytest.param({"value": Decimal("5.5")}, id="decimal_value"),
+        pytest.param({"values": {1, 2}}, id="set_value"),
+        pytest.param({"value": object()}, id="arbitrary_object"),
+    ],
+)
+def test_raw_payload_rejects_values_outside_json_shapes(raw_payload):
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        make_capture(raw_payload=raw_payload)
 
 
 def test_an_accepted_verdict_must_carry_how_it_got_there():
@@ -153,7 +169,7 @@ def test_a_consistent_flagged_verdict_is_accepted():
     )
 
     # Assert
-    assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
+    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
 
 
 def test_accepted_via_unremarkable_round_trips():
@@ -184,17 +200,26 @@ def test_quality_verdict_collections_are_immutable_in_place():
         verdict.suspicions[0] = SuspicionReason.unit_changed_from_prior
 
     # Assert
-    assert verdict.rejection_reasons == (RejectionReason.parse_failure,)
-    assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
+    assert verdict.rejection_reasons == [RejectionReason.parse_failure]
+    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
+    assert verdict.model_dump()["rejection_reasons"] == [RejectionReason.parse_failure]
+    assert verdict.model_dump()["suspicions"] == [SuspicionReason.delta_exceeded]
 
 
-def test_an_accepted_observation_must_carry_a_canonical_value():
+@pytest.mark.parametrize(
+    ("quality_state", "accepted_via"),
+    [
+        (QualityState.accepted, AcceptedVia.unremarkable),
+        (QualityState.clinically_exceptional_accepted, AcceptedVia.clinician_verified),
+    ],
+)
+def test_an_accepted_observation_must_carry_a_canonical_value(quality_state, accepted_via):
     # Arrange
     capture = make_capture()
     quality = QualityVerdict(
-        state=QualityState.accepted,
+        state=quality_state,
         unit_resolution=UnitResolution.explicit,
-        accepted_via=AcceptedVia.unremarkable,
+        accepted_via=accepted_via,
     )
 
     # Act / Assert — §6.3 as a type invariant, not a convention: nothing accepted
@@ -203,28 +228,41 @@ def test_an_accepted_observation_must_carry_a_canonical_value():
         CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
 
 
-def test_an_accepted_observation_with_a_canonical_value_is_accepted():
+@pytest.mark.parametrize(
+    ("quality_state", "accepted_via"),
+    [
+        (QualityState.accepted, AcceptedVia.unremarkable),
+        (QualityState.clinically_exceptional_accepted, AcceptedVia.clinician_verified),
+    ],
+)
+def test_an_accepted_observation_with_a_canonical_value_is_accepted(quality_state, accepted_via):
     # Arrange
     capture = make_capture(
         context_flags=["home_visit"],
         raw_payload={"device": {"serial": "BP-17"}, "readings": ["5.5", "5.6"]},
     )
     quality = QualityVerdict(
-        state=QualityState.accepted,
+        state=quality_state,
         unit_resolution=UnitResolution.explicit,
-        accepted_via=AcceptedVia.unremarkable,
+        accepted_via=accepted_via,
     )
     canonical = CanonicalQuantity(value=Decimal("5.5"), ucum="mmol/L")
+    capture_dump = capture.model_dump()
 
     # Act
-    observation = CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
+    observation = CanonicalObservation(**capture_dump, canonical=canonical, quality=quality)
 
     # Assert
     assert observation.canonical == canonical
-    assert observation.quality.state is QualityState.accepted
-    assert observation.context_flags == ("home_visit",)
+    assert observation.quality.state is quality_state
+    assert capture_dump["context_flags"] == ["home_visit"]
+    assert capture_dump["raw_payload"] == {
+        "device": {"serial": "BP-17"},
+        "readings": ["5.5", "5.6"],
+    }
+    assert observation.context_flags == ["home_visit"]
     assert observation.raw_payload["device"]["serial"] == "BP-17"
-    assert observation.raw_payload["readings"] == ("5.5", "5.6")
+    assert observation.raw_payload["readings"] == ["5.5", "5.6"]
 
 
 def test_ambiguous_unit_resolution_cannot_produce_an_accepted_verdict():
@@ -250,7 +288,7 @@ def test_an_ambiguous_rejected_observation_carries_no_canonical_value():
     observation = CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
 
     # Assert
-    assert observation.quality.rejection_reasons == (RejectionReason.unit_ambiguous,)
+    assert observation.quality.rejection_reasons == [RejectionReason.unit_ambiguous]
     assert observation.canonical is None
 
 
