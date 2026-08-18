@@ -1,5 +1,6 @@
 """The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants."""
 
+import math
 from datetime import UTC, datetime, timedelta, timezone
 from decimal import Decimal
 
@@ -118,6 +119,9 @@ def test_capture_collections_are_immutable_in_place():
         pytest.param({"value": Decimal("5.5")}, id="decimal_value"),
         pytest.param({"values": {1, 2}}, id="set_value"),
         pytest.param({"value": object()}, id="arbitrary_object"),
+        pytest.param({"value": math.nan}, id="nan_value"),
+        pytest.param({"value": math.inf}, id="positive_infinity"),
+        pytest.param({"value": -math.inf}, id="negative_infinity"),
     ],
 )
 def test_raw_payload_rejects_values_outside_json_shapes(raw_payload):

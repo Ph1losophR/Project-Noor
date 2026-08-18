@@ -4,6 +4,7 @@ Every model is frozen and closed: an observation is written once and never
 overwritten, and an undeclared field cannot enter the record.
 """
 
+import math
 from collections.abc import Mapping
 from datetime import UTC, datetime
 from decimal import Decimal
@@ -32,6 +33,8 @@ class _FrozenSequence(tuple[Any, ...]):
 
 
 def _freeze_payload(value: object) -> object:
+    if isinstance(value, float) and not math.isfinite(value):
+        raise ValueError("raw_payload floats must be finite")
     if value is None or isinstance(value, (bool, int, float, str)):
         return value
     if isinstance(value, Mapping):
