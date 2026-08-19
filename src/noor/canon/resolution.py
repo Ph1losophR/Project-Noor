@@ -68,8 +68,10 @@ def confirm_repeat(
         raise ResolutionError(f"nothing to confirm: state is {flagged.quality.state}")
     if repeat.quality.state not in ACCEPTED_FAMILY or repeat.canonical is None:
         raise ResolutionError("the repeat must itself be accepted-quality")
-    if flagged.canonical is None or repeat.observable != flagged.observable:
-        raise ResolutionError("the repeat must be the same observable with a canonical value")
+    if flagged.canonical is None:
+        raise ResolutionError("the flagged observation has no canonical value to confirm")
+    if repeat.observable != flagged.observable:
+        raise ResolutionError("the repeat must be the same observable")
     context_fields = {"reading_ordinal", "is_average"}
     if flagged.context.model_dump(exclude=context_fields) != repeat.context.model_dump(
         exclude=context_fields

@@ -62,6 +62,23 @@ def test_a_discordant_repeat_confirms_nothing(registry):
         confirm_repeat(flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT)
 
 
+def test_a_repeat_exactly_at_the_tolerance_boundary_confirms(registry):
+    # Arrange — |29.4 - 30.0| = 0.6, the glucose tolerance itself: the guard is
+    # strict `>` (resolution.py), so the boundary is inside, not out
+    entry = registry.entry("glucose")
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
+    repeat = make_canonical(value="29.4")
+
+    # Act
+    resolution = confirm_repeat(
+        flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT
+    )
+
+    # Assert
+    assert resolution.resulting_state is QualityState.accepted
+    assert resolution.accepted_via is AcceptedVia.repeat_confirmed
+
+
 def test_a_repeat_that_is_not_accepted_quality_cannot_confirm(registry):
     # Arrange — a flagged repeat is another question, not an answer
     entry = registry.entry("glucose")
@@ -71,6 +88,21 @@ def test_a_repeat_that_is_not_accepted_quality_cannot_confirm(registry):
     # Act / Assert
     with pytest.raises(ResolutionError):
         confirm_repeat(flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT)
+
+
+def test_a_valueless_flagged_observation_has_nothing_to_confirm(registry):
+    # Arrange — the pipeline never emits a flagged record without a canonical
+    # value, but the store can hold one (e.g. data written before the invariant
+    # tightened); the guard refuses it on its own, not as a side effect of the
+    # same-observable check
+    entry = registry.entry("glucose")
+    flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
+    valueless = flagged.model_copy(update={"canonical": None})
+    repeat = make_canonical(value="29.5")
+
+    # Act / Assert
+    with pytest.raises(ResolutionError):
+        confirm_repeat(valueless, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT)
 
 
 def test_a_repeat_of_a_different_observable_cannot_confirm(registry):
@@ -197,6 +229,7 @@ def test_a_clinician_verified_ordinary_flagged_value_becomes_accepted(registry):
     # Assert
     assert resolution.resulting_state is QualityState.accepted
     assert resolution.accepted_via is AcceptedVia.clinician_verified
+    assert resolution.confirming_observation is None  # the §6.2 pointer is the repeat path's
 
 
 def test_a_clinician_verified_flagged_extreme_value_becomes_clinically_exceptional(registry):
@@ -236,6 +269,21 @@ def test_a_unit_ambiguous_rejection_can_never_be_verified(registry):
     rejected = make_canonical(
         state=QualityState.rejected,
         rejection_reasons=[RejectionReason.unit_ambiguous],
+        value="5.5",
+    )
+
+    # Act / Assert
+    with pytest.raises(ResolutionError):
+        verify_by_clinician(rejected, entry, clinician_id="MD-3", resolved_at=RESOLVED_AT)
+
+
+def test_a_mapping_unusable_rejection_can_never_be_verified(registry):
+    # Arrange — no attestation makes a valueless record valuable: the mapping
+    # refusal leaves canonical None, and there is nothing to stand behind
+    entry = registry.entry("glucose")
+    rejected = make_canonical(
+        state=QualityState.rejected,
+        rejection_reasons=[RejectionReason.mapping_unusable],
         value="5.5",
     )
 
