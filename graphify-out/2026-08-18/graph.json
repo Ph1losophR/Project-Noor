@@ -1350,7 +1350,7 @@
       "source_location": "L2581",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_testing_and_validation",
-      "community": 0,
+      "community": 23,
       "norm_label": "12. testing and validation"
     },
     {
@@ -1360,7 +1360,7 @@
       "source_location": "L2586",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_1_the_ladder",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.1 the ladder"
     },
     {
@@ -1370,7 +1370,7 @@
       "source_location": "L2600",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_2_release_comparison",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.2 release comparison"
     },
     {
@@ -1380,7 +1380,7 @@
       "source_location": "L2607",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_3_case_selection",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.3 case selection"
     },
     {
@@ -1390,7 +1390,7 @@
       "source_location": "L2617",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_4_synthetic_data",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.4 synthetic data"
     },
     {
@@ -1400,7 +1400,7 @@
       "source_location": "L2623",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_5_calibrated_reliance_audit",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.5 calibrated-reliance audit"
     },
     {
@@ -1410,7 +1410,7 @@
       "source_location": "L2629",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_6_clinical_operations_verification_claims",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.6 clinical-operations verification claims"
     },
     {
@@ -1420,7 +1420,7 @@
       "source_location": "L2684",
       "_origin": "ast",
       "id": "docs_cds_architecture_12_7_shadow_mode",
-      "community": 0,
+      "community": 23,
       "norm_label": "12.7 shadow mode"
     },
     {
@@ -4222,6 +4222,206 @@
       "id": "docs_research_saudi_essential_medicines_list_2023_9_2_1_cytotoxic_medicines",
       "community": 17,
       "norm_label": "9.2.1 cytotoxic medicines"
+    },
+    {
+      "label": "2026-08-18-foundation-and-canon.md",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon",
+      "community": 22,
+      "norm_label": "2026-08-18-foundation-and-canon.md"
+    },
+    {
+      "label": "Foundation + `canon` Implementation Plan",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "community": 22,
+      "norm_label": "foundation + `canon` implementation plan"
+    },
+    {
+      "label": "Global Constraints",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_global_constraints",
+      "community": 22,
+      "norm_label": "global constraints"
+    },
+    {
+      "label": "Assumptions and interpretations (read before executing)",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_assumptions_and_interpretations_read_before_executing",
+      "community": 22,
+      "norm_label": "assumptions and interpretations (read before executing)"
+    },
+    {
+      "label": "File structure",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L145",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "community": 22,
+      "norm_label": "file structure"
+    },
+    {
+      "label": "Task 1: Repository skeleton, tooling, and a green empty suite",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L186",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_1_repository_skeleton_tooling_and_a_green_empty_suite",
+      "community": 22,
+      "norm_label": "task 1: repository skeleton, tooling, and a green empty suite"
+    },
+    {
+      "label": "Task 2: CI and the import-direction seam test",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L361",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_2_ci_and_the_import_direction_seam_test",
+      "community": 22,
+      "norm_label": "task 2: ci and the import-direction seam test"
+    },
+    {
+      "label": "Task 3: The observation model and quality verdicts",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L645",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_3_the_observation_model_and_quality_verdicts",
+      "community": 22,
+      "norm_label": "task 3: the observation model and quality verdicts"
+    },
+    {
+      "label": "Task 4: The observable registry schema, the starter registry, and the safe loader",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1267",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_4_the_observable_registry_schema_the_starter_registry_and_the_safe_loader",
+      "community": 22,
+      "norm_label": "task 4: the observable registry schema, the starter registry, and the safe loader"
+    },
+    {
+      "label": "Task 5: Unit resolution",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1934",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_5_unit_resolution",
+      "community": 22,
+      "norm_label": "task 5: unit resolution"
+    },
+    {
+      "label": "Task 6: The conversion round-trip property",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2218",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_6_the_conversion_round_trip_property",
+      "community": 22,
+      "norm_label": "task 6: the conversion round-trip property"
+    },
+    {
+      "label": "Task 7: Value parsing and the decimal/transposition pattern",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2399",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_7_value_parsing_and_the_decimal_transposition_pattern",
+      "community": 22,
+      "norm_label": "task 7: value parsing and the decimal/transposition pattern"
+    },
+    {
+      "label": "Task 8: Plausibility envelopes",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2571",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_8_plausibility_envelopes",
+      "community": 22,
+      "norm_label": "task 8: plausibility envelopes"
+    },
+    {
+      "label": "Task 9: Delta review",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2691",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_9_delta_review",
+      "community": 22,
+      "norm_label": "task 9: delta review"
+    },
+    {
+      "label": "Task 10: The `canonicalise` pipeline",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L3258",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_10_the_canonicalise_pipeline",
+      "community": 22,
+      "norm_label": "task 10: the `canonicalise` pipeline"
+    },
+    {
+      "label": "Task 11: Quality resolution \u2014 repeat confirmation and clinician verification",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4038",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_11_quality_resolution_repeat_confirmation_and_clinician_verification",
+      "community": 22,
+      "norm_label": "task 11: quality resolution \u2014 repeat confirmation and clinician verification"
+    },
+    {
+      "label": "Task 12: Fuzzing the boundary",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4508",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_12_fuzzing_the_boundary",
+      "community": 22,
+      "norm_label": "task 12: fuzzing the boundary"
+    },
+    {
+      "label": "Exit verification \u2014 SSOT \u00a714 steps 1\u20133",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4666",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_exit_verification_ssot_14_steps_1_3",
+      "community": 22,
+      "norm_label": "exit verification \u2014 ssot \u00a714 steps 1\u20133"
+    },
+    {
+      "label": "What this plan deliberately does not build",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4685",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_what_this_plan_deliberately_does_not_build",
+      "community": 22,
+      "norm_label": "what this plan deliberately does not build"
+    },
+    {
+      "label": "Claims the persistence plan must carry",
+      "file_type": "document",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4727",
+      "_origin": "ast",
+      "id": "docs_superpowers_plans_2026_08_18_foundation_and_canon_claims_the_persistence_plan_must_carry",
+      "community": 22,
+      "norm_label": "claims the persistence plan must carry"
     },
     {
       "label": "testing-standards.md",
@@ -8628,6 +8828,196 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_assumptions_and_interpretations_read_before_executing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4666",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_exit_verification_ssot_14_steps_1_3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_global_constraints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4685",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_foundation_canon_implementation_plan",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_what_this_plan_deliberately_does_not_build",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L3258",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_10_the_canonicalise_pipeline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4038",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_11_quality_resolution_repeat_confirmation_and_clinician_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4508",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_12_fuzzing_the_boundary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L186",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_1_repository_skeleton_tooling_and_a_green_empty_suite",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L361",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_2_ci_and_the_import_direction_seam_test",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L645",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_3_the_observation_model_and_quality_verdicts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1267",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_4_the_observable_registry_schema_the_starter_registry_and_the_safe_loader",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L1934",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_5_unit_resolution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2218",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_6_the_conversion_round_trip_property",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2399",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_7_value_parsing_and_the_decimal_transposition_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2571",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_8_plausibility_envelopes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L2691",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_file_structure",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_task_9_delta_review",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/superpowers/plans/2026-08-18-foundation-and-canon.md",
+      "source_location": "L4727",
+      "weight": 1.0,
+      "source": "docs_superpowers_plans_2026_08_18_foundation_and_canon_what_this_plan_deliberately_does_not_build",
+      "target": "docs_superpowers_plans_2026_08_18_foundation_and_canon_claims_the_persistence_plan_must_carry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "docs/testing-standards.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -8937,5 +9327,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "bc55cdcf9143dce6c0b532cfdc8f3c1776f7d4b4"
+  "built_at_commit": "bab8a3d57fe9f5a9f6d96a6d856b56bcc2221227"
 }

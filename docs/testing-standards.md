@@ -7,9 +7,16 @@ disagree, the SSOT wins and this file is wrong — fix it here, not there.
 
 Section references in the form (§N) point at the SSOT.
 
-**Nothing described here exists yet.** No test, module, fixture, or database.
-These are the standards the suite will be built to, not a description of a suite
-that runs. Verify against the filesystem before assuming otherwise.
+**The full suite described here does not exist yet.** The repository has the
+foundation layout and seam tests, and `canon` complete with its own tests: the
+observation and registry models, unit resolution and conversion round-trips, all
+three §6.1 layers, the `canonicalise` pipeline, quality resolution, and hypothesis
+properties — plus a schema-only registry loader in `catalogue`. Nothing above the
+device boundary is built: no rule schema or rule compilation, no `engine`, no
+HTTP layer, no database. Rungs 2–8 below therefore describe no running test, and
+`tests/app/`, `tests/release/`, `content/rules/`, and `content/golden/` do not
+exist. These are the standards the suite will be built to. Verify against the
+filesystem before assuming otherwise.
 
 ---
 
@@ -29,7 +36,7 @@ a comment.** The suite *is* the safety case.
 
 ## The validation ladder
 
-The SSOT §12.1 defines seven rungs. They replace the conventional test pyramid,
+The SSOT §12.1 defines eight rungs. They replace the conventional test pyramid,
 which does not describe this system: the engine is a pure function, so the layer
 that would be "slow integration tests" elsewhere is fast here, and the layer that
 carries the most clinical risk is content, which is data rather than code.
@@ -39,12 +46,13 @@ carries the most clinical risk is content, which is data rather than code.
 | 1 | Schema and compile validation | Automated, CI merge gate | `tests/catalogue/` |
 | 2 | Rule-unit rows | Automated, data-driven | `content/rules/<id>.cases.yaml` |
 | 3 | Golden patient cases | Automated, data-driven | `content/golden/*.yaml` |
-| 4 | Integration | Automated, HTTP | `tests/app/` |
-| 5 | Release comparison | Automated, release gate | `tests/release/` |
-| 6 | Independent clinical validation | Human | Governance record, not the repo |
-| 7 | Shadow mode | Human + telemetry | Deployment, not the repo |
+| 4 | State-machine tests | Automated, table-driven | `tests/app/` |
+| 5 | Integration | Automated, HTTP | `tests/app/` |
+| 6 | Release comparison | Automated, release gate | `tests/release/` |
+| 7 | Independent clinical validation | Human | Governance record, not the repo |
+| 8 | Shadow mode | Human + telemetry | Deployment, not the repo |
 
-Rungs 1–5 run in CI. Rungs 6–7 are clinical governance and cannot be automated;
+Rungs 1–6 run in CI. Rungs 7–8 are clinical governance and cannot be automated;
 they are listed so nobody mistakes a green suite for clinical validation.
 
 Cutting across all of them is a set of **invariant tests** that do not belong to
@@ -124,7 +132,7 @@ def test_metformin_rule_is_indeterminate_when_egfr_is_older_than_its_window():
     snapshot = snapshot_with(
         observations=[egfr(value=52, effective_time="2025-11-04T08:00:00+03:00")],
         medications=["metformin"],
-        evaluated_at="2026-06-12T09:00:00+03:00",   # 220 days later
+        evaluated_at="2026-06-12T09:00:00+03:00",  # 220 days later
     )
 
     # Act
@@ -163,10 +171,10 @@ test_units
 
 ## Rung 1 — Schema and compile validation
 
-The catalogue is machine-checked before anything runs. §10.4 lists ten conditions
-that refuse a merge. **Each gate gets a test that feeds the compiler deliberately
-bad content and asserts the refusal** — a gate with no test proving it refuses is
-not a gate.
+The catalogue is machine-checked before anything runs. §10.4 lists seventeen
+conditions that refuse a merge. **Each gate gets a test that feeds the compiler
+deliberately bad content and asserts the refusal** — a gate with no test proving
+it refuses is not a gate.
 
 | Gate | Test asserts the compiler refuses |
 |---|---|
@@ -180,8 +188,18 @@ not a gate.
 | 8 | a rule with no `*.cases.yaml`, or missing at/below/above rows for any threshold it references |
 | 9 | a release whose comparison diff is unexplained by its manifest |
 | 10 | `severity: stop_and_review` with any requirement `on_unusable: silent` |
+| 11 | a rule reading encounter state, visit state, or trigger identity in `scope` or `when` |
+| 12 | a rule naming a field absent from the snapshot schema, or an operator outside the evaluator's vocabulary |
+| 13 | a content file that fails a schema-only YAML load, including any object-constructing tag |
+| 14 | a rule referencing a drug without declaring `drug_scope_level` |
+| 15 | a renal-dosing rule omitting `renal_metric`, or naming an eGFR observable where its source specifies creatinine clearance |
+| 16 | `severity: stop_and_review` matching an allergy without requiring `verification_status: confirmed` and `severity: severe` |
+| 17 | a rule citing a code system absent from the terminology charter, or one whose charter entry has no licence status |
 
-Gate 9 is rung 5; the other nine are pure catalogue tests.
+Gate 9 is rung 6; the other sixteen are pure catalogue tests. Gate 13 is the one
+to write first — it is the only gate that refuses a file the loader would
+otherwise *execute*, and `tests/catalogue/` already covers it for the observable
+registry (§7.5).
 
 Assert on the *refusal*, not on a message string. A test that pins error prose
 breaks on rewording and teaches nothing.
@@ -272,7 +290,7 @@ that patient.
 
 Golden cases catch what rule-unit rows cannot: interaction between rules,
 findings that appear when they should not, and findings that quietly stop
-appearing. They are the input to release comparison (rung 5).
+appearing. They are the input to release comparison (rung 6).
 
 Assert the **whole** finding set, ordered deterministically. A golden case that
 asserts only the findings it cares about cannot detect an extra finding, which is
@@ -280,7 +298,40 @@ half of what it exists for.
 
 ---
 
-## Rung 4 — Integration
+## Rung 4 — State-machine tests
+
+The visit state machine (§11.2) decides one thing above all: whether
+observations may be written. A wrong transition therefore does not merely
+mis-label a visit — it either creates clinical facts in a state that has no
+encounter to hold them, or loses facts a clinician captured.
+
+Table-driven over the transition matrix, and **the invalid transitions carry the
+same weight as the valid ones**: every (state, event) pair gets a row, and a pair
+absent from §11.2's diagram asserts a refusal. A suite that only walks the happy
+paths through the diagram proves the arrows exist, not that nothing else does.
+
+What these tests must pin, beyond arrow-by-arrow coverage:
+
+- **Observations are writable in `in_progress` and nowhere else.** Every other
+  state refuses the write.
+- **Every path into `completed` passes through `submitted`,** including the
+  escalated one. There is exactly one completion gate (§11.2), so a second path
+  into `completed` is a missing gate, not an extra arrow.
+- **`interrupted_for_emergency` is entered with no gate of any kind** from
+  `scheduled` or `in_progress` (§11.7). A test that has to satisfy a precondition
+  to reach the emergency hatch has already broken the invariant.
+- **The terminal states are terminal.** `completed`, `cancelled`, and `abandoned`
+  refuse every event, and `abandoned` keeps its partial observations (§5).
+- **Entering `escalated` names a person and stamps a due time** (§11.2, §11.8).
+  Naming a role alone is a refusal.
+
+These live in `tests/app/` because the machine governs the encounter, which sits
+outside the device boundary (§2.2) — but the state machine itself is a §0
+security-critical constant, so a transition table change is an SSOT change first.
+
+---
+
+## Rung 5 — Integration
 
 Through the HTTP layer, with real FastAPI, SQLAlchemy, and PostgreSQL. Use
 FastAPI's `AsyncClient` — full request/response including middleware and Pydantic
@@ -310,7 +361,7 @@ written before that decision is testing an assumption.
 
 ---
 
-## Rung 5 — Release comparison
+## Rung 6 — Release comparison
 
 Run catalogue *vN* and *vN+1* over the full golden set and diff. **Any finding
 that changes or disappears must be explained in the release manifest, or the
@@ -327,7 +378,7 @@ catch it (§14 step 10).
 
 ---
 
-## Rungs 6 and 7 — not automated
+## Rungs 7 and 8 — not automated
 
 **Independent clinical validation** is a clinician who did not author the rule
 reviewing it against the generated plain-language rendering (§7.5). The record
@@ -418,7 +469,10 @@ Required properties and cases:
 
 - **Unit resolution.** `unit_resolution: ambiguous` is a hard failure (§6.3). A
   value whose unit cannot be resolved never receives a canonical value and never
-  reaches the engine. Property-test this over generated inputs, not just examples.
+  reaches the engine. An **absent** resolution — canon refused the record before
+  resolution ran — bars a canonical value the same way, so state the property
+  positively: a canonical value carries a resolved unit. Property-test this over
+  generated inputs, not just examples.
 - **HbA1c.** Never infer percent versus mmol/mol from the value alone. NGSP % and
   IFCC mmol/mol are distinct observables, not two units of one (§5, §6.3).
 - **Glucose.** Original unit preserved; conversion only with displayed conversion
@@ -455,7 +509,7 @@ async def db_session(async_engine):
         await conn.begin_nested()
         session = AsyncSession(bind=conn)
         yield session
-        await session.rollback()      # DB state never changes
+        await session.rollback()  # DB state never changes
 ```
 
 Each test runs inside a transaction that rolls back. Fast, isolated, no cleanup.

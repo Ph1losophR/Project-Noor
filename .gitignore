@@ -1,0 +1,21 @@
+.venv/
+__pycache__/
+*.py[cod]
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+dist/
+*.egg-info/
+
+# .coverage is regenerated tool output (coverage.py); only the report is reviewed.
+.coverage
+
+# .hypothesis/examples/ is COMMITTED on purpose: a counterexample hypothesis
+# found once is a regression case, so the database is part of the repo
+# (docs/testing-standards.md). Its two sibling caches are not. Repeatability comes
+# from derandomize=True in the "ci" profile (tests/conftest.py), not from either:
+# constants/ is keyed by source content and unicode_data/ by the interpreter's
+# unicodedata version, so both churn on every edit and every interpreter bump
+# while telling a reviewer nothing.
+.hypothesis/constants/
+.hypothesis/unicode_data/

@@ -1,0 +1,12 @@
+# Clinical content requires review from a code owner other than the author (SSOT §7.5).
+# @Ph1losophR is the clinical content owner; @ph1losophrr is the second clinical
+# approver (§10.2, §10.3). The registry's envelopes and conversions are clinical
+# content (§6.4, §6.6).
+/content/                 @Ph1losophR @ph1losophrr
+/docs/cds-architecture.md @Ph1losophR @ph1losophrr
+
+# The CI gates are the enforcement mechanism for everything above, and SSOT §0
+# names them security-critical constants (§10.4). A pull request that weakens a
+# gate needs the same four eyes as one that changes what the gate protects —
+# otherwise the review requirement can be removed by the change that evades it.
+/.github/                 @Ph1losophR @ph1losophrr

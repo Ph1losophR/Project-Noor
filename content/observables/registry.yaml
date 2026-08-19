@@ -1,0 +1,166 @@
+# The observable registry (SSOT §6.6). One entry per observable Noor can reason
+# about. Envelopes are DATA-VALIDITY bounds (§6.4) — "could this value be real",
+# never "is this value controlled". Treatment thresholds live separately in
+# content/thresholds/ and are never read here (§6.4).
+#
+# Values are owned by the named owner and change only via pull request (§7.5).
+# Envelope, delta, and tolerance figures are conservative plausibility-grade
+# starting points pending clinical-owner review. Decimal scalars are quoted so
+# they load as exact strings, not binary floats.
+#
+# Every conversion carries its own `version`, copied onto each value it produces
+# (§6.3 provenance). Changing add/multiply/precision/rounding without bumping
+# `version` in the same PR breaks the trail from a stored value back to the factor
+# that produced it. `tolerance` bounds the round trip in the source unit,
+# `canonical_tolerance` in the canonical unit — §6.3 requires both directions.
+#
+# Quantity observables only. §6.6's Curated Clinical Signal Set (coded symptoms,
+# signs, exam findings) has no canonical unit and no envelopes; it needs a schema
+# discriminator that does not exist yet (see the plan's assumption 13).
+observables:
+  - observable: hba1c_ngsp
+    owner: Youssef Sabry
+    canonical_ucum: "%"
+    accepted_units: ["%"]
+    conversions: []
+    code_unit_map:
+      "http://loinc.org|4548-4": "%"
+    physiologic: {low: "1.0", high: "30.0", version: "2026-08-18"}
+    operational: {low: "3.0", high: "20.0", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "2.0", within_hours: 2160, compare_context: [], compare_device_class: false}
+    repeat_tolerance: "0.3"
+    required_context: []
+    required_method: []
+
+  - observable: hba1c_ifcc
+    owner: Youssef Sabry
+    canonical_ucum: "mmol/mol"
+    accepted_units: ["mmol/mol"]
+    conversions: []
+    code_unit_map:
+      "http://loinc.org|59261-8": "mmol/mol"
+    physiologic: {low: "1", high: "305", version: "2026-08-18"}
+    operational: {low: "20", high: "195", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "20", within_hours: 2160, compare_context: [], compare_device_class: false}
+    repeat_tolerance: "3"
+    required_context: []
+    required_method: []
+
+  - observable: glucose
+    owner: Youssef Sabry
+    canonical_ucum: "mmol/L"
+    accepted_units: ["mmol/L", "mg/dL"]
+    conversions:
+      - {from_unit: "mg/dL", add: "0", multiply: "0.055507", precision: 2, rounding: "ROUND_HALF_UP", tolerance: "0.5", canonical_tolerance: "0.01", version: "2026-08-18"}
+    code_unit_map: {}
+    physiologic: {low: "0.3", high: "70.0", version: "2026-08-18"}
+    operational: {low: "1.5", high: "35.0", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "8.0", within_hours: 4, compare_context: [], compare_device_class: true}
+    repeat_tolerance: "0.6"
+    required_context: []
+    required_method: []
+
+  - observable: systolic_bp
+    owner: Youssef Sabry
+    canonical_ucum: "mm[Hg]"
+    accepted_units: ["mm[Hg]"]
+    conversions: []
+    code_unit_map: {}
+    physiologic: {low: "40", high: "320", version: "2026-08-18"}
+    operational: {low: "70", high: "260", version: "2026-08-18"}
+    delta_policy:
+      max_abs_change: "40"
+      within_hours: 168
+      compare_context: ["setting", "posture", "arm", "cuff_size"]
+      compare_device_class: true
+    repeat_tolerance: "10"
+    required_context: ["setting", "posture", "arm", "cuff_size", "rest_duration_seconds", "reading_ordinal", "is_average"]
+    required_method: ["device_class"]
+
+  - observable: diastolic_bp
+    owner: Youssef Sabry
+    canonical_ucum: "mm[Hg]"
+    accepted_units: ["mm[Hg]"]
+    conversions: []
+    code_unit_map: {}
+    physiologic: {low: "20", high: "220", version: "2026-08-18"}
+    operational: {low: "40", high: "160", version: "2026-08-18"}
+    delta_policy:
+      max_abs_change: "30"
+      within_hours: 168
+      compare_context: ["setting", "posture", "arm", "cuff_size"]
+      compare_device_class: true
+    repeat_tolerance: "8"
+    required_context: ["setting", "posture", "arm", "cuff_size", "rest_duration_seconds", "reading_ordinal", "is_average"]
+    required_method: ["device_class"]
+
+  - observable: pulse
+    owner: Youssef Sabry
+    canonical_ucum: "/min"
+    accepted_units: ["/min"]
+    conversions: []
+    code_unit_map: {}
+    physiologic: {low: "15", high: "260", version: "2026-08-18"}
+    operational: {low: "35", high: "200", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "50", within_hours: 2, compare_context: [], compare_device_class: true}
+    repeat_tolerance: "8"
+    required_context: []
+    required_method: []
+
+  - observable: body_temperature
+    owner: Youssef Sabry
+    canonical_ucum: "Cel"
+    accepted_units: ["Cel", "[degF]"]
+    conversions:
+      - {from_unit: "[degF]", add: "-32", multiply: "0.5555556", precision: 1, rounding: "ROUND_HALF_UP", tolerance: "0.4", canonical_tolerance: "0.1", version: "2026-08-18"}
+    code_unit_map: {}
+    physiologic: {low: "22.0", high: "46.0", version: "2026-08-18"}
+    operational: {low: "33.0", high: "42.5", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "1.5", within_hours: 24, compare_context: [], compare_device_class: true}
+    repeat_tolerance: "0.3"
+    required_context: []
+    required_method: []
+
+  - observable: weight
+    owner: Youssef Sabry
+    canonical_ucum: "kg"
+    accepted_units: ["kg"]
+    conversions: []
+    code_unit_map: {}
+    physiologic: {low: "1.0", high: "400.0", version: "2026-08-18"}
+    operational: {low: "20.0", high: "300.0", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "5.0", within_hours: 720, compare_context: [], compare_device_class: true}
+    repeat_tolerance: "0.5"
+    required_context: []
+    required_method: []
+
+  - observable: egfr
+    owner: Youssef Sabry
+    # The braces are load-bearing. UCUM reads "." as multiplication, not a decimal
+    # point, so the tempting "mL/min/1.73m2" resolves to per-73 m2 — off by a factor
+    # of 42. "{...}" is a UCUM annotation with no arithmetic meaning; this is the
+    # form LOINC and FHIR use for eGFR. Do not "simplify" it.
+    canonical_ucum: "mL/min/{1.73_m2}"
+    accepted_units: ["mL/min/{1.73_m2}"]
+    conversions: []
+    code_unit_map: {}
+    physiologic: {low: "1", high: "200", version: "2026-08-18"}
+    operational: {low: "5", high: "150", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "20", within_hours: 2160, compare_context: [], compare_device_class: false}
+    repeat_tolerance: "3"
+    required_context: []
+    required_method: []
+
+  - observable: creatinine
+    owner: Youssef Sabry
+    canonical_ucum: "umol/L"
+    accepted_units: ["umol/L", "mg/dL"]
+    conversions:
+      - {from_unit: "mg/dL", add: "0", multiply: "88.4", precision: 1, rounding: "ROUND_HALF_UP", tolerance: "0.02", canonical_tolerance: "0.1", version: "2026-08-18"}
+    code_unit_map: {}
+    physiologic: {low: "5", high: "2000", version: "2026-08-18"}
+    operational: {low: "20", high: "1200", version: "2026-08-18"}
+    delta_policy: {max_abs_change: "60", within_hours: 2160, compare_context: [], compare_device_class: false}
+    repeat_tolerance: "15"
+    required_context: []
+    required_method: []
