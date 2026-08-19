@@ -310,7 +310,7 @@ def test_a_bp_delta_with_matching_context_is_recorded(registry):
     # Act
     delta = review_delta(Decimal("118"), capture, [prior], entry)
 
-    # Assert — |−42| > 40: suspicious
+    # Assert — |-42| > 40: suspicious
     assert delta.comparable is True
     assert delta.change == Decimal("-42")
     assert delta.suspicious is True
