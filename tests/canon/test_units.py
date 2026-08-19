@@ -163,6 +163,79 @@ def test_reverse_identity_rejects_a_quantity_outside_the_declared_canonical_unit
         from_canonical(quantity, "mg%", make_entry())
 
 
+def test_reverse_identity_rejects_malformed_recorded_provenance():
+    # Arrange
+    entry = make_entry()
+    malformed = ConversionApplied.model_construct(
+        from_unit="",
+        add=Decimal("0"),
+        multiply=Decimal("1"),
+        precision=2,
+        rounding="ROUND_HALF_UP",
+        version="test-v1",
+    )
+    quantity = CanonicalQuantity(
+        value=Decimal("7.40"),
+        ucum="mmol/L",
+        conversion_applied=malformed,
+    )
+
+    # Act / Assert
+    with pytest.raises(UnknownUnitError):
+        from_canonical(quantity, "mmol/L", entry)
+
+
+@pytest.mark.parametrize(
+    "multiplier", [Decimal("0"), Decimal("-1"), Decimal("NaN"), Decimal("Infinity")]
+)
+def test_reverse_conversion_rejects_a_non_positive_or_non_finite_recorded_multiplier(
+    multiplier: Decimal,
+):
+    # Arrange
+    entry = make_entry(
+        accepted_units=["mmol/L", "mg/dL"],
+        conversions=[
+            Conversion(
+                from_unit="mg/dL",
+                multiply=Decimal("0.055507"),
+                precision=2,
+                tolerance=Decimal("0.5"),
+                canonical_tolerance=Decimal("0.01"),
+                version="glucose-mgdl-v1",
+            )
+        ],
+    )
+    malformed = ConversionApplied.model_construct(
+        from_unit="mg/dL",
+        add=Decimal("0"),
+        multiply=multiplier,
+        precision=2,
+        rounding="ROUND_HALF_UP",
+        version="test-v1",
+    )
+    quantity = CanonicalQuantity(
+        value=Decimal("5.00"),
+        ucum="mmol/L",
+        conversion_applied=malformed,
+    )
+
+    # Act / Assert
+    with pytest.raises(UnknownUnitError):
+        from_canonical(quantity, "mg/dL", entry)
+
+
+def test_reverse_identity_returns_a_valid_canonical_quantity_value():
+    # Arrange
+    entry = make_entry()
+    quantity = CanonicalQuantity(value=Decimal("7.40"), ucum="mmol/L")
+
+    # Act
+    value = from_canonical(quantity, "mmol/L", entry)
+
+    # Assert
+    assert value == Decimal("7.40")
+
+
 def test_reverse_conversion_rejects_an_undeclared_target_unit():
     # Arrange
     quantity = to_canonical(Decimal("90"), "mmol/L", make_entry())

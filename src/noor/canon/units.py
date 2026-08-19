@@ -82,14 +82,36 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
         )
     if unit not in entry.accepted_units:
         raise UnknownUnitError(f"{entry.observable}: no reverse unit declared for {unit!r}")
-    if unit == entry.canonical_ucum:
-        return quantity.value
-    if quantity.conversion_applied is not None:
-        applied = quantity.conversion_applied
-        if applied.from_unit != unit:
+    applied = quantity.conversion_applied
+    if applied is not None:
+        try:
+            provenance_is_usable = (
+                isinstance(applied, ConversionApplied)
+                and isinstance(applied.from_unit, str)
+                and bool(applied.from_unit)
+                and isinstance(applied.add, Decimal)
+                and applied.add.is_finite()
+                and isinstance(applied.multiply, Decimal)
+                and applied.multiply.is_finite()
+                and applied.multiply > 0
+                and type(applied.precision) is int
+                and applied.precision >= 0
+                and isinstance(applied.rounding, str)
+                and bool(applied.rounding)
+                and isinstance(applied.version, str)
+                and bool(applied.version)
+            )
+        except (AttributeError, TypeError, ValueError):
+            provenance_is_usable = False
+        if not provenance_is_usable:
+            raise UnknownUnitError(f"{entry.observable}: malformed conversion provenance")
+        if unit != entry.canonical_ucum and applied.from_unit != unit:
             raise UnknownUnitError(
                 f"{entry.observable}: conversion provenance does not match {unit!r}"
             )
+    if unit == entry.canonical_ucum:
+        return quantity.value
+    if applied is not None:
         return (quantity.value / applied.multiply) - applied.add
     for conversion in entry.conversions:
         if conversion.from_unit == unit:
