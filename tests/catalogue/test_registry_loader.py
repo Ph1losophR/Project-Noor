@@ -1,6 +1,7 @@
 """Content loads through a schema-only YAML loader (SSOT §7.5)."""
 
 import pytest
+from yaml.constructor import ConstructorError
 
 from noor.catalogue.registry_loader import load_registry
 from tests.conftest import REGISTRY_PATH
@@ -39,15 +40,16 @@ def test_ngsp_and_ifcc_hba1c_are_distinct_observables():
 def test_an_object_constructing_yaml_tag_is_a_build_failure(tmp_path):
     # Arrange — §7.5: never a warning, a refusal
     hostile = tmp_path / "registry.yaml"
+    side_effect = tmp_path / "owned.txt"
     hostile.write_text(
-        'observables: !!python/object/apply:os.system ["echo owned"]\n',
+        f"observables: !!python/object/apply:builtins.open ['{side_effect.as_posix()}', 'w']\n",
         encoding="utf-8",
     )
 
     # Act / Assert
-    with pytest.raises(Exception) as excinfo:
+    with pytest.raises(ConstructorError):
         load_registry(hostile)
-    assert excinfo.type.__module__ == "yaml.constructor" or isinstance(excinfo.value, ValueError)
+    assert not side_effect.exists()
 
 
 def test_a_registry_without_an_observables_list_is_refused(tmp_path):

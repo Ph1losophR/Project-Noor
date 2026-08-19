@@ -125,7 +125,7 @@ class ObservableEntry(NoorModel):
             if conversion.from_unit not in self.accepted_units:
                 raise ValueError(f"conversion from unaccepted unit {conversion.from_unit!r}")
         for key, unit in self.code_unit_map.items():
-            if "|" not in key:
+            if key.count("|") != 1 or any(not component for component in key.split("|")):
                 raise ValueError("code_unit_map keys are 'system|code'")
             if unit not in self.accepted_units:
                 raise ValueError(f"code_unit_map names unaccepted unit {unit!r}")

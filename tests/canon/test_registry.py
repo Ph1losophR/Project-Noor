@@ -105,10 +105,14 @@ def test_a_code_unit_map_entry_must_name_an_accepted_unit():
         make_entry(code_unit_map={"http://loinc.org|9999-9": "furlong"})
 
 
-def test_a_code_unit_map_key_must_be_system_pipe_code():
+@pytest.mark.parametrize(
+    "key",
+    ["4548-4", "|4548-4", "http://loinc.org|", "http://loinc.org|4548-4|extra"],
+)
+def test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(key):
     # Arrange / Act / Assert
     with pytest.raises(ValidationError):
-        make_entry(code_unit_map={"4548-4": "%"})
+        make_entry(code_unit_map={key: "%"})
 
 
 def test_required_context_must_name_known_fields():
