@@ -28,6 +28,10 @@ packages = ["src/noor"]
 [tool.ruff]
 line-length = 100
 target-version = "py312"
+# graphify-out/ is tool output, committed as the knowledge graph but not authored
+# here: graphify regenerates its helper scripts, so lint findings in them are not
+# actionable. CI lints the project's own source.
+extend-exclude = ["graphify-out"]
 
 [tool.ruff.lint]
 select = ["B", "E", "F", "I", "RUF", "SIM", "UP"]

@@ -420,7 +420,10 @@ Required properties and cases:
 
 - **Unit resolution.** `unit_resolution: ambiguous` is a hard failure (§6.3). A
   value whose unit cannot be resolved never receives a canonical value and never
-  reaches the engine. Property-test this over generated inputs, not just examples.
+  reaches the engine. An **absent** resolution — canon refused the record before
+  resolution ran — bars a canonical value the same way, so state the property
+  positively: a canonical value carries a resolved unit. Property-test this over
+  generated inputs, not just examples.
 - **HbA1c.** Never infer percent versus mmol/mol from the value alone. NGSP % and
   IFCC mmol/mol are distinct observables, not two units of one (§5, §6.3).
 - **Glucose.** Original unit preserved; conversion only with displayed conversion

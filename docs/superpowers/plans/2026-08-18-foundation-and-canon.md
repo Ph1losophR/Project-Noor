@@ -12,6 +12,91 @@
 
 **Scope:** This plan covers §14 steps 1–3 only: repository foundation, the import-direction seam test, and all of `canon` (observable registry, unit resolution, plausibility, delta review, quality states, quality resolution). It does **not** build the engine (step 4), the catalogue compiler (step 5), or any persistence (step 7). Those are separate plans.
 
+## Execution record — Tasks 1–3 (reviewed 2026-08-19)
+
+Tasks 1–3 are executed and committed. Task 1's files are byte-identical to this
+plan. Tasks 2 and 3 shipped with the deviations below. **Where a task body above
+disagrees with the code, the code is authoritative** — these entries are the
+record of why.
+
+**Task 2 — CI was red when Tasks 1–3 were first committed.** Step 4's expected
+`All checks passed!` did not hold: four graphify helper scripts under
+`graphify-out/` are tracked in git and failed both `ruff check .` (9 errors) and
+`ruff format --check .` (4 files). The `verify` job is the single required status
+check in Step 6's branch protection, so it was failing on the branch, and §14
+step 1's verification ("CI runs green on an empty suite") was unmet. Fixed with
+`extend-exclude = ["graphify-out"]` under `[tool.ruff]`: the graph stays
+committed as the project intends, and ruff lints only authored source. All five
+CI steps now pass locally.
+
+The seam test has **13 tests, not the 8** written here. Added:
+`test_packages_only_import_from_declared_lower_layers` (3 params),
+`test_pure_packages_never_call_direct_file_access` (2 params), relative-import
+resolution in `_imported_modules`, and three forbidden roots (`sqlite3`,
+`urllib`, `subprocess`). Step 2's teeth-proof was re-run after the Task 3 review
+edits — five injected breaches gave 5 failed / 8 passed, and 13 passed after
+revert. Step 6's branch protection matches this plan exactly.
+
+**Task 3 — `models.py` diverged, and the divergence was partly reverted on
+review.** The step body expects "PASS — 18 tests"; the file now has 36 test
+functions, 53 collected cases (68 across the suite).
+
+| This plan | As first executed | After review |
+|---|---|---|
+| `context_flags: list[str] = []` | `tuple[...]` + a `_FrozenSequence` wrapper, freeze validator, and serialiser | `tuple[str, ...] = ()` — wrapper deleted |
+| `rejection_reasons` / `suspicions: list[...] = []` | same wrapper machinery | `tuple[...] = ()` — wrapper deleted |
+| `raw_payload: dict = {}` | `Mapping[str, object]`, frozen deeply, with a `mode="before"` **and** a `mode="after"` validator | after-validator + serialiser only; depth capped |
+| `DeltaVerdict` incomparable branch: 3 conditions | 4 — `or self.suspicious` added | kept |
+| `QualityVerdict` 3 invariants, `CanonicalObservation` 1 | 4 and 2 — ambiguous-unit rules added | 5 and 2 — kept, plus the §6.3 absence equivalence (below) |
+| `unit_resolution: UnitResolution` | same | `UnitResolution \| None`, required — §6.3 amended (below) |
+
+Kept, because they close a real §6.3 gap this plan left as convention: an
+`ambiguous` unit resolution must be `rejected` *and* carry `unit_ambiguous`, and
+must never carry a canonical value.
+
+Reverted, because `_FrozenSequence` was a tuple subclass defining `__eq__`
+without `__hash__` — which sets `__hash__ = None` and makes the flags tuple
+unusable in any set or dict key. Its only behaviour was making `tuple == list`
+true, which existed solely so 11 test assertions could keep list literals.
+`raw_payload` keeps its deep freeze: `frozen=True` stops field reassignment but
+not in-place mutation of a `dict` value, and §5 observations are write-once.
+Note that neither this plan's `dict` nor the executed `mappingproxy` makes a
+capture hashable — that was never a property of this model, and the
+`ObservationCapture` docstring now says so.
+
+`raw_payload` also gained `MAX_PAYLOAD_DEPTH = 32`. Payloads cross a trust
+boundary (§5), and an uncapped recursive freeze turns pathological nesting into a
+`RecursionError` that escapes the validation channel instead of a
+`ValidationError` canon can record. Verified: 32 levels accepted, 33 and 500
+rejected as `ValidationError`.
+
+`MappingInfo` still omits §5's `mapping.confidence`, per assumption 12 — the
+docstring now records the deferral, since the model is closed and adding it later
+is a schema change.
+
+**§6.3 amended — absence is the fourth case (approved by the SSOT owner,
+2026-08-19).** §6.3 fixed `UnitResolution` at three values, none meaning "not
+resolved", yet canon refuses some records *before* resolution runs: an unusable
+mapping leaves no trustworthy observable to resolve against (§5), and a withdrawn
+`source_status` is refused at §13.1 gate 1. Reporting `ambiguous` there would force
+a `unit_ambiguous` rejection reason, so §11.9's missing-unit rate would carry a unit
+failure that never happened — a counter that cannot separate "no unit" from "no
+record" measures neither.
+
+§6.3 now states that the three values are *outcomes* and that absence is the fourth
+case, and lists the two refusals that precede resolution. `models.py` holds it as an
+equivalence, not an implication: `QualityVerdict.unit_resolution` is
+`UnitResolution | None`, nullable but required — every verdict states which of the
+two happened — and it is absent **exactly** when the rejection reasons are a subset
+of `{mapping_unusable, source_status_unusable}`. A canonical value requires a
+resolved unit (`explicit` or `inferred_from_code`), so `ambiguous` and absence both
+bar one.
+
+Task 5's `resolve_unit` is unchanged — it still returns one of three outcomes; the
+absent case is the assembler's, not the resolver's. Task 10's `canonicalise` had to
+move its `resolve_unit` call below the unusable-source early return, which is
+corrected in that task's Step 2 below.
+
 ## Global Constraints
 
 Every task implicitly includes these. Values are verbatim from the SSOT.
@@ -19,7 +104,7 @@ Every task implicitly includes these. Values are verbatim from the SSOT.
 - Python ≥ 3.12; uv manages the project; `mypy --strict` runs on `canon/`, `engine/`, `catalogue/` (§3.1).
 - Four quality states, exactly: `accepted`, `needs_repeat_or_verification`, `rejected`, `clinically_exceptional_accepted` (§6.2).
 - `accepted_via`: exactly `unremarkable | repeat_confirmed | clinician_verified` (§6.2).
-- Unit resolution: exactly `explicit | inferred_from_code | ambiguous`; `ambiguous` is a hard failure — the value never receives a canonical value and never reaches the engine (§6.3).
+- Unit resolution: exactly `explicit | inferred_from_code | ambiguous`, or **absent** when canon refused the record before resolution ran (§6.3, amended — see the Task 3 note above). `ambiguous` is a hard failure — the value never receives a canonical value and never reaches the engine; an absent resolution bars a canonical value too.
 - A treatment threshold is never reused as a data-entry validator; the three boundary types are stored and versioned independently (§6.4). `canon` never names or reads a threshold — the seam test enforces that mechanically (Task 2) and the registry schema has nowhere to put one (Task 4).
 - Every canonical value shows its work: a converted value carries the versioned conversion that produced it (§5 "derived, shows its work", §6.3).
 - Delta review compares like with like only and never mutates, converts, replaces, or suppresses a value (§6.1).
@@ -697,10 +782,12 @@ SSOT §5 (the observation model) restricted to what `canon` produces and consume
   - Enums: `UnitResolution`, `QualityState`, `AcceptedVia`, `RejectionReason`, `SuspicionReason`, `NotComparableReason`, `SourceStatus`, `EntryMode`, `InformantRole`, `MappingStatus`, `Setting`, `Posture`, `Arm`, `CuffSize`.
   - `ACCEPTED_FAMILY: frozenset[QualityState]` — `{accepted, clinically_exceptional_accepted}`.
   - `WITHDRAWN_SOURCE_STATUSES: frozenset[SourceStatus]` — `{cancelled, entered_in_error}`.
+  - `RESOLVED_UNITS: frozenset[UnitResolution]` — `{explicit, inferred_from_code}`; a canonical value requires one (§6.3).
+  - `PRE_RESOLUTION_REJECTIONS: frozenset[RejectionReason]` — `{mapping_unusable, source_status_unusable}`; the two refusals that precede unit resolution, so `unit_resolution` is absent exactly for these (§6.3).
   - Models: `SourceCode`, `Informant`, `MethodContext`, `CaptureContext`, `MappingInfo`, `ReportedValue`, `ObservationCapture`, `ConversionApplied`, `CanonicalQuantity`, `DeltaVerdict`, `QualityVerdict`, `CanonicalObservation`.
   - `CanonicalQuantity(value, ucum, conversion_applied: ConversionApplied | None)`; `ConversionApplied(from_unit, add, multiply, precision, rounding, version)`.
   - `DeltaVerdict(comparable, compared_to=None, change=None, suspicious=False, not_comparable_reason=None)` — validated: comparable ⇒ baseline + change; not comparable ⇒ reason only.
-  - `CanonicalObservation(**capture.model_dump(), canonical=..., quality=...)` is how the pipeline builds output. An accepted-family state without a canonical value is a validation error.
+  - `CanonicalObservation(**capture.model_dump(), canonical=..., quality=...)` is how the pipeline builds output. An accepted-family state without a canonical value is a validation error; so is a canonical value whose `unit_resolution` is not in `RESOLVED_UNITS`.
   - conftest: `REPO_ROOT`, `T0`, `make_capture(...)` (with `value=`/`unit=` shorthands), hypothesis profile registration.
 
 - [ ] **Step 1: Write the failing tests**
@@ -882,7 +969,7 @@ def test_a_consistent_flagged_verdict_is_accepted():
     )
 
     # Assert
-    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
+    assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
 
 
 def test_accepted_via_unremarkable_round_trips():
@@ -3500,7 +3587,7 @@ def test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value(registry):
 
     # Assert
     assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == [RejectionReason.unit_ambiguous]
+    assert result.quality.rejection_reasons == (RejectionReason.unit_ambiguous,)
     assert result.quality.unit_resolution is UnitResolution.ambiguous
     assert result.canonical is None  # never receives a canonical value
 
@@ -3514,7 +3601,7 @@ def test_an_unparseable_value_is_rejected(registry):
 
     # Assert
     assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == [RejectionReason.parse_failure]
+    assert result.quality.rejection_reasons == (RejectionReason.parse_failure,)
     assert result.canonical is None
 
 
@@ -3527,7 +3614,8 @@ def test_an_ambiguous_mapping_reaches_canon_as_unusable(registry):
 
     # Assert
     assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == [RejectionReason.mapping_unusable]
+    assert result.quality.rejection_reasons == (RejectionReason.mapping_unusable,)
+    assert result.quality.unit_resolution is None  # resolution never ran (§6.3)
     assert result.canonical is None
 
 
@@ -3541,7 +3629,8 @@ def test_a_withdrawn_source_record_is_refused(registry):
 
     # Assert
     assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == [RejectionReason.source_status_unusable]
+    assert result.quality.rejection_reasons == (RejectionReason.source_status_unusable,)
+    assert result.quality.unit_resolution is None  # resolution never ran (§6.3)
     assert result.canonical is None
 
 
@@ -3553,7 +3642,8 @@ def test_a_cancelled_source_record_is_refused(registry):
     result = canonicalise(capture, registry)
 
     # Assert
-    assert result.quality.rejection_reasons == [RejectionReason.source_status_unusable]
+    assert result.quality.rejection_reasons == (RejectionReason.source_status_unusable,)
+    assert result.quality.unit_resolution is None  # resolution never ran (§6.3)
 
 
 def test_a_corrected_source_record_is_canonicalised_normally(registry):
@@ -3596,6 +3686,7 @@ def test_an_unusable_mapping_and_an_unusable_status_are_both_named(registry):
         RejectionReason.mapping_unusable,
         RejectionReason.source_status_unusable,
     }
+    assert result.quality.unit_resolution is None  # both refusals precede it (§6.3)
     assert result.canonical is None
 
 
@@ -3652,7 +3743,7 @@ def test_a_physiologically_impossible_value_is_rejected_but_kept(registry):
 
     # Assert — the value is kept so a clinician can resurrect it (§6.2)
     assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == [RejectionReason.outside_physiologic_envelope]
+    assert result.quality.rejection_reasons == (RejectionReason.outside_physiologic_envelope,)
     assert result.canonical is not None
     assert result.canonical.value == Decimal("80")
 
@@ -3666,7 +3757,7 @@ def test_an_extreme_but_possible_value_is_flagged_not_rejected(registry):
 
     # Assert
     assert result.quality.state is QualityState.needs_repeat_or_verification
-    assert result.quality.suspicions == [SuspicionReason.outside_operational_envelope]
+    assert result.quality.suspicions == (SuspicionReason.outside_operational_envelope,)
     assert result.canonical is not None
     assert result.canonical.value == Decimal("220")
 
@@ -3717,7 +3808,7 @@ def test_a_unit_changed_from_the_patients_prior_record_is_flagged(registry):
 
     # Assert
     assert result.quality.state is QualityState.needs_repeat_or_verification
-    assert result.quality.suspicions == [SuspicionReason.unit_changed_from_prior]
+    assert result.quality.suspicions == (SuspicionReason.unit_changed_from_prior,)
 
 
 def test_a_unit_matching_the_patients_prior_record_is_unremarkable(registry):
@@ -3737,7 +3828,7 @@ def test_a_unit_matching_the_patients_prior_record_is_unremarkable(registry):
 
     # Assert
     assert result.quality.state is QualityState.accepted
-    assert result.quality.suspicions == []
+    assert result.quality.suspicions == ()
 
 
 def test_a_later_observation_is_not_a_unit_change_baseline(registry):
@@ -3782,7 +3873,7 @@ def test_a_superseded_prior_is_not_the_unit_change_baseline(registry):
 
     # Assert
     assert result.quality.state is QualityState.accepted
-    assert result.quality.suspicions == []
+    assert result.quality.suspicions == ()
 
 
 def test_priors_may_be_a_generator(registry):
@@ -3800,7 +3891,7 @@ def test_priors_may_be_a_generator(registry):
     result = canonicalise(capture, registry, priors=(p for p in [prior]))
 
     # Assert — the delta was found on the second pass
-    assert result.quality.suspicions == [SuspicionReason.delta_exceeded]
+    assert result.quality.suspicions == (SuspicionReason.delta_exceeded,)
 
 
 def test_a_suspicious_delta_is_flagged_and_recorded(registry):
@@ -3818,7 +3909,7 @@ def test_a_suspicious_delta_is_flagged_and_recorded(registry):
 
     # Assert
     assert result.quality.state is QualityState.needs_repeat_or_verification
-    assert result.quality.suspicions == [SuspicionReason.delta_exceeded]
+    assert result.quality.suspicions == (SuspicionReason.delta_exceeded,)
     assert result.quality.delta is not None
     assert result.quality.delta.compared_to == "PRIOR-1"
     assert result.quality.delta.change == Decimal("8.5")
@@ -3895,7 +3986,7 @@ def test_context_flags_pass_through_and_the_value_is_never_corrected(registry):
     assert result.quality.state is QualityState.accepted
     assert result.canonical is not None
     assert result.canonical.value == Decimal("7.4")
-    assert result.context_flags == ["a1c_interpretation_caution"]
+    assert result.context_flags == ("a1c_interpretation_caution",)
 
 
 def test_a_code_display_name_is_carried_but_never_required(registry):
@@ -4044,18 +4135,20 @@ def canonicalise(
             f"{capture.observable}: absent_reason observations carry no value to canonicalise"
         )
 
-    unit_resolution, resolved_unit = resolve_unit(
-        capture.as_reported.unit, capture.source_code, entry
-    )
-
     unusable = _unusable_source(capture)
     if unusable:
+        # §6.3: both reasons here precede unit resolution, so the verdict reports no
+        # resolution outcome rather than a guess — hence the call below, not above.
         quality = QualityVerdict(
             state=QualityState.rejected,
-            unit_resolution=unit_resolution,
+            unit_resolution=None,
             rejection_reasons=unusable,
         )
         return CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+    unit_resolution, resolved_unit = resolve_unit(
+        capture.as_reported.unit, capture.source_code, entry
+    )
 
     rejection_reasons: list[RejectionReason] = []
     suspicions: list[SuspicionReason] = []
@@ -4631,6 +4724,7 @@ from hypothesis import strategies as st
 
 from noor.canon.models import (
     ACCEPTED_FAMILY,
+    RESOLVED_UNITS,
     WITHDRAWN_SOURCE_STATUSES,
     MappingInfo,
     MappingStatus,
@@ -4638,7 +4732,6 @@ from noor.canon.models import (
     RejectionReason,
     ReportedValue,
     SourceStatus,
-    UnitResolution,
 )
 from noor.canon.pipeline import canonicalise
 from noor.canon.plausibility import EnvelopePosition, locate
@@ -4712,8 +4805,8 @@ def test_nothing_crosses_the_boundary_uncanonicalised(observable, value, unit, m
     if result.quality.state in ACCEPTED_FAMILY:
         # §14 step 2: no observation reaches the engine with an unresolved unit
         assert result.canonical is not None
-        assert result.quality.unit_resolution is not UnitResolution.ambiguous
-        assert result.quality.suspicions == []
+        assert result.quality.unit_resolution in RESOLVED_UNITS
+        assert result.quality.suspicions == ()
         assert result.quality.accepted_via is not None
         # §5: a record the source withdrew never becomes a fact
         assert result.source_status not in WITHDRAWN_SOURCE_STATUSES

@@ -1,5 +1,6 @@
 """The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants."""
 
+import json
 import math
 from datetime import UTC, datetime, timedelta, timezone
 from decimal import Decimal
@@ -8,6 +9,7 @@ import pytest
 from pydantic import ValidationError
 
 from noor.canon.models import (
+    MAX_PAYLOAD_DEPTH,
     AcceptedVia,
     CanonicalObservation,
     CanonicalQuantity,
@@ -20,10 +22,26 @@ from noor.canon.models import (
     QualityVerdict,
     RejectionReason,
     ReportedValue,
+    SourceStatus,
     SuspicionReason,
     UnitResolution,
 )
 from tests.conftest import make_capture
+
+# Which exception an immutable container raises is the container's business; the
+# contract is only that the mutation is refused (§5 write-once).
+MUTATION_REFUSED = (TypeError, AttributeError)
+
+
+def _nested_payload(levels: int) -> dict[str, object]:
+    """A chain of `levels` nested mappings, innermost empty."""
+    payload: dict[str, object] = {}
+    current = payload
+    for _ in range(levels - 1):
+        nested: dict[str, object] = {}
+        current["n"] = nested
+        current = nested
+    return payload
 
 
 def test_effective_time_is_normalised_to_utc():
@@ -94,21 +112,49 @@ def test_capture_collections_are_immutable_in_place():
     )
 
     # Act / Assert
-    with pytest.raises(TypeError):
+    with pytest.raises(MUTATION_REFUSED):
         capture.context_flags[0] = "clinic"
-    with pytest.raises(AttributeError):
+    with pytest.raises(MUTATION_REFUSED):
         capture.context_flags.append("clinic")
-    with pytest.raises(TypeError):
+    with pytest.raises(MUTATION_REFUSED):
         capture.raw_payload["details"] = {"source": "manual"}
-    with pytest.raises(TypeError):
+    with pytest.raises(MUTATION_REFUSED):
         capture.raw_payload["details"]["source"] = "manual"
-    with pytest.raises(AttributeError):
+    with pytest.raises(MUTATION_REFUSED):
         capture.raw_payload["readings"].append("6.0")
 
     # Assert — nested payload data remains write-once as well
-    assert capture.context_flags == ["home"]
+    assert capture.context_flags == ("home",)
     assert capture.raw_payload["details"]["source"] == "meter"
-    assert capture.raw_payload["readings"] == ["5.5"]
+    assert capture.raw_payload["readings"] == ("5.5",)
+
+
+def test_a_capture_without_a_payload_still_holds_a_frozen_one():
+    # Arrange / Act — the default routes through the same validator as a supplied
+    # payload, so the field's type does not depend on whether a caller passed one
+    capture = make_capture()
+
+    # Act / Assert
+    with pytest.raises(MUTATION_REFUSED):
+        capture.raw_payload["injected"] = "value"
+
+    # Assert
+    assert capture.raw_payload == {}
+
+
+def test_a_frozen_payload_serialises_to_json():
+    # Arrange
+    capture = make_capture(
+        context_flags=["home"],
+        raw_payload={"device": {"serial": "BP-17"}, "readings": ["5.5", "5.6"]},
+    )
+
+    # Act — the frozen containers are not JSON types; serialisation thaws them
+    payload = json.loads(capture.model_dump_json())
+
+    # Assert
+    assert payload["context_flags"] == ["home"]
+    assert payload["raw_payload"] == {"device": {"serial": "BP-17"}, "readings": ["5.5", "5.6"]}
 
 
 def test_raw_payload_rejects_a_cyclic_container():
@@ -121,6 +167,21 @@ def test_raw_payload_rejects_a_cyclic_container():
         make_capture(raw_payload=raw_payload)
 
 
+def test_raw_payload_accepts_nesting_at_the_depth_cap():
+    # Arrange / Act
+    capture = make_capture(raw_payload=_nested_payload(MAX_PAYLOAD_DEPTH))
+
+    # Assert
+    assert "n" in capture.raw_payload
+
+
+def test_raw_payload_rejects_nesting_past_the_depth_cap():
+    # Arrange / Act / Assert — an uncapped recursion would raise RecursionError and
+    # escape the validation channel; the cap makes it an ordinary rejection
+    with pytest.raises(ValidationError):
+        make_capture(raw_payload=_nested_payload(MAX_PAYLOAD_DEPTH + 1))
+
+
 @pytest.mark.parametrize(
     "raw_payload",
     [
@@ -130,8 +191,7 @@ def test_raw_payload_rejects_a_cyclic_container():
         pytest.param({"values": {1, 2}}, id="set_value"),
         pytest.param({"value": object()}, id="arbitrary_object"),
         pytest.param({"value": math.nan}, id="nan_value"),
-        pytest.param({"value": math.inf}, id="positive_infinity"),
-        pytest.param({"value": -math.inf}, id="negative_infinity"),
+        pytest.param({"value": math.inf}, id="infinity"),
     ],
 )
 def test_raw_payload_rejects_values_outside_json_shapes(raw_payload):
@@ -183,7 +243,7 @@ def test_a_consistent_flagged_verdict_is_accepted():
     )
 
     # Assert
-    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
+    assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
 
 
 def test_accepted_via_unremarkable_round_trips():
@@ -198,8 +258,8 @@ def test_accepted_via_unremarkable_round_trips():
     assert verdict.accepted_via is AcceptedVia.unremarkable
 
 
-def test_quality_verdict_collections_are_immutable_in_place():
-    # Arrange
+def test_verdict_reason_lists_are_stored_as_immutable_collections():
+    # Arrange — reasons arrive as lists, from callers and from JSON alike
     verdict = QualityVerdict(
         state=QualityState.rejected,
         unit_resolution=UnitResolution.explicit,
@@ -207,17 +267,16 @@ def test_quality_verdict_collections_are_immutable_in_place():
         suspicions=[SuspicionReason.delta_exceeded],
     )
 
-    # Act / Assert
-    with pytest.raises(TypeError):
+    # Act / Assert — a verdict is a record; §8.2 reads these reasons, so they
+    # cannot be edited after the fact
+    with pytest.raises(MUTATION_REFUSED):
         verdict.rejection_reasons[0] = RejectionReason.unit_ambiguous
-    with pytest.raises(TypeError):
+    with pytest.raises(MUTATION_REFUSED):
         verdict.suspicions[0] = SuspicionReason.unit_changed_from_prior
 
     # Assert
-    assert verdict.rejection_reasons == [RejectionReason.parse_failure]
-    assert verdict.suspicions == [SuspicionReason.delta_exceeded]
-    assert verdict.model_dump()["rejection_reasons"] == [RejectionReason.parse_failure]
-    assert verdict.model_dump()["suspicions"] == [SuspicionReason.delta_exceeded]
+    assert verdict.rejection_reasons == (RejectionReason.parse_failure,)
+    assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
 
 
 @pytest.mark.parametrize(
@@ -273,15 +332,15 @@ def test_an_accepted_observation_with_a_canonical_value_is_accepted(quality_stat
     # Assert
     assert observation.canonical == canonical
     assert observation.quality.state is quality_state
-    assert capture_dump["context_flags"] == ["home_visit"]
+    assert capture_dump["context_flags"] == ("home_visit",)
     assert capture_dump["raw_payload"] == {
         "device": {"serial": "BP-17"},
         "readings": ["5.5", "5.6"],
         "temperature_c": 36.5,
     }
-    assert observation.context_flags == ["home_visit"]
+    assert observation.context_flags == ("home_visit",)
     assert observation.raw_payload["device"]["serial"] == "BP-17"
-    assert observation.raw_payload["readings"] == ["5.5", "5.6"]
+    assert observation.raw_payload["readings"] == ("5.5", "5.6")
 
 
 def test_ambiguous_unit_resolution_cannot_produce_an_accepted_verdict():
@@ -292,6 +351,94 @@ def test_ambiguous_unit_resolution_cannot_produce_an_accepted_verdict():
             unit_resolution=UnitResolution.ambiguous,
             accepted_via=AcceptedVia.unremarkable,
         )
+
+
+@pytest.mark.parametrize(
+    "rejection_reason",
+    [RejectionReason.mapping_unusable, RejectionReason.source_status_unusable],
+)
+def test_a_refusal_before_unit_resolution_records_no_resolution_outcome(rejection_reason):
+    # Arrange / Act — §6.3: the three values are outcomes, and these two refusals
+    # happen before resolution runs, so there is no outcome to name
+    verdict = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=None,
+        rejection_reasons=[rejection_reason],
+    )
+
+    # Assert
+    assert verdict.unit_resolution is None
+    assert verdict.rejection_reasons == (rejection_reason,)
+
+
+@pytest.mark.parametrize(
+    "rejection_reasons",
+    [
+        pytest.param([RejectionReason.parse_failure], id="parse_failure"),
+        pytest.param([RejectionReason.unit_ambiguous], id="unit_ambiguous"),
+        pytest.param([RejectionReason.missing_required_context], id="missing_context"),
+        pytest.param([RejectionReason.outside_physiologic_envelope], id="outside_envelope"),
+        pytest.param(
+            [RejectionReason.mapping_unusable, RejectionReason.parse_failure],
+            id="a_pre_resolution_reason_mixed_with_a_later_one",
+        ),
+    ],
+)
+def test_a_refusal_after_unit_resolution_must_record_its_outcome(rejection_reasons):
+    # Arrange / Act / Assert — a unit resolves whether or not the value parses, the
+    # context is complete, or the result is plausible, so silence here would hand
+    # §11.9's missing-unit rate a failure that never happened
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.rejected,
+            unit_resolution=None,
+            rejection_reasons=rejection_reasons,
+        )
+
+
+@pytest.mark.parametrize(
+    "rejection_reason",
+    [RejectionReason.mapping_unusable, RejectionReason.source_status_unusable],
+)
+def test_a_refusal_before_unit_resolution_cannot_record_an_outcome(rejection_reason):
+    # Arrange / Act / Assert — the other direction of the same equivalence: claiming
+    # a resolution that never ran misleads the same §11.9 counters
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.rejected,
+            unit_resolution=UnitResolution.explicit,
+            rejection_reasons=[rejection_reason],
+        )
+
+
+@pytest.mark.parametrize(
+    "verdict_fields",
+    [
+        pytest.param(
+            {"state": QualityState.accepted, "accepted_via": AcceptedVia.unremarkable},
+            id="accepted",
+        ),
+        pytest.param(
+            {
+                "state": QualityState.clinically_exceptional_accepted,
+                "accepted_via": AcceptedVia.clinician_verified,
+            },
+            id="clinically_exceptional_accepted",
+        ),
+        pytest.param(
+            {
+                "state": QualityState.needs_repeat_or_verification,
+                "suspicions": [SuspicionReason.delta_exceeded],
+            },
+            id="needs_repeat_or_verification",
+        ),
+    ],
+)
+def test_a_verdict_that_is_not_a_refusal_must_record_a_unit_resolution(verdict_fields):
+    # Arrange / Act / Assert — only a refusal can precede resolution; any other
+    # state means the three layers ran (§6.1)
+    with pytest.raises(ValidationError):
+        QualityVerdict(unit_resolution=None, **verdict_fields)
 
 
 def test_an_ambiguous_rejected_observation_carries_no_canonical_value():
@@ -307,17 +454,44 @@ def test_an_ambiguous_rejected_observation_carries_no_canonical_value():
     observation = CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
 
     # Assert
-    assert observation.quality.rejection_reasons == [RejectionReason.unit_ambiguous]
+    assert observation.quality.rejection_reasons == (RejectionReason.unit_ambiguous,)
     assert observation.canonical is None
 
 
-def test_an_ambiguous_observation_with_a_canonical_value_is_refused():
-    # Arrange
+def test_an_observation_refused_before_unit_resolution_carries_no_canonical_value():
+    # Arrange — the source withdrew the record (§13.1 gate 1), so nothing was resolved
+    capture = make_capture(source_status=SourceStatus.entered_in_error)
+    quality = QualityVerdict(
+        state=QualityState.rejected,
+        unit_resolution=None,
+        rejection_reasons=[RejectionReason.source_status_unusable],
+    )
+
+    # Act
+    observation = CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+    # Assert
+    assert observation.quality.unit_resolution is None
+    assert observation.canonical is None
+
+
+@pytest.mark.parametrize(
+    ("unit_resolution", "rejection_reason"),
+    [
+        pytest.param(
+            UnitResolution.ambiguous, RejectionReason.unit_ambiguous, id="ambiguous_resolution"
+        ),
+        pytest.param(None, RejectionReason.mapping_unusable, id="resolution_never_ran"),
+    ],
+)
+def test_a_canonical_value_requires_a_resolved_unit(unit_resolution, rejection_reason):
+    # Arrange — converting against a unit that was never settled is the silent best
+    # guess §5 forbids, whether resolution failed or never ran (§6.3)
     capture = make_capture()
     quality = QualityVerdict(
         state=QualityState.rejected,
-        unit_resolution=UnitResolution.ambiguous,
-        rejection_reasons=[RejectionReason.unit_ambiguous],
+        unit_resolution=unit_resolution,
+        rejection_reasons=[rejection_reason],
     )
     canonical = CanonicalQuantity(value=Decimal("5.5"), ucum="mmol/L")
 

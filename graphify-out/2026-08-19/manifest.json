@@ -15,8 +15,8 @@
     "semantic_hash": ""
   },
   "docs/cds-architecture.md": {
-    "mtime": 1787097178.9904275,
-    "ast_hash": "c1b8892da3eaf3c3cdb33ebdc4b67022",
+    "mtime": 1787079792.220929,
+    "ast_hash": "cfb95a95bc29366916af1f514513e29b",
     "semantic_hash": ""
   },
   "docs/research/archive/cds-safety-and-human-factors.md": {
@@ -75,13 +75,13 @@
     "semantic_hash": ""
   },
   "docs/testing-standards.md": {
-    "mtime": 1787137230.9193342,
-    "ast_hash": "e488fadf0b0f3750f12f2216742d8473",
+    "mtime": 1787090386.4698784,
+    "ast_hash": "736f747bd61e80fe517c92b0530b9c4d",
     "semantic_hash": ""
   },
   "docs/superpowers/plans/2026-08-18-foundation-and-canon.md": {
-    "mtime": 1787137194.2153976,
-    "ast_hash": "7d18020bdf0214fb4c492f5290d09ec5",
+    "mtime": 1787094114.955743,
+    "ast_hash": "f39db35135e14e020647283b75f8ff24",
     "semantic_hash": ""
   },
   "pyproject.toml": {
@@ -105,8 +105,8 @@
     "semantic_hash": ""
   },
   "src/noor/canon/models.py": {
-    "mtime": 1787137975.7623239,
-    "ast_hash": "94598fe73c936f87187a2a595ebd7309",
+    "mtime": 1787093948.6011043,
+    "ast_hash": "29ba6bc9335e8c0b936bb3a8d14867f2",
     "semantic_hash": ""
   },
   "src/noor/catalogue/__init__.py": {
@@ -120,8 +120,8 @@
     "semantic_hash": ""
   },
   "tests/canon/test_models.py": {
-    "mtime": 1787136540.5874844,
-    "ast_hash": "ecae6b73f1e822fdc98fcd7b91dbe30a",
+    "mtime": 1787093600.6950836,
+    "ast_hash": "b4d296b112e48d53d81a0aec0e0141e7",
     "semantic_hash": ""
   },
   "tests/conftest.py": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "tests/test_import_direction.py": {
-    "mtime": 1787137990.4240444,
-    "ast_hash": "dead6b937e332645eac65c4658186b42",
+    "mtime": 1787090808.4183853,
+    "ast_hash": "569a22d0adff9e35dced80aba0e078f5",
     "semantic_hash": ""
   },
   "tests/test_smoke.py": {

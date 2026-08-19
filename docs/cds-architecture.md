@@ -800,7 +800,8 @@ observation:
   # intrinsic quality verdict from canon (§6)
   quality:
     state: accepted
-    unit_resolution: explicit
+    unit_resolution: explicit   # absent if canon refused this record before
+                                # resolution ran (§6.3)
     delta: {compared_to: "OBS-71904", change: +0.6, comparable: true}
   context_flags: [a1c_interpretation_caution]
 ```
@@ -1073,6 +1074,7 @@ there is how the flag gets clicked away without being read.
 
 ```
 unit_resolution: explicit | inferred_from_code | ambiguous
+                 # absent when canon refused the record before resolution ran
 ```
 
 **`ambiguous` is a hard failure.** A value whose unit cannot be resolved never
@@ -1083,6 +1085,36 @@ Fahrenheit-for-Celsius errors in a production vital-signs corpus).
 This is the one capture-time hard stop in §11.5. It is a hard stop precisely
 because it is resolvable in the home: the clinician knows which unit the device
 displays, and no other party can recover that fact later.
+
+**The three values are outcomes, so absence is the fourth case.** Each one names
+something resolution *did*: the source stated the unit, the observation code
+implied it, or neither settled it. A record canon refuses *before* resolution runs
+has no outcome to name, and `unit_resolution` is **absent** — the same way `delta`
+is absent when the value never reached delta review (§5). Absence is required
+there, not merely permitted.
+
+Exactly two refusals precede resolution:
+
+| Refusal | Why resolution cannot run |
+|---|---|
+| `mapping_unusable` | An `ambiguous` or `unmapped` mapping yields no trustworthy observable (§5), so resolving against a registry entry (§6.6) would be the silent best guess §5 forbids |
+| `source_status_unusable` | The source withdrew the record (§13.1 gate 1). There is nothing to make safe |
+
+No other refusal does. A unit resolves independently of whether the value parses,
+the context is complete, or the result is plausible, so `parse_failure`,
+`missing_required_context`, and both envelope outcomes all carry a real outcome.
+
+**Recording an unattempted resolution as `ambiguous` would be a false safety
+signal, not a conservative one.** `ambiguous` forces `unit_ambiguous` into the
+rejection reasons, so §11.9's counters would carry a unit failure that never
+happened: the missing-unit rate exists to say *the intake path is losing units*,
+and it would be saying it about a record that was withdrawn or whose code never
+mapped, while the rejected-value rate gains a refusal that had nothing to do with
+units. A counter that cannot separate "no unit" from "no record" measures neither.
+
+**A canonical value exists only where the unit was resolved** — `explicit` or
+`inferred_from_code`. `ambiguous` and absence both bar it, and neither reaches the
+engine.
 
 Specific consequences:
 

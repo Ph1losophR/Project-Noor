@@ -1,12 +1,12 @@
 # Graph Report - cds_engine  (2026-08-19)
 
 ## Corpus Check
-- 35 files · ~4,227,983 words
+- 35 files · ~4,226,803 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 694 nodes · 771 edges · 47 communities (37 shown, 10 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 34 edges (avg confidence: 0.8)
+- 688 nodes · 758 edges · 47 communities (37 shown, 10 thin omitted)
+- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.8)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -63,12 +63,12 @@
 - [[_COMMUNITY_noor|noor]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `make_capture()` - 25 edges
-2. `QualityVerdict` - 21 edges
-3. `Project Noor — Testing Standards` - 21 edges
-4. `Project Noor — CDS Engine Architecture` - 19 edges
-5. `Task 3 Report: The Observation Model and Quality Verdicts` - 17 edges
-6. `11. Topics raised during the design interview` - 17 edges
+1. `make_capture()` - 24 edges
+2. `Project Noor — Testing Standards` - 21 edges
+3. `Project Noor — CDS Engine Architecture` - 19 edges
+4. `Task 3 Report: The Observation Model and Quality Verdicts` - 17 edges
+5. `11. Topics raised during the design interview` - 17 edges
+6. `QualityVerdict` - 16 edges
 7. `NoorModel` - 13 edges
 8. `File structure` - 13 edges
 9. `5. Interoperability and integration` - 12 edges
@@ -189,15 +189,15 @@ Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 S
 
 ### Community 24 - "test_models.py"
 Cohesion: 0.06
-Nodes (57): Any, datetime, Self, CanonicalObservation, CanonicalQuantity, DeltaVerdict, ObservationCapture, QualityVerdict (+49 more)
+Nodes (54): Any, datetime, Self, CanonicalObservation, CanonicalQuantity, DeltaVerdict, ObservationCapture, QualityVerdict (+46 more)
 
 ### Community 25 - "Task 3 Report: The Observation Model and Quality Verdicts"
 Cohesion: 0.05
 Nodes (43): Baseline, Changed Files, Commit, Coverage Concern, Cyclic Payload Fix, Final Container Fix, Final Edge-Case Fixes, Final Review Findings Addressed (+35 more)
 
 ### Community 26 - "models.py"
-Cohesion: 0.08
-Nodes (35): BaseModel, AcceptedVia, Arm, CaptureContext, ConversionApplied, CuffSize, EntryMode, _freeze_mapping() (+27 more)
+Cohesion: 0.09
+Nodes (32): BaseModel, AcceptedVia, Arm, CaptureContext, ConversionApplied, CuffSize, EntryMode, _freeze_mapping() (+24 more)
 
 ### Community 27 - "Task 2 Report: CI and the Import-Direction Seam Test"
 Cohesion: 0.08
@@ -244,16 +244,16 @@ Nodes (4): 9.1 Three severities, 9.2 Overrides, 9.3 Safety surveillance, 9. Find
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Project Noor — CDS Engine Architecture` connect `Project Noor — CDS Engine Architecture` to `13. Gates`, `16. Open questions`, `4. Module architecture`, `9. Findings, alerts, overrides`, `11. Clinical operations`, `2. Regulatory and compliance posture`, `3.2 Medication knowledge`, `5. The observation model`, `6. `canon` — the data-validity layer`, `10. Clinical content governance`, `7. Rule schema and catalogue`, `12. Testing and validation`, `8. Evaluation`, `15. Deferred`?**
-  _High betweenness centrality (0.030) - this node is a cross-community bridge._
+  _High betweenness centrality (0.031) - this node is a cross-community bridge._
 - **Why does `11. Clinical operations` connect `11. Clinical operations` to `Project Noor — CDS Engine Architecture`?**
   _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `2. Regulatory and compliance posture` connect `2. Regulatory and compliance posture` to `Project Noor — CDS Engine Architecture`?**
   _High betweenness centrality (0.006) - this node is a cross-community bridge._
-- **Are the 17 inferred relationships involving `QualityVerdict` (e.g. with `test_a_canonical_value_requires_a_resolved_unit()` and `test_a_consistent_flagged_verdict_is_accepted()`) actually correct?**
-  _`QualityVerdict` has 17 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSIDE` to the rest of the system?**
-  _453 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _452 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `11. Topics raised during the design interview` be split into smaller, more focused modules?**
   _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
 - **Should `Project Noor — Testing Standards` be split into smaller, more focused modules?**
   _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
+- **Should `5. Interoperability and integration` be split into smaller, more focused modules?**
+  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._

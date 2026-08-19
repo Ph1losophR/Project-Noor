@@ -10,7 +10,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
 from types import MappingProxyType
-from typing import Any, Self, cast
+from typing import Self, cast
 
 from pydantic import (
     AwareDatetime,
@@ -27,33 +27,48 @@ class NoorModel(BaseModel):
     model_config = ConfigDict(frozen=True, extra="forbid")
 
 
-class _FrozenSequence(tuple[Any, ...]):
-    def __eq__(self, other: object) -> bool:
-        return isinstance(other, (list, tuple)) and tuple(self) == tuple(other)
+# A payload arrives from an external source system, so its shape is not trusted
+# (§5). Depth is capped so pathological nesting is refused as a ValidationError
+# like every other malformed payload, instead of escaping the validation channel
+# as a RecursionError. Real clinical payloads nest well under ten levels.
+MAX_PAYLOAD_DEPTH = 32
 
 
-def _freeze_payload(value: object, active_ids: set[int]) -> object:
+def _freeze_payload(value: object, active_ids: set[int], depth: int = 0) -> object:
+    """Validate one JSON value and return an immutable copy of it.
+
+    `active_ids` holds the containers currently being frozen, so a shared subtree
+    is fine and only a true cycle is refused.
+    """
     if isinstance(value, float) and not math.isfinite(value):
         raise ValueError("raw_payload floats must be finite")
     if value is None or isinstance(value, (bool, int, float, str)):
         return value
-    if isinstance(value, (Mapping, list, tuple)):
-        container_id = id(value)
-        if container_id in active_ids:
-            raise ValueError("raw_payload contains a cyclic container")
-        active_ids.add(container_id)
-        try:
-            if isinstance(value, Mapping):
-                frozen_items: dict[str, object] = {}
-                for key, item in value.items():
-                    if not isinstance(key, str):
-                        raise ValueError("raw_payload mapping keys must be strings")
-                    frozen_items[key] = _freeze_payload(item, active_ids)
-                return MappingProxyType(frozen_items)
-            return _FrozenSequence(_freeze_payload(item, active_ids) for item in value)
-        finally:
-            active_ids.remove(container_id)
-    raise ValueError("raw_payload contains an unsupported JSON value")
+    if not isinstance(value, (Mapping, list, tuple)):
+        raise ValueError("raw_payload contains an unsupported JSON value")
+    if depth >= MAX_PAYLOAD_DEPTH:
+        raise ValueError(f"raw_payload nests deeper than {MAX_PAYLOAD_DEPTH} levels")
+    container_id = id(value)
+    if container_id in active_ids:
+        raise ValueError("raw_payload contains a cyclic container")
+    active_ids.add(container_id)
+    try:
+        if isinstance(value, Mapping):
+            return _freeze_mapping(value, active_ids, depth)
+        return tuple(_freeze_payload(item, active_ids, depth + 1) for item in value)
+    finally:
+        active_ids.remove(container_id)
+
+
+def _freeze_mapping(
+    value: Mapping[object, object], active_ids: set[int], depth: int
+) -> Mapping[str, object]:
+    frozen_items: dict[str, object] = {}
+    for key, item in value.items():
+        if not isinstance(key, str):
+            raise ValueError("raw_payload mapping keys must be strings")
+        frozen_items[key] = _freeze_payload(item, active_ids, depth + 1)
+    return MappingProxyType(frozen_items)
 
 
 def _thaw_payload(value: object) -> object:
@@ -65,9 +80,24 @@ def _thaw_payload(value: object) -> object:
 
 
 class UnitResolution(StrEnum):
+    """What unit resolution concluded (SSOT §6.3).
+
+    Every value is an outcome, so none of them means "resolution never ran":
+    `QualityVerdict.unit_resolution` is None for that, exactly as `delta` is None
+    when the value never reached delta review. Holding the enum to outcomes is what
+    lets §11.9's unit counters mean one thing.
+    """
+
     explicit = "explicit"
     inferred_from_code = "inferred_from_code"
     ambiguous = "ambiguous"
+
+
+# A canonical value exists only where resolution settled the unit (§6.3).
+# `ambiguous` and an absent resolution both bar one.
+RESOLVED_UNITS: frozenset[UnitResolution] = frozenset(
+    {UnitResolution.explicit, UnitResolution.inferred_from_code}
+)
 
 
 class QualityState(StrEnum):
@@ -95,6 +125,17 @@ class RejectionReason(StrEnum):
     unit_ambiguous = "unit_ambiguous"
     missing_required_context = "missing_required_context"
     outside_physiologic_envelope = "outside_physiologic_envelope"
+
+
+# The two refusals that precede unit resolution (§6.3). Both are properties of the
+# record rather than of the value: an unusable mapping leaves no trustworthy
+# observable to resolve against (§5), and a withdrawn source status is refused
+# before the three layers run (§13.1 gate 1). Every other reason implies a layer
+# ran — a unit resolves whether or not the value parses, the context is complete,
+# or the result is plausible.
+PRE_RESOLUTION_REJECTIONS: frozenset[RejectionReason] = frozenset(
+    {RejectionReason.mapping_unusable, RejectionReason.source_status_unusable}
+)
 
 
 class SuspicionReason(StrEnum):
@@ -204,7 +245,12 @@ class CaptureContext(NoorModel):
 
 
 class MappingInfo(NoorModel):
-    """How the source code became a Noor observable (SSOT §5)."""
+    """How the source code became a Noor observable (SSOT §5).
+
+    §5 also lists `confidence`; it is deferred to the terminology charter (§3.3),
+    which decides what produces it. The model is closed, so adding it later is a
+    schema change rather than an additive one.
+    """
 
     status: MappingStatus = MappingStatus.mapped
     source_display: str | None = None
@@ -229,6 +275,10 @@ class ObservationCapture(NoorModel):
     `encounter_id` is carried and never read: a rule cannot ask which encounter a
     fact came from (§8.1), but the model is closed, so canon's output has to be
     able to hold the one inert §5 field the workflow adds.
+
+    Frozen but not hashable: `raw_payload` holds a mapping, and no immutable
+    mapping in the standard library hashes. Compare captures by value; key
+    collections by `source_identifier` and `source_version` (§5) instead.
     """
 
     observable: str = Field(min_length=1)
@@ -249,7 +299,7 @@ class ObservationCapture(NoorModel):
     as_reported: ReportedValue
     absent_reason: str | None = None
     mapping: MappingInfo = MappingInfo()
-    context_flags: tuple[str, ...] = Field(default_factory=tuple, validate_default=True)
+    context_flags: tuple[str, ...] = ()
     raw_payload: Mapping[str, object] = Field(default_factory=dict, validate_default=True)
 
     @field_validator("effective_time", "issued_at", "received_at")
@@ -269,27 +319,15 @@ class ObservationCapture(NoorModel):
             raise ValueError("absent_reason is set INSTEAD of a value, never alongside it (§5)")
         return self
 
-    @field_validator("raw_payload", mode="before")
-    @classmethod
-    def _validate_raw_payload(cls, payload: object) -> object:
-        return _freeze_payload(payload, set())
-
     @field_validator("raw_payload", mode="after")
     @classmethod
     def _freeze_raw_payload(cls, payload: Mapping[str, object]) -> Mapping[str, object]:
         return cast(Mapping[str, object], _freeze_payload(payload, set()))
 
-    @field_validator("context_flags", mode="after")
-    @classmethod
-    def _freeze_context_flags(cls, values: tuple[str, ...]) -> tuple[str, ...]:
-        return _FrozenSequence(values)
-
-    @field_serializer("context_flags")
-    def _serialise_context_flags(self, values: tuple[str, ...]) -> list[str]:
-        return list(values)
-
     @field_serializer("raw_payload")
     def _serialise_raw_payload(self, payload: Mapping[str, object]) -> dict[str, object]:
+        """Without this, dumping a frozen payload emits mappingproxy in Python mode
+        and fails outright in JSON mode — pydantic cannot serialise the type."""
         return cast(dict[str, object], _thaw_payload(payload))
 
 
@@ -357,25 +395,19 @@ class DeltaVerdict(NoorModel):
 
 
 class QualityVerdict(NoorModel):
-    """Canon's intrinsic verdict on one observation (SSOT §6.2)."""
+    """Canon's intrinsic verdict on one observation (SSOT §6.2).
+
+    `unit_resolution` is None exactly when canon refused the record before
+    resolution could run (§6.3). It is nullable but not optional: every verdict
+    states which of the two happened.
+    """
 
     state: QualityState
-    unit_resolution: UnitResolution
+    unit_resolution: UnitResolution | None
     accepted_via: AcceptedVia | None = None
-    rejection_reasons: tuple[RejectionReason, ...] = Field(
-        default_factory=tuple, validate_default=True
-    )
-    suspicions: tuple[SuspicionReason, ...] = Field(default_factory=tuple, validate_default=True)
+    rejection_reasons: tuple[RejectionReason, ...] = ()
+    suspicions: tuple[SuspicionReason, ...] = ()
     delta: DeltaVerdict | None = None
-
-    @field_validator("rejection_reasons", "suspicions", mode="after")
-    @classmethod
-    def _freeze_verdict_collections(cls, values: tuple[Any, ...]) -> tuple[Any, ...]:
-        return _FrozenSequence(values)
-
-    @field_serializer("rejection_reasons", "suspicions")
-    def _serialise_verdict_collections(self, values: tuple[Any, ...]) -> list[Any]:
-        return list(values)
 
     @model_validator(mode="after")
     def _the_verdict_explains_itself(self) -> Self:
@@ -385,6 +417,21 @@ class QualityVerdict(NoorModel):
             raise ValueError("a rejected observation names why")
         if self.state is QualityState.needs_repeat_or_verification and not self.suspicions:
             raise ValueError("a flagged observation names what is suspected")
+        # §6.3: the enum holds outcomes, so a record refused before resolution ran
+        # reports None. Calling it `ambiguous` instead would force a `unit_ambiguous`
+        # reason and hand §11.9's missing-unit rate a unit failure that never
+        # happened. An equivalence rather than an implication, because a resolution
+        # outcome on a pre-resolution refusal misleads the same counters the other
+        # way — and the verbatim unit is kept in `as_reported` regardless.
+        # Safe after the check above: a rejected verdict has reasons by this line.
+        reasons_precede_resolution = set(self.rejection_reasons) <= PRE_RESOLUTION_REJECTIONS
+        refused_before_resolution = (
+            self.state is QualityState.rejected and reasons_precede_resolution
+        )
+        if (self.unit_resolution is None) is not refused_before_resolution:
+            raise ValueError(
+                "unit resolution is absent exactly when the refusal precedes it (§6.3)"
+            )
         if self.unit_resolution is UnitResolution.ambiguous and (
             self.state is not QualityState.rejected
             or RejectionReason.unit_ambiguous not in self.rejection_reasons
@@ -396,20 +443,22 @@ class QualityVerdict(NoorModel):
 class CanonicalObservation(ObservationCapture):
     """Canon's output: the verbatim capture, its canonical value, its quality verdict.
 
-    `canonical` is None exactly when the value could not be made safe to evaluate —
-    most sharply when `unit_resolution` is `ambiguous` (§6.3). The converse is an
-    invariant, not a hope: an accepted-family observation always carries a
-    canonical value, which is what lets `delta` and the engine read it without a
-    None check they could get wrong.
+    `canonical` is None when the value could not be made safe to evaluate. The
+    converse is an invariant, not a hope: an accepted-family observation always
+    carries a canonical value, which is what lets `delta` and the engine read it
+    without a None check they could get wrong. A canonical value in turn requires a
+    resolved unit (§6.3), so a rejected observation may still carry one — an
+    envelope refusal needs the canonical value to reach its verdict — while an
+    ambiguous or unattempted resolution never can.
     """
 
     canonical: CanonicalQuantity | None
     quality: QualityVerdict
 
     @model_validator(mode="after")
-    def _an_accepted_observation_carries_a_canonical_value(self) -> Self:
+    def _the_canonical_value_matches_the_verdict(self) -> Self:
         if self.quality.state in ACCEPTED_FAMILY and self.canonical is None:
             raise ValueError("an accepted observation carries a canonical value (§6.3)")
-        if self.quality.unit_resolution is UnitResolution.ambiguous and self.canonical is not None:
-            raise ValueError("an ambiguous unit resolution carries no canonical value (§6.3)")
+        if self.canonical is not None and self.quality.unit_resolution not in RESOLVED_UNITS:
+            raise ValueError("a canonical value requires a resolved unit (§6.3)")
         return self

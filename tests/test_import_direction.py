@@ -108,7 +108,11 @@ def _called_builtin_functions(path: Path) -> list[str]:
 
 def _identifiers(path: Path) -> list[str]:
     """Every name the code *uses* — not comments or docstrings, which may say
-    "threshold" while explaining why there isn't one."""
+    "threshold" while explaining why there isn't one.
+
+    Parameter and keyword-argument names count: `def locate(threshold)` and
+    `entry.bound(threshold=x)` name one without ever loading it as a variable.
+    """
     tree = ast.parse(path.read_text(encoding="utf-8"))
     names: list[str] = []
     for node in ast.walk(tree):
@@ -118,6 +122,8 @@ def _identifiers(path: Path) -> list[str]:
             names.append(node.attr)
         elif isinstance(node, (ast.FunctionDef, ast.ClassDef)):
             names.append(node.name)
+        elif isinstance(node, (ast.arg, ast.keyword)) and node.arg is not None:
+            names.append(node.arg)
         elif isinstance(node, (ast.Import, ast.ImportFrom)):
             names.extend(alias.name for alias in node.names)
     return names
