@@ -258,6 +258,34 @@ def test_accepted_via_unremarkable_round_trips():
     assert verdict.accepted_via is AcceptedVia.unremarkable
 
 
+@pytest.mark.parametrize(
+    "quality_state",
+    [QualityState.accepted, QualityState.clinically_exceptional_accepted],
+)
+def test_an_accepted_family_verdict_cannot_carry_rejection_reasons(quality_state):
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=quality_state,
+            unit_resolution=UnitResolution.explicit,
+            accepted_via=AcceptedVia.unremarkable,
+            rejection_reasons=[RejectionReason.parse_failure],
+        )
+
+
+@pytest.mark.parametrize(
+    "unit_resolution", [UnitResolution.explicit, UnitResolution.inferred_from_code]
+)
+def test_a_resolved_verdict_cannot_carry_a_unit_ambiguous_rejection(unit_resolution):
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.rejected,
+            unit_resolution=unit_resolution,
+            rejection_reasons=[RejectionReason.unit_ambiguous],
+        )
+
+
 def test_verdict_reason_lists_are_stored_as_immutable_collections():
     # Arrange — reasons arrive as lists, from callers and from JSON alike
     verdict = QualityVerdict(

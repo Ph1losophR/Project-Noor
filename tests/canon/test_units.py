@@ -14,7 +14,18 @@ LOINC_HBA1C = SourceCode(system="http://loinc.org", code="4548-4")
 
 def test_a_reported_accepted_unit_resolves_explicitly():
     # Arrange
-    entry = make_entry(accepted_units=["mmol/L", "mg/dL"])
+    entry = make_entry(
+        accepted_units=["mmol/L", "mg/dL"],
+        conversions=[
+            Conversion(
+                from_unit="mg/dL",
+                precision=2,
+                tolerance=Decimal("0.5"),
+                canonical_tolerance=Decimal("0.01"),
+                version="t1",
+            )
+        ],
+    )
 
     # Act
     resolution, unit = resolve_unit("mg/dL", None, entry)
@@ -26,7 +37,18 @@ def test_a_reported_accepted_unit_resolves_explicitly():
 
 def test_an_unrecognised_unit_is_ambiguous():
     # Arrange — "mg%" is a real-world spelling drift; never guessed (§6.3)
-    entry = make_entry(accepted_units=["mmol/L", "mg/dL"])
+    entry = make_entry(
+        accepted_units=["mmol/L", "mg/dL"],
+        conversions=[
+            Conversion(
+                from_unit="mg/dL",
+                precision=2,
+                tolerance=Decimal("0.5"),
+                canonical_tolerance=Decimal("0.01"),
+                version="t1",
+            )
+        ],
+    )
 
     # Act
     resolution, unit = resolve_unit("mg%", None, entry)
@@ -41,6 +63,15 @@ def test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous():
     entry = make_entry(
         accepted_units=["%", "mmol/mol"],
         canonical_ucum="mmol/mol",
+        conversions=[
+            Conversion(
+                from_unit="%",
+                precision=2,
+                tolerance=Decimal("0.5"),
+                canonical_tolerance=Decimal("0.01"),
+                version="t1",
+            )
+        ],
         code_unit_map={"http://loinc.org|59261-8": "mmol/mol"},
     )
     ifcc_code = SourceCode(system="http://loinc.org", code="59261-8")
@@ -154,10 +185,10 @@ def test_an_unconvertible_unit_raises():
         to_canonical(Decimal("100"), "mg/dL", make_entry())
 
 
-def test_conversion_to_canonical_rejects_an_accepted_unit_without_a_matching_declaration():
+def test_conversion_to_canonical_rejects_an_unaccepted_unit_without_a_matching_declaration():
     # Arrange
     entry = make_entry(
-        accepted_units=["mmol/L", "mg/dL", "g/L"],
+        accepted_units=["mmol/L", "mg/dL"],
         conversions=[
             Conversion(
                 from_unit="mg/dL",
@@ -278,6 +309,27 @@ def test_reverse_identity_returns_a_valid_canonical_quantity_value():
     assert value == Decimal("7.40")
 
 
+def test_reverse_identity_rejects_provenance_with_a_bogus_source_unit():
+    # Arrange
+    entry = make_entry()
+    quantity = CanonicalQuantity(
+        value=Decimal("7.40"),
+        ucum="mmol/L",
+        conversion_applied=ConversionApplied(
+            from_unit="bogus",
+            add=Decimal("0"),
+            multiply=Decimal("1"),
+            precision=2,
+            rounding="ROUND_HALF_UP",
+            version="historical-v1",
+        ),
+    )
+
+    # Act / Assert
+    with pytest.raises(UnknownUnitError):
+        from_canonical(quantity, "mmol/L", entry)
+
+
 def test_reverse_conversion_rejects_an_undeclared_target_unit():
     # Arrange
     quantity = to_canonical(Decimal("90"), "mmol/L", make_entry())
@@ -395,10 +447,10 @@ def test_reverse_conversion_rejects_a_target_that_does_not_match_provenance():
         from_canonical(quantity, "g/L", entry)
 
 
-def test_reverse_conversion_rejects_an_accepted_unit_without_a_declared_conversion():
+def test_reverse_conversion_rejects_an_unaccepted_unit_without_a_declared_conversion():
     # Arrange
     entry = make_entry(
-        accepted_units=["mmol/L", "mg/dL", "g/L"],
+        accepted_units=["mmol/L", "mg/dL"],
         conversions=[
             Conversion(
                 from_unit="mg/dL",

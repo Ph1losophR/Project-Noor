@@ -105,6 +105,13 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
             provenance_is_usable = False
         if not provenance_is_usable:
             raise UnknownUnitError(f"{entry.observable}: malformed conversion provenance")
+        provenance_source_is_noncanonical = (
+            applied.from_unit in entry.accepted_units and applied.from_unit != entry.canonical_ucum
+        )
+        if not provenance_source_is_noncanonical:
+            raise UnknownUnitError(
+                f"{entry.observable}: provenance source unit is not an accepted non-canonical unit"
+            )
         if unit != entry.canonical_ucum and applied.from_unit != unit:
             raise UnknownUnitError(
                 f"{entry.observable}: conversion provenance does not match {unit!r}"
@@ -113,7 +120,7 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
         return quantity.value
     if applied is not None:
         return (quantity.value / applied.multiply) - applied.add
-    for conversion in entry.conversions:
-        if conversion.from_unit == unit:
-            return (quantity.value / conversion.multiply) - conversion.add
-    raise UnknownUnitError(f"{entry.observable}: no conversion declared back to {unit!r}")
+    conversion = next(
+        conversion for conversion in entry.conversions if conversion.from_unit == unit
+    )
+    return (quantity.value / conversion.multiply) - conversion.add

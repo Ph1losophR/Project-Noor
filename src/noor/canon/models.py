@@ -413,6 +413,8 @@ class QualityVerdict(NoorModel):
     def _the_verdict_explains_itself(self) -> Self:
         if self.state in ACCEPTED_FAMILY and self.accepted_via is None:
             raise ValueError("an accepted observation carries how it got there (§6.2)")
+        if self.state in ACCEPTED_FAMILY and self.rejection_reasons:
+            raise ValueError("an accepted observation cannot carry rejection reasons (§6.2)")
         if self.state is QualityState.rejected and not self.rejection_reasons:
             raise ValueError("a rejected observation names why")
         if self.state is QualityState.needs_repeat_or_verification and not self.suspicions:
@@ -437,6 +439,11 @@ class QualityVerdict(NoorModel):
             or RejectionReason.unit_ambiguous not in self.rejection_reasons
         ):
             raise ValueError("ambiguous unit resolution is rejected as unit_ambiguous (§6.3)")
+        if (
+            self.unit_resolution in RESOLVED_UNITS
+            and RejectionReason.unit_ambiguous in self.rejection_reasons
+        ):
+            raise ValueError("a resolved unit cannot be rejected as unit_ambiguous (§6.3)")
         return self
 
 

@@ -5,10 +5,12 @@ their conversions, the two validity envelopes (§6.4), delta policy, required
 context/method fields, and a named owner per observable.
 """
 
+from collections.abc import Mapping
 from decimal import Decimal
+from types import MappingProxyType
 from typing import Literal, Self
 
-from pydantic import Field, model_validator
+from pydantic import Field, field_serializer, field_validator, model_validator
 
 from noor.canon.models import NoorModel
 
@@ -81,7 +83,7 @@ class DeltaPolicy(NoorModel):
 
     max_abs_change: Decimal = Field(gt=0)
     within_hours: int = Field(gt=0)
-    compare_context: list[str] = Field(default_factory=list)
+    compare_context: tuple[str, ...] = ()
     compare_device_class: bool = True
 
     @model_validator(mode="after")
@@ -105,15 +107,24 @@ class ObservableEntry(NoorModel):
     observable: str = Field(pattern=r"^[a-z][a-z0-9_]*$")
     owner: str = Field(min_length=1)
     canonical_ucum: str = Field(min_length=1)
-    accepted_units: list[str] = Field(min_length=1)
-    conversions: list[Conversion] = Field(default_factory=list)
-    code_unit_map: dict[str, str] = Field(default_factory=dict)
+    accepted_units: tuple[str, ...] = Field(min_length=1)
+    conversions: tuple[Conversion, ...] = ()
+    code_unit_map: Mapping[str, str] = Field(default_factory=dict)
     physiologic: Envelope
     operational: Envelope
     delta_policy: DeltaPolicy
     repeat_tolerance: Decimal = Field(gt=0)
-    required_context: list[str] = Field(default_factory=list)
-    required_method: list[str] = Field(default_factory=list)
+    required_context: tuple[str, ...] = ()
+    required_method: tuple[str, ...] = ()
+
+    @field_validator("code_unit_map", mode="after")
+    @classmethod
+    def _freeze_code_unit_map(cls, value: Mapping[str, str]) -> Mapping[str, str]:
+        return MappingProxyType(dict(value))
+
+    @field_serializer("code_unit_map")
+    def _serialise_code_unit_map(self, value: Mapping[str, str]) -> dict[str, str]:
+        return dict(value)
 
     @model_validator(mode="after")
     def _internally_consistent(self) -> Self:
@@ -124,6 +135,13 @@ class ObservableEntry(NoorModel):
                 raise ValueError("a conversion from the canonical unit is identity; omit it")
             if conversion.from_unit not in self.accepted_units:
                 raise ValueError(f"conversion from unaccepted unit {conversion.from_unit!r}")
+        missing_conversions = (set(self.accepted_units) - {self.canonical_ucum}) - {
+            conversion.from_unit for conversion in self.conversions
+        }
+        if missing_conversions:
+            raise ValueError(
+                f"accepted non-canonical units need conversions: {sorted(missing_conversions)}"
+            )
         for key, unit in self.code_unit_map.items():
             if key.count("|") != 1 or any(not component for component in key.split("|")):
                 raise ValueError("code_unit_map keys are 'system|code'")
