@@ -117,9 +117,17 @@ def make_canonical(
             RejectionReason.source_status_unusable,
         }
         canonical = None if valueless & set(reasons) else quantity()
+        unit_resolution = (
+            None
+            if set(reasons)
+            <= {RejectionReason.mapping_unusable, RejectionReason.source_status_unusable}
+            else UnitResolution.ambiguous
+            if RejectionReason.unit_ambiguous in reasons
+            else UnitResolution.explicit
+        )
         quality = QualityVerdict(
             state=state,
-            unit_resolution=UnitResolution.explicit,
+            unit_resolution=unit_resolution,
             rejection_reasons=reasons,
         )
     elif state is QualityState.needs_repeat_or_verification:
@@ -135,7 +143,11 @@ def make_canonical(
         quality = QualityVerdict(
             state=state,
             unit_resolution=UnitResolution.explicit,
-            accepted_via=AcceptedVia.unremarkable,
+            accepted_via=(
+                AcceptedVia.clinician_verified
+                if state is QualityState.clinically_exceptional_accepted
+                else AcceptedVia.unremarkable
+            ),
             delta=delta,
         )
     return CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
