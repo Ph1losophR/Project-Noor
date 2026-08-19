@@ -8,6 +8,7 @@ from decimal import Decimal
 import pytest
 
 from noor.canon.models import (
+    WITHDRAWN_SOURCE_STATUSES,
     Arm,
     CaptureContext,
     CuffSize,
@@ -26,8 +27,8 @@ from noor.canon.models import (
     UnitResolution,
 )
 from noor.canon.pipeline import AbsentObservationError, canonicalise
-from noor.canon.registry import UnknownObservableError
-from tests.conftest import T0, make_canonical, make_capture
+from noor.canon.registry import ObservableRegistry, UnknownObservableError
+from tests.conftest import T0, make_canonical, make_capture, make_conversion, make_entry
 
 
 def bp_capture(value: str, **kw):
@@ -156,10 +157,12 @@ def test_an_ambiguous_mapping_reaches_canon_as_unusable(registry):
     assert result.canonical is None
 
 
-def test_a_withdrawn_source_record_is_refused(registry):
+@pytest.mark.parametrize("status", sorted(WITHDRAWN_SOURCE_STATUSES))
+def test_a_withdrawn_source_record_is_refused(registry, status):
     # Arrange — §5: the source retracted this. Canonicalising it would turn a
-    # retraction into a fact.
-    capture = make_capture(source_status=SourceStatus.entered_in_error)
+    # retraction into a fact. Driven off the frozenset so a new withdrawn status
+    # cannot be added to the enum without a row here.
+    capture = make_capture(source_status=status)
 
     # Act
     result = canonicalise(capture, registry)
@@ -171,23 +174,12 @@ def test_a_withdrawn_source_record_is_refused(registry):
     assert result.canonical is None
 
 
-def test_a_cancelled_source_record_is_refused(registry):
-    # Arrange — the other withdrawn status; both rows of the boundary
-    capture = make_capture(source_status=SourceStatus.cancelled)
-
-    # Act
-    result = canonicalise(capture, registry)
-
-    # Assert
-    assert result.quality.state is QualityState.rejected
-    assert result.quality.rejection_reasons == (RejectionReason.source_status_unusable,)
-    assert result.quality.unit_resolution is None  # resolution never ran (§6.3)
-
-
-def test_a_corrected_source_record_is_canonicalised_normally(registry):
-    # Arrange — a correction is the value that stands, not a withdrawal
-    # (assumption 11); freshness is a per-rule §5.1 question, not canon's.
-    capture = make_capture(source_status=SourceStatus.corrected)
+@pytest.mark.parametrize("status", sorted(set(SourceStatus) - WITHDRAWN_SOURCE_STATUSES))
+def test_a_source_record_the_source_still_stands_behind_is_canonicalised_normally(registry, status):
+    # Arrange — canon gates on withdrawal, not on finality: whether a preliminary
+    # result is fresh enough for a decision is a per-rule §5.1 question, and a
+    # correction is the value that stands rather than a withdrawal (assumption 11).
+    capture = make_capture(source_status=status)
 
     # Act
     result = canonicalise(capture, registry)
@@ -196,17 +188,6 @@ def test_a_corrected_source_record_is_canonicalised_normally(registry):
     assert result.quality.state is QualityState.accepted
     assert result.canonical is not None
     assert result.canonical.value == Decimal("5.5")
-
-
-def test_a_preliminary_source_record_is_canonicalised_normally(registry):
-    # Arrange — canon does not gate on finality (assumption 11)
-    capture = make_capture(source_status=SourceStatus.preliminary)
-
-    # Act
-    result = canonicalise(capture, registry)
-
-    # Assert
-    assert result.quality.state is QualityState.accepted
 
 
 def test_an_unusable_mapping_and_an_unusable_status_are_both_named(registry):
@@ -338,26 +319,62 @@ def test_a_real_but_extreme_value_and_a_mistyped_value_land_in_different_states(
     assert extreme_result.quality.state != mistyped_result.quality.state
 
 
-def test_a_decimal_transposition_pattern_adds_a_suspicion(registry):
-    # Arrange — glucose 40 mmol/L: outside operational, and 4.0 would be inside
-    capture = make_capture(value="40", unit="mmol/L")
+@pytest.mark.parametrize(
+    ("observable", "value", "unit", "shape"),
+    [
+        # pulse 20 with a 200 partner: the operational envelope spans 5.7x, so a
+        # ten-times slip is real news. No swap of "20" lands inside it.
+        pytest.param(
+            "pulse",
+            "20",
+            "/min",
+            SuspicionReason.decimal_shift_suspected,
+            id="a_pulse_of_20_that_could_be_200",
+        ),
+        # glucose 0.3 with a 3.0 partner: true, but glucose spans 23.3x, where a
+        # partner exists for every flagged value, so the decimal shape stays silent
+        # and only the swap that produced 0.3 from 3.0 is recorded.
+        pytest.param(
+            "glucose",
+            "0.3",
+            "mmol/L",
+            SuspicionReason.digit_transposition_suspected,
+            id="a_glucose_of_0_3_that_could_be_3_0",
+        ),
+    ],
+)
+def test_a_flagged_value_records_only_the_mistype_shape_that_discriminates(
+    registry, observable, value, unit, shape
+):
+    # Arrange — §6.1's two shapes are recorded where they say something about this
+    # reading, and nowhere else: a hint true of every flagged value trains the
+    # reader to skim the flag that matters.
+    capture = make_capture(observable=observable, value=value, unit=unit)
 
     # Act
     result = canonicalise(capture, registry)
 
-    # Assert
+    # Assert — the exact tuple: the other shape is absent, not merely unasserted
     assert result.quality.state is QualityState.needs_repeat_or_verification
-    assert SuspicionReason.outside_operational_envelope in result.quality.suspicions
-    assert SuspicionReason.decimal_transposition_suspected in result.quality.suspicions
+    assert result.quality.suspicions == (SuspicionReason.outside_operational_envelope, shape)
+
+
+def canonicalised_prior(registry, value: str, unit: str, **kw):
+    """A prior as canon actually stored it.
+
+    Canonicalised rather than assembled, so its canonical value carries the real
+    conversion provenance (§6.3) — which is how a stored record still names the
+    unit the source reported.
+    """
+    return canonicalise(make_capture(value=value, unit=unit, **kw), registry)
 
 
 def test_a_unit_changed_from_the_patients_prior_record_is_flagged(registry):
     # Arrange — §6.1 layer 1: the prior was mg/dL, today's says mmol/L
-    prior = make_canonical(
-        value="100",
-        unit="mg/dL",
-        canonical_value="5.55",
-        canonical_ucum="mmol/L",
+    prior = canonicalised_prior(
+        registry,
+        "100",
+        "mg/dL",
         effective_time=T0 - timedelta(hours=1),
         source_identifier="PRIOR-1",
     )
@@ -373,11 +390,10 @@ def test_a_unit_changed_from_the_patients_prior_record_is_flagged(registry):
 
 def test_a_unit_matching_the_patients_prior_record_is_unremarkable(registry):
     # Arrange — same unit as the prior: no suspicion
-    prior = make_canonical(
-        value="100",
-        unit="mg/dL",
-        canonical_value="5.55",
-        canonical_ucum="mmol/L",
+    prior = canonicalised_prior(
+        registry,
+        "100",
+        "mg/dL",
         effective_time=T0 - timedelta(hours=1),
         source_identifier="PRIOR-1",
     )
@@ -393,11 +409,10 @@ def test_a_unit_matching_the_patients_prior_record_is_unremarkable(registry):
 
 def test_a_later_observation_is_not_a_unit_change_baseline(registry):
     # Arrange — results land out of order; only earlier priors count
-    later = make_canonical(
-        value="100",
-        unit="mg/dL",
-        canonical_value="5.55",
-        canonical_ucum="mmol/L",
+    later = canonicalised_prior(
+        registry,
+        "100",
+        "mg/dL",
         effective_time=T0 + timedelta(hours=1),
         source_identifier="LATER-1",
     )
@@ -415,11 +430,10 @@ def test_a_superseded_prior_is_not_the_unit_change_baseline(registry):
     # 5.55 mmol/L. Today's mmol/L capture matches the version that stands, so
     # there is no unit change to flag. Newest first: arrival order is not sorted.
     versions = [
-        make_canonical(
-            value=value,
-            unit=unit,
-            canonical_value="5.55",
-            canonical_ucum="mmol/L",
+        canonicalised_prior(
+            registry,
+            value,
+            unit,
             effective_time=T0 - timedelta(hours=1),
             source_identifier="PRIOR-1",
             source_version=version,
@@ -437,23 +451,21 @@ def test_a_superseded_prior_is_not_the_unit_change_baseline(registry):
 
 
 def test_the_unit_change_flag_does_not_depend_on_prior_arrival_order(registry):
-    # Arrange — two priors at the same effective_time: the same-source, same-time
-    # tie is broken by source_identifier, so PRIOR-B (already mmol/L) is the
-    # latest baseline whichever order the priors arrive in (§5: a never-rewritten
-    # verdict cannot depend on query order).
-    prior_a = make_canonical(
-        value="100",
-        unit="mg/dL",
-        canonical_value="5.55",
-        canonical_ucum="mmol/L",
+    # Arrange — two priors at the same effective_time, one mg/dL and one mmol/L.
+    # The tie is broken by source_identifier, so PRIOR-B (already mmol/L) is the
+    # baseline whichever order the priors arrive in (§5: a never-rewritten verdict
+    # cannot depend on query order).
+    prior_a = canonicalised_prior(
+        registry,
+        "100",
+        "mg/dL",
         effective_time=T0 - timedelta(hours=1),
         source_identifier="PRIOR-A",
     )
-    prior_b = make_canonical(
-        value="5.5",
-        unit="mmol/L",
-        canonical_value="5.5",
-        canonical_ucum="mmol/L",
+    prior_b = canonicalised_prior(
+        registry,
+        "5.5",
+        "mmol/L",
         effective_time=T0 - timedelta(hours=1),
         source_identifier="PRIOR-B",
     )
@@ -466,6 +478,78 @@ def test_the_unit_change_flag_does_not_depend_on_prior_arrival_order(registry):
     # Assert — the tie-break picks the same baseline; no unit change either way
     assert forward == reversed_order
     assert forward.quality.suspicions == ()
+
+
+@pytest.fixture
+def dual_unit_registry() -> ObservableRegistry:
+    """One observable that accepts both units and maps an observation code to each.
+
+    Synthetic because no shipped observable does both: an entry needs a non-empty
+    code_unit_map *and* a second accepted unit before a source can switch between
+    an explicit unit and a code-implied one, and content/observables/registry.yaml
+    has no such entry. Envelopes come from make_entry: [2, 10] and [4, 8] mmol/L.
+    """
+    return ObservableRegistry(
+        entries={
+            "glucose": make_entry(
+                observable="glucose",
+                accepted_units=["mmol/L", "mg/dL"],
+                conversions=[make_conversion(multiply=Decimal("0.0555"))],
+                code_unit_map={
+                    "http://loinc.org|2345-7": "mg/dL",  # glucose [mass/volume]
+                    "http://loinc.org|14749-6": "mmol/L",  # glucose [moles/volume]
+                },
+            )
+        }
+    )
+
+
+@pytest.mark.parametrize(
+    ("code", "value", "state", "suspicions"),
+    [
+        pytest.param(
+            "2345-7",
+            "100",
+            QualityState.needs_repeat_or_verification,
+            (SuspicionReason.unit_changed_from_prior,),
+            id="a_code_implied_mg_dL_after_an_explicit_mmol_L_prior",
+        ),
+        pytest.param(
+            "14749-6",
+            "5.6",
+            QualityState.accepted,
+            (),
+            id="a_code_implied_mmol_L_after_an_explicit_mmol_L_prior",
+        ),
+    ],
+)
+def test_a_unit_change_is_read_from_the_resolved_unit_not_the_reported_text(
+    dual_unit_registry, code, value, state, suspicions
+):
+    # Arrange — §6.3: an interfaced source stops sending a unit and starts relying
+    # on its observation code. Whether that is a unit change is a question about the
+    # resolved units, not about the reported text, which is absent on one side here.
+    prior = canonicalised_prior(
+        dual_unit_registry,
+        "5.5",
+        "mmol/L",
+        effective_time=T0 - timedelta(hours=1),
+        source_identifier="PRIOR-1",
+    )
+    capture = make_capture(
+        value=value,
+        unit=None,
+        source_code=SourceCode(system="http://loinc.org", code=code),
+    )
+
+    # Act
+    result = canonicalise(capture, dual_unit_registry, priors=[prior])
+
+    # Assert — the incoming unit really did arrive implied, and the flag followed
+    # the unit rather than the absence
+    assert result.quality.unit_resolution is UnitResolution.inferred_from_code
+    assert result.quality.state is state
+    assert result.quality.suspicions == suspicions
 
 
 def test_priors_may_be_a_generator(registry):

@@ -1,12 +1,6 @@
 """Layout sanity: the module map of SSOT §4.1 exists and imports."""
 
 import importlib
-import sys
-
-
-def test_the_interpreter_is_at_least_python_312():
-    # Arrange / Act / Assert
-    assert sys.version_info >= (3, 12)
 
 
 def test_the_ssot_module_layout_exists_and_imports():

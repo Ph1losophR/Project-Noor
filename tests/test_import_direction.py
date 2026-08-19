@@ -1,4 +1,8 @@
-"""The device-boundary seam test (SSOT §4.2).
+"""The import-direction and purity half of the device-boundary seam (SSOT §4.2).
+
+What these packages may *import and call*, read statically off the AST. The other
+half of §4.2 — the data contract a device reading must satisfy to cross the
+boundary — is a property of the models at runtime, not of the import graph.
 
 `app` imports from `canon`, `engine`, and `catalogue` — never the reverse.
 `canon` and `engine` are pure: no database, no HTTP, no filesystem, no clock

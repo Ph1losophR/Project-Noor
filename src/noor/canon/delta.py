@@ -11,7 +11,7 @@ trigger, never a correction: nothing here mutates a value.
 """
 
 from collections.abc import Iterable
-from datetime import timedelta
+from datetime import datetime, timedelta
 from decimal import Decimal
 
 from noor.canon.models import (
@@ -22,6 +22,24 @@ from noor.canon.models import (
     ObservationCapture,
 )
 from noor.canon.registry import ObservableEntry
+
+
+def _version_order(prior: CanonicalObservation) -> tuple[int, datetime, str, str]:
+    """A total order over records sharing one identity, derived from content alone.
+
+    `source_version` decides it (§5). The rest breaks a tie the source should
+    never have produced — two records under one identifier at one version — and
+    exists so that arrival order cannot. A quality verdict is written into a
+    record that is never rewritten (§5); it must not depend on what order a query
+    happened to return, which is the same reason the two selections below and in
+    the pipeline are order-independent.
+    """
+    return (
+        prior.source_version,
+        prior.effective_time,
+        prior.as_reported.value or "",
+        prior.as_reported.unit or "",
+    )
 
 
 def current_versions(
@@ -40,13 +58,11 @@ def current_versions(
     between them is not a version of anything, and dropping one would discard a
     baseline that exists.
     """
-    latest: dict[tuple[str, str, str], CanonicalObservation] = {}
+    grouped: dict[tuple[str, str, str], list[CanonicalObservation]] = {}
     for prior in priors:
         key = (prior.source_system, prior.source_identifier, prior.observable)
-        seen = latest.get(key)
-        if seen is None or prior.source_version > seen.source_version:
-            latest[key] = prior
-    return list(latest.values())
+        grouped.setdefault(key, []).append(prior)
+    return [max(group, key=_version_order) for group in grouped.values()]
 
 
 def is_comparable(

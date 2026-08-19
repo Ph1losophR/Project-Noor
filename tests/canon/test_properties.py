@@ -8,6 +8,7 @@ withdrawn, and no unexplained passage.
 """
 
 import string
+from datetime import timedelta
 from decimal import Decimal
 
 from hypothesis import given
@@ -20,24 +21,21 @@ from noor.canon.models import (
     MappingInfo,
     MappingStatus,
     QualityState,
-    RejectionReason,
     ReportedValue,
     SourceStatus,
 )
 from noor.canon.pipeline import canonicalise
 from noor.canon.plausibility import EnvelopePosition, locate
 from noor.catalogue.registry_loader import load_registry
-from tests.conftest import REGISTRY_PATH, make_capture
+from tests.conftest import (
+    REGISTRY_PATH,
+    T0,
+    VALUELESS_REJECTIONS,
+    make_capture,
+)
 
 REGISTRY = load_registry(REGISTRY_PATH)
 OBSERVABLES = sorted(REGISTRY.entries)
-
-VALUELESS_REJECTIONS = {
-    RejectionReason.parse_failure,
-    RejectionReason.unit_ambiguous,
-    RejectionReason.mapping_unusable,
-    RejectionReason.source_status_unusable,
-}
 
 value_strings = st.one_of(
     st.decimals(
@@ -70,6 +68,37 @@ unit_strings = st.one_of(
 mapping_statuses = st.sampled_from(list(MappingStatus))
 source_statuses = st.sampled_from(list(SourceStatus))
 observables = st.sampled_from(OBSERVABLES)
+
+# Glucose priors as a source might have sent them: two identifiers so records
+# collide, two versions so a correction supersedes (§5), and hours spanning the
+# 4-hour delta window from both sides.
+prior_specs = st.lists(
+    st.tuples(
+        st.sampled_from(["1.0", "5.5", "9.0", "30.0", "100"]),
+        st.sampled_from(["mmol/L", "mg/dL"]),
+        st.sampled_from([1, 3, 5]),
+        st.sampled_from([1, 2]),
+        st.sampled_from(["PRIOR-A", "PRIOR-B"]),
+    ),
+    max_size=3,
+)
+
+
+def stored_glucose_priors(specs):
+    """The specs as canon would have stored them, provenance and all (§6.3)."""
+    return [
+        canonicalise(
+            make_capture(
+                value=value,
+                unit=unit,
+                effective_time=T0 - timedelta(hours=hours),
+                source_version=version,
+                source_identifier=identifier,
+            ),
+            REGISTRY,
+        )
+        for value, unit, hours, version, identifier in specs
+    ]
 
 
 @given(
@@ -120,4 +149,24 @@ def test_canonicalise_is_deterministic(observable, value, unit):
     second = canonicalise(capture, REGISTRY)
 
     # Assert — replay starts here (§8.4 invariant 6's foundation)
+    assert first == second
+
+
+@given(
+    value=st.sampled_from(["5.5", "14.0", "0.3"]),
+    orders=prior_specs.flatmap(lambda specs: st.tuples(st.just(specs), st.permutations(specs))),
+)
+def test_a_verdict_never_depends_on_the_order_the_priors_arrive_in(value, orders):
+    # Arrange — §5 writes a verdict into a record that is never rewritten, so a
+    # verdict that moved with the order a query returned rows in would make one
+    # history mean two things. Three selections read this list: the version
+    # reducer, the unit-change baseline, and the delta baseline.
+    capture = make_capture(value=value, unit="mmol/L")
+    arrived, rearrived = (stored_glucose_priors(specs) for specs in orders)
+
+    # Act
+    first = canonicalise(capture, REGISTRY, priors=arrived)
+    second = canonicalise(capture, REGISTRY, priors=rearrived)
+
+    # Assert
     assert first == second

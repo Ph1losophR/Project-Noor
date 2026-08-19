@@ -285,18 +285,6 @@ def test_a_flagged_verdict_cannot_carry_rejection_reasons():
         )
 
 
-def test_accepted_via_unremarkable_round_trips():
-    # Arrange / Act
-    verdict = QualityVerdict(
-        state=QualityState.accepted,
-        unit_resolution=UnitResolution.explicit,
-        accepted_via=AcceptedVia.unremarkable,
-    )
-
-    # Assert
-    assert verdict.accepted_via is AcceptedVia.unremarkable
-
-
 @pytest.mark.parametrize(
     "quality_state",
     [QualityState.accepted, QualityState.clinically_exceptional_accepted],

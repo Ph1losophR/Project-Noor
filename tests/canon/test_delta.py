@@ -138,6 +138,34 @@ def test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in(regi
     assert delta.suspicious is False
 
 
+def test_two_records_at_one_version_pick_the_same_baseline_either_way(registry):
+    # Arrange — a source that sends two different values under one identifier at
+    # one version has a bug, but §5 writes the verdict into a record that is never
+    # rewritten: 1.0 and 9.0 disagree about whether the new 9.5 is a +8.5 jump, and
+    # which of them wins cannot depend on the order a query returned them in.
+    entry = registry.entry("glucose")
+    duplicates = [
+        make_canonical(
+            value=value,
+            effective_time=T0 - timedelta(hours=1),
+            method=MethodContext(device_class="accu-chek"),
+            source_identifier="PRIOR-1",
+            source_version=1,
+        )
+        for value in ("1.0", "9.0")
+    ]
+    capture = glucose_capture("9.5")
+
+    # Act
+    forwards = review_delta(Decimal("9.5"), capture, duplicates, entry)
+    backwards = review_delta(Decimal("9.5"), capture, list(reversed(duplicates)), entry)
+
+    # Assert — the version tie breaks on content, so the same record wins both times
+    assert forwards == backwards
+    assert forwards.change == Decimal("0.5")
+    assert forwards.suspicious is False
+
+
 def test_a_prior_from_a_different_device_class_is_not_comparable(registry):
     # Arrange
     entry = registry.entry("glucose")

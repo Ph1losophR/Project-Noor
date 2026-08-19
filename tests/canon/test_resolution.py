@@ -42,7 +42,8 @@ def test_a_concordant_repeat_confirms_a_flagged_value(registry):
         flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT
     )
 
-    # Assert — §6.2: accepted via repeat_confirmed, with the pointer
+    # Assert — §6.2: accepted via repeat_confirmed, with the pointer. 30.0 sits
+    # inside operational [1.5, 35], which is what makes `accepted` the right state.
     assert resolution.observation == "FLAGGED-1"
     assert resolution.kind is ResolutionKind.repeat_confirmed
     assert resolution.confirming_observation == "REPEAT-1"
@@ -76,6 +77,37 @@ def test_a_repeat_exactly_at_the_tolerance_boundary_confirms(registry):
 
     # Assert
     assert resolution.resulting_state is QualityState.accepted
+    assert resolution.accepted_via is AcceptedVia.repeat_confirmed
+
+
+def test_a_repeat_confirmed_extreme_value_becomes_clinically_exceptional(registry):
+    # Arrange — pulse 220 is outside operational [35, 200] but inside physiologic,
+    # and 218 is within the tolerance of 8. Two concordant measurements are stronger
+    # evidence that an extreme value is real than one attestation, so the path with
+    # the better evidence must not produce the weaker state (§6.2). The repeat is
+    # clinically_exceptional_accepted because that is the only accepted state the
+    # pipeline can give a 218 pulse.
+    entry = registry.entry("pulse")
+    flagged = make_canonical(
+        state=QualityState.needs_repeat_or_verification,
+        observable="pulse",
+        value="220",
+        unit="/min",
+    )
+    repeat = make_canonical(
+        state=QualityState.clinically_exceptional_accepted,
+        observable="pulse",
+        value="218",
+        unit="/min",
+    )
+
+    # Act
+    resolution = confirm_repeat(
+        flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT
+    )
+
+    # Assert — the state names what the value is, accepted_via how it got there
+    assert resolution.resulting_state is QualityState.clinically_exceptional_accepted
     assert resolution.accepted_via is AcceptedVia.repeat_confirmed
 
 

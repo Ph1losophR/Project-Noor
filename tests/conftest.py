@@ -10,6 +10,7 @@ import pytest
 from hypothesis import settings
 
 from noor.canon.models import (
+    PRE_RESOLUTION_REJECTIONS,
     AcceptedVia,
     CanonicalObservation,
     CanonicalQuantity,
@@ -24,7 +25,13 @@ from noor.canon.models import (
     SuspicionReason,
     UnitResolution,
 )
-from noor.canon.registry import DeltaPolicy, Envelope, ObservableEntry, ObservableRegistry
+from noor.canon.registry import (
+    Conversion,
+    DeltaPolicy,
+    Envelope,
+    ObservableEntry,
+    ObservableRegistry,
+)
 from noor.catalogue.registry_loader import load_registry
 
 settings.register_profile("ci", derandomize=True)
@@ -35,6 +42,14 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 REGISTRY_PATH = REPO_ROOT / "content" / "observables" / "registry.yaml"
 
 T0 = datetime(2026, 6, 12, 8, 20, tzinfo=UTC)
+
+# The rejections that leave no canonical value: the two that precede unit
+# resolution, plus the two that refuse the value itself. Written once here because
+# both the builder below and the boundary property assert against it.
+VALUELESS_REJECTIONS: frozenset[RejectionReason] = PRE_RESOLUTION_REJECTIONS | {
+    RejectionReason.parse_failure,
+    RejectionReason.unit_ambiguous,
+}
 
 
 def make_capture(**overrides: Any) -> ObservationCapture:
@@ -85,6 +100,23 @@ def make_entry(**overrides: Any) -> ObservableEntry:
     return ObservableEntry(**fields)
 
 
+def make_conversion(**overrides: Any) -> Conversion:
+    """A synthetic mg/dL conversion into the canonical mmol/L; override anything.
+
+    Precision and the two round-trip tolerances are what every unit test carries
+    unchanged; `from_unit`, `multiply`, and `version` are what they vary.
+    """
+    fields: dict[str, Any] = {
+        "from_unit": "mg/dL",
+        "precision": 2,
+        "tolerance": Decimal("0.5"),
+        "canonical_tolerance": Decimal("0.01"),
+        "version": "t1",
+    }
+    fields.update(overrides)
+    return Conversion(**fields)
+
+
 def make_canonical(
     *,
     state: QualityState = QualityState.accepted,
@@ -110,17 +142,10 @@ def make_canonical(
 
     if state is QualityState.rejected:
         reasons = rejection_reasons or [RejectionReason.outside_physiologic_envelope]
-        valueless = {
-            RejectionReason.parse_failure,
-            RejectionReason.unit_ambiguous,
-            RejectionReason.mapping_unusable,
-            RejectionReason.source_status_unusable,
-        }
-        canonical = None if valueless & set(reasons) else quantity()
+        canonical = None if VALUELESS_REJECTIONS & set(reasons) else quantity()
         unit_resolution = (
             None
-            if set(reasons)
-            <= {RejectionReason.mapping_unusable, RejectionReason.source_status_unusable}
+            if set(reasons) <= PRE_RESOLUTION_REJECTIONS
             else UnitResolution.ambiguous
             if RejectionReason.unit_ambiguous in reasons
             else UnitResolution.explicit

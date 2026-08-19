@@ -10,6 +10,7 @@ how it got there.
 """
 
 from datetime import UTC, datetime
+from decimal import Decimal
 from enum import StrEnum
 
 from pydantic import AwareDatetime, Field, field_validator
@@ -50,6 +51,23 @@ class QualityResolution(NoorModel):
         return value.astimezone(UTC)
 
 
+def _resolved_state(value: Decimal, entry: ObservableEntry) -> QualityState:
+    """A resolved value outside the operational envelope is clinically exceptional
+    (§6.2) — by whichever path resolved it.
+
+    The state names what the value *is*; `accepted_via` already records how it got
+    there, so nothing is lost by deriving one from the value and the other from
+    the path. Deriving it in both paths keeps a repeat-confirmed extreme value
+    distinguishable from an ordinary one for any reader who has the state and not
+    the envelopes.
+    """
+    return (
+        QualityState.accepted
+        if locate(value, entry) is EnvelopePosition.within_operational
+        else QualityState.clinically_exceptional_accepted
+    )
+
+
 def confirm_repeat(
     flagged: CanonicalObservation,
     repeat: CanonicalObservation,
@@ -63,6 +81,12 @@ def confirm_repeat(
     The repeat must itself be accepted-quality, the same observable, in the same
     context (reading ordinal and averaging aside) and device class, and within
     the registry's repeat tolerance. A discordant repeat confirms nothing.
+
+    A confirmed value still outside the operational envelope resolves to
+    `clinically_exceptional_accepted` (§6.2): two concordant measurements are
+    stronger evidence that an extreme value is real than one clinician's
+    attestation, so the path that produces the better evidence must not produce
+    the weaker state.
     """
     if flagged.quality.state is not QualityState.needs_repeat_or_verification:
         raise ResolutionError(f"nothing to confirm: state is {flagged.quality.state}")
@@ -89,7 +113,7 @@ def confirm_repeat(
         clinician_id=clinician_id,
         confirming_observation=repeat.source_identifier,
         resolved_at=resolved_at,
-        resulting_state=QualityState.accepted,
+        resulting_state=_resolved_state(flagged.canonical.value, entry),
         accepted_via=AcceptedVia.repeat_confirmed,
     )
 
@@ -121,17 +145,12 @@ def verify_by_clinician(
     ):
         raise ResolutionError(f"nothing to verify: state is {observation.quality.state}")
     # A verified value outside the operational envelope is clinically exceptional
-    # (§6.2); a verified ordinary value is simply accepted.
-    resulting_state = (
-        QualityState.accepted
-        if locate(observation.canonical.value, entry) is EnvelopePosition.within_operational
-        else QualityState.clinically_exceptional_accepted
-    )
+    # (§6.2), the same derivation the repeat path makes.
     return QualityResolution(
         observation=observation.source_identifier,
         kind=ResolutionKind.clinician_verified,
         clinician_id=clinician_id,
         resolved_at=resolved_at,
-        resulting_state=resulting_state,
+        resulting_state=_resolved_state(observation.canonical.value, entry),
         accepted_via=AcceptedVia.clinician_verified,
     )

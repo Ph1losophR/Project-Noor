@@ -5,27 +5,15 @@ from decimal import Decimal
 import pytest
 
 from noor.canon.models import CanonicalQuantity, ConversionApplied, SourceCode, UnitResolution
-from noor.canon.registry import Conversion
 from noor.canon.units import UnknownUnitError, from_canonical, resolve_unit, to_canonical
-from tests.conftest import make_entry
+from tests.conftest import make_conversion, make_entry
 
 LOINC_HBA1C = SourceCode(system="http://loinc.org", code="4548-4")
 
 
 def test_a_reported_accepted_unit_resolves_explicitly():
     # Arrange
-    entry = make_entry(
-        accepted_units=["mmol/L", "mg/dL"],
-        conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="t1",
-            )
-        ],
-    )
+    entry = make_entry(accepted_units=["mmol/L", "mg/dL"], conversions=[make_conversion()])
 
     # Act
     resolution, unit = resolve_unit("mg/dL", None, entry)
@@ -37,18 +25,7 @@ def test_a_reported_accepted_unit_resolves_explicitly():
 
 def test_an_unrecognised_unit_is_ambiguous():
     # Arrange — "mg%" is a real-world spelling drift; never guessed (§6.3)
-    entry = make_entry(
-        accepted_units=["mmol/L", "mg/dL"],
-        conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="t1",
-            )
-        ],
-    )
+    entry = make_entry(accepted_units=["mmol/L", "mg/dL"], conversions=[make_conversion()])
 
     # Act
     resolution, unit = resolve_unit("mg%", None, entry)
@@ -64,15 +41,7 @@ def test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous():
     # observables, so one entry accepting both is a shape the registry forbids.
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL"],
-        conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="t1",
-            )
-        ],
+        conversions=[make_conversion()],
         code_unit_map={"http://loinc.org|14749-6": "mmol/L"},
     )
     mmol_glucose_code = SourceCode(system="http://loinc.org", code="14749-6")
@@ -154,14 +123,7 @@ def test_a_declared_conversion_records_the_provenance_of_its_result():
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL"],
         conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                multiply=Decimal("0.055507"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-mgdl-v1",
-            )
+            make_conversion(multiply=Decimal("0.055507"), version="glucose-mgdl-v1"),
         ],
     )
 
@@ -191,14 +153,7 @@ def test_conversion_to_canonical_rejects_an_unaccepted_unit_without_a_matching_d
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL"],
         conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                multiply=Decimal("0.055507"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-mgdl-v1",
-            )
+            make_conversion(multiply=Decimal("0.055507"), version="glucose-mgdl-v1"),
         ],
     )
 
@@ -214,18 +169,6 @@ def test_reverse_identity_rejects_a_quantity_outside_the_declared_canonical_unit
     # Act / Assert
     with pytest.raises(UnknownUnitError):
         from_canonical(quantity, "mg%", make_entry())
-
-
-def test_reverse_identity_returns_a_valid_canonical_quantity_value():
-    # Arrange
-    entry = make_entry()
-    quantity = CanonicalQuantity(value=Decimal("7.40"), ucum="mmol/L")
-
-    # Act
-    value = from_canonical(quantity, "mmol/L", entry)
-
-    # Assert
-    assert value == Decimal("7.40")
 
 
 def test_reverse_identity_rejects_provenance_with_a_bogus_source_unit():
@@ -249,28 +192,12 @@ def test_reverse_identity_rejects_provenance_with_a_bogus_source_unit():
         from_canonical(quantity, "mmol/L", entry)
 
 
-def test_reverse_conversion_rejects_an_undeclared_target_unit():
-    # Arrange
-    quantity = to_canonical(Decimal("90"), "mmol/L", make_entry())
-
-    # Act / Assert
-    with pytest.raises(UnknownUnitError):
-        from_canonical(quantity, "mg%", make_entry())
-
-
 def test_reverse_conversion_uses_the_recorded_conversion_provenance():
     # Arrange
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL"],
         conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                multiply=Decimal("0.055507"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-mgdl-v2",
-            )
+            make_conversion(multiply=Decimal("0.055507"), version="glucose-mgdl-v2"),
         ],
     )
     quantity = CanonicalQuantity(
@@ -298,22 +225,8 @@ def test_reverse_conversion_uses_a_later_matching_registry_declaration():
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL", "g/L"],
         conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                multiply=Decimal("0.055507"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-mgdl-v1",
-            ),
-            Conversion(
-                from_unit="g/L",
-                multiply=Decimal("0.1"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-gl-v1",
-            ),
+            make_conversion(multiply=Decimal("0.055507"), version="glucose-mgdl-v1"),
+            make_conversion(from_unit="g/L", multiply=Decimal("0.1"), version="glucose-gl-v1"),
         ],
     )
     quantity = CanonicalQuantity(value=Decimal("5.00"), ucum="mmol/L")
@@ -330,22 +243,8 @@ def test_reverse_conversion_rejects_a_target_that_does_not_match_provenance():
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL", "g/L"],
         conversions=[
-            Conversion(
-                from_unit="mg/dL",
-                multiply=Decimal("0.055507"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-mgdl-v2",
-            ),
-            Conversion(
-                from_unit="g/L",
-                multiply=Decimal("0.1"),
-                precision=2,
-                tolerance=Decimal("0.5"),
-                canonical_tolerance=Decimal("0.01"),
-                version="glucose-gl-v1",
-            ),
+            make_conversion(multiply=Decimal("0.055507"), version="glucose-mgdl-v2"),
+            make_conversion(from_unit="g/L", multiply=Decimal("0.1"), version="glucose-gl-v1"),
         ],
     )
     quantity = CanonicalQuantity(

@@ -1,10 +1,21 @@
-"""Layer 1 of canon: parsing and decimal/transposition patterns (SSOT §6.1)."""
+"""Layer 1 of canon: parsing and the two mistype shapes (SSOT §6.1).
+
+A shape hint never changes a value or a state, so its only job is to say what to
+re-check — which makes discrimination the property under test here, not just
+arithmetic. Each shape is asserted to be silent where its own answer would be a
+foregone conclusion.
+"""
 
 from decimal import Decimal
 
 import pytest
 
-from noor.canon.parse import decimal_transposition_suspected, parse_value
+from noor.canon.parse import (
+    decimal_shift_suspected,
+    digit_transposition_suspected,
+    parse_value,
+)
+from noor.canon.registry import Envelope
 from tests.conftest import make_entry
 
 
@@ -68,9 +79,82 @@ def test_a_malformed_value_is_unparseable(raw):
         pytest.param("900", False, id="an_extreme_value_with_no_plausible_shift"),
     ],
 )
-def test_the_transposition_pattern_matches_only_a_plausible_one_place_slip(value, suspected):
-    # Arrange — synthetic entry: operational [4, 8]
+def test_the_decimal_shape_matches_only_a_plausible_one_place_slip(value, suspected):
+    # Arrange — synthetic entry: operational [4, 8], a span of 2.0
     entry = make_entry()
 
     # Act / Assert
-    assert decimal_transposition_suspected(Decimal(value), entry) is suspected
+    assert decimal_shift_suspected(Decimal(value), entry) is suspected
+
+
+@pytest.mark.parametrize(
+    ("high", "suspected"),
+    [
+        # 59 / 6 is 9.83: a shifted partner is still news about this reading
+        pytest.param("59", True, id="a_span_just_under_ten_still_discriminates"),
+        # 60 / 6 is exactly 10, and the guard is inclusive
+        pytest.param("60", False, id="a_span_of_exactly_ten_is_vacuous"),
+    ],
+)
+def test_the_decimal_shape_is_silent_where_the_envelope_makes_its_answer_a_constant(
+    high, suspected
+):
+    # Arrange — an envelope spanning a factor of ten or more has a ten-times
+    # partner inside it for essentially the whole flagged band, so "yes" describes
+    # the envelope rather than the reading. Measured against the shipped registry,
+    # eGFR spans 30x and answered yes for 100% of flagged values.
+    entry = make_entry(
+        physiologic=Envelope(low=Decimal("1"), high=Decimal("200"), version="t1"),
+        operational=Envelope(low=Decimal("6"), high=Decimal(high), version="t1"),
+    )
+
+    # Act / Assert — 5.9 is below the floor either way, and shifts to 59
+    assert decimal_shift_suspected(Decimal("5.9"), entry) is suspected
+
+
+def test_the_decimal_shape_is_silent_for_an_envelope_that_reaches_zero():
+    # Arrange — no shipped observable straddles zero, but the schema asks only for
+    # low < high, so a pull request can declare one. The span is read by dividing
+    # the envelope by its own floor, and a floor of zero has no reciprocal.
+    entry = make_entry(
+        physiologic=Envelope(low=Decimal("-10"), high=Decimal("10"), version="t1"),
+        operational=Envelope(low=Decimal("0"), high=Decimal("8"), version="t1"),
+    )
+
+    # Act / Assert — 40 shifts to 4.0, inside [0, 8]; the guard answers first
+    assert decimal_shift_suspected(Decimal("40"), entry) is False
+
+
+@pytest.mark.parametrize(
+    ("reported", "suspected"),
+    [
+        # 5.0 is inside [4, 8]; the point holds its place while the digits move
+        pytest.param("0.5", True, id="two_digits_exchanged_across_the_point"),
+        # 04 is 4, the operational floor, and bounds are inclusive
+        pytest.param("40", True, id="a_swap_landing_on_the_operational_floor"),
+        # 061 is 61, 601 is 601: neither is plausible
+        pytest.param("601", False, id="no_swap_lands_inside_the_envelope"),
+        # the only exchange available is one digit with itself
+        pytest.param("55", False, id="a_repeated_digit_has_no_distinct_swap"),
+        # 4 is already inside, so nothing here is a slip to re-check
+        pytest.param("4", False, id="a_single_digit_cannot_be_transposed"),
+    ],
+)
+def test_the_digit_shape_matches_only_a_swap_that_lands_inside_the_envelope(reported, suspected):
+    # Arrange — synthetic entry: operational [4, 8], canonical mmol/L
+    entry = make_entry()
+
+    # Act / Assert
+    assert digit_transposition_suspected(reported, "mmol/L", entry) is suspected
+
+
+def test_the_digit_shape_swaps_the_reported_text_and_not_the_converted_value(registry):
+    # Arrange — 98.6 degF is 37.0 Cel. Typed as 89.6 it converts to 32.0 Cel and is
+    # flagged, and the swap that explains it is a Fahrenheit one: the mistype
+    # happened before the -32 offset. Swapping the digits of the canonical 32.0
+    # models an error nobody made, which is why the reported text is what moves.
+    entry = registry.entry("body_temperature")
+
+    # Act / Assert
+    assert digit_transposition_suspected("89.6", "[degF]", entry) is True
+    assert digit_transposition_suspected("32.0", "Cel", entry) is False

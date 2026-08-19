@@ -139,8 +139,13 @@ PRE_RESOLUTION_REJECTIONS: frozenset[RejectionReason] = frozenset(
 
 
 class SuspicionReason(StrEnum):
+    """§6.1's mistype shapes are two reasons, not one: the decimal point in the
+    wrong place and two digits in the wrong order are different things to
+    re-check, and §11.9 counts them separately."""
+
     outside_operational_envelope = "outside_operational_envelope"
-    decimal_transposition_suspected = "decimal_transposition_suspected"
+    decimal_shift_suspected = "decimal_shift_suspected"
+    digit_transposition_suspected = "digit_transposition_suspected"
     unit_changed_from_prior = "unit_changed_from_prior"
     delta_exceeded = "delta_exceeded"
 

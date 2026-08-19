@@ -21,7 +21,7 @@ from noor.canon.models import (
     SuspicionReason,
     UnitResolution,
 )
-from noor.canon.parse import decimal_transposition_suspected, parse_value
+from noor.canon.parse import decimal_shift_suspected, digit_transposition_suspected, parse_value
 from noor.canon.plausibility import EnvelopePosition, locate
 from noor.canon.registry import ObservableEntry, ObservableRegistry
 from noor.canon.units import resolve_unit, to_canonical
@@ -58,23 +58,37 @@ def _unusable_source(capture: ObservationCapture) -> list[RejectionReason]:
     return reasons
 
 
+def _reported_unit(quantity: CanonicalQuantity) -> str:
+    """The unit the source reported, recovered from the value's own provenance.
+
+    `conversion_applied` is None exactly when the reported unit was already the
+    canonical one (§6.3), so its absence names that unit rather than an unknown.
+    """
+    applied = quantity.conversion_applied
+    return applied.from_unit if applied is not None else quantity.ucum
+
+
 def _unit_changed_from_prior(
+    canonical: CanonicalQuantity,
     capture: ObservationCapture,
     priors: Iterable[CanonicalObservation],
 ) -> bool:
     """§6.1 layer 1: the unit changed from the patient's prior accepted record.
 
+    Both sides are the *resolved* source unit, not the reported text. A source
+    that stops sending a unit and starts relying on its observation code has still
+    changed unit, and comparing the text would miss it from both directions: an
+    incoming absence would read as "no change", and a prior absence would exclude
+    the one record worth comparing against.
+
     The priors are already current versions (§5) — canonicalise deduplicated
     them once, before this layer ran.
     """
-    if capture.as_reported.unit is None:
-        return False
     candidates = [
         prior
         for prior in priors
         if prior.observable == capture.observable
         and prior.quality.state in ACCEPTED_FAMILY
-        and prior.as_reported.unit is not None
         and prior.effective_time < capture.effective_time
     ]
     if not candidates:
@@ -86,7 +100,9 @@ def _unit_changed_from_prior(
         candidates,
         key=lambda prior: (prior.effective_time, prior.source_system, prior.source_identifier),
     )
-    return capture.as_reported.unit != latest.as_reported.unit
+    # An accepted-family prior always carries a canonical value (models.py).
+    assert latest.canonical is not None
+    return _reported_unit(canonical) != _reported_unit(latest.canonical)
 
 
 def canonicalise(
@@ -132,7 +148,8 @@ def canonicalise(
     canonical: CanonicalQuantity | None = None
     delta: DeltaVerdict | None = None
 
-    parsed = parse_value(capture.as_reported.value) if capture.as_reported.value else None
+    reported = capture.as_reported.value or ""
+    parsed = parse_value(reported) if reported else None
     if parsed is None:
         rejection_reasons.append(RejectionReason.parse_failure)
 
@@ -149,11 +166,13 @@ def canonicalise(
             rejection_reasons.append(RejectionReason.outside_physiologic_envelope)
         elif position is EnvelopePosition.outside_operational:
             suspicions.append(SuspicionReason.outside_operational_envelope)
-            if decimal_transposition_suspected(canonical.value, entry):
-                suspicions.append(SuspicionReason.decimal_transposition_suspected)
+            if decimal_shift_suspected(canonical.value, entry):
+                suspicions.append(SuspicionReason.decimal_shift_suspected)
+            if digit_transposition_suspected(reported, resolved_unit, entry):
+                suspicions.append(SuspicionReason.digit_transposition_suspected)
 
     if not rejection_reasons and canonical is not None:
-        if _unit_changed_from_prior(capture, known_priors):
+        if _unit_changed_from_prior(canonical, capture, known_priors):
             suspicions.append(SuspicionReason.unit_changed_from_prior)
         delta = review_delta(canonical.value, capture, known_priors, entry)
         if delta.suspicious:
