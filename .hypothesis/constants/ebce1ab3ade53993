@@ -1,0 +1,4 @@
+# file: C:\Users\youss\Projects\cds_engine\src\noor\canon\parse.py
+# hypothesis_version: 6.165.10
+
+['^-?\\d+(\\.\\d+)?$']

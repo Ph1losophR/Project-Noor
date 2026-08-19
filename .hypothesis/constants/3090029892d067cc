@@ -1,0 +1,4 @@
+# file: C:\Users\youss\Projects\cds_engine\src\noor\canon\resolution.py
+# hypothesis_version: 6.165.10
+
+['clinician_verified', 'is_average', 'reading_ordinal', 'repeat_confirmed', 'resolved_at']
