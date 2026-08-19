@@ -86,6 +86,21 @@ def test_a_conversion_must_convert_from_an_accepted_non_canonical_unit():
         make_entry(conversions=[bad])
 
 
+def test_a_conversion_from_an_unaccepted_unit_is_rejected():
+    # Arrange
+    bad = Conversion(
+        from_unit="mg/dL",
+        precision=2,
+        tolerance=Decimal("0.5"),
+        canonical_tolerance=Decimal("0.01"),
+        version="t1",
+    )
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        make_entry(accepted_units=["mmol/L"], conversions=[bad])
+
+
 def test_a_conversion_multiplier_must_be_positive():
     # Arrange / Act / Assert
     with pytest.raises(ValidationError):
