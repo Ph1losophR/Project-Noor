@@ -1,7 +1,7 @@
 # Graph Report - cds_engine  (2026-08-20)
 
 ## Corpus Check
-- 78 files · ~4,266,342 words
+- 78 files · ~4,266,374 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `896c73ed`
+- Built from commit: `0253841b`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -225,7 +225,7 @@ Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 S
 
 ### Community 24 - "test_models.py"
 Cohesion: 0.10
-Nodes (34): DeltaVerdict, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always r, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolution`, _nested_payload(), The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants., A chain of `levels` nested mappings, innermost empty., test_a_canonical_value_requires_a_resolved_unit() (+26 more)
+Nodes (34): DeltaVerdict, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolutio, _nested_payload(), The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants., A chain of `levels` nested mappings, innermost empty., test_a_canonical_value_requires_a_resolved_unit() (+26 more)
 
 ### Community 25 - "Task 3 Report: The Observation Model and Quality Verdicts"
 Cohesion: 0.05
@@ -241,7 +241,7 @@ Nodes (25): Branch Protection, CI-equivalent coverage command, Clean initial sea
 
 ### Community 28 - "test_import_direction.py"
 Cohesion: 0.29
-Nodes (14): _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), Path, _python_files(), The import-direction and purity half of the device-boundary seam (SSOT §4.2).  W, Every name the code *uses* — not comments or docstrings, which may say     "thre (+6 more)
+Nodes (14): _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), Path, _python_files(), The import-direction and purity half of the device-boundary seam (SSOT §4.2)., Every name the code *uses* — not comments or docstrings, which may say     "thr (+6 more)
 
 ### Community 29 - "Task 1 Implementation Report"
 Cohesion: 0.22
@@ -265,7 +265,7 @@ Nodes (4): 16.1 Questions that block business, not behaviour, 16.2 Questions tha
 
 ### Community 34 - "4. Module architecture"
 Cohesion: 0.13
-Nodes (31): canonicalise(), Run the three canon layers over one capture.      `priors` are the patient's exi, canonicalised_prior(), The canon pipeline (SSOT §6): the three layers, the four quality states, and the, A prior as canon actually stored it.      Canonicalised rather than assembled, s, test_a_bp_capture_missing_required_context_is_rejected(), test_a_clean_delta_is_recorded_without_flagging(), test_a_code_implied_unit_is_recorded_as_inferred() (+23 more)
+Nodes (31): canonicalise(), Run the three canon layers over one capture.      `priors` are the patient's e, canonicalised_prior(), The canon pipeline (SSOT §6): the three layers, the four quality states, and th, A prior as canon actually stored it.      Canonicalised rather than assembled,, test_a_bp_capture_missing_required_context_is_rejected(), test_a_clean_delta_is_recorded_without_flagging(), test_a_code_implied_unit_is_recorded_as_inferred() (+23 more)
 
 ### Community 35 - "9. Findings, alerts, overrides"
 Cohesion: 0.50
@@ -273,7 +273,7 @@ Nodes (4): 9.1 Three severities, 9.2 Overrides, 9.3 Safety surveillance, 9. Find
 
 ### Community 47 - "test_registry.py"
 Cohesion: 0.14
-Nodes (23): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversion, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None exa, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is bli, No registry declaration covers the requested unit, or a value's recorded     con (+15 more)
+Nodes (23): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversio, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None e, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is b, No registry declaration covers the requested unit, or a value's recorded     co (+15 more)
 
 ### Community 49 - "Task 4 Implementation Report"
 Cohesion: 0.20
@@ -285,7 +285,7 @@ Nodes (18): Blocking Conflict, Changes Made, Uncommitted, Clarification Applied,
 
 ### Community 51 - "load_registry"
 Cohesion: 0.15
-Nodes (16): MappingNode, _ContentLoader, load_registry(), Any, Path, Loads registry content into validated models (SSOT §7.4).  Schema-only YAML (§7., The `SafeLoader` subclass §7.5 allows, refusing a repeated mapping key.      Sto, Load and validate an observable registry file (content/observables/registry.yaml (+8 more)
+Nodes (16): MappingNode, _ContentLoader, load_registry(), Any, Path, Loads registry content into validated models (SSOT §7.4).  Schema-only YAML (§, The `SafeLoader` subclass §7.5 allows, refusing a repeated mapping key.      S, Load and validate an observable registry file (content/observables/registry.yaml (+8 more)
 
 ### Community 53 - "Task 6 Report: Conversion Round-Trip Property"
 Cohesion: 0.25
@@ -313,15 +313,15 @@ Nodes (4): Design, Goal, Verification, Whole-Branch Review Remediation Design
 
 ### Community 60 - "make_entry"
 Cohesion: 0.11
-Nodes (21): Conversion, Envelope, Inclusive bounds in the canonical unit, versioned independently (§6.4)., canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `tol, The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit(), test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(), test_a_conversion_from_an_unaccepted_unit_is_rejected() (+13 more)
+Nodes (21): Conversion, Envelope, Inclusive bounds in the canonical unit, versioned independently (§6.4)., canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `t, The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit(), test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(), test_a_conversion_from_an_unaccepted_unit_is_rejected() (+13 more)
 
 ### Community 61 - "test_parse.py"
 Cohesion: 0.15
-Nodes (18): _adjacent_digit_swaps(), decimal_shift_suspected(), digit_transposition_suspected(), parse_value(), Decimal, Layer 1 of canon: parsing and the two mistype shapes (SSOT §6.1).  Strict plain-, Every distinct text formed by exchanging two digits adjacent in the digit     se, Parse an as-reported value, or return None when it is unparseable.      The patt (+10 more)
+Nodes (18): _adjacent_digit_swaps(), decimal_shift_suspected(), digit_transposition_suspected(), parse_value(), Decimal, Layer 1 of canon: parsing and the two mistype shapes (SSOT §6.1).  Strict plai, Every distinct text formed by exchanging two digits adjacent in the digit     s, Parse an as-reported value, or return None when it is unparseable.      The pa (+10 more)
 
 ### Community 62 - "test_units.py"
 Cohesion: 0.21
-Nodes (21): SourceCode, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a u, resolve_unit(), Unit resolution is a hard safety control (SSOT §6.3)., test_a_declared_conversion_records_the_provenance_of_its_result(), test_a_reported_accepted_unit_resolves_explicitly(), test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous(), test_an_absent_unit_and_an_unknown_code_is_ambiguous() (+13 more)
+Nodes (21): SourceCode, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a, resolve_unit(), Unit resolution is a hard safety control (SSOT §6.3)., test_a_declared_conversion_records_the_provenance_of_its_result(), test_a_reported_accepted_unit_resolves_explicitly(), test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous(), test_an_absent_unit_and_an_unknown_code_is_ambiguous() (+13 more)
 
 ### Community 63 - "make_canonical"
 Cohesion: 0.15
@@ -337,7 +337,7 @@ Nodes (8): Concerns, Files Changed, GREEN, RED, Self-Review, Task 7 Implementati
 
 ### Community 69 - "review_delta"
 Cohesion: 0.14
-Nodes (39): current_versions(), datetime, Decimal, Layer 3 of canon: delta review (SSOT §6.1 layer 3).  Compares like with like onl, Compare a canonical value against the most recent comparable accepted prior., A total order over records sharing one identity, derived from content alone., The latest version of each source record (SSOT §5).      A source may correct a, review_delta() (+31 more)
+Nodes (39): current_versions(), datetime, Decimal, Layer 3 of canon: delta review (SSOT §6.1 layer 3).  Compares like with like o, Compare a canonical value against the most recent comparable accepted prior., A total order over records sharing one identity, derived from content alone., The latest version of each source record (SSOT §5).      A source may correct, review_delta() (+31 more)
 
 ### Community 70 - "Task 9 Implementation Report"
 Cohesion: 0.17
@@ -349,7 +349,7 @@ Nodes (6): Commands and Results, Concerns, Files Changed, Self-Review, Task 8 Im
 
 ### Community 72 - "conftest.py"
 Cohesion: 0.29
-Nodes (5): The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and declared i, test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds(), Shared builders and fixtures (docs/testing-standards.md: factories live here)., The real content/observables/registry.yaml, loaded and validated., registry()
+Nodes (5): The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and declared, test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds(), Shared builders and fixtures (docs/testing-standards.md: factories live here)., The real content/observables/registry.yaml, loaded and validated., registry()
 
 ### Community 73 - "Task 12 Report — Fuzzing the boundary"
 Cohesion: 0.14
@@ -389,7 +389,7 @@ Nodes (7): Exactly as captured. The value stays a string until parse validates i
 
 ### Community 84 - "MappingInfo"
 Cohesion: 0.40
-Nodes (5): MappingInfo, How the source code became a Noor observable (SSOT §5).      §5 also lists `conf, test_a_code_display_name_is_carried_but_never_required(), test_an_ambiguous_mapping_reaches_canon_as_unusable(), test_an_unusable_mapping_and_an_unusable_status_are_both_named()
+Nodes (5): MappingInfo, How the source code became a Noor observable (SSOT §5).      §5 also lists `co, test_a_code_display_name_is_carried_but_never_required(), test_an_ambiguous_mapping_reaches_canon_as_unusable(), test_an_unusable_mapping_and_an_unusable_status_are_both_named()
 
 ## Knowledge Gaps
 - **554 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+549 more)
@@ -411,5 +411,5 @@ _Questions this graph is uniquely positioned to answer:_
   _`make_entry()` has 2 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 24 inferred relationships involving `review_delta()` (e.g. with `canonicalise()` and `test_a_bp_delta_requires_matching_context()`) actually correct?**
   _`review_delta()` has 24 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSIDE` to the rest of the system?**
+- **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSI` to the rest of the system?**
   _636 weakly-connected nodes found - possible documentation gaps or missing edges._

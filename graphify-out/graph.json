@@ -47,14 +47,14 @@
       "norm_label": "__init__.py"
     },
     {
-      "label": "app \u2014 FastAPI, persistence, and the clinical workflow (SSOT \u00a711).  Lives OUTSIDE",
+      "label": "app \u2014 FastAPI, persistence, and the clinical workflow (SSOT \u00a711).  Lives OUTSI",
       "file_type": "rationale",
       "source_file": "src/noor/app/__init__.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_app_init_rationale_1",
       "community": 37,
-      "norm_label": "app \u2014 fastapi, persistence, and the clinical workflow (ssot \u00a711).  lives outside"
+      "norm_label": "app \u2014 fastapi, persistence, and the clinical workflow (ssot \u00a711).  lives outsi"
     },
     {
       "label": "__init__.py",
@@ -147,14 +147,14 @@
       "norm_label": "decimal"
     },
     {
-      "label": "Layer 3 of canon: delta review (SSOT \u00a76.1 layer 3).  Compares like with like onl",
+      "label": "Layer 3 of canon: delta review (SSOT \u00a76.1 layer 3).  Compares like with like o",
       "file_type": "rationale",
       "source_file": "src/noor/canon/delta.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_delta_rationale_1",
       "community": 69,
-      "norm_label": "layer 3 of canon: delta review (ssot \u00a76.1 layer 3).  compares like with like onl"
+      "norm_label": "layer 3 of canon: delta review (ssot \u00a76.1 layer 3).  compares like with like o"
     },
     {
       "label": "A total order over records sharing one identity, derived from content alone.",
@@ -167,14 +167,14 @@
       "norm_label": "a total order over records sharing one identity, derived from content alone."
     },
     {
-      "label": "The latest version of each source record (SSOT \u00a75).      A source may correct a",
+      "label": "The latest version of each source record (SSOT \u00a75).      A source may correct",
       "file_type": "rationale",
       "source_file": "src/noor/canon/delta.py",
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_noor_canon_delta_rationale_48",
       "community": 69,
-      "norm_label": "the latest version of each source record (ssot \u00a75).      a source may correct a"
+      "norm_label": "the latest version of each source record (ssot \u00a75).      a source may correct"
     },
     {
       "label": "True when `prior` may serve as the delta baseline for `capture`.",
@@ -637,54 +637,54 @@
       "norm_label": "._the_canonical_value_matches_the_verdict()"
     },
     {
-      "label": "The observation model (SSOT \u00a75) and canon's quality verdicts (\u00a76.2).  Every mode",
+      "label": "The observation model (SSOT \u00a75) and canon's quality verdicts (\u00a76.2).  Every mo",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_1",
       "community": 26,
-      "norm_label": "the observation model (ssot \u00a75) and canon's quality verdicts (\u00a76.2).  every mode"
+      "norm_label": "the observation model (ssot \u00a75) and canon's quality verdicts (\u00a76.2).  every mo"
     },
     {
-      "label": "Validate one JSON value and return an immutable copy of it.      `active_ids` ho",
+      "label": "Validate one JSON value and return an immutable copy of it.      `active_ids`",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_38",
       "community": 26,
-      "norm_label": "validate one json value and return an immutable copy of it.      `active_ids` ho"
+      "norm_label": "validate one json value and return an immutable copy of it.      `active_ids`"
     },
     {
-      "label": "What unit resolution concluded (SSOT \u00a76.3).      Every value is an outcome, so n",
+      "label": "What unit resolution concluded (SSOT \u00a76.3).      Every value is an outcome, so",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L83",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_83",
       "community": 26,
-      "norm_label": "what unit resolution concluded (ssot \u00a76.3).      every value is an outcome, so n"
+      "norm_label": "what unit resolution concluded (ssot \u00a76.3).      every value is an outcome, so"
     },
     {
-      "label": "\u00a76.1's mistype shapes are two reasons, not one: the decimal point in the     wro",
+      "label": "\u00a76.1's mistype shapes are two reasons, not one: the decimal point in the     wr",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L142",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_142",
       "community": 26,
-      "norm_label": "\u00a76.1's mistype shapes are two reasons, not one: the decimal point in the     wro"
+      "norm_label": "\u00a76.1's mistype shapes are two reasons, not one: the decimal point in the     wr"
     },
     {
-      "label": "Why delta review compared nothing. \"Not compared\" is a fact of record, not     a",
+      "label": "Why delta review compared nothing. \"Not compared\" is a fact of record, not",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L154",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_154",
       "community": 26,
-      "norm_label": "why delta review compared nothing. \"not compared\" is a fact of record, not     a"
+      "norm_label": "why delta review compared nothing. \"not compared\" is a fact of record, not"
     },
     {
       "label": "Per-observable context (SSOT \u00a76.6). BP needs all of it; the registry says so.",
@@ -697,14 +697,14 @@
       "norm_label": "per-observable context (ssot \u00a76.6). bp needs all of it; the registry says so."
     },
     {
-      "label": "How the source code became a Noor observable (SSOT \u00a75).      \u00a75 also lists `conf",
+      "label": "How the source code became a Noor observable (SSOT \u00a75).      \u00a75 also lists `co",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L253",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_253",
       "community": 84,
-      "norm_label": "how the source code became a noor observable (ssot \u00a75).      \u00a75 also lists `conf"
+      "norm_label": "how the source code became a noor observable (ssot \u00a75).      \u00a75 also lists `co"
     },
     {
       "label": "Exactly as captured. The value stays a string until parse validates it.",
@@ -717,14 +717,14 @@
       "norm_label": "exactly as captured. the value stays a string until parse validates it."
     },
     {
-      "label": "Canon's input: one observation exactly as captured (SSOT \u00a75).      `recorded_at`",
+      "label": "Canon's input: one observation exactly as captured (SSOT \u00a75).      `recorded_a",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L277",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_277",
       "community": 26,
-      "norm_label": "canon's input: one observation exactly as captured (ssot \u00a75).      `recorded_at`"
+      "norm_label": "canon's input: one observation exactly as captured (ssot \u00a75).      `recorded_a"
     },
     {
       "label": "Without this, dumping a frozen payload emits mappingproxy in Python mode",
@@ -737,44 +737,44 @@
       "norm_label": "without this, dumping a frozen payload emits mappingproxy in python mode"
     },
     {
-      "label": "The conversion that produced a canonical value (SSOT \u00a76.3: \"every     conversion",
+      "label": "The conversion that produced a canonical value (SSOT \u00a76.3: \"every     conversio",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L340",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_340",
       "community": 47,
-      "norm_label": "the conversion that produced a canonical value (ssot \u00a76.3: \"every     conversion"
+      "norm_label": "the conversion that produced a canonical value (ssot \u00a76.3: \"every     conversio"
     },
     {
-      "label": "Derived, and it shows its work (\u00a75, \u00a76.3).      `conversion_applied` is None exa",
+      "label": "Derived, and it shows its work (\u00a75, \u00a76.3).      `conversion_applied` is None e",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L357",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_357",
       "community": 47,
-      "norm_label": "derived, and it shows its work (\u00a75, \u00a76.3).      `conversion_applied` is none exa"
+      "norm_label": "derived, and it shows its work (\u00a75, \u00a76.3).      `conversion_applied` is none e"
     },
     {
-      "label": "What delta review compared, or why it compared nothing (\u00a75, \u00a76.1).      Always r",
+      "label": "What delta review compared, or why it compared nothing (\u00a75, \u00a76.1).      Always",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L369",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_369",
       "community": 24,
-      "norm_label": "what delta review compared, or why it compared nothing (\u00a75, \u00a76.1).      always r"
+      "norm_label": "what delta review compared, or why it compared nothing (\u00a75, \u00a76.1).      always"
     },
     {
-      "label": "Canon's intrinsic verdict on one observation (SSOT \u00a76.2).      `unit_resolution`",
+      "label": "Canon's intrinsic verdict on one observation (SSOT \u00a76.2).      `unit_resolutio",
       "file_type": "rationale",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L403",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_403",
       "community": 24,
-      "norm_label": "canon's intrinsic verdict on one observation (ssot \u00a76.2).      `unit_resolution`"
+      "norm_label": "canon's intrinsic verdict on one observation (ssot \u00a76.2).      `unit_resolutio"
     },
     {
       "label": "Canon's output: the verbatim capture, its canonical value, its quality verdict.",
@@ -847,54 +847,54 @@
       "norm_label": "_adjacent_digit_swaps()"
     },
     {
-      "label": "Layer 1 of canon: parsing and the two mistype shapes (SSOT \u00a76.1).  Strict plain-",
+      "label": "Layer 1 of canon: parsing and the two mistype shapes (SSOT \u00a76.1).  Strict plai",
       "file_type": "rationale",
       "source_file": "src/noor/canon/parse.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_parse_rationale_1",
       "community": 61,
-      "norm_label": "layer 1 of canon: parsing and the two mistype shapes (ssot \u00a76.1).  strict plain-"
+      "norm_label": "layer 1 of canon: parsing and the two mistype shapes (ssot \u00a76.1).  strict plai"
     },
     {
-      "label": "Parse an as-reported value, or return None when it is unparseable.      The patt",
+      "label": "Parse an as-reported value, or return None when it is unparseable.      The pa",
       "file_type": "rationale",
       "source_file": "src/noor/canon/parse.py",
       "source_location": "L40",
       "_origin": "ast",
       "id": "src_noor_canon_parse_rationale_40",
       "community": 61,
-      "norm_label": "parse an as-reported value, or return none when it is unparseable.      the patt"
+      "norm_label": "parse an as-reported value, or return none when it is unparseable.      the pa"
     },
     {
-      "label": "True when sliding the decimal point one place would move the value inside     th",
+      "label": "True when sliding the decimal point one place would move the value inside     t",
       "file_type": "rationale",
       "source_file": "src/noor/canon/parse.py",
       "source_location": "L51",
       "_origin": "ast",
       "id": "src_noor_canon_parse_rationale_51",
       "community": 61,
-      "norm_label": "true when sliding the decimal point one place would move the value inside     th"
+      "norm_label": "true when sliding the decimal point one place would move the value inside     t"
     },
     {
-      "label": "True when exchanging two neighbouring digits of the *reported* text would     mo",
+      "label": "True when exchanging two neighbouring digits of the *reported* text would     m",
       "file_type": "rationale",
       "source_file": "src/noor/canon/parse.py",
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_noor_canon_parse_rationale_76",
       "community": 61,
-      "norm_label": "true when exchanging two neighbouring digits of the *reported* text would     mo"
+      "norm_label": "true when exchanging two neighbouring digits of the *reported* text would     m"
     },
     {
-      "label": "Every distinct text formed by exchanging two digits adjacent in the digit     se",
+      "label": "Every distinct text formed by exchanging two digits adjacent in the digit     s",
       "file_type": "rationale",
       "source_file": "src/noor/canon/parse.py",
       "source_location": "L104",
       "_origin": "ast",
       "id": "src_noor_canon_parse_rationale_104",
       "community": 61,
-      "norm_label": "every distinct text formed by exchanging two digits adjacent in the digit     se"
+      "norm_label": "every distinct text formed by exchanging two digits adjacent in the digit     s"
     },
     {
       "label": "pipeline.py",
@@ -977,64 +977,64 @@
       "norm_label": "canonicalise()"
     },
     {
-      "label": "The canon pipeline (SSOT \u00a76.1). Every observation captured during a visit passes",
+      "label": "The canon pipeline (SSOT \u00a76.1). Every observation captured during a visit passe",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_1",
       "community": 26,
-      "norm_label": "the canon pipeline (ssot \u00a76.1). every observation captured during a visit passes"
+      "norm_label": "the canon pipeline (ssot \u00a76.1). every observation captured during a visit passe"
     },
     {
-      "label": "An absent_reason observation carries no value; there is nothing to     canonical",
+      "label": "An absent_reason observation carries no value; there is nothing to     canonica",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_31",
       "community": 26,
-      "norm_label": "an absent_reason observation carries no value; there is nothing to     canonical"
+      "norm_label": "an absent_reason observation carries no value; there is nothing to     canonica"
     },
     {
-      "label": "\u00a75's two \"this record cannot be used at all\" conditions.      Both are propertie",
+      "label": "\u00a75's two \"this record cannot be used at all\" conditions.      Both are propert",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L48",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_48",
       "community": 26,
-      "norm_label": "\u00a75's two \"this record cannot be used at all\" conditions.      both are propertie"
+      "norm_label": "\u00a75's two \"this record cannot be used at all\" conditions.      both are propert"
     },
     {
-      "label": "The unit the source reported, recovered from the value's own provenance.      `c",
+      "label": "The unit the source reported, recovered from the value's own provenance.",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L62",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_62",
       "community": 26,
-      "norm_label": "the unit the source reported, recovered from the value's own provenance.      `c"
+      "norm_label": "the unit the source reported, recovered from the value's own provenance."
     },
     {
-      "label": "\u00a76.1 layer 1: the unit changed from the patient's prior accepted record.      Bo",
+      "label": "\u00a76.1 layer 1: the unit changed from the patient's prior accepted record.",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L76",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_76",
       "community": 26,
-      "norm_label": "\u00a76.1 layer 1: the unit changed from the patient's prior accepted record.      bo"
+      "norm_label": "\u00a76.1 layer 1: the unit changed from the patient's prior accepted record."
     },
     {
-      "label": "Run the three canon layers over one capture.      `priors` are the patient's exi",
+      "label": "Run the three canon layers over one capture.      `priors` are the patient's e",
       "file_type": "rationale",
       "source_file": "src/noor/canon/pipeline.py",
       "source_location": "L113",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_113",
       "community": 34,
-      "norm_label": "run the three canon layers over one capture.      `priors` are the patient's exi"
+      "norm_label": "run the three canon layers over one capture.      `priors` are the patient's e"
     },
     {
       "label": "plausibility.py",
@@ -1077,14 +1077,14 @@
       "norm_label": "decimal"
     },
     {
-      "label": "Layer 2 of canon: the two envelopes (SSOT \u00a76.1, \u00a76.4).  The physiologic envelope",
+      "label": "Layer 2 of canon: the two envelopes (SSOT \u00a76.1, \u00a76.4).  The physiologic envelo",
       "file_type": "rationale",
       "source_file": "src/noor/canon/plausibility.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_rationale_1",
       "community": 26,
-      "norm_label": "layer 2 of canon: the two envelopes (ssot \u00a76.1, \u00a76.4).  the physiologic envelope"
+      "norm_label": "layer 2 of canon: the two envelopes (ssot \u00a76.1, \u00a76.4).  the physiologic envelo"
     },
     {
       "label": "Position of a canonical value against the entry's inclusive envelopes.",
@@ -1317,14 +1317,14 @@
       "norm_label": "inclusive bounds in the canonical unit, versioned independently (\u00a76.4)."
     },
     {
-      "label": "canonical = (value + add) * multiply, quantised to `precision` (\u00a76.3).      `tol",
+      "label": "canonical = (value + add) * multiply, quantised to `precision` (\u00a76.3).      `t",
       "file_type": "rationale",
       "source_file": "src/noor/canon/registry.py",
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_37",
       "community": 60,
-      "norm_label": "canonical = (value + add) * multiply, quantised to `precision` (\u00a76.3).      `tol"
+      "norm_label": "canonical = (value + add) * multiply, quantised to `precision` (\u00a76.3).      `t"
     },
     {
       "label": "Like-with-like comparison rules (\u00a76.1 layer 3).",
@@ -1337,14 +1337,14 @@
       "norm_label": "like-with-like comparison rules (\u00a76.1 layer 3)."
     },
     {
-      "label": "One observable's data-validity declaration (SSOT \u00a76.6).      Quantity observable",
+      "label": "One observable's data-validity declaration (SSOT \u00a76.6).      Quantity observab",
       "file_type": "rationale",
       "source_file": "src/noor/canon/registry.py",
       "source_location": "L98",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_98",
       "community": 26,
-      "norm_label": "one observable's data-validity declaration (ssot \u00a76.6).      quantity observable"
+      "norm_label": "one observable's data-validity declaration (ssot \u00a76.6).      quantity observab"
     },
     {
       "label": "resolution.py",
@@ -1447,14 +1447,14 @@
       "norm_label": "verify_by_clinician()"
     },
     {
-      "label": "Quality resolution (SSOT \u00a76.2, \u00a76.5).  Observations are write-once (\u00a75), so a re",
+      "label": "Quality resolution (SSOT \u00a76.2, \u00a76.5).  Observations are write-once (\u00a75), so a",
       "file_type": "rationale",
       "source_file": "src/noor/canon/resolution.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_resolution_rationale_1",
       "community": 26,
-      "norm_label": "quality resolution (ssot \u00a76.2, \u00a76.5).  observations are write-once (\u00a75), so a re"
+      "norm_label": "quality resolution (ssot \u00a76.2, \u00a76.5).  observations are write-once (\u00a75), so a"
     },
     {
       "label": "A resolution that does not meet its bar is refused, not approximated.",
@@ -1557,54 +1557,54 @@
       "norm_label": "from_canonical()"
     },
     {
-      "label": "Unit resolution and registry-declared conversion (SSOT \u00a76.3).  Resolution is bli",
+      "label": "Unit resolution and registry-declared conversion (SSOT \u00a76.3).  Resolution is b",
       "file_type": "rationale",
       "source_file": "src/noor/canon/units.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_1",
       "community": 47,
-      "norm_label": "unit resolution and registry-declared conversion (ssot \u00a76.3).  resolution is bli"
+      "norm_label": "unit resolution and registry-declared conversion (ssot \u00a76.3).  resolution is b"
     },
     {
-      "label": "No registry declaration covers the requested unit, or a value's recorded     con",
+      "label": "No registry declaration covers the requested unit, or a value's recorded     co",
       "file_type": "rationale",
       "source_file": "src/noor/canon/units.py",
       "source_location": "L14",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_14",
       "community": 47,
-      "norm_label": "no registry declaration covers the requested unit, or a value's recorded     con"
+      "norm_label": "no registry declaration covers the requested unit, or a value's recorded     co"
     },
     {
-      "label": "Resolve the unit a value arrived in (\u00a76.3).      explicit: the source stated a u",
+      "label": "Resolve the unit a value arrived in (\u00a76.3).      explicit: the source stated a",
       "file_type": "rationale",
       "source_file": "src/noor/canon/units.py",
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_23",
       "community": 62,
-      "norm_label": "resolve the unit a value arrived in (\u00a76.3).      explicit: the source stated a u"
+      "norm_label": "resolve the unit a value arrived in (\u00a76.3).      explicit: the source stated a"
     },
     {
-      "label": "Convert a resolved unit to the canonical UCUM unit (\u00a76.6).      A converted valu",
+      "label": "Convert a resolved unit to the canonical UCUM unit (\u00a76.6).      A converted va",
       "file_type": "rationale",
       "source_file": "src/noor/canon/units.py",
       "source_location": "L45",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_45",
       "community": 47,
-      "norm_label": "convert a resolved unit to the canonical ucum unit (\u00a76.6).      a converted valu"
+      "norm_label": "convert a resolved unit to the canonical ucum unit (\u00a76.6).      a converted va"
     },
     {
-      "label": "The exact inverse of `to_canonical`, before quantisation.      Exists for the ro",
+      "label": "The exact inverse of `to_canonical`, before quantisation.      Exists for the",
       "file_type": "rationale",
       "source_file": "src/noor/canon/units.py",
       "source_location": "L74",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_74",
       "community": 47,
-      "norm_label": "the exact inverse of `to_canonical`, before quantisation.      exists for the ro"
+      "norm_label": "the exact inverse of `to_canonical`, before quantisation.      exists for the"
     },
     {
       "label": "__init__.py",
@@ -1697,24 +1697,24 @@
       "norm_label": "path"
     },
     {
-      "label": "Loads registry content into validated models (SSOT \u00a77.4).  Schema-only YAML (\u00a77.",
+      "label": "Loads registry content into validated models (SSOT \u00a77.4).  Schema-only YAML (\u00a7",
       "file_type": "rationale",
       "source_file": "src/noor/catalogue/registry_loader.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_catalogue_registry_loader_rationale_1",
       "community": 51,
-      "norm_label": "loads registry content into validated models (ssot \u00a77.4).  schema-only yaml (\u00a77."
+      "norm_label": "loads registry content into validated models (ssot \u00a77.4).  schema-only yaml (\u00a7"
     },
     {
-      "label": "The `SafeLoader` subclass \u00a77.5 allows, refusing a repeated mapping key.      Sto",
+      "label": "The `SafeLoader` subclass \u00a77.5 allows, refusing a repeated mapping key.      S",
       "file_type": "rationale",
       "source_file": "src/noor/catalogue/registry_loader.py",
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_noor_catalogue_registry_loader_rationale_19",
       "community": 51,
-      "norm_label": "the `safeloader` subclass \u00a77.5 allows, refusing a repeated mapping key.      sto"
+      "norm_label": "the `safeloader` subclass \u00a77.5 allows, refusing a repeated mapping key.      s"
     },
     {
       "label": "Load and validate an observable registry file (content/observables/registry.yaml",
@@ -1827,14 +1827,14 @@
       "norm_label": "test_every_registry_conversion_round_trips_from_the_canonical_side()"
     },
     {
-      "label": "Every registry conversion is reversible within its declared precision (SSOT \u00a712.",
+      "label": "Every registry conversion is reversible within its declared precision (SSOT \u00a712",
       "file_type": "rationale",
       "source_file": "tests/canon/test_conversion_roundtrip.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_conversion_roundtrip_rationale_1",
       "community": 47,
-      "norm_label": "every registry conversion is reversible within its declared precision (ssot \u00a712."
+      "norm_label": "every registry conversion is reversible within its declared precision (ssot \u00a712"
     },
     {
       "label": "test_delta.py",
@@ -2107,14 +2107,14 @@
       "norm_label": "test_delta_review_never_mutates_either_observation()"
     },
     {
-      "label": "Layer 3 of canon: delta review compares like with like only (SSOT \u00a76.1), and a s",
+      "label": "Layer 3 of canon: delta review compares like with like only (SSOT \u00a76.1), and a",
       "file_type": "rationale",
       "source_file": "tests/canon/test_delta.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_delta_rationale_1",
       "community": 69,
-      "norm_label": "layer 3 of canon: delta review compares like with like only (ssot \u00a76.1), and a s"
+      "norm_label": "layer 3 of canon: delta review compares like with like only (ssot \u00a76.1), and a"
     },
     {
       "label": "test_models.py",
@@ -2997,14 +2997,14 @@
       "norm_label": "test_the_capture_is_never_mutated()"
     },
     {
-      "label": "The canon pipeline (SSOT \u00a76): the three layers, the four quality states, and the",
+      "label": "The canon pipeline (SSOT \u00a76): the three layers, the four quality states, and th",
       "file_type": "rationale",
       "source_file": "tests/canon/test_pipeline.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_rationale_1",
       "community": 34,
-      "norm_label": "the canon pipeline (ssot \u00a76): the three layers, the four quality states, and the"
+      "norm_label": "the canon pipeline (ssot \u00a76): the three layers, the four quality states, and th"
     },
     {
       "label": "A fully-contextualised systolic BP capture (SSOT \u00a76.6).",
@@ -3017,14 +3017,14 @@
       "norm_label": "a fully-contextualised systolic bp capture (ssot \u00a76.6)."
     },
     {
-      "label": "A prior as canon actually stored it.      Canonicalised rather than assembled, s",
+      "label": "A prior as canon actually stored it.      Canonicalised rather than assembled,",
       "file_type": "rationale",
       "source_file": "tests/canon/test_pipeline.py",
       "source_location": "L363",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_rationale_363",
       "community": 34,
-      "norm_label": "a prior as canon actually stored it.      canonicalised rather than assembled, s"
+      "norm_label": "a prior as canon actually stored it.      canonicalised rather than assembled,"
     },
     {
       "label": "One observable that accepts both units and maps an observation code to each.",
@@ -3057,14 +3057,14 @@
       "norm_label": "test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds()"
     },
     {
-      "label": "The two envelopes (SSOT \u00a76.1 layer 2, \u00a76.4). Bounds are inclusive and declared i",
+      "label": "The two envelopes (SSOT \u00a76.1 layer 2, \u00a76.4). Bounds are inclusive and declared",
       "file_type": "rationale",
       "source_file": "tests/canon/test_plausibility.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_plausibility_rationale_1",
       "community": 72,
-      "norm_label": "the two envelopes (ssot \u00a76.1 layer 2, \u00a76.4). bounds are inclusive and declared i"
+      "norm_label": "the two envelopes (ssot \u00a76.1 layer 2, \u00a76.4). bounds are inclusive and declared"
     },
     {
       "label": "test_properties.py",
@@ -3117,14 +3117,14 @@
       "norm_label": "test_a_verdict_never_depends_on_the_order_the_priors_arrive_in()"
     },
     {
-      "label": "Nothing crosses the boundary uncanonicalised (SSOT \u00a73.1, \u00a76).  A boundary claim,",
+      "label": "Nothing crosses the boundary uncanonicalised (SSOT \u00a73.1, \u00a76).  A boundary clai",
       "file_type": "rationale",
       "source_file": "tests/canon/test_properties.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_properties_rationale_1",
       "community": 81,
-      "norm_label": "nothing crosses the boundary uncanonicalised (ssot \u00a73.1, \u00a76).  a boundary claim,"
+      "norm_label": "nothing crosses the boundary uncanonicalised (ssot \u00a73.1, \u00a76).  a boundary clai"
     },
     {
       "label": "The specs as canon would have stored them, provenance and all (\u00a76.3).",
@@ -3947,14 +3947,14 @@
       "norm_label": "shared builders and fixtures (docs/testing-standards.md: factories live here)."
     },
     {
-      "label": "A well-formed glucose capture; override anything.      `value` and `unit` are sh",
+      "label": "A well-formed glucose capture; override anything.      `value` and `unit` are",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
       "source_location": "L56",
       "_origin": "ast",
       "id": "tests_conftest_rationale_56",
       "community": 81,
-      "norm_label": "a well-formed glucose capture; override anything.      `value` and `unit` are sh"
+      "norm_label": "a well-formed glucose capture; override anything.      `value` and `unit` are"
     },
     {
       "label": "The real content/observables/registry.yaml, loaded and validated.",
@@ -3967,14 +3967,14 @@
       "norm_label": "the real content/observables/registry.yaml, loaded and validated."
     },
     {
-      "label": "A synthetic registry entry with tight envelopes for boundary tests.      Physiol",
+      "label": "A synthetic registry entry with tight envelopes for boundary tests.      Physi",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
       "source_location": "L85",
       "_origin": "ast",
       "id": "tests_conftest_rationale_85",
       "community": 62,
-      "norm_label": "a synthetic registry entry with tight envelopes for boundary tests.      physiol"
+      "norm_label": "a synthetic registry entry with tight envelopes for boundary tests.      physi"
     },
     {
       "label": "A synthetic mg/dL conversion into the canonical mmol/L; override anything.",
@@ -3987,14 +3987,14 @@
       "norm_label": "a synthetic mg/dl conversion into the canonical mmol/l; override anything."
     },
     {
-      "label": "A canonical observation as the pipeline would emit it; override anything.      T",
+      "label": "A canonical observation as the pipeline would emit it; override anything.",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
       "source_location": "L129",
       "_origin": "ast",
       "id": "tests_conftest_rationale_129",
       "community": 63,
-      "norm_label": "a canonical observation as the pipeline would emit it; override anything.      t"
+      "norm_label": "a canonical observation as the pipeline would emit it; override anything."
     },
     {
       "label": "test_import_direction.py",
@@ -4127,24 +4127,24 @@
       "norm_label": "test_canon_never_names_a_treatment_threshold()"
     },
     {
-      "label": "The import-direction and purity half of the device-boundary seam (SSOT \u00a74.2).  W",
+      "label": "The import-direction and purity half of the device-boundary seam (SSOT \u00a74.2).",
       "file_type": "rationale",
       "source_file": "tests/test_import_direction.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_test_import_direction_rationale_1",
       "community": 28,
-      "norm_label": "the import-direction and purity half of the device-boundary seam (ssot \u00a74.2).  w"
+      "norm_label": "the import-direction and purity half of the device-boundary seam (ssot \u00a74.2)."
     },
     {
-      "label": "Every name the code *uses* \u2014 not comments or docstrings, which may say     \"thre",
+      "label": "Every name the code *uses* \u2014 not comments or docstrings, which may say     \"thr",
       "file_type": "rationale",
       "source_file": "tests/test_import_direction.py",
       "source_location": "L114",
       "_origin": "ast",
       "id": "tests_test_import_direction_rationale_114",
       "community": 28,
-      "norm_label": "every name the code *uses* \u2014 not comments or docstrings, which may say     \"thre"
+      "norm_label": "every name the code *uses* \u2014 not comments or docstrings, which may say     \"thr"
     },
     {
       "label": "test_smoke.py",
@@ -29388,5 +29388,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "896c73ed04cd1bca279b538373b21b4bee025749"
+  "built_at_commit": "0253841b09755ae2b570230dc562b616d45cf31b"
 }
