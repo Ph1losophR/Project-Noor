@@ -107,6 +107,24 @@ def test_every_accepted_non_canonical_unit_must_have_a_conversion_declaration():
         make_entry(accepted_units=["mmol/L", "mg/dL"])
 
 
+def test_conversion_sources_must_be_unique_within_an_entry():
+    # Arrange
+    conversion = Conversion(
+        from_unit="mg/dL",
+        precision=2,
+        tolerance=Decimal("0.5"),
+        canonical_tolerance=Decimal("0.01"),
+        version="t1",
+    )
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        make_entry(
+            accepted_units=["mmol/L", "mg/dL"],
+            conversions=[conversion, conversion],
+        )
+
+
 def test_registry_declaration_collections_are_immutable_after_validation():
     # Arrange
     entry = make_entry(
@@ -216,3 +234,19 @@ def test_registry_lookup_raises_unknown_observable_for_a_missing_id():
     # Act / Assert
     with pytest.raises(UnknownObservableError):
         registry.entry("tsh")
+
+
+def test_registry_entries_are_immutable_after_validation():
+    # Arrange
+    entry = make_entry()
+    registry = ObservableRegistry(entries={"test_obs": entry})
+
+    # Act / Assert
+    with pytest.raises(TypeError):
+        registry.entries["other_obs"] = entry  # type: ignore[index]
+    with pytest.raises(AttributeError):
+        registry.entries.clear()  # type: ignore[attr-defined]
+
+    # Assert
+    assert registry.entry("test_obs") is entry
+    assert registry.model_dump()["entries"]["test_obs"] == entry.model_dump()

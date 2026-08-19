@@ -7,9 +7,10 @@ disagree, the SSOT wins and this file is wrong — fix it here, not there.
 
 Section references in the form (§N) point at the SSOT.
 
-**The full suite described here does not exist yet.** The repository now has the
-foundation smoke/seam tests and Task 3 observation-model tests and fixtures, but
-the registry, remaining canon behavior tests, and database are not built. These
+**The full suite described here does not exist yet.** The repository now has
+foundation smoke/seam tests, observation-model tests and fixtures, registry-loader
+tests, and canon unit, registry, and conversion-round-trip behavior tests. Later
+canon behavior, the engine, catalogue behavior, and database are not built. These
 are the standards the suite will be built to, not a description of a complete
 suite that runs. Verify against the filesystem before assuming otherwise.
 

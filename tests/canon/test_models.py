@@ -234,6 +234,17 @@ def test_a_consistent_rejected_verdict_is_accepted():
     assert verdict.accepted_via is None
 
 
+def test_a_rejected_verdict_cannot_carry_accepted_via():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.rejected,
+            unit_resolution=UnitResolution.explicit,
+            accepted_via=AcceptedVia.clinician_verified,
+            rejection_reasons=[RejectionReason.parse_failure],
+        )
+
+
 def test_a_consistent_flagged_verdict_is_accepted():
     # Arrange / Act
     verdict = QualityVerdict(
@@ -244,6 +255,17 @@ def test_a_consistent_flagged_verdict_is_accepted():
 
     # Assert
     assert verdict.suspicions == (SuspicionReason.delta_exceeded,)
+
+
+def test_a_flagged_verdict_cannot_carry_rejection_reasons():
+    # Arrange / Act / Assert
+    with pytest.raises(ValidationError):
+        QualityVerdict(
+            state=QualityState.needs_repeat_or_verification,
+            unit_resolution=UnitResolution.explicit,
+            rejection_reasons=[RejectionReason.parse_failure],
+            suspicions=[SuspicionReason.delta_exceeded],
+        )
 
 
 def test_accepted_via_unremarkable_round_trips():

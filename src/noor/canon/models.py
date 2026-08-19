@@ -415,8 +415,12 @@ class QualityVerdict(NoorModel):
             raise ValueError("an accepted observation carries how it got there (§6.2)")
         if self.state in ACCEPTED_FAMILY and self.rejection_reasons:
             raise ValueError("an accepted observation cannot carry rejection reasons (§6.2)")
+        if self.state is QualityState.rejected and self.accepted_via is not None:
+            raise ValueError("a rejected observation cannot carry accepted_via (§6.2)")
         if self.state is QualityState.rejected and not self.rejection_reasons:
             raise ValueError("a rejected observation names why")
+        if self.state is QualityState.needs_repeat_or_verification and self.rejection_reasons:
+            raise ValueError("a flagged observation cannot carry rejection reasons (§6.2)")
         if self.state is QualityState.needs_repeat_or_verification and not self.suspicions:
             raise ValueError("a flagged observation names what is suspected")
         # §6.3: the enum holds outcomes, so a record refused before resolution ran

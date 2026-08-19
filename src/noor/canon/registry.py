@@ -128,6 +128,9 @@ class ObservableEntry(NoorModel):
 
     @model_validator(mode="after")
     def _internally_consistent(self) -> Self:
+        conversion_sources = [conversion.from_unit for conversion in self.conversions]
+        if len(conversion_sources) != len(set(conversion_sources)):
+            raise ValueError("conversion sources must be unique within an observable entry")
         if self.canonical_ucum not in self.accepted_units:
             raise ValueError("the canonical unit must be an accepted unit")
         for conversion in self.conversions:
@@ -161,7 +164,20 @@ class ObservableEntry(NoorModel):
 
 
 class ObservableRegistry(NoorModel):
-    entries: dict[str, ObservableEntry]
+    entries: Mapping[str, ObservableEntry]
+
+    @field_validator("entries", mode="after")
+    @classmethod
+    def _freeze_entries(
+        cls, entries: Mapping[str, ObservableEntry]
+    ) -> Mapping[str, ObservableEntry]:
+        return MappingProxyType(dict(entries))
+
+    @field_serializer("entries")
+    def _serialise_entries(
+        self, entries: Mapping[str, ObservableEntry]
+    ) -> dict[str, ObservableEntry]:
+        return dict(entries)
 
     @model_validator(mode="after")
     def _keys_match_entries(self) -> Self:
