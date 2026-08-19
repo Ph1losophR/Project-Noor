@@ -9,7 +9,21 @@ from typing import Any
 import pytest
 from hypothesis import settings
 
-from noor.canon.models import EntryMode, ObservationCapture, ReportedValue, SourceStatus
+from noor.canon.models import (
+    AcceptedVia,
+    CanonicalObservation,
+    CanonicalQuantity,
+    DeltaVerdict,
+    EntryMode,
+    ObservationCapture,
+    QualityState,
+    QualityVerdict,
+    RejectionReason,
+    ReportedValue,
+    SourceStatus,
+    SuspicionReason,
+    UnitResolution,
+)
 from noor.canon.registry import DeltaPolicy, Envelope, ObservableEntry, ObservableRegistry
 from noor.catalogue.registry_loader import load_registry
 
@@ -69,3 +83,59 @@ def make_entry(**overrides: Any) -> ObservableEntry:
     }
     fields.update(overrides)
     return ObservableEntry(**fields)
+
+
+def make_canonical(
+    *,
+    state: QualityState = QualityState.accepted,
+    rejection_reasons: list[RejectionReason] | None = None,
+    canonical_value: str | None = None,
+    canonical_ucum: str | None = None,
+    delta: DeltaVerdict | None = None,
+    **capture_overrides: Any,
+) -> CanonicalObservation:
+    """A canonical observation as the pipeline would emit it; override anything.
+
+    The quality verdict is built consistently with the state (§6.2). Canonical
+    value defaults to the capture's as-reported value and unit — say what the
+    test needs via canonical_value / canonical_ucum.
+    """
+    capture = make_capture(**capture_overrides)
+
+    def quantity() -> CanonicalQuantity:
+        return CanonicalQuantity(
+            value=Decimal(canonical_value or capture.as_reported.value or "0"),
+            ucum=canonical_ucum or capture.as_reported.unit or "mmol/L",
+        )
+
+    if state is QualityState.rejected:
+        reasons = rejection_reasons or [RejectionReason.outside_physiologic_envelope]
+        valueless = {
+            RejectionReason.parse_failure,
+            RejectionReason.unit_ambiguous,
+            RejectionReason.mapping_unusable,
+            RejectionReason.source_status_unusable,
+        }
+        canonical = None if valueless & set(reasons) else quantity()
+        quality = QualityVerdict(
+            state=state,
+            unit_resolution=UnitResolution.explicit,
+            rejection_reasons=reasons,
+        )
+    elif state is QualityState.needs_repeat_or_verification:
+        canonical = quantity()
+        quality = QualityVerdict(
+            state=state,
+            unit_resolution=UnitResolution.explicit,
+            suspicions=[SuspicionReason.delta_exceeded],
+            delta=delta,
+        )
+    else:
+        canonical = quantity()
+        quality = QualityVerdict(
+            state=state,
+            unit_resolution=UnitResolution.explicit,
+            accepted_via=AcceptedVia.unremarkable,
+            delta=delta,
+        )
+    return CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
