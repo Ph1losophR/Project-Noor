@@ -141,6 +141,21 @@ def test_a_repeat_from_a_different_device_class_cannot_confirm(registry):
         confirm_repeat(flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT)
 
 
+def test_a_repeat_in_a_different_setting_cannot_confirm(registry):
+    # Arrange
+    entry = registry.entry("glucose")
+    flagged = make_canonical(
+        state=QualityState.needs_repeat_or_verification,
+        value="30.0",
+        setting=Setting.home,
+    )
+    repeat = make_canonical(value="29.5", setting=Setting.office)
+
+    # Act / Assert
+    with pytest.raises(ResolutionError):
+        confirm_repeat(flagged, repeat, entry, clinician_id="RN-7", resolved_at=RESOLVED_AT)
+
+
 def test_an_unflagged_observation_has_nothing_to_confirm(registry):
     # Arrange
     entry = registry.entry("glucose")
