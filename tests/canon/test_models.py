@@ -13,6 +13,7 @@ from noor.canon.models import (
     AcceptedVia,
     CanonicalObservation,
     CanonicalQuantity,
+    ConversionApplied,
     DeltaVerdict,
     EntryMode,
     Informant,
@@ -198,6 +199,22 @@ def test_raw_payload_rejects_values_outside_json_shapes(raw_payload):
     # Arrange / Act / Assert
     with pytest.raises(ValidationError):
         make_capture(raw_payload=raw_payload)
+
+
+@pytest.mark.parametrize("multiplier", [Decimal("0"), Decimal("-1")])
+def test_a_recorded_conversion_multiplier_must_be_positive(multiplier):
+    # Arrange / Act / Assert — §6.3: recorded provenance is replayed to convert a
+    # stored value back, so a non-positive factor is a division waiting to happen.
+    # `Conversion` refuses one at authoring time; this refuses one on the value.
+    with pytest.raises(ValidationError):
+        ConversionApplied(
+            from_unit="mg/dL",
+            add=Decimal("0"),
+            multiply=multiplier,
+            precision=2,
+            rounding="ROUND_HALF_UP",
+            version="glucose-mgdl-v1",
+        )
 
 
 def test_an_accepted_verdict_must_carry_how_it_got_there():

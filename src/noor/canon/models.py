@@ -342,7 +342,7 @@ class ConversionApplied(NoorModel):
 
     from_unit: str = Field(min_length=1)
     add: Decimal
-    multiply: Decimal
+    multiply: Decimal = Field(gt=0)
     precision: int = Field(ge=0)
     rounding: str = Field(min_length=1)
     version: str = Field(min_length=1)

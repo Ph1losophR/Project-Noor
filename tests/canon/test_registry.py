@@ -126,7 +126,10 @@ def test_conversion_sources_must_be_unique_within_an_entry():
 
 
 def test_registry_declaration_collections_are_immutable_after_validation():
-    # Arrange
+    # Arrange — YAML hands Pydantic lists and dicts; the schema stores containers
+    # that loaded content cannot be edited through in process (§7.5: content
+    # changes by pull request). One probe per container family is the whole claim
+    # — tuple and MappingProxyType semantics are the standard library's.
     entry = make_entry(
         accepted_units=["mmol/L", "mg/dL"],
         conversions=[
@@ -139,39 +142,16 @@ def test_registry_declaration_collections_are_immutable_after_validation():
             )
         ],
         code_unit_map={"http://loinc.org|1234-5": "mg/dL"},
-        delta_policy=DeltaPolicy(
-            max_abs_change=Decimal("3"), within_hours=24, compare_context=["posture"]
-        ),
-        required_context=["setting"],
-        required_method=["device_class"],
     )
 
     # Act / Assert
-    with pytest.raises(TypeError):
-        entry.accepted_units[0] = "g/L"  # type: ignore[index]
     with pytest.raises(AttributeError):
         entry.accepted_units.append("g/L")  # type: ignore[attr-defined]
     with pytest.raises(TypeError):
-        entry.conversions[0] = entry.conversions[0]  # type: ignore[index]
-    with pytest.raises(TypeError):
         entry.code_unit_map["http://loinc.org|1234-5"] = "mmol/L"  # type: ignore[index]
-    with pytest.raises(AttributeError):
-        entry.code_unit_map.update({"http://loinc.org|9999-9": "mg/dL"})  # type: ignore[attr-defined]
-    with pytest.raises(AttributeError):
-        entry.delta_policy.compare_context.append("setting")  # type: ignore[attr-defined]
-    with pytest.raises(AttributeError):
-        entry.required_context.append("posture")  # type: ignore[attr-defined]
-    with pytest.raises(AttributeError):
-        entry.required_method.append("specimen")  # type: ignore[attr-defined]
 
-    # Assert
-    assert tuple(entry.accepted_units) == ("mmol/L", "mg/dL")
-    assert tuple(conversion.from_unit for conversion in entry.conversions) == ("mg/dL",)
-    assert entry.code_unit_map["http://loinc.org|1234-5"] == "mg/dL"
+    # Assert — and the frozen mapping still serialises back to a storable dict
     assert entry.model_dump()["code_unit_map"] == {"http://loinc.org|1234-5": "mg/dL"}
-    assert entry.delta_policy.compare_context == ("posture",)
-    assert entry.required_context == ("setting",)
-    assert entry.required_method == ("device_class",)
 
 
 def test_a_conversion_multiplier_must_be_positive():

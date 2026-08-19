@@ -1,16 +1,16 @@
 # Graph Report - cds_engine  (2026-08-19)
 
 ## Corpus Check
-- 35 files · ~4,226,803 words
+- 53 files · ~4,240,114 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 688 nodes · 758 edges · 47 communities (37 shown, 10 thin omitted)
-- Extraction: 96% EXTRACTED · 4% INFERRED · 0% AMBIGUOUS · INFERRED: 28 edges (avg confidence: 0.8)
+- 886 nodes · 1146 edges · 60 communities (47 shown, 13 thin omitted)
+- Extraction: 86% EXTRACTED · 14% INFERRED · 0% AMBIGUOUS · INFERRED: 165 edges (avg confidence: 0.78)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `b0a55f13`
+- Built from commit: `99ba6559`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -61,23 +61,36 @@
 - [[_COMMUNITY_task-2-brief|task-2-brief.md]]
 - [[_COMMUNITY_task-3-brief|task-3-brief.md]]
 - [[_COMMUNITY_noor|noor]]
+- [[_COMMUNITY_test_registry.py|test_registry.py]]
+- [[_COMMUNITY_task-4-brief|task-4-brief.md]]
+- [[_COMMUNITY_Task 4 Implementation Report|Task 4 Implementation Report]]
+- [[_COMMUNITY_Task 5 Report Unit Resolution|Task 5 Report: Unit Resolution]]
+- [[_COMMUNITY_load_registry|load_registry]]
+- [[_COMMUNITY_task-5-brief|task-5-brief.md]]
+- [[_COMMUNITY_Task 6 Report Conversion Round-Trip Property|Task 6 Report: Conversion Round-Trip Property]]
+- [[_COMMUNITY_task-6-brief|task-6-brief.md]]
+- [[_COMMUNITY_Coverage Fix Report|Coverage Fix Report]]
+- [[_COMMUNITY_Whole-Branch Review Remediation Report|Whole-Branch Review Remediation Report]]
+- [[_COMMUNITY_Final Whole-Branch Review Fix Report|Final Whole-Branch Review Fix Report]]
+- [[_COMMUNITY_Global Constraints|Global Constraints]]
+- [[_COMMUNITY_Whole-Branch Review Remediation Design|Whole-Branch Review Remediation Design]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `make_capture()` - 24 edges
-2. `Project Noor — Testing Standards` - 21 edges
-3. `Project Noor — CDS Engine Architecture` - 19 edges
-4. `Task 3 Report: The Observation Model and Quality Verdicts` - 17 edges
-5. `11. Topics raised during the design interview` - 17 edges
-6. `QualityVerdict` - 16 edges
-7. `NoorModel` - 13 edges
-8. `File structure` - 13 edges
-9. `5. Interoperability and integration` - 12 edges
-10. `4. Terminology, coding, and identifiers` - 12 edges
+1. `make_entry()` - 43 edges
+2. `QualityVerdict` - 25 edges
+3. `make_capture()` - 25 edges
+4. `Project Noor — Testing Standards` - 21 edges
+5. `NoorModel` - 19 edges
+6. `Project Noor — CDS Engine Architecture` - 19 edges
+7. `Task 5 Report: Unit Resolution` - 18 edges
+8. `Conversion` - 17 edges
+9. `to_canonical()` - 17 edges
+10. `from_canonical()` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `test_a_comparable_delta_names_its_baseline_and_its_change()` --calls--> `DeltaVerdict`  [INFERRED]
+- `test_a_canonical_value_requires_a_resolved_unit()` --calls--> `CanonicalQuantity`  [INFERRED]
   tests/canon/test_models.py → src/noor/canon/models.py
-- `test_a_comparable_delta_without_a_baseline_is_refused()` --calls--> `DeltaVerdict`  [INFERRED]
+- `test_an_accepted_observation_with_a_canonical_value_is_accepted()` --calls--> `CanonicalQuantity`  [INFERRED]
   tests/canon/test_models.py → src/noor/canon/models.py
 - `test_an_incomparable_delta_records_why_nothing_was_compared()` --calls--> `DeltaVerdict`  [INFERRED]
   tests/canon/test_models.py → src/noor/canon/models.py
@@ -89,11 +102,11 @@
 ## Import Cycles
 - None detected.
 
-## Communities (47 total, 10 thin omitted)
+## Communities (60 total, 13 thin omitted)
 
 ### Community 0 - "Project Noor — CDS Engine Architecture"
-Cohesion: 0.20
-Nodes (9): 0.1 Document map, 0.2 Table of contents, 0. How to use this document, 14. Build sequence, 17. Research index, 1.1 What Noor is not, 1.2 First build target, 1. What Noor is (+1 more)
+Cohesion: 0.18
+Nodes (10): 0.1 Document map, 0.2 Table of contents, 0. How to use this document, 14. Build sequence, 17. Research index, 4.1 Layout, 4.2 The enforced seam, 4.3 Why an evaluator and not an inference engine (+2 more)
 
 ### Community 1 - "11. Topics raised during the design interview"
 Cohesion: 0.06
@@ -188,16 +201,16 @@ Cohesion: 0.25
 Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 Synthetic data, 12.5 Calibrated-reliance audit, 12.6 Clinical-operations verification claims, 12.7 Shadow mode, 12. Testing and validation
 
 ### Community 24 - "test_models.py"
-Cohesion: 0.06
-Nodes (54): Any, datetime, Self, CanonicalObservation, CanonicalQuantity, DeltaVerdict, ObservationCapture, QualityVerdict (+46 more)
+Cohesion: 0.07
+Nodes (55): Any, datetime, CanonicalObservation, DeltaVerdict, QualityVerdict, Exactly as captured. The value stays a string until parse validates it., What delta review compared, or why it compared nothing (§5, §6.1).      Always r, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolution` (+47 more)
 
 ### Community 25 - "Task 3 Report: The Observation Model and Quality Verdicts"
 Cohesion: 0.05
 Nodes (43): Baseline, Changed Files, Commit, Coverage Concern, Cyclic Payload Fix, Final Container Fix, Final Edge-Case Fixes, Final Review Findings Addressed (+35 more)
 
 ### Community 26 - "models.py"
-Cohesion: 0.09
-Nodes (32): BaseModel, AcceptedVia, Arm, CaptureContext, ConversionApplied, CuffSize, EntryMode, _freeze_mapping() (+24 more)
+Cohesion: 0.06
+Nodes (40): BaseModel, AcceptedVia, Arm, CaptureContext, CuffSize, EntryMode, _freeze_mapping(), _freeze_payload() (+32 more)
 
 ### Community 27 - "Task 2 Report: CI and the Import-Direction Seam Test"
 Cohesion: 0.08
@@ -205,7 +218,7 @@ Nodes (25): Branch Protection, CI-equivalent coverage command, Clean initial sea
 
 ### Community 28 - "test_import_direction.py"
 Cohesion: 0.29
-Nodes (14): Path, _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), _python_files(), The device-boundary seam test (SSOT §4.2).  `app` imports from `canon`, `engine`, Every name the code *uses* — not comments or docstrings, which may say     "thre (+6 more)
+Nodes (14): _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), Path, _python_files(), The device-boundary seam test (SSOT §4.2).  `app` imports from `canon`, `engine`, Every name the code *uses* — not comments or docstrings, which may say     "thre (+6 more)
 
 ### Community 29 - "Task 1 Implementation Report"
 Cohesion: 0.22
@@ -228,32 +241,72 @@ Cohesion: 0.50
 Nodes (4): 16.1 Questions that block business, not behaviour, 16.2 Questions that block behaviour, 16.3 What is genuinely unanswerable here, 16. Open questions
 
 ### Community 34 - "4. Module architecture"
-Cohesion: 0.50
-Nodes (4): 4.1 Layout, 4.2 The enforced seam, 4.3 Why an evaluator and not an inference engine, 4. Module architecture
+Cohesion: 0.67
+Nodes (3): 1.1 What Noor is not, 1.2 First build target, 1. What Noor is
 
 ### Community 35 - "9. Findings, alerts, overrides"
 Cohesion: 0.50
 Nodes (4): 9.1 Three severities, 9.2 Overrides, 9.3 Safety surveillance, 9. Findings, alerts, overrides
 
+### Community 47 - "test_registry.py"
+Cohesion: 0.06
+Nodes (76): Decimal, KeyError, CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversion, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None exa, SourceCode, Conversion (+68 more)
+
+### Community 49 - "Task 4 Implementation Report"
+Cohesion: 0.20
+Nodes (9): Concerns, Files changed, Implementation, Important Finding Fixes, Status, Task 4 Implementation Report, TDD Evidence, Verification (+1 more)
+
+### Community 50 - "Task 5 Report: Unit Resolution"
+Cohesion: 0.11
+Nodes (18): Blocking Conflict, Changes Made, Uncommitted, Clarification Applied, Commit, Context Verified, Final Commit, Final Files, Final Verification (+10 more)
+
+### Community 51 - "load_registry"
+Cohesion: 0.22
+Nodes (11): load_registry(), Path, Loads registry content into validated models (SSOT §7.4).  Schema-only YAML (§7., Load and validate an observable registry file (content/observables/registry.yaml, Content loads through a schema-only YAML loader (SSOT §7.5)., test_a_registry_without_an_observables_list_is_refused(), test_an_entry_that_is_not_an_identified_mapping_names_the_offending_file(), test_an_object_constructing_yaml_tag_is_a_build_failure() (+3 more)
+
+### Community 53 - "Task 6 Report: Conversion Round-Trip Property"
+Cohesion: 0.25
+Nodes (7): Concerns, Implementation, Review Remediation, Status, Task 6 Report: Conversion Round-Trip Property, Verification, Verification After Remediation
+
+### Community 55 - "Coverage Fix Report"
+Cohesion: 0.29
+Nodes (6): Commit(s), Concerns, Coverage Fix Report, Report Path, Status, Test Summary
+
+### Community 56 - "Whole-Branch Review Remediation Report"
+Cohesion: 0.20
+Nodes (9): Commits, Finding 1: Deep Registry Immutability, Finding 2: Quality Verdict Contradictions, Finding 3: Missing Noncanonical Conversion, Finding 4: Bogus Provenance Source Unit, Scope and Concerns, Status, Verification (+1 more)
+
+### Community 57 - "Final Whole-Branch Review Fix Report"
+Cohesion: 0.20
+Nodes (9): Commits, Final Whole-Branch Review Fix Report, Finding 1: Registry Immutability, Finding 2: Quality Verdict Consistency, Finding 3: Duplicate Conversion Sources, Finding 4: Testing Standards Documentation, Scope and Concerns, Status (+1 more)
+
+### Community 58 - "Global Constraints"
+Cohesion: 0.29
+Nodes (6): Global Constraints, Task 1: Registry Immutability and Validation, Task 2: Verdict Consistency, Task 3: Provenance Source-Unit Validation, Task 4: Full Verification and Report, Whole-Branch Review Remediation Implementation Plan
+
+### Community 59 - "Whole-Branch Review Remediation Design"
+Cohesion: 0.40
+Nodes (4): Design, Goal, Verification, Whole-Branch Review Remediation Design
+
 ## Knowledge Gaps
-- **427 isolated node(s):** `noor`, `Task 1: Repository skeleton, tooling, and a green empty suite`, `Status`, `TDD Evidence`, `Commands And Results` (+422 more)
+- **488 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+483 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **10 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **13 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Project Noor — CDS Engine Architecture` connect `Project Noor — CDS Engine Architecture` to `13. Gates`, `16. Open questions`, `4. Module architecture`, `9. Findings, alerts, overrides`, `11. Clinical operations`, `2. Regulatory and compliance posture`, `3.2 Medication knowledge`, `5. The observation model`, `6. `canon` — the data-validity layer`, `10. Clinical content governance`, `7. Rule schema and catalogue`, `12. Testing and validation`, `8. Evaluation`, `15. Deferred`?**
-  _High betweenness centrality (0.031) - this node is a cross-community bridge._
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `NoorModel` connect `models.py` to `test_models.py`, `test_registry.py`?**
+  _High betweenness centrality (0.008) - this node is a cross-community bridge._
 - **Why does `11. Clinical operations` connect `11. Clinical operations` to `Project Noor — CDS Engine Architecture`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
-- **Why does `2. Regulatory and compliance posture` connect `2. Regulatory and compliance posture` to `Project Noor — CDS Engine Architecture`?**
-  _High betweenness centrality (0.006) - this node is a cross-community bridge._
+  _High betweenness centrality (0.007) - this node is a cross-community bridge._
+- **Are the 3 inferred relationships involving `make_entry()` (e.g. with `Decimal` and `DeltaPolicy`) actually correct?**
+  _`make_entry()` has 3 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 32 inferred relationships involving `Decimal` (e.g. with `test_every_registry_conversion_round_trips_from_the_canonical_side()` and `test_from_canonical_in_a_canonical_unit_returns_the_value()`) actually correct?**
+  _`Decimal` has 32 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 21 inferred relationships involving `QualityVerdict` (e.g. with `test_a_canonical_value_requires_a_resolved_unit()` and `test_a_consistent_flagged_verdict_is_accepted()`) actually correct?**
+  _`QualityVerdict` has 21 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSIDE` to the rest of the system?**
-  _452 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `11. Topics raised during the design interview` be split into smaller, more focused modules?**
-  _Cohesion score 0.05714285714285714 - nodes in this community are weakly interconnected._
-- **Should `Project Noor — Testing Standards` be split into smaller, more focused modules?**
-  _Cohesion score 0.0625 - nodes in this community are weakly interconnected._
-- **Should `5. Interoperability and integration` be split into smaller, more focused modules?**
-  _Cohesion score 0.06666666666666667 - nodes in this community are weakly interconnected._
+  _533 weakly-connected nodes found - possible documentation gaps or missing edges._

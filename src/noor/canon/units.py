@@ -11,8 +11,8 @@ from noor.canon.registry import ObservableEntry
 
 
 class UnknownUnitError(ValueError):
-    """A unit survived to conversion without a registry declaration — a defect,
-    not data. resolve_unit runs first; this should be unreachable."""
+    """No registry declaration covers the requested unit, or a value's recorded
+    conversion does not match it. Raised by both directions of conversion."""
 
 
 def resolve_unit(
@@ -75,6 +75,15 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
 
     Exists for the round-trip property test (§12.6 claim 41) and for displayed
     conversions (§6.3: convert only with displayed conversion and provenance).
+
+    A value that carries provenance is replayed with its own historical factors,
+    never the registry's current ones: a value stored under `glucose-mgdl-v1`
+    must convert back the way it converted in, even after a factor is corrected.
+
+    Raises `UnknownUnitError` when `quantity` is not in `entry`'s canonical unit,
+    when `unit` is not an accepted unit, or when recorded provenance names a
+    source unit `entry` does not accept as non-canonical or that disagrees with
+    `unit`.
     """
     if quantity.ucum != entry.canonical_ucum:
         raise UnknownUnitError(
@@ -84,27 +93,6 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
         raise UnknownUnitError(f"{entry.observable}: no reverse unit declared for {unit!r}")
     applied = quantity.conversion_applied
     if applied is not None:
-        try:
-            provenance_is_usable = (
-                isinstance(applied, ConversionApplied)
-                and isinstance(applied.from_unit, str)
-                and bool(applied.from_unit)
-                and isinstance(applied.add, Decimal)
-                and applied.add.is_finite()
-                and isinstance(applied.multiply, Decimal)
-                and applied.multiply.is_finite()
-                and applied.multiply > 0
-                and type(applied.precision) is int
-                and applied.precision >= 0
-                and isinstance(applied.rounding, str)
-                and bool(applied.rounding)
-                and isinstance(applied.version, str)
-                and bool(applied.version)
-            )
-        except (AttributeError, TypeError, ValueError):
-            provenance_is_usable = False
-        if not provenance_is_usable:
-            raise UnknownUnitError(f"{entry.observable}: malformed conversion provenance")
         provenance_source_is_noncanonical = (
             applied.from_unit in entry.accepted_units and applied.from_unit != entry.canonical_ucum
         )

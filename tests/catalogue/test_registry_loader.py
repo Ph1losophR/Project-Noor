@@ -73,3 +73,37 @@ def test_duplicate_observable_ids_are_refused(tmp_path):
     # Act / Assert
     with pytest.raises(ValueError, match="duplicate"):
         load_registry(bad)
+
+
+def test_a_content_file_with_a_repeated_key_is_refused(tmp_path):
+    # Arrange — stock PyYAML keeps the LAST of two identical keys silently, so this
+    # file would load a physiologic ceiling of 99 while the approver read 10 (§7.5)
+    bad = tmp_path / "registry.yaml"
+    bad.write_text(
+        "observables:\n"
+        "  - observable: glucose\n"
+        '    physiologic: {low: "2", high: "10", version: v1}\n'
+        '    physiologic: {low: "2", high: "99", version: v1}\n',
+        encoding="utf-8",
+    )
+
+    # Act / Assert
+    with pytest.raises(ConstructorError, match="duplicate keys: physiologic"):
+        load_registry(bad)
+
+
+@pytest.mark.parametrize(
+    "observables_block",
+    ["observables:\n  - {owner: a}\n", "observables:\n  - glucose\n"],
+    ids=["mapping-without-an-id", "not-a-mapping"],
+)
+def test_an_entry_that_is_not_an_identified_mapping_names_the_offending_file(
+    tmp_path, observables_block
+):
+    # Arrange — a content author's error must say which file to open
+    bad = tmp_path / "registry.yaml"
+    bad.write_text(observables_block, encoding="utf-8")
+
+    # Act / Assert
+    with pytest.raises(ValueError, match=r"registry\.yaml: every observable"):
+        load_registry(bad)

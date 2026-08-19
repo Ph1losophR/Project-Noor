@@ -3,12 +3,16 @@
 added to content/observables/registry.yaml is tested here automatically.
 §6.3 requires reversibility in BOTH directions, so there are two properties: one
 bounded by `tolerance` in the source unit, one by `canonical_tolerance`.
+
+Reversibility alone cannot catch a wrong factor — the round trip divides by the
+number it multiplied by, so a 10x error round-trips perfectly. `GOLDEN_VALUES`
+is where the factor itself is checked, and a conversion added without one fails.
 """
 
 from decimal import Decimal
 
 import pytest
-from hypothesis import given, settings
+from hypothesis import given
 from hypothesis import strategies as st
 
 from noor.canon.models import CanonicalQuantity
@@ -23,6 +27,16 @@ CONVERSIONS = [
     for conversion in entry.conversions
 ]
 
+# One hand-computed (source value, canonical value) pair per declared conversion.
+GOLDEN_VALUES = {
+    # 90 x 0.055507 = 4.99563, quantised to 2dp
+    ("glucose", "mg/dL"): (Decimal("90"), Decimal("5.00")),
+    # the §R-11 incident class: °F mistaken for °C. (98.6 - 32) x 0.5555556, 1dp
+    ("body_temperature", "[degF]"): (Decimal("98.6"), Decimal("37.0")),
+    # 1.0 x 88.4, 1dp
+    ("creatinine", "mg/dL"): (Decimal("1.0"), Decimal("88.4")),
+}
+
 
 def test_the_registry_declares_conversions_to_test():
     # Arrange / Act / Assert — a registry with zero conversions makes this file
@@ -30,40 +44,37 @@ def test_the_registry_declares_conversions_to_test():
     assert CONVERSIONS, "no registry conversions declared — claim 41 has no object"
 
 
-def test_glucose_mg_dl_converts_to_mmol_l_as_declared():
-    # Arrange
-    entry = REGISTRY.entry("glucose")
-
-    # Act
-    quantity = to_canonical(Decimal("90"), "mg/dL", entry)
-
-    # Assert — 90 mg/dL x 0.055507 = 4.99563, quantised to 2dp
-    assert quantity.value == Decimal("5.00")
-    assert quantity.ucum == "mmol/L"
-
-
-def test_creatinine_mg_dl_converts_to_umol_l_as_declared():
-    # Arrange
-    entry = REGISTRY.entry("creatinine")
-
-    # Act
-    quantity = to_canonical(Decimal("1.0"), "mg/dL", entry)
+def test_every_registry_conversion_declares_a_hand_computed_golden_value():
+    # Arrange / Act — the round-trip properties below are self-consistent by
+    # construction, so a new conversion is unverified until its factor is checked
+    # against a value computed by hand
+    unchecked = [
+        (observable, conversion.from_unit)
+        for observable, conversion in CONVERSIONS
+        if (observable, conversion.from_unit) not in GOLDEN_VALUES
+    ]
 
     # Assert
-    assert quantity.value == Decimal("88.4")
-    assert quantity.ucum == "umol/L"
+    assert not unchecked, f"conversions with no golden value: {unchecked}"
 
 
-def test_fahrenheit_converts_to_celsius_as_declared():
-    # Arrange — the §R-11 incident class: °F mistaken for °C
-    entry = REGISTRY.entry("body_temperature")
+@pytest.mark.parametrize(
+    "observable,from_unit,source_value,expected_canonical",
+    [(observable, unit, *pair) for (observable, unit), pair in GOLDEN_VALUES.items()],
+    ids=[f"{observable}:{unit}" for observable, unit in GOLDEN_VALUES],
+)
+def test_a_declared_conversion_produces_its_hand_computed_canonical_value(
+    observable, from_unit, source_value, expected_canonical
+):
+    # Arrange
+    entry = REGISTRY.entry(observable)
 
     # Act
-    quantity = to_canonical(Decimal("98.6"), "[degF]", entry)
+    quantity = to_canonical(source_value, from_unit, entry)
 
     # Assert
-    assert quantity.value == Decimal("37.0")
-    assert quantity.ucum == "Cel"
+    assert quantity.value == expected_canonical
+    assert quantity.ucum == entry.canonical_ucum
 
 
 def test_from_canonical_in_a_canonical_unit_returns_the_value():
@@ -90,7 +101,6 @@ def test_from_canonical_to_an_undeclared_unit_raises():
     CONVERSIONS,
     ids=[f"{observable}:{conversion.from_unit}" for observable, conversion in CONVERSIONS],
 )
-@settings(derandomize=True)
 @given(
     value=st.decimals(
         min_value=Decimal("0.1"),
@@ -123,7 +133,6 @@ def test_every_registry_conversion_round_trips_within_declared_precision(
     CONVERSIONS,
     ids=[f"{observable}:{conversion.from_unit}" for observable, conversion in CONVERSIONS],
 )
-@settings(derandomize=True)
 @given(
     value=st.decimals(
         min_value=Decimal("0.1"),
