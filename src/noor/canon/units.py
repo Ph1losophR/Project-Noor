@@ -76,8 +76,21 @@ def from_canonical(quantity: CanonicalQuantity, unit: str, entry: ObservableEntr
     Exists for the round-trip property test (§12.6 claim 41) and for displayed
     conversions (§6.3: convert only with displayed conversion and provenance).
     """
-    if unit == quantity.ucum:
+    if quantity.ucum != entry.canonical_ucum:
+        raise UnknownUnitError(
+            f"{entry.observable}: quantity is not in the declared canonical unit"
+        )
+    if unit not in entry.accepted_units:
+        raise UnknownUnitError(f"{entry.observable}: no reverse unit declared for {unit!r}")
+    if unit == entry.canonical_ucum:
         return quantity.value
+    if quantity.conversion_applied is not None:
+        applied = quantity.conversion_applied
+        if applied.from_unit != unit:
+            raise UnknownUnitError(
+                f"{entry.observable}: conversion provenance does not match {unit!r}"
+            )
+        return (quantity.value / applied.multiply) - applied.add
     for conversion in entry.conversions:
         if conversion.from_unit == unit:
             return (quantity.value / conversion.multiply) - conversion.add
