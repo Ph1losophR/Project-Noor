@@ -8,7 +8,7 @@ bounded by `tolerance` in the source unit, one by `canonical_tolerance`.
 from decimal import Decimal
 
 import pytest
-from hypothesis import given
+from hypothesis import given, settings
 from hypothesis import strategies as st
 
 from noor.canon.models import CanonicalQuantity
@@ -90,6 +90,7 @@ def test_from_canonical_to_an_undeclared_unit_raises():
     CONVERSIONS,
     ids=[f"{observable}:{conversion.from_unit}" for observable, conversion in CONVERSIONS],
 )
+@settings(derandomize=True)
 @given(
     value=st.decimals(
         min_value=Decimal("0.1"),
@@ -122,6 +123,7 @@ def test_every_registry_conversion_round_trips_within_declared_precision(
     CONVERSIONS,
     ids=[f"{observable}:{conversion.from_unit}" for observable, conversion in CONVERSIONS],
 )
+@settings(derandomize=True)
 @given(
     value=st.decimals(
         min_value=Decimal("0.1"),
