@@ -1,16 +1,16 @@
-# Graph Report - cds_engine  (2026-08-20)
+# Graph Report - cds_engine  (2026-08-19)
 
 ## Corpus Check
-- 78 files · ~4,266,342 words
+- 77 files · ~4,261,395 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1153 nodes · 1726 edges · 85 communities (69 shown, 16 thin omitted)
-- Extraction: 83% EXTRACTED · 17% INFERRED · 0% AMBIGUOUS · INFERRED: 292 edges (avg confidence: 0.75)
+- 1120 nodes · 1655 edges · 81 communities (65 shown, 16 thin omitted)
+- Extraction: 82% EXTRACTED · 18% INFERRED · 0% AMBIGUOUS · INFERRED: 290 edges (avg confidence: 0.75)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `896c73ed`
+- Built from commit: `ef742d93`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -93,39 +93,35 @@
 - [[_COMMUNITY_Task 10 Report — The `canonicalise` pipeline|Task 10 Report — The `canonicalise` pipeline]]
 - [[_COMMUNITY_4. Module architecture|4. Module architecture]]
 - [[_COMMUNITY_task-12-brief|task-12-brief.md]]
-- [[_COMMUNITY_make_capture|make_capture]]
-- [[_COMMUNITY_Review — fix commits `438d704..HEAD` on `featfoundation-and-canon`|Review — fix commits `438d704..HEAD` on `feat/foundation-and-canon`]]
-- [[_COMMUNITY_ReportedValue|ReportedValue]]
-- [[_COMMUNITY_MappingInfo|MappingInfo]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `make_capture()` - 71 edges
-2. `canonicalise()` - 54 edges
-3. `make_entry()` - 49 edges
-4. `make_canonical()` - 43 edges
-5. `review_delta()` - 33 edges
-6. `ObservableEntry` - 28 edges
-7. `QualityVerdict` - 27 edges
+1. `make_capture()` - 69 edges
+2. `canonicalise()` - 51 edges
+3. `make_entry()` - 46 edges
+4. `make_canonical()` - 46 edges
+5. `review_delta()` - 32 edges
+6. `QualityVerdict` - 28 edges
+7. `ObservableEntry` - 26 edges
 8. `NoorModel` - 22 edges
-9. `MethodContext` - 22 edges
-10. `CanonicalObservation` - 22 edges
+9. `MethodContext` - 21 edges
+10. `CanonicalObservation` - 21 edges
 
 ## Surprising Connections (you probably didn't know these)
+- `test_a_bp_delta_requires_matching_context()` --calls--> `review_delta()`  [INFERRED]
+  tests/canon/test_delta.py → src/noor/canon/delta.py
+- `test_a_bp_delta_with_matching_context_is_recorded()` --calls--> `review_delta()`  [INFERRED]
+  tests/canon/test_delta.py → src/noor/canon/delta.py
+- `test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines()` --calls--> `review_delta()`  [INFERRED]
+  tests/canon/test_delta.py → src/noor/canon/delta.py
+- `test_a_prior_with_incomplete_context_is_not_comparable()` --calls--> `review_delta()`  [INFERRED]
+  tests/canon/test_delta.py → src/noor/canon/delta.py
 - `test_a_code_display_name_is_carried_but_never_required()` --calls--> `SourceCode`  [INFERRED]
-  tests/canon/test_pipeline.py → src/noor/canon/models.py
-- `test_a_code_implied_unit_is_recorded_as_inferred()` --calls--> `SourceCode`  [INFERRED]
-  tests/canon/test_pipeline.py → src/noor/canon/models.py
-- `test_a_unit_change_is_read_from_the_resolved_unit_not_the_reported_text()` --calls--> `SourceCode`  [INFERRED]
-  tests/canon/test_pipeline.py → src/noor/canon/models.py
-- `test_patient_reported_entry_with_an_informant_is_accepted()` --calls--> `Informant`  [INFERRED]
-  tests/canon/test_models.py → src/noor/canon/models.py
-- `bp_capture()` --calls--> `MethodContext`  [INFERRED]
   tests/canon/test_pipeline.py → src/noor/canon/models.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (85 total, 16 thin omitted)
+## Communities (81 total, 16 thin omitted)
 
 ### Community 0 - "Project Noor — CDS Engine Architecture"
 Cohesion: 0.20
@@ -137,7 +133,7 @@ Nodes (34): 11.10 Emergency handling, 11.11 Validation sandbox and accelerator p
 
 ### Community 2 - "Project Noor — Testing Standards"
 Cohesion: 0.06
-Nodes (32): Adding a new CDS rule, Authentication, Case file shape, Case selection: boundary plus pairwise, Core mental model, Coverage targets, Database test strategy, Invariant tests (+24 more)
+Nodes (31): Adding a new CDS rule, Authentication, Case file shape, Case selection: boundary plus pairwise, Core mental model, Coverage targets, Database test strategy, Invariant tests (+23 more)
 
 ### Community 3 - "5. Interoperability and integration"
 Cohesion: 0.07
@@ -224,16 +220,16 @@ Cohesion: 0.25
 Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 Synthetic data, 12.5 Calibrated-reliance audit, 12.6 Clinical-operations verification claims, 12.7 Shadow mode, 12. Testing and validation
 
 ### Community 24 - "test_models.py"
-Cohesion: 0.10
-Nodes (34): DeltaVerdict, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always r, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolution`, _nested_payload(), The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants., A chain of `levels` nested mappings, innermost empty., test_a_canonical_value_requires_a_resolved_unit() (+26 more)
+Cohesion: 0.06
+Nodes (48): CanonicalObservation, DeltaVerdict, Self, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always r, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolution`, Canon's output: the verbatim capture, its canonical value, its quality verdict., _nested_payload() (+40 more)
 
 ### Community 25 - "Task 3 Report: The Observation Model and Quality Verdicts"
 Cohesion: 0.05
 Nodes (43): Baseline, Changed Files, Commit, Coverage Concern, Cyclic Payload Fix, Final Container Fix, Final Edge-Case Fixes, Final Review Findings Addressed (+35 more)
 
 ### Community 26 - "models.py"
-Cohesion: 0.05
-Nodes (62): BaseModel, is_comparable(), True when `prior` may serve as the delta baseline for `capture`., AcceptedVia, Arm, CanonicalObservation, CuffSize, EntryMode (+54 more)
+Cohesion: 0.06
+Nodes (54): BaseModel, AcceptedVia, Arm, CuffSize, EntryMode, _freeze_mapping(), _freeze_payload(), Informant (+46 more)
 
 ### Community 27 - "Task 2 Report: CI and the Import-Direction Seam Test"
 Cohesion: 0.08
@@ -241,7 +237,7 @@ Nodes (25): Branch Protection, CI-equivalent coverage command, Clean initial sea
 
 ### Community 28 - "test_import_direction.py"
 Cohesion: 0.29
-Nodes (14): _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), Path, _python_files(), The import-direction and purity half of the device-boundary seam (SSOT §4.2).  W, Every name the code *uses* — not comments or docstrings, which may say     "thre (+6 more)
+Nodes (14): _called_attributes(), _called_builtin_functions(), _identifiers(), _imported_modules(), Path, _python_files(), The device-boundary seam test (SSOT §4.2).  `app` imports from `canon`, `engine`, Every name the code *uses* — not comments or docstrings, which may say     "thre (+6 more)
 
 ### Community 29 - "Task 1 Implementation Report"
 Cohesion: 0.22
@@ -264,16 +260,16 @@ Cohesion: 0.50
 Nodes (4): 16.1 Questions that block business, not behaviour, 16.2 Questions that block behaviour, 16.3 What is genuinely unanswerable here, 16. Open questions
 
 ### Community 34 - "4. Module architecture"
-Cohesion: 0.13
-Nodes (31): canonicalise(), Run the three canon layers over one capture.      `priors` are the patient's exi, canonicalised_prior(), The canon pipeline (SSOT §6): the three layers, the four quality states, and the, A prior as canon actually stored it.      Canonicalised rather than assembled, s, test_a_bp_capture_missing_required_context_is_rejected(), test_a_clean_delta_is_recorded_without_flagging(), test_a_code_implied_unit_is_recorded_as_inferred() (+23 more)
+Cohesion: 0.10
+Nodes (56): CaptureContext, MappingInfo, MethodContext, Per-observable context (SSOT §6.6). BP needs all of it; the registry says so., How the source code became a Noor observable (SSOT §5).      §5 also lists `conf, Exactly as captured. The value stays a string until parse validates it., ReportedValue, Setting (+48 more)
 
 ### Community 35 - "9. Findings, alerts, overrides"
 Cohesion: 0.50
 Nodes (4): 9.1 Three severities, 9.2 Overrides, 9.3 Safety surveillance, 9. Findings, alerts, overrides
 
 ### Community 47 - "test_registry.py"
-Cohesion: 0.14
-Nodes (23): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversion, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None exa, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is bli, No registry declaration covers the requested unit, or a value's recorded     con (+15 more)
+Cohesion: 0.12
+Nodes (26): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversion, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None exa, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is bli, Convert a resolved unit to the canonical UCUM unit (§6.6).      A converted valu (+18 more)
 
 ### Community 49 - "Task 4 Implementation Report"
 Cohesion: 0.20
@@ -312,32 +308,32 @@ Cohesion: 0.40
 Nodes (4): Design, Goal, Verification, Whole-Branch Review Remediation Design
 
 ### Community 60 - "make_entry"
-Cohesion: 0.11
-Nodes (21): Conversion, Envelope, Inclusive bounds in the canonical unit, versioned independently (§6.4)., canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `tol, The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit(), test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(), test_a_conversion_from_an_unaccepted_unit_is_rejected() (+13 more)
+Cohesion: 0.16
+Nodes (21): ObservableRegistry, The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit(), test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(), test_a_conversion_from_an_unaccepted_unit_is_rejected(), test_a_conversion_must_convert_from_an_accepted_non_canonical_unit(), test_a_well_formed_entry_validates(), test_conversion_sources_must_be_unique_within_an_entry() (+13 more)
 
 ### Community 61 - "test_parse.py"
-Cohesion: 0.15
-Nodes (18): _adjacent_digit_swaps(), decimal_shift_suspected(), digit_transposition_suspected(), parse_value(), Decimal, Layer 1 of canon: parsing and the two mistype shapes (SSOT §6.1).  Strict plain-, Every distinct text formed by exchanging two digits adjacent in the digit     se, Parse an as-reported value, or return None when it is unparseable.      The patt (+10 more)
+Cohesion: 0.23
+Nodes (10): decimal_transposition_suspected(), parse_value(), Decimal, Layer 1 of canon: parsing and decimal/transposition patterns (SSOT §6.1).  Stric, Parse an as-reported value, or return None when it is unparseable.      The patt, True when sliding the decimal point one place would move the value inside     th, Layer 1 of canon: parsing and decimal/transposition patterns (SSOT §6.1)., test_a_malformed_value_is_unparseable() (+2 more)
 
 ### Community 62 - "test_units.py"
-Cohesion: 0.21
-Nodes (21): SourceCode, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a u, resolve_unit(), Unit resolution is a hard safety control (SSOT §6.3)., test_a_declared_conversion_records_the_provenance_of_its_result(), test_a_reported_accepted_unit_resolves_explicitly(), test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous(), test_an_absent_unit_and_an_unknown_code_is_ambiguous() (+13 more)
+Cohesion: 0.19
+Nodes (17): SourceCode, Conversion, canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `tol, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a u, resolve_unit(), test_a_conversion_multiplier_must_be_finite(), test_a_conversion_multiplier_must_be_positive(), Unit resolution is a hard safety control (SSOT §6.3). (+9 more)
 
 ### Community 63 - "make_canonical"
-Cohesion: 0.15
-Nodes (29): confirm_repeat(), datetime, A named clinician attests that a questioned or envelope-rejected value is real., Resolve a needs_repeat_or_verification observation against a concordant repeat., verify_by_clinician(), Quality resolution (SSOT §6.2, §6.5): append-only, named, and never silent., test_a_clinician_verified_envelope_rejection_becomes_clinically_exceptional(), test_a_clinician_verified_flagged_extreme_value_becomes_clinically_exceptional() (+21 more)
+Cohesion: 0.17
+Nodes (27): confirm_repeat(), A named clinician attests that a questioned or envelope-rejected value is real., Resolve a needs_repeat_or_verification observation against a concordant repeat., verify_by_clinician(), Quality resolution (SSOT §6.2, §6.5): append-only, named, and never silent., test_a_clinician_verified_envelope_rejection_becomes_clinically_exceptional(), test_a_clinician_verified_flagged_extreme_value_becomes_clinically_exceptional(), test_a_clinician_verified_ordinary_flagged_value_becomes_accepted() (+19 more)
 
 ### Community 64 - "ObservableEntry"
-Cohesion: 0.09
-Nodes (14): KeyError, DeltaPolicy, ObservableRegistry, Self, The observable registry: per-observable data-validity declarations (SSOT §6.6)., A capture named an observable the registry does not govern., Like-with-like comparison rules (§6.1 layer 3)., UnknownObservableError (+6 more)
+Cohesion: 0.12
+Nodes (11): KeyError, DeltaPolicy, Envelope, Self, The observable registry: per-observable data-validity declarations (SSOT §6.6)., A capture named an observable the registry does not govern., Inclusive bounds in the canonical unit, versioned independently (§6.4)., Like-with-like comparison rules (§6.1 layer 3). (+3 more)
 
 ### Community 65 - "Task 7 Implementation Report"
 Cohesion: 0.22
 Nodes (8): Concerns, Files Changed, GREEN, RED, Self-Review, Task 7 Implementation Report, TDD Evidence, Verification
 
 ### Community 69 - "review_delta"
-Cohesion: 0.14
-Nodes (39): current_versions(), datetime, Decimal, Layer 3 of canon: delta review (SSOT §6.1 layer 3).  Compares like with like onl, Compare a canonical value against the most recent comparable accepted prior., A total order over records sharing one identity, derived from content alone., The latest version of each source record (SSOT §5).      A source may correct a, review_delta() (+31 more)
+Cohesion: 0.17
+Nodes (29): current_versions(), is_comparable(), Decimal, Layer 3 of canon: delta review (SSOT §6.1 layer 3).  Compares like with like onl, The latest version of each source record (SSOT §5).      A source may correct a, True when `prior` may serve as the delta baseline for `capture`., Compare a canonical value against the most recent comparable accepted prior., review_delta() (+21 more)
 
 ### Community 70 - "Task 9 Implementation Report"
 Cohesion: 0.17
@@ -360,8 +356,8 @@ Cohesion: 0.18
 Nodes (10): Approved deviation, Commit, Deviations from the brief beyond the approved one (lint-conformance only), Files changed, Issues or concerns, Self-review findings, Task 11 Report — Quality resolution: repeat confirmation and clinician verification, TDD Evidence (+2 more)
 
 ### Community 75 - "Findings-fix report — `feat/foundation-and-canon`"
-Cohesion: 0.18
-Nodes (10): A — `src/noor/canon/pipeline.py`, `tests/canon/test_pipeline.py` (commit `197306e`), B — `src/noor/canon/resolution.py`, `tests/canon/test_resolution.py` (commit `eb6ca2d`), C — `src/noor/canon/registry.py`, `tests/canon/test_registry.py` (commit `d1550b3`), Commits, Concerns, D — repo hygiene (commit `edbd2c9`), Findings-fix report — `feat/foundation-and-canon`, Gates (all five, on final tree) (+2 more)
+Cohesion: 0.20
+Nodes (9): A — `src/noor/canon/pipeline.py`, `tests/canon/test_pipeline.py` (commit `197306e`), B — `src/noor/canon/resolution.py`, `tests/canon/test_resolution.py` (commit `eb6ca2d`), C — `src/noor/canon/registry.py`, `tests/canon/test_registry.py` (commit `d1550b3`), Commits, Concerns, D — repo hygiene (commit `edbd2c9`), Findings-fix report — `feat/foundation-and-canon`, Gates (all five, on final tree) (+1 more)
 
 ### Community 76 - "Task 10 Report — The `canonicalise` pipeline"
 Cohesion: 0.25
@@ -375,41 +371,25 @@ Nodes (4): 4.1 Layout, 4.2 The enforced seam, 4.3 Why an evaluator and not an in
 Cohesion: 0.50
 Nodes (3): Claims the persistence plan must carry, Exit verification â€” SSOT Â§14 steps 1â€“3, What this plan deliberately does not build
 
-### Community 81 - "make_capture"
-Cohesion: 0.13
-Nodes (19): test_a_capture_without_a_payload_still_holds_a_frozen_one(), test_a_frozen_payload_serialises_to_json(), test_a_naive_datetime_is_refused(), test_capture_collections_are_immutable_in_place(), test_effective_time_is_normalised_to_utc(), test_patient_reported_entry_requires_an_informant(), test_patient_reported_entry_with_an_informant_is_accepted(), test_raw_payload_rejects_a_cyclic_container() (+11 more)
-
-### Community 82 - "Review — fix commits `438d704..HEAD` on `feat/foundation-and-canon`"
-Cohesion: 0.25
-Nodes (7): Cross-checks, Findings table, Gate results (run by reviewer, all pass), New findings, Review — fix commits `438d704..HEAD` on `feat/foundation-and-canon`, Scrutiny answers, Verdict
-
-### Community 83 - "ReportedValue"
-Cohesion: 0.29
-Nodes (7): Exactly as captured. The value stays a string until parse validates it., ReportedValue, test_absent_reason_is_set_instead_of_a_value_never_alongside_one(), bp_capture(), A fully-contextualised systolic BP capture (SSOT §6.6)., test_a_bp_capture_missing_required_method_fields_is_rejected(), test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value()
-
-### Community 84 - "MappingInfo"
-Cohesion: 0.40
-Nodes (5): MappingInfo, How the source code became a Noor observable (SSOT §5).      §5 also lists `conf, test_a_code_display_name_is_carried_but_never_required(), test_an_ambiguous_mapping_reaches_canon_as_unusable(), test_an_unusable_mapping_and_an_unusable_status_are_both_named()
-
 ## Knowledge Gaps
-- **554 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+549 more)
+- **546 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+541 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **16 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `canonicalise()` connect `4. Module architecture` to `ObservableEntry`, `review_delta`, `test_registry.py`, `make_capture`, `ReportedValue`, `MappingInfo`, `test_models.py`, `models.py`, `test_parse.py`, `test_units.py`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
-- **Why does `make_entry()` connect `test_units.py` to `ObservableEntry`, `4. Module architecture`, `conftest.py`, `test_registry.py`, `models.py`, `make_entry`, `test_parse.py`?**
-  _High betweenness centrality (0.018) - this node is a cross-community bridge._
-- **Why does `ObservableEntry` connect `models.py` to `ObservableEntry`, `review_delta`, `test_registry.py`, `test_parse.py`, `test_units.py`, `make_canonical`?**
+- **Why does `make_canonical()` connect `make_canonical` to `4. Module architecture`, `review_delta`, `conftest.py`, `test_models.py`, `models.py`, `make_entry`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **Why does `make_capture()` connect `4. Module architecture` to `review_delta`, `conftest.py`, `test_models.py`, `models.py`, `make_entry`, `make_canonical`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **Why does `ObservableEntry` connect `models.py` to `ObservableEntry`, `review_delta`, `test_registry.py`, `make_entry`, `test_parse.py`, `test_units.py`, `make_canonical`?**
   _High betweenness centrality (0.016) - this node is a cross-community bridge._
-- **Are the 45 inferred relationships involving `canonicalise()` (e.g. with `current_versions()` and `review_delta()`) actually correct?**
-  _`canonicalise()` has 45 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 42 inferred relationships involving `canonicalise()` (e.g. with `current_versions()` and `review_delta()`) actually correct?**
+  _`canonicalise()` has 42 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 2 inferred relationships involving `make_entry()` (e.g. with `DeltaPolicy` and `Envelope`) actually correct?**
   _`make_entry()` has 2 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 24 inferred relationships involving `review_delta()` (e.g. with `canonicalise()` and `test_a_bp_delta_requires_matching_context()`) actually correct?**
-  _`review_delta()` has 24 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 23 inferred relationships involving `review_delta()` (e.g. with `canonicalise()` and `test_a_bp_delta_requires_matching_context()`) actually correct?**
+  _`review_delta()` has 23 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSIDE` to the rest of the system?**
-  _636 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _618 weakly-connected nodes found - possible documentation gaps or missing edges._
