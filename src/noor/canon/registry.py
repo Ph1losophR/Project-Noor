@@ -59,8 +59,8 @@ class Conversion(NoorModel):
 
     @model_validator(mode="after")
     def _positive_multiplier(self) -> Self:
-        if self.multiply <= 0:
-            raise ValueError("a conversion multiplier must be positive")
+        if not self.multiply.is_finite() or self.multiply <= 0:
+            raise ValueError("a conversion multiplier must be a positive finite number")
         return self
 
 

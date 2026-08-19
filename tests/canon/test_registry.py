@@ -167,6 +167,24 @@ def test_a_conversion_multiplier_must_be_positive():
         )
 
 
+@pytest.mark.parametrize("multiplier", [Decimal("NaN"), Decimal("Infinity")])
+def test_a_conversion_multiplier_must_be_finite(multiplier):
+    # Arrange — NaN and Infinity both slip the plain `multiply <= 0` check
+    # (NaN compares false, Infinity is positive); a `.inf` registry value would
+    # otherwise reach to_canonical and raise decimal.InvalidOperation at run time
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        Conversion(
+            from_unit="mg/dL",
+            multiply=multiplier,
+            precision=2,
+            tolerance=Decimal("0.5"),
+            canonical_tolerance=Decimal("0.01"),
+            version="t1",
+        )
+
+
 def test_a_code_unit_map_entry_must_name_an_accepted_unit():
     # Arrange / Act / Assert
     with pytest.raises(ValidationError):
