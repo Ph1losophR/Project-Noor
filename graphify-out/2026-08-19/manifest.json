@@ -275,8 +275,8 @@
     "semantic_hash": ""
   },
   "src/noor/canon/parse.py": {
-    "mtime": 1787155332.206073,
-    "ast_hash": "94e264397997d47c6c12c9e1dd46bcf4",
+    "mtime": 1787158386.729235,
+    "ast_hash": "be4124f3291840b3c617c853fa925add",
     "semantic_hash": ""
   },
   "src/noor/canon/plausibility.py": {
@@ -315,8 +315,8 @@
     "semantic_hash": ""
   },
   "src/noor/canon/delta.py": {
-    "mtime": 1787155643.5340815,
-    "ast_hash": "83346a0c74a3f0ad3530d4a3cb960b0d",
+    "mtime": 1787158717.201287,
+    "ast_hash": "4701a11e6c8c9b4987038780121f4af2",
     "semantic_hash": ""
   },
   "tests/canon/test_delta.py": {

@@ -62,6 +62,7 @@
   "60": "make_entry",
   "61": "test_parse.py",
   "62": "test_units.py",
+  "63": "make_canonical",
   "64": "ObservableEntry",
   "65": "Task 7 Implementation Report",
   "66": "task-7-brief.md",
@@ -70,5 +71,13 @@
   "69": "review_delta",
   "70": "Task 9 Implementation Report",
   "71": "Task 8 Implementation Report",
-  "72": "conftest.py"
+  "72": "conftest.py",
+  "73": "Task 12 Report — Fuzzing the boundary",
+  "74": "Task 11 Report — Quality resolution: repeat confirmation and clinician verification",
+  "75": "Findings-fix report — `feat/foundation-and-canon`",
+  "76": "Task 10 Report — The `canonicalise` pipeline",
+  "77": "4. Module architecture",
+  "78": "task-12-brief.md",
+  "79": "task-10-brief.md",
+  "80": "task-11-brief.md"
 }
