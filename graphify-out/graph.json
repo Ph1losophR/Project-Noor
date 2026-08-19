@@ -77,6 +77,96 @@
       "norm_label": "canon \u2014 the data-validity layer (ssot \u00a76). pure: no i/o, no clock, no database."
     },
     {
+      "label": "delta.py",
+      "file_type": "code",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta",
+      "community": 69,
+      "norm_label": "delta.py"
+    },
+    {
+      "label": "current_versions()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_current_versions",
+      "community": 69,
+      "norm_label": "current_versions()"
+    },
+    {
+      "label": "is_comparable()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_is_comparable",
+      "community": 69,
+      "norm_label": "is_comparable()"
+    },
+    {
+      "label": "review_delta()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_review_delta",
+      "community": 69,
+      "norm_label": "review_delta()"
+    },
+    {
+      "label": "Decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_py_decimal",
+      "community": 69,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "Layer 3 of canon: delta review (SSOT \u00a76.1 layer 3).  Compares like with like onl",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_rationale_1",
+      "community": 69,
+      "norm_label": "layer 3 of canon: delta review (ssot \u00a76.1 layer 3).  compares like with like onl"
+    },
+    {
+      "label": "The latest version of each source record (SSOT \u00a75).      A source may correct a",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_rationale_30",
+      "community": 69,
+      "norm_label": "the latest version of each source record (ssot \u00a75).      a source may correct a"
+    },
+    {
+      "label": "True when `prior` may serve as the delta baseline for `capture`.",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L57",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_rationale_57",
+      "community": 69,
+      "norm_label": "true when `prior` may serve as the delta baseline for `capture`."
+    },
+    {
+      "label": "Compare a canonical value against the most recent comparable accepted prior.",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "src_noor_canon_delta_rationale_94",
+      "community": 69,
+      "norm_label": "compare a canonical value against the most recent comparable accepted prior."
+    },
+    {
       "label": "models.py",
       "file_type": "code",
       "source_file": "src/noor/canon/models.py",
@@ -93,7 +183,7 @@
       "source_location": "L26",
       "_origin": "ast",
       "id": "src_noor_canon_models_noormodel",
-      "community": 47,
+      "community": 64,
       "norm_label": "noormodel"
     },
     {
@@ -103,7 +193,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "basemodel",
-      "community": 47,
+      "community": 64,
       "norm_label": "basemodel"
     },
     {
@@ -293,7 +383,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "src_noor_canon_models_sourcecode",
-      "community": 47,
+      "community": 62,
       "norm_label": "sourcecode"
     },
     {
@@ -313,7 +403,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "src_noor_canon_models_methodcontext",
-      "community": 26,
+      "community": 69,
       "norm_label": "methodcontext"
     },
     {
@@ -323,7 +413,7 @@
       "source_location": "L236",
       "_origin": "ast",
       "id": "src_noor_canon_models_capturecontext",
-      "community": 26,
+      "community": 69,
       "norm_label": "capturecontext"
     },
     {
@@ -473,7 +563,7 @@
       "source_location": "L379",
       "_origin": "ast",
       "id": "src_noor_canon_models_deltaverdict_the_verdict_says_what_it_compared",
-      "community": 24,
+      "community": 26,
       "norm_label": "._the_verdict_says_what_it_compared()"
     },
     {
@@ -563,7 +653,7 @@
       "source_location": "L237",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_237",
-      "community": 26,
+      "community": 69,
       "norm_label": "per-observable context (ssot \u00a76.6). bp needs all of it; the registry says so."
     },
     {
@@ -657,13 +747,143 @@
       "norm_label": "canon's output: the verbatim capture, its canonical value, its quality verdict."
     },
     {
+      "label": "parse.py",
+      "file_type": "code",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse",
+      "community": 61,
+      "norm_label": "parse.py"
+    },
+    {
+      "label": "parse_value()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_parse_value",
+      "community": 61,
+      "norm_label": "parse_value()"
+    },
+    {
+      "label": "Decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_py_decimal",
+      "community": 61,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "decimal_transposition_suspected()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_decimal_transposition_suspected",
+      "community": 61,
+      "norm_label": "decimal_transposition_suspected()"
+    },
+    {
+      "label": "Layer 1 of canon: parsing and decimal/transposition patterns (SSOT \u00a76.1).  Stric",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_rationale_1",
+      "community": 61,
+      "norm_label": "layer 1 of canon: parsing and decimal/transposition patterns (ssot \u00a76.1).  stric"
+    },
+    {
+      "label": "Parse an as-reported value, or return None when it is unparseable.      The patt",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_rationale_22",
+      "community": 61,
+      "norm_label": "parse an as-reported value, or return none when it is unparseable.      the patt"
+    },
+    {
+      "label": "True when sliding the decimal point one place would move the value inside     th",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "src_noor_canon_parse_rationale_33",
+      "community": 61,
+      "norm_label": "true when sliding the decimal point one place would move the value inside     th"
+    },
+    {
+      "label": "plausibility.py",
+      "file_type": "code",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility",
+      "community": 26,
+      "norm_label": "plausibility.py"
+    },
+    {
+      "label": "EnvelopePosition",
+      "file_type": "code",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility_envelopeposition",
+      "community": 26,
+      "norm_label": "envelopeposition"
+    },
+    {
+      "label": "locate()",
+      "file_type": "code",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility_locate",
+      "community": 26,
+      "norm_label": "locate()"
+    },
+    {
+      "label": "Decimal",
+      "file_type": "code",
+      "source_file": "",
+      "source_location": "",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility_py_decimal",
+      "community": 26,
+      "norm_label": "decimal"
+    },
+    {
+      "label": "Layer 2 of canon: the two envelopes (SSOT \u00a76.1, \u00a76.4).  The physiologic envelope",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility_rationale_1",
+      "community": 26,
+      "norm_label": "layer 2 of canon: the two envelopes (ssot \u00a76.1, \u00a76.4).  the physiologic envelope"
+    },
+    {
+      "label": "Position of a canonical value against the entry's inclusive envelopes.",
+      "file_type": "rationale",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L22",
+      "_origin": "ast",
+      "id": "src_noor_canon_plausibility_rationale_22",
+      "community": 26,
+      "norm_label": "position of a canonical value against the entry's inclusive envelopes."
+    },
+    {
       "label": "registry.py",
       "file_type": "code",
       "source_file": "src/noor/canon/registry.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_registry",
-      "community": 47,
+      "community": 64,
       "norm_label": "registry.py"
     },
     {
@@ -673,7 +893,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_noor_canon_registry_unknownobservableerror",
-      "community": 47,
+      "community": 64,
       "norm_label": "unknownobservableerror"
     },
     {
@@ -683,7 +903,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "keyerror",
-      "community": 47,
+      "community": 64,
       "norm_label": "keyerror"
     },
     {
@@ -693,7 +913,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_noor_canon_registry_envelope",
-      "community": 47,
+      "community": 60,
       "norm_label": "envelope"
     },
     {
@@ -723,7 +943,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "src_noor_canon_registry_conversion",
-      "community": 47,
+      "community": 62,
       "norm_label": "conversion"
     },
     {
@@ -743,7 +963,7 @@
       "source_location": "L81",
       "_origin": "ast",
       "id": "src_noor_canon_registry_deltapolicy",
-      "community": 47,
+      "community": 64,
       "norm_label": "deltapolicy"
     },
     {
@@ -753,7 +973,7 @@
       "source_location": "L90",
       "_origin": "ast",
       "id": "src_noor_canon_registry_deltapolicy_known_context_fields",
-      "community": 26,
+      "community": 64,
       "norm_label": "._known_context_fields()"
     },
     {
@@ -763,7 +983,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry",
-      "community": 47,
+      "community": 64,
       "norm_label": "observableentry"
     },
     {
@@ -773,7 +993,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry_freeze_code_unit_map",
-      "community": 47,
+      "community": 64,
       "norm_label": "._freeze_code_unit_map()"
     },
     {
@@ -783,7 +1003,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry_serialise_code_unit_map",
-      "community": 47,
+      "community": 64,
       "norm_label": "._serialise_code_unit_map()"
     },
     {
@@ -803,7 +1023,7 @@
       "source_location": "L166",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry",
-      "community": 47,
+      "community": 64,
       "norm_label": "observableregistry"
     },
     {
@@ -813,7 +1033,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry_freeze_entries",
-      "community": 47,
+      "community": 64,
       "norm_label": "._freeze_entries()"
     },
     {
@@ -823,7 +1043,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry_serialise_entries",
-      "community": 47,
+      "community": 64,
       "norm_label": "._serialise_entries()"
     },
     {
@@ -843,7 +1063,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry_entry",
-      "community": 47,
+      "community": 64,
       "norm_label": ".entry()"
     },
     {
@@ -853,7 +1073,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_1",
-      "community": 47,
+      "community": 64,
       "norm_label": "the observable registry: per-observable data-validity declarations (ssot \u00a76.6)."
     },
     {
@@ -863,7 +1083,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_19",
-      "community": 47,
+      "community": 64,
       "norm_label": "a capture named an observable the registry does not govern."
     },
     {
@@ -873,7 +1093,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_23",
-      "community": 47,
+      "community": 60,
       "norm_label": "inclusive bounds in the canonical unit, versioned independently (\u00a76.4)."
     },
     {
@@ -883,7 +1103,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_37",
-      "community": 47,
+      "community": 62,
       "norm_label": "canonical = (value + add) * multiply, quantised to `precision` (\u00a76.3).      `tol"
     },
     {
@@ -893,7 +1113,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_82",
-      "community": 47,
+      "community": 64,
       "norm_label": "like-with-like comparison rules (\u00a76.1 layer 3)."
     },
     {
@@ -903,7 +1123,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_98",
-      "community": 47,
+      "community": 64,
       "norm_label": "one observable's data-validity declaration (ssot \u00a76.6).      quantity observable"
     },
     {
@@ -943,7 +1163,7 @@
       "source_location": "L18",
       "_origin": "ast",
       "id": "src_noor_canon_units_resolve_unit",
-      "community": 47,
+      "community": 62,
       "norm_label": "resolve_unit()"
     },
     {
@@ -962,7 +1182,7 @@
       "source_file": "",
       "source_location": "",
       "_origin": "ast",
-      "id": "decimal",
+      "id": "src_noor_canon_units_py_decimal",
       "community": 47,
       "norm_label": "decimal"
     },
@@ -1003,7 +1223,7 @@
       "source_location": "L23",
       "_origin": "ast",
       "id": "src_noor_canon_units_rationale_23",
-      "community": 47,
+      "community": 62,
       "norm_label": "resolve the unit a value arrived in (\u00a76.3).      explicit: the source stated a u"
     },
     {
@@ -1257,6 +1477,276 @@
       "norm_label": "every registry conversion is reversible within its declared precision (ssot \u00a712."
     },
     {
+      "label": "test_delta.py",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta",
+      "community": 69,
+      "norm_label": "test_delta.py"
+    },
+    {
+      "label": "glucose_prior()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L23",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_glucose_prior",
+      "community": 69,
+      "norm_label": "glucose_prior()"
+    },
+    {
+      "label": "glucose_capture()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_glucose_capture",
+      "community": 69,
+      "norm_label": "glucose_capture()"
+    },
+    {
+      "label": "test_a_comparable_prior_produces_a_recorded_delta()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_comparable_prior_produces_a_recorded_delta",
+      "community": 69,
+      "norm_label": "test_a_comparable_prior_produces_a_recorded_delta()"
+    },
+    {
+      "label": "test_a_delta_beyond_the_registry_bound_is_suspicious()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_delta_beyond_the_registry_bound_is_suspicious",
+      "community": 69,
+      "norm_label": "test_a_delta_beyond_the_registry_bound_is_suspicious()"
+    },
+    {
+      "label": "test_a_delta_exactly_at_the_registry_bound_is_not_suspicious()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_delta_exactly_at_the_registry_bound_is_not_suspicious",
+      "community": 69,
+      "norm_label": "test_a_delta_exactly_at_the_registry_bound_is_not_suspicious()"
+    },
+    {
+      "label": "test_a_superseded_prior_is_not_a_baseline()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "community": 69,
+      "norm_label": "test_a_superseded_prior_is_not_a_baseline()"
+    },
+    {
+      "label": "test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L117",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "community": 69,
+      "norm_label": "test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in()"
+    },
+    {
+      "label": "test_a_prior_from_a_different_device_class_is_not_comparable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L141",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_from_a_different_device_class_is_not_comparable",
+      "community": 69,
+      "norm_label": "test_a_prior_from_a_different_device_class_is_not_comparable()"
+    },
+    {
+      "label": "test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L156",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "community": 69,
+      "norm_label": "test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so()"
+    },
+    {
+      "label": "test_a_prior_with_no_recorded_device_class_is_not_comparable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L187",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_with_no_recorded_device_class_is_not_comparable",
+      "community": 69,
+      "norm_label": "test_a_prior_with_no_recorded_device_class_is_not_comparable()"
+    },
+    {
+      "label": "test_a_capture_with_no_recorded_device_class_has_no_comparable_prior()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L199",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_capture_with_no_recorded_device_class_has_no_comparable_prior",
+      "community": 69,
+      "norm_label": "test_a_capture_with_no_recorded_device_class_has_no_comparable_prior()"
+    },
+    {
+      "label": "test_a_prior_in_a_stale_canonical_unit_is_not_comparable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L210",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_in_a_stale_canonical_unit_is_not_comparable",
+      "community": 69,
+      "norm_label": "test_a_prior_in_a_stale_canonical_unit_is_not_comparable()"
+    },
+    {
+      "label": "test_a_prior_older_than_the_policy_window_is_not_comparable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L224",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_older_than_the_policy_window_is_not_comparable",
+      "community": 69,
+      "norm_label": "test_a_prior_older_than_the_policy_window_is_not_comparable()"
+    },
+    {
+      "label": "test_a_flagged_prior_is_not_a_baseline()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L235",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_flagged_prior_is_not_a_baseline",
+      "community": 69,
+      "norm_label": "test_a_flagged_prior_is_not_a_baseline()"
+    },
+    {
+      "label": "test_a_rejected_prior_is_not_a_baseline()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L246",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_rejected_prior_is_not_a_baseline",
+      "community": 69,
+      "norm_label": "test_a_rejected_prior_is_not_a_baseline()"
+    },
+    {
+      "label": "test_a_later_observation_is_not_a_prior()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L257",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_later_observation_is_not_a_prior",
+      "community": 69,
+      "norm_label": "test_a_later_observation_is_not_a_prior()"
+    },
+    {
+      "label": "test_a_prior_of_another_observable_is_ignored()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L268",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_of_another_observable_is_ignored",
+      "community": 69,
+      "norm_label": "test_a_prior_of_another_observable_is_ignored()"
+    },
+    {
+      "label": "test_the_most_recent_comparable_prior_wins()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L282",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_the_most_recent_comparable_prior_wins",
+      "community": 69,
+      "norm_label": "test_the_most_recent_comparable_prior_wins()"
+    },
+    {
+      "label": "test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L296",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way",
+      "community": 69,
+      "norm_label": "test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way()"
+    },
+    {
+      "label": "bp()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L317",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_bp",
+      "community": 69,
+      "norm_label": "bp()"
+    },
+    {
+      "label": "test_a_bp_delta_requires_matching_context()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L330",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "community": 69,
+      "norm_label": "test_a_bp_delta_requires_matching_context()"
+    },
+    {
+      "label": "test_a_bp_delta_with_matching_context_is_recorded()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L371",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "community": 69,
+      "norm_label": "test_a_bp_delta_with_matching_context_is_recorded()"
+    },
+    {
+      "label": "test_a_prior_with_incomplete_context_is_not_comparable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L408",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "community": 69,
+      "norm_label": "test_a_prior_with_incomplete_context_is_not_comparable()"
+    },
+    {
+      "label": "test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L449",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "community": 69,
+      "norm_label": "test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines()"
+    },
+    {
+      "label": "test_delta_review_never_mutates_either_observation()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L494",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_test_delta_review_never_mutates_either_observation",
+      "community": 69,
+      "norm_label": "test_delta_review_never_mutates_either_observation()"
+    },
+    {
+      "label": "Layer 3 of canon: delta review compares like with like only (SSOT \u00a76.1), and a s",
+      "file_type": "rationale",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_delta_rationale_1",
+      "community": 69,
+      "norm_label": "layer 3 of canon: delta review compares like with like only (ssot \u00a76.1), and a s"
+    },
+    {
       "label": "test_models.py",
       "file_type": "code",
       "source_file": "tests/canon/test_models.py",
@@ -1423,7 +1913,7 @@
       "source_location": "L205",
       "_origin": "ast",
       "id": "tests_canon_test_models_test_a_recorded_conversion_multiplier_must_be_positive",
-      "community": 47,
+      "community": 24,
       "norm_label": "test_a_recorded_conversion_multiplier_must_be_positive()"
     },
     {
@@ -1707,13 +2197,93 @@
       "norm_label": "a chain of `levels` nested mappings, innermost empty."
     },
     {
+      "label": "test_parse.py",
+      "file_type": "code",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_parse",
+      "community": 61,
+      "norm_label": "test_parse.py"
+    },
+    {
+      "label": "test_a_well_formed_value_parses()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L21",
+      "_origin": "ast",
+      "id": "tests_canon_test_parse_test_a_well_formed_value_parses",
+      "community": 61,
+      "norm_label": "test_a_well_formed_value_parses()"
+    },
+    {
+      "label": "test_a_malformed_value_is_unparseable()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L50",
+      "_origin": "ast",
+      "id": "tests_canon_test_parse_test_a_malformed_value_is_unparseable",
+      "community": 61,
+      "norm_label": "test_a_malformed_value_is_unparseable()"
+    },
+    {
+      "label": "test_the_transposition_pattern_matches_only_a_plausible_one_place_slip()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L71",
+      "_origin": "ast",
+      "id": "tests_canon_test_parse_test_the_transposition_pattern_matches_only_a_plausible_one_place_slip",
+      "community": 61,
+      "norm_label": "test_the_transposition_pattern_matches_only_a_plausible_one_place_slip()"
+    },
+    {
+      "label": "Layer 1 of canon: parsing and decimal/transposition patterns (SSOT \u00a76.1).",
+      "file_type": "rationale",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_parse_rationale_1",
+      "community": 61,
+      "norm_label": "layer 1 of canon: parsing and decimal/transposition patterns (ssot \u00a76.1)."
+    },
+    {
+      "label": "test_plausibility.py",
+      "file_type": "code",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_plausibility",
+      "community": 72,
+      "norm_label": "test_plausibility.py"
+    },
+    {
+      "label": "test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds()",
+      "file_type": "code",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "tests_canon_test_plausibility_test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds",
+      "community": 72,
+      "norm_label": "test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds()"
+    },
+    {
+      "label": "The two envelopes (SSOT \u00a76.1 layer 2, \u00a76.4). Bounds are inclusive and declared i",
+      "file_type": "rationale",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "tests_canon_test_plausibility_rationale_1",
+      "community": 72,
+      "norm_label": "the two envelopes (ssot \u00a76.1 layer 2, \u00a76.4). bounds are inclusive and declared i"
+    },
+    {
       "label": "test_registry.py",
       "file_type": "code",
       "source_file": "tests/canon/test_registry.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_registry",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_registry.py"
     },
     {
@@ -1723,7 +2293,7 @@
       "source_location": "L19",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_well_formed_entry_validates",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_a_well_formed_entry_validates()"
     },
     {
@@ -1733,7 +2303,7 @@
       "source_location": "L28",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_the_canonical_unit_must_be_an_accepted_unit",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_the_canonical_unit_must_be_an_accepted_unit()"
     },
     {
@@ -1743,7 +2313,7 @@
       "source_location": "L34",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_the_operational_envelope_must_sit_inside_the_physiologic_envelope",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_the_operational_envelope_must_sit_inside_the_physiologic_envelope()"
     },
     {
@@ -1753,7 +2323,7 @@
       "source_location": "L45",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_an_envelope_must_be_ordered",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_an_envelope_must_be_ordered()"
     },
     {
@@ -1763,7 +2333,7 @@
       "source_location": "L51",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_the_two_envelope_types_are_versioned_independently",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_the_two_envelope_types_are_versioned_independently()"
     },
     {
@@ -1773,7 +2343,7 @@
       "source_location": "L64",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_the_registry_declares_no_treatment_threshold_field",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_the_registry_declares_no_treatment_threshold_field()"
     },
     {
@@ -1783,7 +2353,7 @@
       "source_location": "L74",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_conversion_must_convert_from_an_accepted_non_canonical_unit",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_a_conversion_must_convert_from_an_accepted_non_canonical_unit()"
     },
     {
@@ -1793,7 +2363,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_conversion_from_an_unaccepted_unit_is_rejected",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_a_conversion_from_an_unaccepted_unit_is_rejected()"
     },
     {
@@ -1803,7 +2373,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_every_accepted_non_canonical_unit_must_have_a_conversion_declaration",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_every_accepted_non_canonical_unit_must_have_a_conversion_declaration()"
     },
     {
@@ -1813,7 +2383,7 @@
       "source_location": "L110",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_conversion_sources_must_be_unique_within_an_entry",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_conversion_sources_must_be_unique_within_an_entry()"
     },
     {
@@ -1823,7 +2393,7 @@
       "source_location": "L128",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_registry_declaration_collections_are_immutable_after_validation",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_registry_declaration_collections_are_immutable_after_validation()"
     },
     {
@@ -1833,7 +2403,7 @@
       "source_location": "L157",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_conversion_multiplier_must_be_positive",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_a_conversion_multiplier_must_be_positive()"
     },
     {
@@ -1843,7 +2413,7 @@
       "source_location": "L170",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_code_unit_map_entry_must_name_an_accepted_unit",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_a_code_unit_map_entry_must_name_an_accepted_unit()"
     },
     {
@@ -1853,7 +2423,7 @@
       "source_location": "L180",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair()"
     },
     {
@@ -1863,7 +2433,7 @@
       "source_location": "L186",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_required_context_must_name_known_fields",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_required_context_must_name_known_fields()"
     },
     {
@@ -1873,7 +2443,7 @@
       "source_location": "L192",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_required_method_must_name_known_fields",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_required_method_must_name_known_fields()"
     },
     {
@@ -1883,7 +2453,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_a_delta_policy_must_not_name_unknown_context_fields",
-      "community": 47,
+      "community": 64,
       "norm_label": "test_a_delta_policy_must_not_name_unknown_context_fields()"
     },
     {
@@ -1893,7 +2463,7 @@
       "source_location": "L204",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_registry_keys_must_match_their_entries",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_registry_keys_must_match_their_entries()"
     },
     {
@@ -1903,7 +2473,7 @@
       "source_location": "L210",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_registry_lookup_raises_unknown_observable_for_a_missing_id",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_registry_lookup_raises_unknown_observable_for_a_missing_id()"
     },
     {
@@ -1913,7 +2483,7 @@
       "source_location": "L219",
       "_origin": "ast",
       "id": "tests_canon_test_registry_test_registry_entries_are_immutable_after_validation",
-      "community": 47,
+      "community": 60,
       "norm_label": "test_registry_entries_are_immutable_after_validation()"
     },
     {
@@ -1923,7 +2493,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_registry_rationale_1",
-      "community": 47,
+      "community": 60,
       "norm_label": "the registry validates itself at load (ssot \u00a76.4, \u00a76.6)."
     },
     {
@@ -1933,7 +2503,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_units",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_units.py"
     },
     {
@@ -1943,7 +2513,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_a_reported_accepted_unit_resolves_explicitly",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_a_reported_accepted_unit_resolves_explicitly()"
     },
     {
@@ -1953,7 +2523,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_an_unrecognised_unit_is_ambiguous",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_an_unrecognised_unit_is_ambiguous()"
     },
     {
@@ -1963,7 +2533,7 @@
       "source_location": "L61",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous()"
     },
     {
@@ -1973,7 +2543,7 @@
       "source_location": "L88",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_an_absent_unit_is_inferred_from_the_source_code",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_an_absent_unit_is_inferred_from_the_source_code()"
     },
     {
@@ -1983,7 +2553,7 @@
       "source_location": "L104",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_an_absent_unit_and_an_unknown_code_is_ambiguous",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_an_absent_unit_and_an_unknown_code_is_ambiguous()"
     },
     {
@@ -1993,7 +2563,7 @@
       "source_location": "L116",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_an_absent_unit_and_no_code_is_ambiguous",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_an_absent_unit_and_no_code_is_ambiguous()"
     },
     {
@@ -2003,7 +2573,7 @@
       "source_location": "L124",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_resolution_never_looks_at_the_value",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_resolution_never_looks_at_the_value()"
     },
     {
@@ -2023,7 +2593,7 @@
       "source_location": "L151",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_a_declared_conversion_records_the_provenance_of_its_result",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_a_declared_conversion_records_the_provenance_of_its_result()"
     },
     {
@@ -2043,7 +2613,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_conversion_to_canonical_rejects_an_unaccepted_unit_without_a_matching_declaration",
-      "community": 47,
+      "community": 62,
       "norm_label": "test_conversion_to_canonical_rejects_an_unaccepted_unit_without_a_matching_declaration()"
     },
     {
@@ -2123,7 +2693,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_units_rationale_1",
-      "community": 47,
+      "community": 62,
       "norm_label": "unit resolution is a hard safety control (ssot \u00a76.3)."
     },
     {
@@ -2223,14 +2793,14 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_conftest",
-      "community": 47,
+      "community": 72,
       "norm_label": "conftest.py"
     },
     {
       "label": "make_capture()",
       "file_type": "code",
       "source_file": "tests/conftest.py",
-      "source_location": "L26",
+      "source_location": "L40",
       "_origin": "ast",
       "id": "tests_conftest_make_capture",
       "community": 24,
@@ -2250,21 +2820,31 @@
       "label": "registry()",
       "file_type": "code",
       "source_file": "tests/conftest.py",
-      "source_location": "L50",
+      "source_location": "L64",
       "_origin": "ast",
       "id": "tests_conftest_registry",
-      "community": 47,
+      "community": 72,
       "norm_label": "registry()"
     },
     {
       "label": "make_entry()",
       "file_type": "code",
       "source_file": "tests/conftest.py",
-      "source_location": "L55",
+      "source_location": "L69",
       "_origin": "ast",
       "id": "tests_conftest_make_entry",
-      "community": 47,
+      "community": 60,
       "norm_label": "make_entry()"
+    },
+    {
+      "label": "make_canonical()",
+      "file_type": "code",
+      "source_file": "tests/conftest.py",
+      "source_location": "L88",
+      "_origin": "ast",
+      "id": "tests_conftest_make_canonical",
+      "community": 69,
+      "norm_label": "make_canonical()"
     },
     {
       "label": "Shared builders and fixtures (docs/testing-standards.md: factories live here).",
@@ -2273,16 +2853,16 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_conftest_rationale_1",
-      "community": 47,
+      "community": 72,
       "norm_label": "shared builders and fixtures (docs/testing-standards.md: factories live here)."
     },
     {
       "label": "A well-formed glucose capture; override anything.      `value` and `unit` are sh",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
-      "source_location": "L27",
+      "source_location": "L41",
       "_origin": "ast",
-      "id": "tests_conftest_rationale_27",
+      "id": "tests_conftest_rationale_41",
       "community": 24,
       "norm_label": "a well-formed glucose capture; override anything.      `value` and `unit` are sh"
     },
@@ -2290,21 +2870,31 @@
       "label": "The real content/observables/registry.yaml, loaded and validated.",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
-      "source_location": "L51",
+      "source_location": "L65",
       "_origin": "ast",
-      "id": "tests_conftest_rationale_51",
-      "community": 47,
+      "id": "tests_conftest_rationale_65",
+      "community": 72,
       "norm_label": "the real content/observables/registry.yaml, loaded and validated."
     },
     {
       "label": "A synthetic registry entry with tight envelopes for boundary tests.      Physiol",
       "file_type": "rationale",
       "source_file": "tests/conftest.py",
-      "source_location": "L56",
+      "source_location": "L70",
       "_origin": "ast",
-      "id": "tests_conftest_rationale_56",
-      "community": 47,
+      "id": "tests_conftest_rationale_70",
+      "community": 60,
       "norm_label": "a synthetic registry entry with tight envelopes for boundary tests.      physiol"
+    },
+    {
+      "label": "A canonical observation as the pipeline would emit it; override anything.      T",
+      "file_type": "rationale",
+      "source_file": "tests/conftest.py",
+      "source_location": "L97",
+      "_origin": "ast",
+      "id": "tests_conftest_rationale_97",
+      "community": 69,
+      "norm_label": "a canonical observation as the pipeline would emit it; override anything.      t"
     },
     {
       "label": "test_import_direction.py",
@@ -4055,6 +4645,346 @@
       "id": "superpowers_sdd_task_6_report_verification_after_remediation",
       "community": 53,
       "norm_label": "verification after remediation"
+    },
+    {
+      "label": "task-7-brief.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_brief",
+      "community": 66,
+      "norm_label": "task-7-brief.md"
+    },
+    {
+      "label": "Task 7: Value parsing and the decimal/transposition pattern",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_brief_task_7_value_parsing_and_the_decimal_transposition_pattern",
+      "community": 66,
+      "norm_label": "task 7: value parsing and the decimal/transposition pattern"
+    },
+    {
+      "label": "task-7-report.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report",
+      "community": 65,
+      "norm_label": "task-7-report.md"
+    },
+    {
+      "label": "Task 7 Implementation Report",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "community": 65,
+      "norm_label": "task 7 implementation report"
+    },
+    {
+      "label": "Files Changed",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_files_changed",
+      "community": 65,
+      "norm_label": "files changed"
+    },
+    {
+      "label": "TDD Evidence",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_tdd_evidence",
+      "community": 65,
+      "norm_label": "tdd evidence"
+    },
+    {
+      "label": "RED",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_red",
+      "community": 65,
+      "norm_label": "red"
+    },
+    {
+      "label": "GREEN",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_green",
+      "community": 65,
+      "norm_label": "green"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L47",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_verification",
+      "community": 65,
+      "norm_label": "verification"
+    },
+    {
+      "label": "Self-Review",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_self_review",
+      "community": 65,
+      "norm_label": "self-review"
+    },
+    {
+      "label": "Concerns",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_7_report_concerns",
+      "community": 65,
+      "norm_label": "concerns"
+    },
+    {
+      "label": "task-8-brief.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_brief",
+      "community": 67,
+      "norm_label": "task-8-brief.md"
+    },
+    {
+      "label": "Task 8: Plausibility envelopes",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_brief_task_8_plausibility_envelopes",
+      "community": 67,
+      "norm_label": "task 8: plausibility envelopes"
+    },
+    {
+      "label": "task-8-report.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report",
+      "community": 71,
+      "norm_label": "task-8-report.md"
+    },
+    {
+      "label": "Task 8 Implementation Report",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "community": 71,
+      "norm_label": "task 8 implementation report"
+    },
+    {
+      "label": "Files Changed",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_files_changed",
+      "community": 71,
+      "norm_label": "files changed"
+    },
+    {
+      "label": "TDD Evidence",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_tdd_evidence",
+      "community": 71,
+      "norm_label": "tdd evidence"
+    },
+    {
+      "label": "Commands and Results",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L16",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_commands_and_results",
+      "community": 71,
+      "norm_label": "commands and results"
+    },
+    {
+      "label": "Self-Review",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_self_review",
+      "community": 71,
+      "norm_label": "self-review"
+    },
+    {
+      "label": "Concerns",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_8_report_concerns",
+      "community": 71,
+      "norm_label": "concerns"
+    },
+    {
+      "label": "task-9-brief.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_brief",
+      "community": 68,
+      "norm_label": "task-9-brief.md"
+    },
+    {
+      "label": "Task 9: Delta review",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-brief.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_brief_task_9_delta_review",
+      "community": 68,
+      "norm_label": "task 9: delta review"
+    },
+    {
+      "label": "task-9-report.md",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report",
+      "community": 70,
+      "norm_label": "task-9-report.md"
+    },
+    {
+      "label": "Task 9 Implementation Report",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "community": 70,
+      "norm_label": "task 9 implementation report"
+    },
+    {
+      "label": "Status",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L3",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_status",
+      "community": 70,
+      "norm_label": "status"
+    },
+    {
+      "label": "Files Changed",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_files_changed",
+      "community": 70,
+      "norm_label": "files changed"
+    },
+    {
+      "label": "TDD Evidence",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L26",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_tdd_evidence",
+      "community": 70,
+      "norm_label": "tdd evidence"
+    },
+    {
+      "label": "RED",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_red",
+      "community": 70,
+      "norm_label": "red"
+    },
+    {
+      "label": "GREEN",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L42",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_green",
+      "community": 70,
+      "norm_label": "green"
+    },
+    {
+      "label": "Verification",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L52",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_verification",
+      "community": 70,
+      "norm_label": "verification"
+    },
+    {
+      "label": "Self-Review",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L62",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_self_review",
+      "community": 70,
+      "norm_label": "self-review"
+    },
+    {
+      "label": "Concerns",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_concerns",
+      "community": 70,
+      "norm_label": "concerns"
+    },
+    {
+      "label": "Reviewer Fix",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_reviewer_fix",
+      "community": 70,
+      "norm_label": "reviewer fix"
+    },
+    {
+      "label": "Fixture Corrections",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_9_report_fixture_corrections",
+      "community": 70,
+      "norm_label": "fixture corrections"
     },
     {
       "label": "AGENTS.md",
@@ -8962,22 +9892,466 @@
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/noor/canon/models.py",
-      "source_location": "L9",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L14",
       "weight": 1.0,
-      "source": "src_noor_canon_models",
+      "source": "src_noor_canon_delta",
       "target": "datetime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta",
+      "target": "src_noor_canon_delta_current_versions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta",
+      "target": "src_noor_canon_delta_is_comparable",
       "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta",
+      "target": "src_noor_canon_delta_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta",
+      "target": "src_noor_canon_delta_review_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_rationale_1",
+      "target": "src_noor_canon_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_current_versions",
+      "target": "src_noor_canon_models_canonicalobservation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_rationale_30",
+      "target": "src_noor_canon_delta_current_versions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_delta_current_versions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_is_comparable",
+      "target": "src_noor_canon_models_canonicalobservation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_is_comparable",
+      "target": "src_noor_canon_models_observationcapture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_is_comparable",
+      "target": "src_noor_canon_registry_observableentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L57",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_rationale_57",
+      "target": "src_noor_canon_delta_is_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L101",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_delta_is_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_rationale_94",
+      "target": "src_noor_canon_delta_review_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_delta_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_models_canonicalobservation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_models_deltaverdict",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_models_observationcapture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/delta.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "src_noor_canon_delta_review_delta",
+      "target": "src_noor_canon_registry_observableentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L367",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L400",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L488",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_capture_with_no_recorded_device_class_has_no_comparable_prior",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_comparable_prior_produces_a_recorded_delta",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_beyond_the_registry_bound_is_suspicious",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_exactly_at_the_registry_bound_is_not_suspicious",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L242",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_flagged_prior_is_not_a_baseline",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L264",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_later_observation_is_not_a_prior",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_a_different_device_class_is_not_comparable",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L179",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L220",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_in_a_stale_canonical_unit_is_not_comparable",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L275",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_of_another_observable_is_ignored",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L231",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_older_than_the_policy_window_is_not_comparable",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L445",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L195",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_no_recorded_device_class_is_not_comparable",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L253",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_rejected_prior_is_not_a_baseline",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L134",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L501",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_delta_review_never_mutates_either_observation",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L290",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_the_most_recent_comparable_prior_wins",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L307",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way",
+      "target": "src_noor_canon_delta_review_delta"
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
       "source_file": "src/noor/canon/models.py",
-      "source_location": "L10",
+      "source_location": "L9",
       "weight": 1.0,
       "source": "src_noor_canon_models",
-      "target": "decimal",
+      "target": "datetime",
       "confidence_score": 1.0
     },
     {
@@ -9717,6 +11091,38 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "inherits",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_envelopeposition",
+      "target": "strenum",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "src_noor_canon_models_qualitystate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "generic_arg",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "src_noor_canon_models_rejectionreason",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/canon/models.py",
@@ -9724,6 +11130,17 @@
       "weight": 1.0,
       "source": "src_noor_canon_models_rationale_149",
       "target": "src_noor_canon_models_notcomparablereason",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L317",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_bp",
+      "target": "src_noor_canon_models_setting",
       "confidence_score": 1.0
     },
     {
@@ -9781,12 +11198,177 @@
       "target": "src_noor_canon_models_informant"
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L324",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_bp",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_glucose_capture",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_glucose_prior",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L362",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L395",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L482",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L166",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L440",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "target": "src_noor_canon_models_methodcontext"
+    },
+    {
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/canon/models.py",
       "source_location": "L237",
       "weight": 1.0,
       "source": "src_noor_canon_models_rationale_237",
+      "target": "src_noor_canon_models_capturecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L317",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_bp",
+      "target": "src_noor_canon_models_capturecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L333",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "target": "src_noor_canon_models_capturecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L374",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "target": "src_noor_canon_models_capturecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L457",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "target": "src_noor_canon_models_capturecontext",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L411",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
       "target": "src_noor_canon_models_capturecontext",
       "confidence_score": 1.0
     },
@@ -9827,7 +11409,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/conftest.py",
-      "source_location": "L39",
+      "source_location": "L53",
       "weight": 1.0,
       "source": "tests_conftest_make_capture",
       "target": "src_noor_canon_models_reportedvalue"
@@ -9862,6 +11444,17 @@
       "source_location": "L307",
       "weight": 1.0,
       "source": "src_noor_canon_models_observationcapture_normalise_to_utc",
+      "target": "datetime",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
       "target": "datetime",
       "confidence_score": 1.0
     },
@@ -9984,7 +11577,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L26",
+      "source_location": "L40",
       "weight": 1.0,
       "source": "tests_conftest_make_capture",
       "target": "src_noor_canon_models_observationcapture",
@@ -10369,6 +11962,17 @@
       "target": "src_noor_canon_models_deltaverdict"
     },
     {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "src_noor_canon_models_deltaverdict",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "INFERRED",
@@ -10635,6 +12239,17 @@
       "context": "call",
       "confidence": "INFERRED",
       "confidence_score": 0.8,
+      "source_file": "tests/conftest.py",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "src_noor_canon_models_qualityverdict"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
       "source_file": "src/noor/canon/models.py",
       "source_location": "L415",
       "weight": 1.0,
@@ -10717,6 +12332,17 @@
       "target": "src_noor_canon_models_canonicalobservation"
     },
     {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "src_noor_canon_models_canonicalobservation",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "INFERRED",
@@ -10728,15 +12354,236 @@
       "target": "valueerror"
     },
     {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse",
+      "target": "src_noor_canon_parse_decimal_transposition_suspected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse",
+      "target": "src_noor_canon_parse_parse_value",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "imports_from",
       "context": "import",
       "confidence": "EXTRACTED",
-      "source_file": "src/noor/canon/registry.py",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse",
+      "target": "src_noor_canon_parse_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_rationale_1",
+      "target": "src_noor_canon_parse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_parse_value",
+      "target": "src_noor_canon_parse_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_rationale_22",
+      "target": "src_noor_canon_parse_parse_value",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse_test_a_malformed_value_is_unparseable",
+      "target": "src_noor_canon_parse_parse_value"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse_test_a_well_formed_value_parses",
+      "target": "src_noor_canon_parse_parse_value"
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_decimal_transposition_suspected",
+      "target": "src_noor_canon_parse_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_decimal_transposition_suspected",
+      "target": "src_noor_canon_registry_observableentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/parse.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "src_noor_canon_parse_rationale_33",
+      "target": "src_noor_canon_parse_decimal_transposition_suspected",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse_test_the_transposition_pattern_matches_only_a_plausible_one_place_slip",
+      "target": "src_noor_canon_parse_decimal_transposition_suspected"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility",
+      "target": "src_noor_canon_plausibility_envelopeposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility",
+      "target": "src_noor_canon_plausibility_locate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
       "source_location": "L9",
       "weight": 1.0,
-      "source": "src_noor_canon_registry",
-      "target": "decimal",
+      "source": "src_noor_canon_plausibility",
+      "target": "src_noor_canon_plausibility_py_decimal",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_rationale_1",
+      "target": "src_noor_canon_plausibility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "uses",
+      "confidence": "INFERRED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L12",
+      "weight": 0.8,
+      "source": "src_noor_canon_plausibility_envelopeposition",
+      "target": "src_noor_canon_registry_observableentry",
+      "confidence_score": 0.5
+    },
+    {
+      "relation": "references",
+      "context": "return_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_locate",
+      "target": "src_noor_canon_plausibility_envelopeposition",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_locate",
+      "target": "src_noor_canon_plausibility_py_decimal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_locate",
+      "target": "src_noor_canon_registry_observableentry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/plausibility.py",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "src_noor_canon_plausibility_rationale_22",
+      "target": "src_noor_canon_plausibility_locate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility_test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds",
+      "target": "src_noor_canon_plausibility_locate"
     },
     {
       "relation": "contains",
@@ -10898,7 +12745,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/conftest.py",
-      "source_location": "L65",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "tests_conftest_make_entry",
       "target": "src_noor_canon_registry_envelope"
@@ -11180,7 +13027,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/conftest.py",
-      "source_location": "L67",
+      "source_location": "L81",
       "weight": 1.0,
       "source": "tests_conftest_make_entry",
       "target": "src_noor_canon_registry_deltapolicy"
@@ -11317,7 +13164,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L55",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "tests_conftest_make_entry",
       "target": "src_noor_canon_registry_observableentry",
@@ -11433,7 +13280,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L50",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "tests_conftest_registry",
       "target": "src_noor_canon_registry_observableregistry",
@@ -11451,17 +13298,6 @@
       "target": "valueerror"
     },
     {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "src/noor/canon/units.py",
-      "source_location": "L7",
-      "weight": 1.0,
-      "source": "src_noor_canon_units",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/canon/units.py",
@@ -11469,6 +13305,17 @@
       "weight": 1.0,
       "source": "src_noor_canon_units",
       "target": "src_noor_canon_units_from_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "src/noor/canon/units.py",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "src_noor_canon_units",
+      "target": "src_noor_canon_units_py_decimal",
       "confidence_score": 1.0
     },
     {
@@ -11669,7 +13516,7 @@
       "source_location": "L44",
       "weight": 1.0,
       "source": "src_noor_canon_units_to_canonical",
-      "target": "decimal",
+      "target": "src_noor_canon_units_py_decimal",
       "confidence_score": 1.0
     },
     {
@@ -11790,415 +13637,8 @@
       "source_location": "L73",
       "weight": 1.0,
       "source": "src_noor_canon_units_from_canonical",
-      "target": "decimal",
+      "target": "src_noor_canon_units_py_decimal",
       "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/canon/test_conversion_roundtrip.py",
-      "source_location": "L12",
-      "weight": 1.0,
-      "source": "tests_canon_test_conversion_roundtrip",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_conversion_roundtrip.py",
-      "source_location": "L153",
-      "weight": 1.0,
-      "source": "tests_canon_test_conversion_roundtrip_test_every_registry_conversion_round_trips_from_the_canonical_side",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_conversion_roundtrip.py",
-      "source_location": "L83",
-      "weight": 1.0,
-      "source": "tests_canon_test_conversion_roundtrip_test_from_canonical_in_a_canonical_unit_returns_the_value",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_conversion_roundtrip.py",
-      "source_location": "L92",
-      "weight": 1.0,
-      "source": "tests_canon_test_conversion_roundtrip_test_from_canonical_to_an_undeclared_unit_raises",
-      "target": "decimal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L6",
-      "weight": 1.0,
-      "source": "tests_canon_test_models",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L563",
-      "weight": 1.0,
-      "source": "tests_canon_test_models_test_a_canonical_value_requires_a_resolved_unit",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L572",
-      "weight": 1.0,
-      "source": "tests_canon_test_models_test_a_comparable_delta_names_its_baseline_and_its_change",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L582",
-      "weight": 1.0,
-      "source": "tests_canon_test_models_test_a_comparable_delta_without_a_baseline_is_refused",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L212",
-      "weight": 1.0,
-      "source": "tests_canon_test_models_test_a_recorded_conversion_multiplier_must_be_positive",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_models.py",
-      "source_location": "L393",
-      "weight": 1.0,
-      "source": "tests_canon_test_models_test_an_accepted_observation_with_a_canonical_value_is_accepted",
-      "target": "decimal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L94",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_a_conversion_from_an_unaccepted_unit_is_rejected",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L162",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_a_conversion_multiplier_must_be_positive",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L79",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_a_conversion_must_convert_from_an_accepted_non_canonical_unit",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L201",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_a_delta_policy_must_not_name_unknown_context_fields",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L48",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_an_envelope_must_be_ordered",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L115",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_conversion_sources_must_be_unique_within_an_entry",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L139",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_registry_declaration_collections_are_immutable_after_validation",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L36",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_the_operational_envelope_must_sit_inside_the_physiologic_envelope",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_registry.py",
-      "source_location": "L55",
-      "weight": 1.0,
-      "source": "tests_canon_test_registry_test_the_two_envelope_types_are_versioned_independently",
-      "target": "decimal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L3",
-      "weight": 1.0,
-      "source": "tests_canon_test_units",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L159",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_a_declared_conversion_records_the_provenance_of_its_result",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L23",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_a_reported_accepted_unit_resolves_explicitly",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L71",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_a_reported_unit_conflicting_with_the_code_implied_unit_is_ambiguous",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L186",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_an_unconvertible_unit_raises",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L46",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_an_unrecognised_unit_is_ambiguous",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L196",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_conversion_to_canonical_rejects_an_unaccepted_unit_without_a_matching_declaration",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L143",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_identity_conversion_preserves_the_value_exactly",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L335",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_conversion_rejects_a_target_that_does_not_match_provenance",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L254",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_conversion_rejects_an_undeclared_target_unit",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L303",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_conversion_uses_a_later_matching_registry_declaration",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L268",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_conversion_uses_the_recorded_conversion_provenance",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L212",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_identity_rejects_a_quantity_outside_the_declared_canonical_unit",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L235",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_identity_rejects_provenance_with_a_bogus_source_unit",
-      "target": "decimal"
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/canon/test_units.py",
-      "source_location": "L222",
-      "weight": 1.0,
-      "source": "tests_canon_test_units_test_reverse_identity_returns_a_valid_canonical_quantity_value",
-      "target": "decimal"
-    },
-    {
-      "relation": "imports_from",
-      "context": "import",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/conftest.py",
-      "source_location": "L5",
-      "weight": 1.0,
-      "source": "tests_conftest",
-      "target": "decimal",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "INFERRED",
-      "confidence_score": 0.8,
-      "source_file": "tests/conftest.py",
-      "source_location": "L65",
-      "weight": 1.0,
-      "source": "tests_conftest_make_entry",
-      "target": "decimal"
     },
     {
       "relation": "rationale_for",
@@ -12528,7 +13968,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/conftest.py",
-      "source_location": "L52",
+      "source_location": "L66",
       "weight": 1.0,
       "source": "tests_conftest_registry",
       "target": "src_noor_catalogue_registry_loader_load_registry"
@@ -12632,6 +14072,816 @@
       "weight": 1.0,
       "source": "tests_canon_test_conversion_roundtrip_rationale_1",
       "target": "tests_canon_test_conversion_roundtrip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L317",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_bp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L23",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L330",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L371",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L449",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L199",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_capture_with_no_recorded_device_class_has_no_comparable_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_comparable_prior_produces_a_recorded_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_delta_beyond_the_registry_bound_is_suspicious",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_delta_exactly_at_the_registry_bound_is_not_suspicious",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L235",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_flagged_prior_is_not_a_baseline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L257",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_later_observation_is_not_a_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_from_a_different_device_class_is_not_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L156",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L210",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_in_a_stale_canonical_unit_is_not_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_of_another_observable_is_ignored",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L224",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_older_than_the_policy_window_is_not_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L408",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L187",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_prior_with_no_recorded_device_class_is_not_comparable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L246",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_rejected_prior_is_not_a_baseline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L117",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L494",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_delta_review_never_mutates_either_observation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_the_most_recent_comparable_prior_wins",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L296",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_canon_test_delta_test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_conftest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_rationale_1",
+      "target": "tests_canon_test_delta",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L24",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_glucose_prior",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L202",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_capture_with_no_recorded_device_class_has_no_comparable_prior",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_comparable_prior_produces_a_recorded_delta",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_beyond_the_registry_bound_is_suspicious",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_exactly_at_the_registry_bound_is_not_suspicious",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L238",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_flagged_prior_is_not_a_baseline",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L260",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_later_observation_is_not_a_prior",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L144",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_a_different_device_class_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L216",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_in_a_stale_canonical_unit_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L227",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_older_than_the_policy_window_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L191",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_no_recorded_device_class_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_rejected_prior_is_not_a_baseline",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L497",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_delta_review_never_mutates_either_observation",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_the_most_recent_comparable_prior_wins",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L302",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way",
+      "target": "tests_canon_test_delta_glucose_prior",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_glucose_capture",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L203",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_capture_with_no_recorded_device_class_has_no_comparable_prior",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_comparable_prior_produces_a_recorded_delta",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L63",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_beyond_the_registry_bound_is_suspicious",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L77",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_delta_exactly_at_the_registry_bound_is_not_suspicious",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L239",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_flagged_prior_is_not_a_baseline",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L261",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_later_observation_is_not_a_prior",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_a_different_device_class_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_in_a_stale_canonical_unit_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L272",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_of_another_observable_is_ignored",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L228",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_older_than_the_policy_window_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L192",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_no_recorded_device_class_is_not_comparable",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L250",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_rejected_prior_is_not_a_baseline",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L498",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_delta_review_never_mutates_either_observation",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L287",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_the_most_recent_comparable_prior_wins",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L304",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way",
+      "target": "tests_canon_test_delta_glucose_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_superseded_prior_is_not_a_baseline_whichever_order_it_arrives_in",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L161",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L271",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_of_another_observable_is_ignored",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L327",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_bp",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L349",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "target": "tests_canon_test_delta_bp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L382",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "target": "tests_canon_test_delta_bp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L466",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "target": "tests_canon_test_delta_bp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L427",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "target": "tests_canon_test_delta_bp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L356",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_requires_matching_context",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L389",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_delta_with_matching_context_is_recorded",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L434",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_prior_with_incomplete_context_is_not_comparable",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_delta.py",
+      "source_location": "L476",
+      "weight": 1.0,
+      "source": "tests_canon_test_delta_test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines",
+      "target": "tests_conftest_make_capture",
       "confidence_score": 1.0
     },
     {
@@ -13326,6 +15576,132 @@
       "weight": 1.0,
       "source": "tests_canon_test_models_test_a_canonical_value_requires_a_resolved_unit",
       "target": "tests_conftest_make_capture"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse",
+      "target": "tests_canon_test_parse_test_a_malformed_value_is_unparseable",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L21",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse",
+      "target": "tests_canon_test_parse_test_a_well_formed_value_parses",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse",
+      "target": "tests_canon_test_parse_test_the_transposition_pattern_matches_only_a_plausible_one_place_slip",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse",
+      "target": "tests_conftest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse",
+      "target": "tests_conftest_make_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse_rationale_1",
+      "target": "tests_canon_test_parse",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/canon/test_parse.py",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "tests_canon_test_parse_test_the_transposition_pattern_matches_only_a_plausible_one_place_slip",
+      "target": "tests_conftest_make_entry"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility",
+      "target": "tests_canon_test_plausibility_test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility",
+      "target": "tests_conftest",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports",
+      "context": "import",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility",
+      "target": "tests_conftest_make_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility_rationale_1",
+      "target": "tests_canon_test_plausibility",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "tests/canon/test_plausibility.py",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "tests_canon_test_plausibility_test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds",
+      "target": "tests_conftest_make_entry"
     },
     {
       "relation": "contains",
@@ -14240,7 +16616,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L26",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest",
+      "target": "tests_conftest_make_canonical",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L40",
       "weight": 1.0,
       "source": "tests_conftest",
       "target": "tests_conftest_make_capture",
@@ -14250,7 +16636,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L55",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "tests_conftest",
       "target": "tests_conftest_make_entry",
@@ -14260,7 +16646,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L50",
+      "source_location": "L64",
       "weight": 1.0,
       "source": "tests_conftest",
       "target": "tests_conftest_registry",
@@ -14277,11 +16663,22 @@
       "confidence_score": 1.0
     },
     {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "tests_conftest_make_capture",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "references",
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L26",
+      "source_location": "L40",
       "weight": 1.0,
       "source": "tests_conftest_make_capture",
       "target": "tests_conftest_py_any",
@@ -14291,9 +16688,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L27",
+      "source_location": "L41",
       "weight": 1.0,
-      "source": "tests_conftest_rationale_27",
+      "source": "tests_conftest_rationale_41",
       "target": "tests_conftest_make_capture",
       "confidence_score": 1.0
     },
@@ -14302,7 +16699,18 @@
       "context": "parameter_type",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L55",
+      "source_location": "L88",
+      "weight": 1.0,
+      "source": "tests_conftest_make_canonical",
+      "target": "tests_conftest_py_any",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "context": "parameter_type",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L69",
       "weight": 1.0,
       "source": "tests_conftest_make_entry",
       "target": "tests_conftest_py_any",
@@ -14312,9 +16720,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L51",
+      "source_location": "L65",
       "weight": 1.0,
-      "source": "tests_conftest_rationale_51",
+      "source": "tests_conftest_rationale_65",
       "target": "tests_conftest_registry",
       "confidence_score": 1.0
     },
@@ -14322,10 +16730,20 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/conftest.py",
-      "source_location": "L56",
+      "source_location": "L70",
       "weight": 1.0,
-      "source": "tests_conftest_rationale_56",
+      "source": "tests_conftest_rationale_70",
       "target": "tests_conftest_make_entry",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "rationale_for",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/conftest.py",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "tests_conftest_rationale_97",
+      "target": "tests_conftest_make_canonical",
       "confidence_score": 1.0
     },
     {
@@ -16073,6 +18491,286 @@
       "weight": 1.0,
       "source": "superpowers_sdd_task_6_report_task_6_report_conversion_round_trip_property",
       "target": "superpowers_sdd_task_6_report_verification_after_remediation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-brief.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_brief",
+      "target": "superpowers_sdd_task_7_brief_task_7_value_parsing_and_the_decimal_transposition_pattern",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report",
+      "target": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "target": "superpowers_sdd_task_7_report_concerns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "target": "superpowers_sdd_task_7_report_files_changed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "target": "superpowers_sdd_task_7_report_self_review",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "target": "superpowers_sdd_task_7_report_tdd_evidence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L47",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_task_7_implementation_report",
+      "target": "superpowers_sdd_task_7_report_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_tdd_evidence",
+      "target": "superpowers_sdd_task_7_report_green",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-7-report.md",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_7_report_tdd_evidence",
+      "target": "superpowers_sdd_task_7_report_red",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-brief.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_brief",
+      "target": "superpowers_sdd_task_8_brief_task_8_plausibility_envelopes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report",
+      "target": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L16",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "target": "superpowers_sdd_task_8_report_commands_and_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "target": "superpowers_sdd_task_8_report_concerns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "target": "superpowers_sdd_task_8_report_files_changed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "target": "superpowers_sdd_task_8_report_self_review",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-8-report.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_8_report_task_8_implementation_report",
+      "target": "superpowers_sdd_task_8_report_tdd_evidence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-brief.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_brief",
+      "target": "superpowers_sdd_task_9_brief_task_9_delta_review",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report",
+      "target": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_concerns",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_files_changed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_fixture_corrections",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_reviewer_fix",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L62",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_self_review",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L3",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_tdd_evidence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_task_9_implementation_report",
+      "target": "superpowers_sdd_task_9_report_verification",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_tdd_evidence",
+      "target": "superpowers_sdd_task_9_report_green",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-9-report.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_9_report_tdd_evidence",
+      "target": "superpowers_sdd_task_9_report_red",
       "confidence_score": 1.0
     },
     {
@@ -20767,5 +23465,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "99ba655971a06c42b385f165164d4bf382eb90a4"
+  "built_at_commit": "5468465993ed98e0200a6d00f9a317a29ccb81b6"
 }

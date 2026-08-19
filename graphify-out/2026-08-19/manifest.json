@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1787138692.7907693,
-    "ast_hash": "919cbd689ac0beafadbc974d22e2e708",
+    "mtime": 1787151080.3060184,
+    "ast_hash": "e2ea4b0ee0fce1bc2de0cb833cac8aeb",
     "semantic_hash": ""
   },
   "tests/test_import_direction.py": {
@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1787142719.2701278,
-    "ast_hash": "ca24c2779f79857dcb6b1a9a28e0b824",
+    "mtime": 1787151309.7122083,
+    "ast_hash": "8568c0598bced4a29f2e0bbfea22bd9b",
     "semantic_hash": ""
   },
   ".superpowers/sdd/task-1-brief.md": {
@@ -185,8 +185,8 @@
     "semantic_hash": ""
   },
   "src/noor/catalogue/registry_loader.py": {
-    "mtime": 1787146330.449804,
-    "ast_hash": "5b304b06e0fba0309b6dd36beddd529b",
+    "mtime": 1787148379.4411302,
+    "ast_hash": "52727493f3192b057a3e71790e40e55e",
     "semantic_hash": ""
   },
   "tests/canon/test_registry.py": {
@@ -195,8 +195,8 @@
     "semantic_hash": ""
   },
   "tests/catalogue/test_registry_loader.py": {
-    "mtime": 1787146578.8902688,
-    "ast_hash": "2c54172329ffa0f4b7f633e522f99dd1",
+    "mtime": 1787148242.85499,
+    "ast_hash": "1e86d37f443858d31ad1328e1b070f51",
     "semantic_hash": ""
   },
   ".superpowers/sdd/task-4-brief.md": {
@@ -272,6 +272,66 @@
   "docs/superpowers/specs/2026-08-19-branch-review-remediation-design.md": {
     "mtime": 1787141580.7527049,
     "ast_hash": "c0611eefdb82669eadfdf6abcb8afb22",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/parse.py": {
+    "mtime": 1787155332.206073,
+    "ast_hash": "94e264397997d47c6c12c9e1dd46bcf4",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/plausibility.py": {
+    "mtime": 1787155341.9764545,
+    "ast_hash": "f92f96fa9a837d7f23d691cd2ef113ed",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_parse.py": {
+    "mtime": 1787156480.5795991,
+    "ast_hash": "b7eea4714600daf582e4053a8a08b503",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_plausibility.py": {
+    "mtime": 1787155974.8429413,
+    "ast_hash": "8bbca2a9bfbedf1cb82fb60dda1b52a9",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-7-brief.md": {
+    "mtime": 1787149665.7903397,
+    "ast_hash": "d984c499285b790f26ba8257ef3c2931",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-7-report.md": {
+    "mtime": 1787149826.2910213,
+    "ast_hash": "f29ce60616fc87f9bc1b1daa667a2d32",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-8-brief.md": {
+    "mtime": 1787149670.3060899,
+    "ast_hash": "5f247034cfc3fe310d05011f81a66203",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-9-brief.md": {
+    "mtime": 1787149670.3060899,
+    "ast_hash": "93d5f591ea461fbacecee827a0bf3bca",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/delta.py": {
+    "mtime": 1787155643.5340815,
+    "ast_hash": "83346a0c74a3f0ad3530d4a3cb960b0d",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_delta.py": {
+    "mtime": 1787156218.2467647,
+    "ast_hash": "84b15b9dcfbb8fbe2ec7f84bc858d357",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-8-report.md": {
+    "mtime": 1787150086.971558,
+    "ast_hash": "62d6ba0d219a86a3b84479b0df624efe",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-9-report.md": {
+    "mtime": 1787151096.7396965,
+    "ast_hash": "418d11e048d516eb49b30a79beb6f107",
     "semantic_hash": ""
   }
 }

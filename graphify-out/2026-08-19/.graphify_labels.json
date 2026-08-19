@@ -58,5 +58,17 @@
   "56": "Whole-Branch Review Remediation Report",
   "57": "Final Whole-Branch Review Fix Report",
   "58": "Global Constraints",
-  "59": "Whole-Branch Review Remediation Design"
+  "59": "Whole-Branch Review Remediation Design",
+  "60": "make_entry",
+  "61": "test_parse.py",
+  "62": "test_units.py",
+  "64": "ObservableEntry",
+  "65": "Task 7 Implementation Report",
+  "66": "task-7-brief.md",
+  "67": "task-8-brief.md",
+  "68": "task-9-brief.md",
+  "69": "review_delta",
+  "70": "Task 9 Implementation Report",
+  "71": "Task 8 Implementation Report",
+  "72": "conftest.py"
 }

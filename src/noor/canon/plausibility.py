@@ -1,8 +1,9 @@
 """Layer 2 of canon: the two envelopes (SSOT §6.1, §6.4).
 
 The physiologic envelope asks "could the instrument or person generate this?"
-The operational envelope asks "is this the sort of value we expect to act on?"
-Neither produces a diagnosis.
+The operational envelope asks "is this the sort of value we expect to measure?"
+Neither produces a diagnosis, and neither is the clinical-urgency boundary §6.4
+keeps separate from both.
 """
 
 from decimal import Decimal

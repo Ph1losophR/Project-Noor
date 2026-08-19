@@ -125,8 +125,8 @@
     "semantic_hash": ""
   },
   "tests/conftest.py": {
-    "mtime": 1787138692.7907693,
-    "ast_hash": "919cbd689ac0beafadbc974d22e2e708",
+    "mtime": 1787151080.3060184,
+    "ast_hash": "e2ea4b0ee0fce1bc2de0cb833cac8aeb",
     "semantic_hash": ""
   },
   "tests/test_import_direction.py": {
@@ -145,8 +145,8 @@
     "semantic_hash": ""
   },
   ".superpowers/sdd/progress.md": {
-    "mtime": 1787142719.2701278,
-    "ast_hash": "ca24c2779f79857dcb6b1a9a28e0b824",
+    "mtime": 1787151309.7122083,
+    "ast_hash": "8568c0598bced4a29f2e0bbfea22bd9b",
     "semantic_hash": ""
   },
   ".superpowers/sdd/task-1-brief.md": {
@@ -272,6 +272,66 @@
   "docs/superpowers/specs/2026-08-19-branch-review-remediation-design.md": {
     "mtime": 1787141580.7527049,
     "ast_hash": "c0611eefdb82669eadfdf6abcb8afb22",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/parse.py": {
+    "mtime": 1787158386.729235,
+    "ast_hash": "be4124f3291840b3c617c853fa925add",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/plausibility.py": {
+    "mtime": 1787155341.9764545,
+    "ast_hash": "f92f96fa9a837d7f23d691cd2ef113ed",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_parse.py": {
+    "mtime": 1787156480.5795991,
+    "ast_hash": "b7eea4714600daf582e4053a8a08b503",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_plausibility.py": {
+    "mtime": 1787155974.8429413,
+    "ast_hash": "8bbca2a9bfbedf1cb82fb60dda1b52a9",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-7-brief.md": {
+    "mtime": 1787149665.7903397,
+    "ast_hash": "d984c499285b790f26ba8257ef3c2931",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-7-report.md": {
+    "mtime": 1787149826.2910213,
+    "ast_hash": "f29ce60616fc87f9bc1b1daa667a2d32",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-8-brief.md": {
+    "mtime": 1787149670.3060899,
+    "ast_hash": "5f247034cfc3fe310d05011f81a66203",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-9-brief.md": {
+    "mtime": 1787149670.3060899,
+    "ast_hash": "93d5f591ea461fbacecee827a0bf3bca",
+    "semantic_hash": ""
+  },
+  "src/noor/canon/delta.py": {
+    "mtime": 1787158717.201287,
+    "ast_hash": "4701a11e6c8c9b4987038780121f4af2",
+    "semantic_hash": ""
+  },
+  "tests/canon/test_delta.py": {
+    "mtime": 1787156218.2467647,
+    "ast_hash": "84b15b9dcfbb8fbe2ec7f84bc858d357",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-8-report.md": {
+    "mtime": 1787150086.971558,
+    "ast_hash": "62d6ba0d219a86a3b84479b0df624efe",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-9-report.md": {
+    "mtime": 1787151096.7396965,
+    "ast_hash": "418d11e048d516eb49b30a79beb6f107",
     "semantic_hash": ""
   }
 }

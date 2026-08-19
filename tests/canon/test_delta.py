@@ -1,7 +1,7 @@
 """Layer 3 of canon: delta review compares like with like only (SSOT §6.1),
 and a suspicious delta never mutates anything. Where nothing was comparable the
-verdict says so with a reason — §11.9 counts compared and uncompared captures,
-so "not compared" has to be a recorded fact."""
+verdict says so with a reason — §11.9 counts delta checks, so "not compared"
+has to be a recorded fact."""
 
 from datetime import timedelta
 from decimal import Decimal
@@ -20,7 +20,7 @@ from noor.canon.models import (
 from tests.conftest import T0, make_canonical, make_capture
 
 
-def glucose_prior(value: str, *, hours_before: float = 1, device: str = "accu-chek", **kw):
+def glucose_prior(value: str, *, hours_before: float = 1, device: str | None = "accu-chek", **kw):
     return make_canonical(
         value=value,
         effective_time=T0 - timedelta(hours=hours_before),
@@ -30,7 +30,7 @@ def glucose_prior(value: str, *, hours_before: float = 1, device: str = "accu-ch
     )
 
 
-def glucose_capture(value: str, *, device: str = "accu-chek", **kw):
+def glucose_capture(value: str, *, device: str | None = "accu-chek", **kw):
     return make_capture(
         value=value,
         effective_time=T0,
@@ -153,6 +153,74 @@ def test_a_prior_from_a_different_device_class_is_not_comparable(registry):
     assert delta.change is None
 
 
+def test_a_prior_from_another_device_class_is_comparable_when_the_policy_says_so(registry):
+    # Arrange — hba1c_ngsp sets compare_device_class false: a lab analyser and a
+    # point-of-care analyser both report the same 90 days of glycation, so
+    # refusing to compare them would discard the only baseline most patients have
+    entry = registry.entry("hba1c_ngsp")
+    prior = make_canonical(
+        observable="hba1c_ngsp",
+        value="7.4",
+        unit="%",
+        effective_time=T0 - timedelta(days=30),
+        method=MethodContext(device_class="lab-analyser"),
+        source_identifier="PRIOR-A1C",
+    )
+    capture = make_capture(
+        observable="hba1c_ngsp",
+        value="8.0",
+        unit="%",
+        effective_time=T0,
+        method=MethodContext(device_class="poct-analyser"),
+        source_identifier="CURRENT",
+    )
+
+    # Act
+    delta = review_delta(Decimal("8.0"), capture, [prior], entry)
+
+    # Assert — max_abs_change 2.0 %: +0.6 over a month is an ordinary trajectory
+    assert delta.comparable is True
+    assert delta.change == Decimal("0.6")
+    assert delta.suspicious is False
+
+
+def test_a_prior_with_no_recorded_device_class_is_not_comparable(registry):
+    # Arrange — §5's own observation carries device_class: null. Glucose compares
+    # device class, and an unrecorded device cannot be claimed to match this one.
+    entry = registry.entry("glucose")
+    prior = glucose_prior("5.5", device=None)
+    capture = glucose_capture("14.0")
+
+    # Act / Assert
+    delta = review_delta(Decimal("14.0"), capture, [prior], entry)
+    assert delta.not_comparable_reason is NotComparableReason.no_comparable_prior
+
+
+def test_a_capture_with_no_recorded_device_class_has_no_comparable_prior(registry):
+    # Arrange — the same gap on the incoming side
+    entry = registry.entry("glucose")
+    prior = glucose_prior("5.5")
+    capture = glucose_capture("14.0", device=None)
+
+    # Act / Assert
+    delta = review_delta(Decimal("14.0"), capture, [prior], entry)
+    assert delta.not_comparable_reason is NotComparableReason.no_comparable_prior
+
+
+def test_a_prior_in_a_stale_canonical_unit_is_not_comparable(registry):
+    # Arrange — glucose canonicalises to mmol/L, so a stored prior carrying
+    # mg/dL means the registry's canonical unit changed under stored data.
+    # Subtracting 99 mg/dL from 14 mmol/L reports an -85 fall that never
+    # happened — the exact arithmetic layer 3 exists to refuse.
+    entry = registry.entry("glucose")
+    prior = glucose_prior("99", unit="mg/dL", canonical_ucum="mg/dL")
+    capture = glucose_capture("14.0")
+
+    # Act / Assert
+    delta = review_delta(Decimal("14.0"), capture, [prior], entry)
+    assert delta.not_comparable_reason is NotComparableReason.no_comparable_prior
+
+
 def test_a_prior_older_than_the_policy_window_is_not_comparable(registry):
     # Arrange — glucose window is 4h
     entry = registry.entry("glucose")
@@ -223,6 +291,27 @@ def test_the_most_recent_comparable_prior_wins(registry):
 
     # Assert
     assert delta.compared_to == newer.source_identifier
+
+
+def test_two_priors_at_the_same_effective_time_pick_the_same_baseline_either_way(registry):
+    # Arrange — a meter sync and a staff transcription land on one effective_time.
+    # 1.0 and 9.0 disagree about whether the new 9.5 is a +8.5 jump, and the
+    # verdict is written into a record that is never rewritten (§5), so it cannot
+    # depend on the order a query happened to return.
+    entry = registry.entry("glucose")
+    meter_sync = glucose_prior("1.0")
+    transcribed = glucose_prior("9.0")
+    capture = glucose_capture("9.5")
+
+    # Act
+    forwards = review_delta(Decimal("9.5"), capture, [meter_sync, transcribed], entry)
+    backwards = review_delta(Decimal("9.5"), capture, [transcribed, meter_sync], entry)
+
+    # Assert — the tie breaks on source, so the same prior wins both times
+    assert forwards == backwards
+    assert forwards.compared_to == "PRIOR-9.0-1h"
+    assert forwards.change == Decimal("0.5")
+    assert forwards.suspicious is False
 
 
 def bp(observable: str, value: str, *, context: CaptureContext, setting: Setting, **kw):
@@ -355,6 +444,51 @@ def test_a_prior_with_incomplete_context_is_not_comparable(registry):
     # Act / Assert
     delta = review_delta(Decimal("118"), capture, [prior], entry)
     assert delta.not_comparable_reason is NotComparableReason.no_comparable_prior
+
+
+def test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines(registry):
+    # Arrange — one FHIR BP resource carries systolic and diastolic components,
+    # which §6.6 splits into two observables that inherit the resource's single
+    # identifier. Reducing versions on (system, identifier) alone treated the
+    # second component as a correction of the first and dropped it, so a
+    # +52 mmHg systolic jump reported "no prior observation" on one list order
+    # and a suspicious delta on the other.
+    entry = registry.entry("systolic_bp")
+    context = CaptureContext(
+        posture=Posture.sitting,
+        arm=Arm.left,
+        cuff_size=CuffSize.standard,
+        rest_duration_seconds=300,
+        reading_ordinal=1,
+        is_average=False,
+    )
+    components = [
+        bp(
+            observable,
+            value,
+            context=context,
+            setting=Setting.home,
+            effective_time=T0 - timedelta(hours=2),
+            source_identifier="OBS-500",
+        )
+        for observable, value in (("systolic_bp", "118"), ("diastolic_bp", "76"))
+    ]
+    capture = make_capture(
+        observable="systolic_bp",
+        value="170",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=context,
+        method=MethodContext(device_class="home-bp-monitor"),
+        effective_time=T0,
+    )
+
+    # Act / Assert — the systolic baseline survives either arrival order
+    for priors in (components, list(reversed(components))):
+        delta = review_delta(Decimal("170"), capture, priors, entry)
+        assert delta.compared_to == "OBS-500"
+        assert delta.change == Decimal("52")
+        assert delta.suspicious is True
 
 
 def test_delta_review_never_mutates_either_observation(registry):

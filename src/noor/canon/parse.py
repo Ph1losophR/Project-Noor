@@ -1,7 +1,13 @@
 """Layer 1 of canon: parsing and decimal/transposition patterns (SSOT §6.1).
 
-Strict plain-decimal notation only. A comma separator, a stray character, or
-scientific notation is unparseable — never "probably meant 7.4".
+Strict plain-decimal notation only, in ASCII digits. A comma separator, a stray
+character, scientific notation, or an Arabic-Indic numeral is unparseable —
+never "probably meant 7.4". The digit class is spelled out rather than written
+as the regex digit shorthand, which matches every Unicode decimal digit and
+would have let `Decimal` normalise Arabic-Indic digits to a silent 74. A legible
+number the clinician can retype in the home is worth a visible `parse_failure`,
+the same argument §6.3 makes for an unresolvable unit; how Noor should handle
+Arabic numerals is part of what §13.2 item 9 gates.
 """
 
 import re
@@ -9,7 +15,7 @@ from decimal import Decimal
 
 from noor.canon.registry import ObservableEntry
 
-_VALUE_PATTERN = re.compile(r"^-?\d+(\.\d+)?$")
+_VALUE_PATTERN = re.compile(r"-?[0-9]+(\.[0-9]+)?")
 
 
 def parse_value(raw: str) -> Decimal | None:
