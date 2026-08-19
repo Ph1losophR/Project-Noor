@@ -92,9 +92,9 @@ def test_a_repeat_that_is_not_accepted_quality_cannot_confirm(registry):
 
 def test_a_valueless_flagged_observation_has_nothing_to_confirm(registry):
     # Arrange — the pipeline never emits a flagged record without a canonical
-    # value, but the store can hold one (e.g. data written before the invariant
-    # tightened); the guard refuses it on its own, not as a side effect of the
-    # same-observable check
+    # value, but the schema permits one (models.py forbids canonical None only
+    # for the accepted family); the guard refuses it on its own, not as a side
+    # effect of the same-observable check
     entry = registry.entry("glucose")
     flagged = make_canonical(state=QualityState.needs_repeat_or_verification, value="30.0")
     valueless = flagged.model_copy(update={"canonical": None})

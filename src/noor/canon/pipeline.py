@@ -117,10 +117,10 @@ def canonicalise(
         )
         return CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
 
-    # Dedup once, on the normal path only: the priors are walked twice below, and
-    # a caller may pass a generator — which would come back empty on the second
-    # walk. `review_delta` dedups again inside, which is idempotent over the
-    # already-current list.
+    # Dedup once, on the normal path only: the priors are re-walked below — the
+    # unit-change check, then review_delta — and a caller may pass a generator,
+    # which would come back empty on the later walks. `review_delta` dedups
+    # again inside, which is idempotent over the already-current list.
     known_priors = current_versions(priors)
 
     unit_resolution, resolved_unit = resolve_unit(
