@@ -1,4 +1,0 @@
-# file: C:\Users\youss\Projects\cds_engine\src\noor\canon\registry.py
-# hypothesis_version: 6.165.10
-
-['0', '1', 'ROUND_HALF_EVEN', 'ROUND_HALF_UP', '^[a-z][a-z0-9_]*$', 'after', 'arm', 'assay', 'cuff_size', 'device_class', 'is_average', 'posture', 'reading_ordinal', 'setting', 'specimen', '|']

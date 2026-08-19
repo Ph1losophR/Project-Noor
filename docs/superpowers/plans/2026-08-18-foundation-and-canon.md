@@ -120,39 +120,39 @@ Every task implicitly includes these. Values are verbatim from the SSOT.
 
 The SSOT is precise; these are the few places this plan had to choose a reading. Each is stated, not hidden. If you disagree with any, stop and correct the plan before executing.
 
-1. **How `clinically_exceptional_accepted` is reached (§6.2).** The SSOT says a
-   repeat-resolved observation "becomes `accepted` with `accepted_via:
-   repeat_confirmed`", and separately that `clinically_exceptional_accepted` "is
-   what stops the plausibility gate from suppressing a genuine emergency". This
-   plan reads those literally:
-   - `confirm_repeat` → always `accepted` / `repeat_confirmed`.
-   - `verify_by_clinician` on a value outside the *operational* envelope (which
-     includes every physiologic-envelope rejection, since operational ⊆
-     physiologic) → `clinically_exceptional_accepted` / `clinician_verified`;
-     otherwise `accepted` / `clinician_verified`.
-   So the exceptional state marks clinician-attested extreme values, and a
-   mistype (`rejected`) and a real extreme value never share a state at capture:
-   extreme-but-possible → `needs_repeat_or_verification`, impossible/unparseable
-   → `rejected`.
-   This reading is asymmetric, and the asymmetry is stated rather than hidden:
-   pulse 220 confirmed by a repeat resolves to `accepted` / `repeat_confirmed`,
-   while the same 220 verified by a clinician resolves to
-   `clinically_exceptional_accepted` / `clinician_verified`. Both are in
-   `ACCEPTED_FAMILY`, so nothing is suppressed either way, and §11.9's
-   "proportion of clinically important changes after verification" loses nothing:
-   envelope position is recomputable at any time from the stored canonical value
-   and the versioned envelopes, so that counter reads position from the data, not
-   from the state name. Deriving the exceptional state from envelope position in
-   *both* paths would be one line in `confirm_repeat`; it is not done because
-   §6.2 says a repeat-resolved observation "becomes `accepted` with
-   `accepted_via: repeat_confirmed`" and the SSOT's literal sentence wins. If the
-   clinical content owner prefers the symmetric reading, that is an SSOT change
-   first, then a one-line change here.
-2. **Rejected-but-verifiable.** `verify_by_clinician` is refused for
-   `parse_failure`, `unit_ambiguous`, `mapping_unusable`, and
-   `missing_required_context` rejections (there is no trustworthy value or the
-   fix is re-capture). It is allowed for `outside_physiologic_envelope`
-   rejections and any `needs_repeat_or_verification` observation.
+1. **How `clinically_exceptional_accepted` is reached (§6.2).** Both resolution
+   paths derive the resulting state from envelope position: a resolved value
+   outside the *operational* envelope (which includes every physiologic-envelope
+   rejection, since operational ⊆ physiologic) resolves to
+   `clinically_exceptional_accepted`, and one inside it resolves to `accepted`.
+   `accepted_via` records the path — `repeat_confirmed` or `clinician_verified` —
+   so the state names what the value *is* and the via names how it got there.
+   A mistype (`rejected`) and a real extreme value therefore never share a state
+   at capture either: extreme-but-possible → `needs_repeat_or_verification`,
+   impossible/unparseable → `rejected`.
+   An earlier draft of this plan read §6.2's sentence about a repeat-resolved
+   observation "becom[ing] `accepted`" literally and made `confirm_repeat` always
+   produce `accepted`. That was asymmetric: pulse 220 resolved to `accepted` when
+   a repeat confirmed it and to `clinically_exceptional_accepted` when a clinician
+   attested it — the path with the stronger evidence produced the weaker record.
+   The clinical content owner chose the symmetric reading, and §6.2 now states it
+   ("Which accepted state it lands in is read off the envelope, not off the
+   path"), so the SSOT and this plan agree. Nothing is suppressed under either
+   reading, since both states are in `ACCEPTED_FAMILY`, and §11.9's "proportion of
+   clinically important changes after verification" is unaffected: envelope
+   position is recomputable at any time from the stored canonical value and the
+   versioned envelopes, so that counter reads position from the data rather than
+   from the state name.
+2. **Rejected-but-verifiable.** `verify_by_clinician` accepts exactly one
+   rejection reason, `outside_physiologic_envelope`, plus any
+   `needs_repeat_or_verification` observation. Every other reason is refused
+   because there is no trustworthy value or the fix is re-capture, not
+   attestation: `parse_failure`, `unit_ambiguous`, `mapping_unusable`,
+   `missing_required_context`, and `source_status_unusable` — no attestation makes
+   a record the source retracted un-retracted (§5). Stated as an allow-list on
+   purpose: an earlier draft enumerated the refusals and silently omitted
+   `source_status_unusable`, which a deny-list invites and a new enum member would
+   repeat.
 3. **Resolutions are separate append-only records.** Observations are write-once
    (§5), so a quality-state change is not an edit. `canon` produces
    `QualityResolution` records; folding them into an effective state is the
@@ -257,21 +257,45 @@ The SSOT is precise; these are the few places this plan had to choose a reading.
     recomputed under a different equation" guarantee is the append-only store's.
     Equation provenance (`reported_equation`, the CKD-EPI 2021 default) is
     content-plan work, not canon's.
+15. **A mistype shape is recorded only where it discriminates (§6.1).** This plan
+    specified one combined `decimal_transposition_suspected(value, entry)` in
+    Task 7, called unconditionally from the pipeline in Task 10. Execution split
+    it into `decimal_shift_suspected(value, entry)` and
+    `digit_transposition_suspected(reported, unit, entry)`, and gated each. Two
+    reasons, both measured against the shipped registry rather than argued:
+    - The combined predicate answered a decimal question with a transposition
+      name, so a flagged reading could not say which slip to re-check.
+    - Its answer was a constant for half the registry. The decimal question is
+      bimodal by operational-envelope span: observables spanning under a factor
+      of ten answered yes for 0–10% of flagged values (systolic 3.7×, diastolic
+      4.0×, temperature 1.3×, pulse 5.7×, hba1c_ngsp 6.7×), while those spanning
+      ten or more answered yes for 96–100% (hba1c_ifcc 9.8×, weight 15×, glucose
+      23.3×, eGFR 30×, creatinine 60×). A hint true of every flagged eGFR
+      describes eGFR's envelope, not the reading. Hence `_VACUOUS_DECIMAL_SPAN =
+      Decimal(10)` in `parse.py`, and the digit shape's requirement that a
+      distinct exchange exist and land inside the envelope.
+    The digit shape reads the value as reported, before conversion, because digit
+    positions do not survive an offset: `body_temperature` converts from `[degF]`
+    with `add: "-32"`, so transposing the canonical Celsius digits would model an
+    error nobody made. §6.1 now states the rule, so the SSOT and this plan agree;
+    Task 7's and Task 10's code blocks below are the original specification and
+    are superseded on these two points.
 
 ## File structure
 
 ```
 pyproject.toml                          # uv project: deps, ruff, mypy, pytest config
 uv.lock                                 # generated by `uv lock`
-.gitignore                              # .hypothesis/ is deliberately NOT ignored
+.python-version                         # 3.12, the interpreter CI pins
+.gitignore                              # .hypothesis/examples/ is deliberately NOT ignored
 .github/workflows/ci.yml                # lint, format, typecheck boundary, test
-.github/CODEOWNERS                      # content/ requires a code owner who is not the author (§7.5)
+.github/CODEOWNERS                      # content/, the SSOT, and the gates that enforce them (§7.5)
 src/noor/__init__.py                    # docstring only
 src/noor/canon/__init__.py              # docstring only
 src/noor/canon/models.py                # §5 observation model + §6.2 quality verdicts
 src/noor/canon/registry.py              # §6.6 registry Pydantic models
 src/noor/canon/units.py                 # §6.3 unit resolution + conversions
-src/noor/canon/parse.py                 # §6.1 layer 1: parsing, transposition pattern
+src/noor/canon/parse.py                 # §6.1 layer 1: parsing, the two mistype shapes
 src/noor/canon/plausibility.py          # §6.1 layer 2: the two envelopes
 src/noor/canon/delta.py                 # §6.1 layer 3: like-with-like delta review
 src/noor/canon/pipeline.py              # canonicalise(): the three layers, ordered
@@ -281,7 +305,7 @@ src/noor/catalogue/__init__.py          # docstring only
 src/noor/catalogue/registry_loader.py   # schema-only YAML load of the registry
 src/noor/app/__init__.py                # docstring only (empty until the app plans)
 content/observables/registry.yaml       # starter registry: 10 observables
-tests/test_smoke.py                     # layout + interpreter sanity
+tests/test_smoke.py                     # the §4.1 module layout imports
 tests/test_import_direction.py          # the seam (§4.2)
 tests/conftest.py                       # factories, real-registry fixture, hypothesis profiles
 tests/canon/test_models.py
@@ -4873,7 +4897,7 @@ git commit -m "test(canon): boundary fuzz — nothing crosses uncanonicalised; d
 | Step 1: content changes carry four-eyes approval (§7.5) | Task 2 steps 5–6: `.github/CODEOWNERS` + branch protection with `require_code_owner_reviews`, configured before Task 4 writes any content; the plan's own branch reaches `main` by PR |
 | Step 2: no observation reaches the engine with an unresolved unit | `test_nothing_crosses_the_boundary_uncanonicalised` (Task 12) + `test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value` (Task 10) |
 | Step 2: a real-but-extreme value and a mistyped value land in different states (§6.2) | `test_a_real_but_extreme_value_and_a_mistyped_value_land_in_different_states` (Task 10); `clinically_exceptional_accepted` asserted in Task 11 |
-| Step 2 / §13.1 gate 1: source status is read, not merely stored | `test_a_withdrawn_source_record_is_refused`, `test_a_cancelled_source_record_is_refused`, `test_a_corrected_source_record_is_canonicalised_normally` (Task 10) + the status dimension of Task 12's property |
+| Step 2 / §13.1 gate 1: source status is read, not merely stored | `test_a_withdrawn_source_record_is_refused` and `test_a_source_record_the_source_still_stands_behind_is_canonicalised_normally` (Task 10) + the status dimension of Task 12's property. Both are parametrised off `WITHDRAWN_SOURCE_STATUSES` and its complement rather than naming one status each, so every member of the enum is covered and a new one cannot be added without a row. |
 | Step 2: a converted value shows its work (§5, §6.3) | `test_a_declared_conversion_records_the_provenance_of_its_result` (Task 5) + `test_a_converted_value_preserves_the_original_unit_and_shows_its_work` (Task 10) |
 | Step 2: a treatment threshold is never a data-entry validator (§6.4) | `test_canon_never_names_a_treatment_threshold` (Task 2, with its teeth proven in step 4) + `test_the_registry_declares_no_treatment_threshold_field` and `test_the_two_envelope_types_are_versioned_independently` (Task 4) |
 | Step 2: §12.6 claim 41 — every registry conversion reversible within declared precision, **in both directions** | `test_every_registry_conversion_round_trips_within_declared_precision` and `test_every_registry_conversion_round_trips_from_the_canonical_side` (Task 6) |

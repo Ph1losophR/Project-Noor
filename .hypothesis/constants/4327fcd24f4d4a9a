@@ -1,4 +1,0 @@
-# file: C:\Users\youss\Projects\cds_engine\src\noor\canon\models.py
-# hypothesis_version: 6.165.10
-
-['accepted', 'after', 'ambiguous', 'ambulatory', 'amended', 'cancelled', 'clinician_verified', 'corrected', 'delta_exceeded', 'device_memory', 'effective_time', 'entered-in-error', 'explicit', 'final', 'forbid', 'home', 'inferred_from_code', 'interfaced', 'issued_at', 'large', 'left', 'mapped', 'mapping_unusable', 'medicine_manager', 'no_comparable_prior', 'no_prior_observation', 'noor_derived', 'office', 'parse_failure', 'patient', 'patient_reported', 'preliminary', 'raw_payload', 'received_at', 'registered', 'rejected', 'repeat_confirmed', 'right', 'sitting', 'small', 'staff_transcribed', 'standard', 'standing', 'supine', 'thigh', 'unit_ambiguous', 'unmapped', 'unremarkable']

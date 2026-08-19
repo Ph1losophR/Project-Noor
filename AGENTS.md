@@ -5,8 +5,9 @@ Saudi Arabia, aimed at chronic disease management (diabetes and hypertension).
 
 ## Current State
 
-No application code, database, dependencies, or test suite exists yet. The repo
-holds design and research documents only.
+`canon` is built and tested; nothing above the device boundary is. There is no
+database, no HTTP layer, no `engine`, and no rule content — `src/noor/engine/`
+and `src/noor/app/` hold a docstring each.
 
 - **SSOT: `docs/cds-architecture.md`**.
 - The closed research programme is archived under `docs/research/archive/` and
@@ -30,13 +31,25 @@ holds design and research documents only.
   `82-171-20` (NORACTONE, spironolactone 25 mg) carries a real spironolactone
   §1–§3 and then the entire AVORES 400 mg moxifloxacin label from §4.1 onward.
   Do not pin it — the other three spironolactone products are clean.
-- `docs/superpowers/specs/` is empty; the SSOT is the only architectural
-  document.
+- **What exists in code.** `src/noor/canon/` implements SSOT §5, §6.1–§6.3, and
+  §6.6: the observation model, the observable registry, unit resolution, the two
+  mistype shapes, both plausibility envelopes, delta review, the `canonicalise`
+  pipeline, and quality resolution. `src/noor/catalogue/registry_loader.py` does a
+  schema-only YAML load of `content/observables/registry.yaml` (10 observables).
+  `tests/` covers all of it at 100% branch coverage, plus a seam test (§4.2) and
+  hypothesis properties. The plan that built it is
+  `docs/superpowers/plans/2026-08-18-foundation-and-canon.md`, Tasks 1–12.
+- `docs/superpowers/specs/` holds one design note
+  (`2026-08-19-branch-review-remediation-design.md`); the SSOT remains the only
+  architectural document.
 - **Git repository initialized** (commit `1910530`, remote
   `github.com/Ph1losophR/Project-Noor`). SSOT §7.5 makes git the
   clinical-content governance mechanism — a pull request *is* the four-eyes
-  approval, and git holds the permanent approver record. Branch protection and
-  the CI rendering-posting job remain unconfigured.
+  approval, and git holds the permanent approver record. Branch protection on
+  `main` is configured: one approving review, code-owner review required, and the
+  `verify` status check (the CI job in `.github/workflows/ci.yml`). The CI
+  rendering-posting job of §7.5 does not exist yet — there is no rule content for
+  it to render.
 
 Do not infer that any component, table, endpoint, or dependency exists because a
 document describes it — **including the SSOT.** It describes the target, not the
@@ -123,10 +136,24 @@ forward with a broken suite.
 
 ## Important Commands
 
-None yet. The stack is decided in SSOT §3 — Python 3.12+, uv, FastAPI,
-Pydantic v2, PostgreSQL, SQLAlchemy/Alembic, pytest, ruff, mypy — but nothing is
-installed and no command has been run. Document commands here as they become
-real. Do not copy commands from other projects or invent them.
+Python 3.12 (`.python-version`), matching the version CI pins. These four are
+what CI runs, in this order — run them all before calling work done:
+
+```bash
+uv sync --frozen                                            # install from uv.lock
+uv run ruff check .                                         # lint
+uv run ruff format --check .                                # formatting
+uv run mypy src/noor/canon src/noor/engine src/noor/catalogue   # strict, boundary packages
+uv run pytest --cov --cov-report=term-missing --cov-fail-under=100
+```
+
+Coverage is **branch** coverage with no exclusions (`pyproject.toml`), so an
+untested branch fails the suite. `graphify update .` refreshes the knowledge
+graph after a code change.
+
+The rest of the stack is decided in SSOT §3 — FastAPI, PostgreSQL,
+SQLAlchemy/Alembic — but none of it is installed. Document commands here as they
+become real. Do not copy commands from other projects or invent them.
 
 ## Testing
 
@@ -135,8 +162,9 @@ to test; the SSOT says *what must be true*. Where they disagree, **the SSOT
 wins** — SSOT §12 is authoritative on the validation ladder,
 boundary-plus-pairwise case selection, and release comparison.
 
-No test, fixture, or test database exists yet. The standards describe the suite
-to be built, not one that runs.
+`canon`'s tests and fixtures exist (`tests/`, `tests/conftest.py`); everything
+from rung 2 up does not, and there is no test database. The standards describe
+the whole suite, not the part that runs today.
 
 ### Behavioral Rules
 - Every test follows Arrange-Act-Assert. No exceptions.
@@ -150,7 +178,9 @@ to be built, not one that runs.
 ## graphify
 
 This project uses a knowledge graph at `graphify-out/` with god nodes, community
-structure, and cross-file relationships. It will be empty until there is code.
+structure, and cross-file relationships. It is populated (`graph.json`,
+`GRAPH_REPORT.md`) and indexes the source, the tests, and the documents —
+including the SSOT and the archived research.
 
 Rules:
 - For codebase questions, first run `graphify query "<question>"` when `graphify-out/graph.json` exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
