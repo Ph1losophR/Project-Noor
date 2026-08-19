@@ -62,12 +62,16 @@ def _unit_changed_from_prior(
     capture: ObservationCapture,
     priors: Iterable[CanonicalObservation],
 ) -> bool:
-    """§6.1 layer 1: the unit changed from the patient's prior accepted record."""
+    """§6.1 layer 1: the unit changed from the patient's prior accepted record.
+
+    The priors are already current versions (§5) — canonicalise deduplicated
+    them once, before this layer ran.
+    """
     if capture.as_reported.unit is None:
         return False
     candidates = [
         prior
-        for prior in current_versions(priors)
+        for prior in priors
         if prior.observable == capture.observable
         and prior.quality.state in ACCEPTED_FAMILY
         and prior.as_reported.unit is not None
@@ -75,7 +79,13 @@ def _unit_changed_from_prior(
     ]
     if not candidates:
         return False
-    latest = max(candidates, key=lambda prior: prior.effective_time)
+    # Priors sharing an effective_time are broken by source, not by arrival order:
+    # the verdict is written into a record that is never rewritten (§5), so it
+    # cannot depend on what order a query happened to return.
+    latest = max(
+        candidates,
+        key=lambda prior: (prior.effective_time, prior.source_system, prior.source_identifier),
+    )
     return capture.as_reported.unit != latest.as_reported.unit
 
 
@@ -90,9 +100,6 @@ def canonicalise(
     observables are ignored. The capture is never mutated (§6.1).
     """
     entry = registry.entry(capture.observable)
-    # Read once: the priors are walked twice below, and a caller may pass a
-    # generator — which would come back empty on the second walk.
-    known_priors = tuple(priors)
 
     if capture.absent_reason is not None:
         raise AbsentObservationError(
@@ -109,6 +116,12 @@ def canonicalise(
             rejection_reasons=tuple(unusable),
         )
         return CanonicalObservation(**capture.model_dump(), canonical=None, quality=quality)
+
+    # Dedup once, on the normal path only: the priors are walked twice below, and
+    # a caller may pass a generator — which would come back empty on the second
+    # walk. `review_delta` dedups again inside, which is idempotent over the
+    # already-current list.
+    known_priors = current_versions(priors)
 
     unit_resolution, resolved_unit = resolve_unit(
         capture.as_reported.unit, capture.source_code, entry
@@ -151,6 +164,7 @@ def canonicalise(
             state=QualityState.rejected,
             unit_resolution=unit_resolution,
             rejection_reasons=tuple(rejection_reasons),
+            suspicions=tuple(suspicions),
         )
     elif suspicions:
         quality = QualityVerdict(

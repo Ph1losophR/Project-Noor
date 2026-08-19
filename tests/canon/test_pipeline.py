@@ -179,6 +179,7 @@ def test_a_cancelled_source_record_is_refused(registry):
     result = canonicalise(capture, registry)
 
     # Assert
+    assert result.quality.state is QualityState.rejected
     assert result.quality.rejection_reasons == (RejectionReason.source_status_unusable,)
     assert result.quality.unit_resolution is None  # resolution never ran (§6.3)
 
@@ -299,6 +300,28 @@ def test_an_extreme_but_possible_value_is_flagged_not_rejected(registry):
     assert result.canonical.value == Decimal("220")
 
 
+def test_a_rejected_observation_keeps_the_suspicion_it_earned(registry):
+    # Arrange — systolic 300: outside operational [70, 260] but inside physiologic
+    # [40, 320], and the capture misses required context. The suspicion must
+    # survive the rejection, or review loses the emergency signal (§6.2).
+    capture = make_capture(
+        observable="systolic_bp",
+        value="300",
+        unit="mm[Hg]",
+        setting=Setting.home,
+        context=CaptureContext(posture=None, arm=Arm.left, cuff_size=CuffSize.standard),
+        method=MethodContext(device_class="home-bp-monitor"),
+    )
+
+    # Act
+    result = canonicalise(capture, registry)
+
+    # Assert
+    assert result.quality.state is QualityState.rejected
+    assert RejectionReason.missing_required_context in result.quality.rejection_reasons
+    assert result.quality.suspicions == (SuspicionReason.outside_operational_envelope,)
+
+
 def test_a_real_but_extreme_value_and_a_mistyped_value_land_in_different_states(registry):
     # Arrange — §14 step 2's verification, §6.2's reason for four states:
     # systolic 300 is a genuine-emergency value; "abc" is a mistype
@@ -411,6 +434,38 @@ def test_a_superseded_prior_is_not_the_unit_change_baseline(registry):
     # Assert
     assert result.quality.state is QualityState.accepted
     assert result.quality.suspicions == ()
+
+
+def test_the_unit_change_flag_does_not_depend_on_prior_arrival_order(registry):
+    # Arrange — two priors at the same effective_time: the same-source, same-time
+    # tie is broken by source_identifier, so PRIOR-B (already mmol/L) is the
+    # latest baseline whichever order the priors arrive in (§5: a never-rewritten
+    # verdict cannot depend on query order).
+    prior_a = make_canonical(
+        value="100",
+        unit="mg/dL",
+        canonical_value="5.55",
+        canonical_ucum="mmol/L",
+        effective_time=T0 - timedelta(hours=1),
+        source_identifier="PRIOR-A",
+    )
+    prior_b = make_canonical(
+        value="5.5",
+        unit="mmol/L",
+        canonical_value="5.5",
+        canonical_ucum="mmol/L",
+        effective_time=T0 - timedelta(hours=1),
+        source_identifier="PRIOR-B",
+    )
+    capture = make_capture(value="5.5", unit="mmol/L")
+
+    # Act — newest first, then oldest first
+    forward = canonicalise(capture, registry, priors=[prior_a, prior_b])
+    reversed_order = canonicalise(capture, registry, priors=[prior_b, prior_a])
+
+    # Assert — the tie-break picks the same baseline; no unit change either way
+    assert forward == reversed_order
+    assert forward.quality.suspicions == ()
 
 
 def test_priors_may_be_a_generator(registry):
