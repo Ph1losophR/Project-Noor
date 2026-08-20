@@ -34,7 +34,7 @@ with §8.3 degradation and §8.5 per-rule failure semantics.
 | `in_valueset`, date/window operators in `when`, named aggregations | The first rule that needs one (§4.3: growing the enum is a reviewed device change) |
 | Product-level drug matching, ATC class views, formulary availability, SmPC propositions, dose achievability, Child-Pugh phenotype | The medication-knowledge plan (§3.2) |
 | The `crcl` registry row and equation provenance | Already committed by the canon plan's assumption 14 to the plan that has a rule needing it |
-| Persistence of records, the run header, `correlation_id`, `latency_ms`, whole-run fail-closed | §14 step 7 |
+| Persistence of records, the run header, `correlation_id`, `latency_ms`, whole-run fail-closed, and applying `blocked_by` to the planned-actions list (§11.6) | §14 step 7 |
 | `mapping.confidence` | Unchanged from canon assumption 12 — the SSOT gives it no type, scale, or vocabulary |
 
 ## 3. Decisions taken
@@ -57,6 +57,14 @@ Four scoping decisions, made 2026-08-20 and settled:
    windows are already carried by `max_age_days` in the `requires` manifest.
 4. **No `catalogue/` work and no content in this plan.** Rules, thresholds, and
    profiles are constructed in Python by test factories.
+5. **A `drug_requested` operator, and the engine reads a two-field projection of
+   the planned action.** Without it a contraindicated *start* cannot be caught:
+   §7.1's own rule keys on `drug_active`, which is false for a patient not yet on
+   the drug, so a new metformin order for a patient at eGFR 25 records
+   `not_triggered` and nothing blocks. The engine's `RequestedAction` carries
+   `kind` and `subject` only — never `encounter_id`, `state`, `detail`, or
+   `blocked_by` — so a rule can see *what is proposed* and never *where the
+   encounter is*. Two SSOT amendments are pending on this (section 9).
 
 ## 4. Module layout
 
@@ -116,14 +124,20 @@ for a named ingredient makes the requirement unusable, so the rule degrades to
 inferring "no known allergy" from an empty `allergies` tuple. An unasked patient
 and a cleared patient are opposite facts.
 
-`RequestedAction` is the order under consideration — an `ingredient_id` and an
-action kind. It is a separate argument to `evaluate()`, not a snapshot field,
-because it is what the clinician is *proposing* rather than a recorded patient
-fact, and because invariant 1 needs it: a `stop_and_review` rule may block only
-the named order action, so the evaluator must be able to compare what a rule
-blocks against what was actually requested. An empty tuple is the ordinary case —
-a visit-open or periodic evaluation with nothing proposed. What an order-blocking
-rule then records is assumption 6 in section 9.
+`RequestedAction` is a **two-field projection** of §11.6's `planned_action`:
+`kind` (`medication_start | medication_stop | medication_dose_change | lab_order |
+referral | plan_change`) and `subject` (the thing `order_of` matches against).
+Nothing else crosses. `encounter_id` would put encounter identity in front of a
+rule; `state: draft | final` is workflow position and is exactly what invariant 10
+forbids a rule to branch on; `detail` and `blocked_by` are `app/`'s.
+
+The projection is what makes `drug_requested` defensible against invariant 10.
+The invariant's stated risk is that "the moment a rule branches on visit state,
+the workflow becomes part of the regulated device and every UI change re-opens
+clinical validation" (§8.4). A UI change cannot alter what `medication_start` /
+`metformin` means — that pair is clinical intent, not workflow position. The
+narrow projection is the mechanism that keeps the distinction enforceable rather
+than merely asserted, and the seam test checks it (section 8.2).
 
 **Absent by construction, and tested as absent:** visit state, encounter state,
 trigger identity, and any free-text narrative or chief complaint (§8.4 invariant
@@ -143,7 +157,10 @@ objection answerable by the build rather than by assurance. Version 1:
 - Boolean composition: `all`, `any`, `not`
 - Numeric comparison against a `threshold_ref` or a literal: `lt`, `le`, `gt`,
   `ge`, `eq`, `ne`
-- `drug_active` — ingredient-level membership
+- `drug_active` — ingredient-level membership in the patient's current therapy
+- `drug_requested` — ingredient-level match against `requested_actions`, so a
+  contraindicated *start* is catchable. `drug_scope_level` (§7.1(e)) governs it
+  exactly as it governs `drug_active`; at v1 that is `ingredient`
 - An allergy predicate carrying `verification_status` and `severity`, so §10.4
   gate 16 has a shape to check at step 5
 - Scope predicates: condition membership, age bounds, boolean patient attributes
@@ -211,6 +228,20 @@ Per rule, independently, holding no cross-rule state (invariants 5 and 7):
 
 A rule that raises at any step is caught and recorded as `evaluation_failed`
 (section 7 below). Records are returned sorted by `rule_id`.
+
+**`requested_actions` enters the engine as rule input and nothing else.** It is
+read by `drug_requested` inside `when`, and by no other part of the evaluator.
+Applying a block — setting `blocked_by` on a planned action so it cannot be marked
+`final` (§11.6) — is a join `app/` performs at step 7 between the triggered
+records and their rules' `then.blocks.order_of`. The engine cannot write encounter
+state, and §11.6 gives the list to the encounter, so the engine has no business
+mutating it.
+
+Invariant 1 is therefore enforced **at load rather than at application**: only a
+`stop_and_review` rule may carry `blocks`, and `blocks` may name only an order
+action. A rule that cannot express a non-order block cannot perform one, whatever
+`app/` does downstream. That is a stronger guarantee than checking at the point of
+application, and it is testable inside the device boundary.
 
 **Deviation from §8.1's signature, approved 2026-08-20.** §8.1 types the call
 `-> EvaluationRun`, but §8.2 is explicit that the run header is `app/`'s and that
@@ -290,14 +321,14 @@ New files, all under `tests/engine/` beside the existing `tests/canon/` and
 
 | §14 step 4 clause | Proven by |
 |---|---|
-| Invariant 1 — only `stop_and_review` blocks, and only the named order action | `test_invariants.py`, plus a `Then.blocks` model validator (§10.4 gate 6) |
+| Invariant 1 — only `stop_and_review` blocks, and only the named order action | Load-time validators: a non-`stop_and_review` rule carrying `blocks` is refused; `blocks` may name only an order action (§10.4 gate 6). `test_rules.py` |
 | Invariants 2, 3, 4 — load-time refusals | `Rule` and `EvaluationContext` validators, tested in `test_rules.py` / `test_content.py` |
 | Invariant 5 — evaluation order never affects output | Evaluate one snapshot twice under two rule orderings; record tuples compare equal |
-| Invariant 6 — identical snapshot + release ⇒ byte-identical records | Serialised record tuples compare equal; header excluded by construction |
+| Invariant 6 — identical snapshot + requested actions + release ⇒ byte-identical records | Serialised record tuples compare equal; header excluded by construction. Also a negative: varying `requested_actions` alone *does* change a `drug_requested` rule's record, which is why amendment (2) is needed |
 | Invariant 7 — no rule reads another rule's output | Each rule evaluated alone against the same snapshot yields the record it yields in the batch |
 | Invariant 8 — no I/O, no clock | `tests/test_import_direction.py`, already covering `engine` |
 | Invariant 9 — a rule is a pure function of snapshot and catalogue | Same seam test plus determinism |
-| Invariant 10 — no encounter state, no narrative | The seam-test extension in section 8.2 |
+| Invariant 10 — no encounter state, no narrative; the planned-action projection is `kind` + `subject` only | The seam-test extension in section 8.2 |
 | Invariant 11 — a raising rule never ends the run | `test_failure.py` |
 | Claim 4 / 10 — a removed datum degrades a `stop_and_review` to `indeterminate` at `interruptive_review`, never `not_triggered`; the record count equals every rule considered, no outcome excluded | `test_degradation.py`, `test_evaluate.py` |
 | Claim 19 — scope resolves before requirements | `test_evaluate.py`: an out-of-scope rule with an unusable requirement records `out_of_scope` |
@@ -309,19 +340,38 @@ New files, all under `tests/engine/` beside the existing `tests/canon/` and
 | Claim 47 — a `refuted` or `entered_in_error` allergy is `not_triggered` whatever the authored severity, so nothing reaches rendering | `test_evaluate.py` |
 | Claim 48 — evidence grade caps `effective_severity` without ever producing `indeterminate` | `test_degradation.py` |
 
+Beyond the verify clause, decision 5 owes two tests of its own in
+`test_evaluate.py`, since neither case appears in §14 step 4's list:
+
+- A patient **not** on metformin with eGFR 25 and a planned `medication_start` of
+  metformin: the `drug_requested` rule records `triggered` at `stop_and_review`.
+  Same patient with an empty `requested_actions`: `not_triggered`. That pair is
+  the whole point of the operator.
+- A patient **on** metformin with eGFR 25 and nothing planned: the `drug_active`
+  continuation rule still records `triggered`, so the discontinuation advice
+  survives a visit where no order is proposed. This is the case the withdrawn
+  assumption would have silenced.
+
 ### 8.2 Seam-test extension (invariant 10)
 
-Two additions to `tests/test_import_direction.py`, mirroring
+Three additions to `tests/test_import_direction.py`, mirroring
 `test_canon_never_names_a_treatment_threshold`:
 
-1. `engine` source may not name `visit_state`, `encounter_state`, `trigger`, or
-   `narrative`. **Precise names, not the substring `encounter`** —
+1. `engine` source may not name `visit_state`, `encounter_state`, or `narrative`.
+   **Precise names, not the substring `encounter`** —
    `CanonicalObservation.encounter_id` legitimately rides inside the snapshot.
+   `trigger` is on the list too: §8.1 forbids a rule asking which trigger invoked
+   it.
 2. `Snapshot` and `EvaluationContext` field sets contain no such field, the same
    shape as `test_the_registry_declares_no_treatment_threshold_field`. A rule
    cannot ask what it cannot see.
+3. **`RequestedAction`'s field set is exactly `{kind, subject}`** — an equality
+   assertion, not a subset one, so adding `encounter_id`, `state`, `detail`, or
+   `blocked_by` later fails the suite rather than passing quietly. This is the
+   only thing standing between the amendment as approved and the amendment as
+   implemented, so it is asserted narrowly and deliberately.
 
-Both must be proved to have teeth by temporary injection, as Task 2 did.
+All three must be proved to have teeth by temporary injection, as Task 2 did.
 
 ## 9. Assumptions
 
@@ -335,15 +385,53 @@ Both must be proved to have teeth by temporary injection, as Task 2 did.
    result".
 5. **`engine_version` is a module constant**, copied into `Pins`. Reading it is
    not a clock read and not I/O.
-6. **An order-blocking rule with no matching requested action records
-   `out_of_scope`.** Invariant 1 lets a `stop_and_review` rule block only the
-   named order action, so with no such action in `requested_actions` the rule has
-   nothing to act on. `out_of_scope` is the outcome that says so without lying:
-   `not_triggered` would assert the clinical finding is absent when the rule was
-   never asked, and `indeterminate` would open a `carried_forward` obligation for
-   every drug-safety rule on every visit where no drug was ordered. This is the
-   one genuinely new semantic decision in the design; it is the least confident
-   item here and the first to revisit.
+6. **The engine's `RequestedAction` is `kind` + `subject` only** (section 5.1). The
+   projection is the mechanism, not a convention.
+
+An earlier draft carried a seventh assumption — that an order-blocking rule with
+no matching requested action records `out_of_scope`. It is **withdrawn**, and
+`drug_requested` is why. A start rule whose `drug_requested` does not match is
+simply `not_triggered`: the rule was in scope, the data was usable, and the
+condition did not hold. No new outcome semantics are needed, and the withdrawn
+version would have suppressed the discontinuation advice of a continuation rule
+whose finding was real.
+
+### 9.1 Two SSOT amendments, pending explicit approval
+
+Neither invariant is named in §0's list, but §8.4 states that invariant 10 is what
+keeps §11 outside the device boundary, and §0 protects the device boundary's data
+contract (§4.2). Both are therefore treated as protected. **No implementation
+starts until these are approved and committed.**
+
+**(1) §8.4 invariant 10 — permit the projection.** Current text: "No rule reads
+encounter state or free-text narrative. A rule cannot ask which visit state,
+trigger, or workflow step invoked it, and it cannot see the patient's textual
+complaint." Proposed addition:
+
+> A rule may read the `kind` and `subject` of a planned action passed as
+> `requested_actions` (§8.1, §11.6), and nothing else from that list — not
+> `encounter_id`, not `state`, not `detail`, not `blocked_by`. That pair is
+> clinical intent, invariant under any UI change, and §8.1 already supplies it to
+> the evaluator. The remaining fields are encounter state and stay outside.
+
+Nothing is removed. Visit state, trigger, workflow step, and narrative remain
+unreadable.
+
+**(2) §8.4 invariant 6 — name the third input.** Current text: "Identical snapshot
++ identical catalogue release ⇒ byte-identical evaluation *records*." With
+`drug_requested`, records vary with `requested_actions`, so the sentence is false
+as written. Proposed:
+
+> Identical snapshot + identical requested actions + identical catalogue release ⇒
+> byte-identical evaluation *records*.
+
+This preserves the intent exactly — determinism over the whole input — and the
+scoping sentence about the run header is unaffected. The alternative, folding
+`requested_actions` into the `Snapshot`, was rejected: §11.6 assigns the list to
+the encounter and §8.1 keeps the argument separate.
+
+Additive, unprotected, and not blocking: §7.1 should gain a `drug_requested`
+example line so the operator is documented where authors will look for it.
 
 If any of these is wrong, correct it before the implementation plan is written.
 
