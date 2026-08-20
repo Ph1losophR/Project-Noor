@@ -64,7 +64,7 @@ Four scoping decisions, made 2026-08-20 and settled:
    `not_triggered` and nothing blocks. The engine's `RequestedAction` carries
    `kind` and `subject` only — never `encounter_id`, `state`, `detail`, or
    `blocked_by` — so a rule can see *what is proposed* and never *where the
-   encounter is*. Two SSOT amendments are pending on this (section 9).
+   encounter is*. Two SSOT amendments were needed and are applied (section 9.1).
 
 ## 4. Module layout
 
@@ -396,42 +396,39 @@ condition did not hold. No new outcome semantics are needed, and the withdrawn
 version would have suppressed the discontinuation advice of a continuation rule
 whose finding was real.
 
-### 9.1 Two SSOT amendments, pending explicit approval
+### 9.1 Two SSOT amendments, applied 2026-08-20
 
 Neither invariant is named in §0's list, but §8.4 states that invariant 10 is what
 keeps §11 outside the device boundary, and §0 protects the device boundary's data
-contract (§4.2). Both are therefore treated as protected. **No implementation
-starts until these are approved and committed.**
+contract (§4.2). Both were therefore treated as protected, put to the user with
+exact wording, and approved before being written.
 
-**(1) §8.4 invariant 10 — permit the projection.** Current text: "No rule reads
-encounter state or free-text narrative. A rule cannot ask which visit state,
-trigger, or workflow step invoked it, and it cannot see the patient's textual
-complaint." Proposed addition:
+**(1) §8.4 invariant 10 — permit the projection.** Added, nothing removed. Visit
+state, trigger, workflow step, and narrative remain unreadable:
 
 > A rule may read the `kind` and `subject` of a planned action passed as
-> `requested_actions` (§8.1, §11.6), and nothing else from that list — not
-> `encounter_id`, not `state`, not `detail`, not `blocked_by`. That pair is
-> clinical intent, invariant under any UI change, and §8.1 already supplies it to
-> the evaluator. The remaining fields are encounter state and stay outside.
+> `requested_actions` (§8.1, §11.6) — and nothing else from that list: not
+> `encounter_id`, not `state`, not `detail`, not `blocked_by`.
 
-Nothing is removed. Visit state, trigger, workflow step, and narrative remain
-unreadable.
+The invariant now names the seam test as the enforcement, so the projection is
+checked rather than trusted.
 
-**(2) §8.4 invariant 6 — name the third input.** Current text: "Identical snapshot
-+ identical catalogue release ⇒ byte-identical evaluation *records*." With
-`drug_requested`, records vary with `requested_actions`, so the sentence is false
-as written. Proposed:
+**(2) §8.4 invariant 6 — name the third input.** It read "Identical snapshot +
+identical catalogue release ⇒ byte-identical evaluation *records*," which
+`drug_requested` makes false. It now reads:
 
 > Identical snapshot + identical requested actions + identical catalogue release ⇒
 > byte-identical evaluation *records*.
 
-This preserves the intent exactly — determinism over the whole input — and the
-scoping sentence about the run header is unaffected. The alternative, folding
-`requested_actions` into the `Snapshot`, was rejected: §11.6 assigns the list to
-the encounter and §8.1 keeps the argument separate.
+Intent preserved exactly — determinism over the whole input. The scoping sentence
+about the run header is untouched. The alternative, folding `requested_actions`
+into the `Snapshot`, was rejected: §11.6 assigns the list to the encounter and
+§8.1 keeps the argument separate.
 
-Additive, unprotected, and not blocking: §7.1 should gain a `drug_requested`
-example line so the operator is documented where authors will look for it.
+**(3) §7.1 — additive, unprotected.** The example rule's `{drug_active: metformin}`
+line now carries a comment pointing to `{drug_requested: metformin}` for the
+start-contraindication case, so authors find the operator where they will look for
+it.
 
 If any of these is wrong, correct it before the implementation plan is written.
 

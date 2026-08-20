@@ -1246,7 +1246,10 @@ monitors:
 when:
   all:
     - {fact: egfr, op: lt, threshold_ref: metformin.egfr_absolute_contraindication}
-    - {drug_active: metformin}
+    - {drug_active: metformin}    # current therapy. A start-contraindication rule
+                                  # instead uses {drug_requested: metformin}, which
+                                  # matches §11.6's planned actions (§8.1, §8.4
+                                  # invariant 10). Both obey drug_scope_level.
 
 then:
   blocks: {order_of: metformin}   # a block must NAME the order action it blocks
@@ -1672,11 +1675,15 @@ Each is a test.
 3. No rule loads referencing an `unpopulated` threshold.
 4. `stop_and_review` rules cannot be tenant-disabled.
 5. Evaluation order never affects output.
-6. Identical snapshot + identical catalogue release ⇒ byte-identical evaluation
-   *records*. Scoped to the per-rule record of §8.2 — outcome, both severities,
-   `degraded_because`, `requirement_verdicts`, and `pins`. The run header is
-   excluded by construction, because `correlation_id` and `latency_ms` are stamped
-   by `app/` and are not engine output.
+6. Identical snapshot + identical requested actions + identical catalogue release
+   ⇒ byte-identical evaluation *records*. Scoped to the per-rule record of §8.2 —
+   outcome, both severities, `degraded_because`, `requirement_verdicts`, and
+   `pins`. The run header is excluded by construction, because `correlation_id`
+   and `latency_ms` are stamped by `app/` and are not engine output.
+   `requested_actions` is named because invariant 10's projection lets
+   `drug_requested` read it, so it is part of the input a record is a function of
+   (§8.1). Determinism is over the whole input, which is what this invariant has
+   always meant.
 7. No rule reads another rule's output.
 8. The engine performs no I/O and reads no clock (§4.2).
 9. A rule is a pure function of the snapshot and the catalogue — preserving
@@ -1684,6 +1691,19 @@ Each is a test.
 10. No rule reads encounter state or free-text narrative. A rule cannot ask which visit state, trigger,
     or workflow step invoked it, and it cannot see the patient's textual complaint. §11 is a consumer of evaluation, never an input
     to it.
+
+    **One exception, and it is a projection rather than a doorway.** A rule may
+    read the `kind` and `subject` of a planned action passed as `requested_actions`
+    (§8.1, §11.6) — and nothing else from that list: not `encounter_id`, not
+    `state`, not `detail`, not `blocked_by`. That pair is clinical intent and is
+    invariant under any UI change, which is the risk this invariant exists to
+    close, and §8.1 already supplies the list to the evaluator. Without it a
+    contraindicated *start* is inexpressible: §7.1's rule keys on `drug_active`,
+    false for a patient not yet on the drug, so a new order for a contraindicated
+    agent would record `not_triggered` and nothing would block. The remaining
+    fields are encounter state and stay outside. The projection is asserted by
+    field-set equality in the §4.2 seam test, so widening it fails the suite
+    rather than passing quietly.
 11. A raising rule never ends the run, and a failed run never blocks (§8.5).
 
 Invariant 10 is what keeps §11 outside the device boundary. The moment a rule
