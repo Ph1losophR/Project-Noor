@@ -223,7 +223,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_models",
-      "community": 99,
+      "community": 89,
       "norm_label": "models.py"
     },
     {
@@ -253,7 +253,7 @@
       "source_location": "L37",
       "_origin": "ast",
       "id": "src_noor_canon_models_freeze_payload",
-      "community": 99,
+      "community": 63,
       "norm_label": "_freeze_payload()"
     },
     {
@@ -263,7 +263,7 @@
       "source_location": "L63",
       "_origin": "ast",
       "id": "src_noor_canon_models_freeze_mapping",
-      "community": 99,
+      "community": 63,
       "norm_label": "_freeze_mapping()"
     },
     {
@@ -283,7 +283,7 @@
       "source_location": "L82",
       "_origin": "ast",
       "id": "src_noor_canon_models_unitresolution",
-      "community": 62,
+      "community": 89,
       "norm_label": "unitresolution"
     },
     {
@@ -323,7 +323,7 @@
       "source_location": "L121",
       "_origin": "ast",
       "id": "src_noor_canon_models_rejectionreason",
-      "community": 26,
+      "community": 89,
       "norm_label": "rejectionreason"
     },
     {
@@ -333,7 +333,7 @@
       "source_location": "L141",
       "_origin": "ast",
       "id": "src_noor_canon_models_suspicionreason",
-      "community": 99,
+      "community": 89,
       "norm_label": "suspicionreason"
     },
     {
@@ -343,7 +343,7 @@
       "source_location": "L153",
       "_origin": "ast",
       "id": "src_noor_canon_models_notcomparablereason",
-      "community": 99,
+      "community": 89,
       "norm_label": "notcomparablereason"
     },
     {
@@ -373,7 +373,7 @@
       "source_location": "L189",
       "_origin": "ast",
       "id": "src_noor_canon_models_informantrole",
-      "community": 87,
+      "community": 89,
       "norm_label": "informantrole"
     },
     {
@@ -393,7 +393,7 @@
       "source_location": "L200",
       "_origin": "ast",
       "id": "src_noor_canon_models_setting",
-      "community": 99,
+      "community": 89,
       "norm_label": "setting"
     },
     {
@@ -403,7 +403,7 @@
       "source_location": "L206",
       "_origin": "ast",
       "id": "src_noor_canon_models_posture",
-      "community": 99,
+      "community": 89,
       "norm_label": "posture"
     },
     {
@@ -413,7 +413,7 @@
       "source_location": "L212",
       "_origin": "ast",
       "id": "src_noor_canon_models_arm",
-      "community": 99,
+      "community": 89,
       "norm_label": "arm"
     },
     {
@@ -423,7 +423,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "src_noor_canon_models_cuffsize",
-      "community": 99,
+      "community": 89,
       "norm_label": "cuffsize"
     },
     {
@@ -443,7 +443,7 @@
       "source_location": "L230",
       "_origin": "ast",
       "id": "src_noor_canon_models_informant",
-      "community": 99,
+      "community": 89,
       "norm_label": "informant"
     },
     {
@@ -473,7 +473,7 @@
       "source_location": "L252",
       "_origin": "ast",
       "id": "src_noor_canon_models_mappinginfo",
-      "community": 100,
+      "community": 34,
       "norm_label": "mappinginfo"
     },
     {
@@ -493,7 +493,7 @@
       "source_location": "L272",
       "_origin": "ast",
       "id": "src_noor_canon_models_utc",
-      "community": 99,
+      "community": 63,
       "norm_label": "_utc()"
     },
     {
@@ -503,7 +503,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_noor_canon_models_py_datetime",
-      "community": 99,
+      "community": 63,
       "norm_label": "datetime"
     },
     {
@@ -523,7 +523,7 @@
       "source_location": "L312",
       "_origin": "ast",
       "id": "src_noor_canon_models_observationcapture_normalise_to_utc",
-      "community": 99,
+      "community": 63,
       "norm_label": "._normalise_to_utc()"
     },
     {
@@ -563,7 +563,7 @@
       "source_location": "L329",
       "_origin": "ast",
       "id": "src_noor_canon_models_observationcapture_freeze_raw_payload",
-      "community": 99,
+      "community": 63,
       "norm_label": "._freeze_raw_payload()"
     },
     {
@@ -663,7 +663,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_1",
-      "community": 99,
+      "community": 89,
       "norm_label": "the observation model (ssot \u00a75) and canon's quality verdicts (\u00a76.2).  every mo"
     },
     {
@@ -673,7 +673,7 @@
       "source_location": "L38",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_38",
-      "community": 99,
+      "community": 63,
       "norm_label": "validate one json value and return an immutable copy of it.      `active_ids`"
     },
     {
@@ -683,7 +683,7 @@
       "source_location": "L83",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_83",
-      "community": 62,
+      "community": 89,
       "norm_label": "what unit resolution concluded (ssot \u00a76.3).      every value is an outcome, so"
     },
     {
@@ -693,7 +693,7 @@
       "source_location": "L142",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_142",
-      "community": 99,
+      "community": 89,
       "norm_label": "\u00a76.1's mistype shapes are two reasons, not one: the decimal point in the     wr"
     },
     {
@@ -703,7 +703,7 @@
       "source_location": "L154",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_154",
-      "community": 99,
+      "community": 89,
       "norm_label": "why delta review compared nothing. \"not compared\" is a fact of record, not"
     },
     {
@@ -723,7 +723,7 @@
       "source_location": "L253",
       "_origin": "ast",
       "id": "src_noor_canon_models_rationale_253",
-      "community": 100,
+      "community": 34,
       "norm_label": "how the source code became a noor observable (ssot \u00a75).      \u00a75 also lists `co"
     },
     {
@@ -933,7 +933,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_absentobservationerror",
-      "community": 26,
+      "community": 89,
       "norm_label": "absentobservationerror"
     },
     {
@@ -943,7 +943,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "valueerror",
-      "community": 26,
+      "community": 89,
       "norm_label": "valueerror"
     },
     {
@@ -1013,7 +1013,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_noor_canon_pipeline_rationale_31",
-      "community": 26,
+      "community": 89,
       "norm_label": "an absent_reason observation carries no value; there is nothing to     canonica"
     },
     {
@@ -1063,7 +1063,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility",
-      "community": 26,
+      "community": 94,
       "norm_label": "plausibility.py"
     },
     {
@@ -1073,7 +1073,7 @@
       "source_location": "L15",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_envelopeposition",
-      "community": 26,
+      "community": 89,
       "norm_label": "envelopeposition"
     },
     {
@@ -1083,7 +1083,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_locate",
-      "community": 26,
+      "community": 94,
       "norm_label": "locate()"
     },
     {
@@ -1093,7 +1093,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_py_decimal",
-      "community": 26,
+      "community": 94,
       "norm_label": "decimal"
     },
     {
@@ -1103,7 +1103,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_rationale_1",
-      "community": 26,
+      "community": 94,
       "norm_label": "layer 2 of canon: the two envelopes (ssot \u00a76.1, \u00a76.4).  the physiologic envelo"
     },
     {
@@ -1113,7 +1113,7 @@
       "source_location": "L22",
       "_origin": "ast",
       "id": "src_noor_canon_plausibility_rationale_22",
-      "community": 26,
+      "community": 94,
       "norm_label": "position of a canonical value against the entry's inclusive envelopes."
     },
     {
@@ -1223,7 +1223,7 @@
       "source_location": "L97",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry",
-      "community": 26,
+      "community": 94,
       "norm_label": "observableentry"
     },
     {
@@ -1233,7 +1233,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry_freeze_code_unit_map",
-      "community": 26,
+      "community": 94,
       "norm_label": "._freeze_code_unit_map()"
     },
     {
@@ -1243,7 +1243,7 @@
       "source_location": "L126",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableentry_serialise_code_unit_map",
-      "community": 26,
+      "community": 94,
       "norm_label": "._serialise_code_unit_map()"
     },
     {
@@ -1273,7 +1273,7 @@
       "source_location": "L171",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry_freeze_entries",
-      "community": 26,
+      "community": 94,
       "norm_label": "._freeze_entries()"
     },
     {
@@ -1283,7 +1283,7 @@
       "source_location": "L177",
       "_origin": "ast",
       "id": "src_noor_canon_registry_observableregistry_serialise_entries",
-      "community": 26,
+      "community": 94,
       "norm_label": "._serialise_entries()"
     },
     {
@@ -1363,7 +1363,7 @@
       "source_location": "L98",
       "_origin": "ast",
       "id": "src_noor_canon_registry_rationale_98",
-      "community": 26,
+      "community": 94,
       "norm_label": "one observable's data-validity declaration (ssot \u00a76.6).      quantity observab"
     },
     {
@@ -1383,7 +1383,7 @@
       "source_location": "L30",
       "_origin": "ast",
       "id": "src_noor_canon_resolution_resolutionerror",
-      "community": 26,
+      "community": 89,
       "norm_label": "resolutionerror"
     },
     {
@@ -1403,7 +1403,7 @@
       "source_location": "L39",
       "_origin": "ast",
       "id": "src_noor_canon_resolution_qualityresolution",
-      "community": 26,
+      "community": 89,
       "norm_label": "qualityresolution"
     },
     {
@@ -1483,7 +1483,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_noor_canon_resolution_rationale_31",
-      "community": 26,
+      "community": 89,
       "norm_label": "a resolution that does not meet its bar is refused, not approximated."
     },
     {
@@ -2173,7 +2173,7 @@
       "source_location": "L89",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_evaluate",
-      "community": 95,
+      "community": 98,
       "norm_label": "evaluate()"
     },
     {
@@ -2183,7 +2183,7 @@
       "source_location": "L106",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_evaluate_rule",
-      "community": 95,
+      "community": 87,
       "norm_label": "_evaluate_rule()"
     },
     {
@@ -2193,7 +2193,7 @@
       "source_location": "L127",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_consider",
-      "community": 95,
+      "community": 87,
       "norm_label": "_consider()"
     },
     {
@@ -2203,7 +2203,7 @@
       "source_location": "L167",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_indeterminate",
-      "community": 95,
+      "community": 87,
       "norm_label": "_indeterminate()"
     },
     {
@@ -2213,7 +2213,7 @@
       "source_location": "L181",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_record",
-      "community": 95,
+      "community": 87,
       "norm_label": "_record()"
     },
     {
@@ -2443,7 +2443,7 @@
       "source_location": "L94",
       "_origin": "ast",
       "id": "src_noor_engine_evaluate_rationale_94",
-      "community": 95,
+      "community": 98,
       "norm_label": "consider every rule in the release against one snapshot (ssot \u00a78.1).      pure:"
     },
     {
@@ -2480,7 +2480,7 @@
       "label": "Outcome",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L23",
+      "source_location": "L25",
       "_origin": "ast",
       "id": "src_noor_engine_records_outcome",
       "community": 87,
@@ -2490,7 +2490,7 @@
       "label": "DegradedBecause",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L40",
+      "source_location": "L42",
       "_origin": "ast",
       "id": "src_noor_engine_records_degradedbecause",
       "community": 87,
@@ -2500,7 +2500,7 @@
       "label": "RequirementVerdictValue",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L53",
+      "source_location": "L55",
       "_origin": "ast",
       "id": "src_noor_engine_records_requirementverdictvalue",
       "community": 87,
@@ -2510,7 +2510,7 @@
       "label": "RequirementReason",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "_origin": "ast",
       "id": "src_noor_engine_records_requirementreason",
       "community": 87,
@@ -2520,7 +2520,7 @@
       "label": "RequirementVerdict",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L77",
+      "source_location": "L79",
       "_origin": "ast",
       "id": "src_noor_engine_records_requirementverdict",
       "community": 87,
@@ -2530,17 +2530,17 @@
       "label": "cap_below_stop_and_review()",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "_origin": "ast",
       "id": "src_noor_engine_records_cap_below_stop_and_review",
-      "community": 95,
+      "community": 87,
       "norm_label": "cap_below_stop_and_review()"
     },
     {
       "label": "EvaluationRecord",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L130",
+      "source_location": "L131",
       "_origin": "ast",
       "id": "src_noor_engine_records_evaluationrecord",
       "community": 87,
@@ -2550,7 +2550,7 @@
       "label": "._failure_reason_exists_exactly_for_evaluation_failed()",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L154",
+      "source_location": "L156",
       "_origin": "ast",
       "id": "src_noor_engine_records_evaluationrecord_failure_reason_exists_exactly_for_evaluation_failed",
       "community": 87,
@@ -2570,27 +2570,27 @@
       "label": "._degradation_appears_exactly_where_it_happened()",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L167",
+      "source_location": "L169",
       "_origin": "ast",
       "id": "src_noor_engine_records_evaluationrecord_degradation_appears_exactly_where_it_happened",
       "community": 87,
       "norm_label": "._degradation_appears_exactly_where_it_happened()"
     },
     {
-      "label": "._degraded_and_failed_records_present_the_capped_severity()",
+      "label": "._effective_severity_is_fixed_by_the_degradation_state()",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L193",
+      "source_location": "L183",
       "_origin": "ast",
-      "id": "src_noor_engine_records_evaluationrecord_degraded_and_failed_records_present_the_capped_severity",
+      "id": "src_noor_engine_records_evaluationrecord_effective_severity_is_fixed_by_the_degradation_state",
       "community": 87,
-      "norm_label": "._degraded_and_failed_records_present_the_capped_severity()"
+      "norm_label": "._effective_severity_is_fixed_by_the_degradation_state()"
     },
     {
       "label": "._verdicts_only_where_requirements_were_read()",
       "file_type": "code",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L208",
+      "source_location": "L203",
       "_origin": "ast",
       "id": "src_noor_engine_records_evaluationrecord_verdicts_only_where_requirements_were_read",
       "community": 87,
@@ -2610,9 +2610,9 @@
       "label": "How a rule's consideration ended (SSOT \u00a78.2).      Three come from the evaluator",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L24",
+      "source_location": "L26",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_24",
+      "id": "src_noor_engine_records_rationale_26",
       "community": 87,
       "norm_label": "how a rule's consideration ended (ssot \u00a78.2).      three come from the evaluator"
     },
@@ -2620,9 +2620,9 @@
       "label": "Why a record degraded \u2014 exactly \u00a78.3's three causes.      A broken data feed, re",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_41",
+      "id": "src_noor_engine_records_rationale_43",
       "community": 87,
       "norm_label": "why a record degraded \u2014 exactly \u00a78.3's three causes.      a broken data feed, re"
     },
@@ -2630,9 +2630,9 @@
       "label": "Whether a declared requirement could be used (SSOT \u00a78.2).",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L54",
+      "source_location": "L56",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_54",
+      "id": "src_noor_engine_records_rationale_56",
       "community": 87,
       "norm_label": "whether a declared requirement could be used (ssot \u00a78.2)."
     },
@@ -2640,9 +2640,9 @@
       "label": "The closed machine vocabulary for a verdict's reason (SSOT \u00a78.2).      The data-",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L61",
+      "source_location": "L63",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_61",
+      "id": "src_noor_engine_records_rationale_63",
       "community": 87,
       "norm_label": "the closed machine vocabulary for a verdict's reason (ssot \u00a78.2).      the data-"
     },
@@ -2650,9 +2650,9 @@
       "label": "One requirement's verdict, per SSOT \u00a78.2's shape.      `reason` is required on e",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L78",
+      "source_location": "L80",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_78",
+      "id": "src_noor_engine_records_rationale_80",
       "community": 87,
       "norm_label": "one requirement's verdict, per ssot \u00a78.2's shape.      `reason` is required on e"
     },
@@ -2660,19 +2660,19 @@
       "label": "The single \u00a78.3 severity cap, shared by every degradation cause.      `effective",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L92",
+      "source_location": "L94",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_92",
-      "community": 95,
+      "id": "src_noor_engine_records_rationale_94",
+      "community": 87,
       "norm_label": "the single \u00a78.3 severity cap, shared by every degradation cause.      `effective"
     },
     {
       "label": "One rule's consideration of one snapshot, field for field per \u00a78.2.      No run-",
       "file_type": "rationale",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L131",
+      "source_location": "L132",
       "_origin": "ast",
-      "id": "src_noor_engine_records_rationale_131",
+      "id": "src_noor_engine_records_rationale_132",
       "community": 87,
       "norm_label": "one rule's consideration of one snapshot, field for field per \u00a78.2.      no run-"
     },
@@ -2763,7 +2763,7 @@
       "source_location": "",
       "_origin": "ast",
       "id": "src_noor_engine_rules_py_self",
-      "community": 94,
+      "community": 83,
       "norm_label": "self"
     },
     {
@@ -2843,7 +2843,7 @@
       "source_location": "L231",
       "_origin": "ast",
       "id": "src_noor_engine_rules_walk_expression",
-      "community": 94,
+      "community": 83,
       "norm_label": "walk_expression()"
     },
     {
@@ -2863,7 +2863,7 @@
       "source_location": "L255",
       "_origin": "ast",
       "id": "src_noor_engine_rules_scope_scope_reads_patient_state_only",
-      "community": 94,
+      "community": 83,
       "norm_label": "._scope_reads_patient_state_only()"
     },
     {
@@ -2873,7 +2873,7 @@
       "source_location": "L266",
       "_origin": "ast",
       "id": "src_noor_engine_rules_requirement",
-      "community": 89,
+      "community": 95,
       "norm_label": "requirement"
     },
     {
@@ -2943,7 +2943,7 @@
       "source_location": "L344",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule",
-      "community": 94,
+      "community": 83,
       "norm_label": "rule"
     },
     {
@@ -2953,7 +2953,7 @@
       "source_location": "L365",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule_only_a_hard_stop_blocks_an_order_action",
-      "community": 94,
+      "community": 83,
       "norm_label": "._only_a_hard_stop_blocks_an_order_action()"
     },
     {
@@ -2963,7 +2963,7 @@
       "source_location": "L374",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule_a_hard_stop_never_sits_on_silenced_data",
-      "community": 94,
+      "community": 83,
       "norm_label": "._a_hard_stop_never_sits_on_silenced_data()"
     },
     {
@@ -2973,7 +2973,7 @@
       "source_location": "L385",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule_drug_references_declare_their_scope_level",
-      "community": 94,
+      "community": 83,
       "norm_label": "._drug_references_declare_their_scope_level()"
     },
     {
@@ -2983,7 +2983,7 @@
       "source_location": "L398",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule_every_compared_observable_is_declared_in_requires",
-      "community": 94,
+      "community": 83,
       "norm_label": "._every_compared_observable_is_declared_in_requires()"
     },
     {
@@ -2993,7 +2993,7 @@
       "source_location": "L410",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rule_requirements_never_name_encounter_or_trigger_state",
-      "community": 94,
+      "community": 83,
       "norm_label": "._requirements_never_name_encounter_or_trigger_state()"
     },
     {
@@ -3073,7 +3073,7 @@
       "source_location": "L232",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rationale_232",
-      "community": 94,
+      "community": 83,
       "norm_label": "yield the node and every descendant, depth-first (\u00a74.3.1).      public because m"
     },
     {
@@ -3093,7 +3093,7 @@
       "source_location": "L267",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rationale_267",
-      "community": 89,
+      "community": 95,
       "norm_label": "one entry of the data-requirement manifest (\u00a77.1(a), \u00a75.1).      each rule decla"
     },
     {
@@ -3163,7 +3163,7 @@
       "source_location": "L345",
       "_origin": "ast",
       "id": "src_noor_engine_rules_rationale_345",
-      "community": 94,
+      "community": 83,
       "norm_label": "one clinical rule, field for field per ssot \u00a77.1.      the validators below are"
     },
     {
@@ -3183,7 +3183,7 @@
       "source_location": "L20",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_actionkind",
-      "community": 89,
+      "community": 72,
       "norm_label": "actionkind"
     },
     {
@@ -3193,7 +3193,7 @@
       "source_location": "L31",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_requestedaction",
-      "community": 95,
+      "community": 88,
       "norm_label": "requestedaction"
     },
     {
@@ -3293,7 +3293,7 @@
       "source_location": "L138",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_snapshotmedication",
-      "community": 97,
+      "community": 72,
       "norm_label": "snapshotmedication"
     },
     {
@@ -3373,7 +3373,7 @@
       "source_location": "L21",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_rationale_21",
-      "community": 89,
+      "community": 72,
       "norm_label": "what the clinician intends to do (ssot \u00a711.6)."
     },
     {
@@ -3383,7 +3383,7 @@
       "source_location": "L32",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_rationale_32",
-      "community": 95,
+      "community": 88,
       "norm_label": "the planned action reduced to what the evaluator reads (ssot \u00a711.6).      detail"
     },
     {
@@ -3483,7 +3483,7 @@
       "source_location": "L139",
       "_origin": "ast",
       "id": "src_noor_engine_snapshot_rationale_139",
-      "community": 97,
+      "community": 72,
       "norm_label": "one medication-list entry, with canon's mapping verdict attached (\u00a74.2).      an"
     },
     {
@@ -3953,7 +3953,7 @@
       "source_location": "L72",
       "_origin": "ast",
       "id": "tests_canon_test_models_test_patient_reported_entry_with_an_informant_is_accepted",
-      "community": 99,
+      "community": 34,
       "norm_label": "test_patient_reported_entry_with_an_informant_is_accepted()"
     },
     {
@@ -3983,7 +3983,7 @@
       "source_location": "L99",
       "_origin": "ast",
       "id": "tests_canon_test_models_test_the_model_is_immutable",
-      "community": 34,
+      "community": 24,
       "norm_label": "test_the_model_is_immutable()"
     },
     {
@@ -3993,7 +3993,7 @@
       "source_location": "L108",
       "_origin": "ast",
       "id": "tests_canon_test_models_test_capture_collections_are_immutable_in_place",
-      "community": 34,
+      "community": 24,
       "norm_label": "test_capture_collections_are_immutable_in_place()"
     },
     {
@@ -4053,7 +4053,7 @@
       "source_location": "L198",
       "_origin": "ast",
       "id": "tests_canon_test_models_test_raw_payload_rejects_values_outside_json_shapes",
-      "community": 34,
+      "community": 24,
       "norm_label": "test_raw_payload_rejects_values_outside_json_shapes()"
     },
     {
@@ -4473,7 +4473,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_a_code_implied_unit_is_recorded_as_inferred",
-      "community": 34,
+      "community": 100,
       "norm_label": "test_a_code_implied_unit_is_recorded_as_inferred()"
     },
     {
@@ -4483,7 +4483,7 @@
       "source_location": "L119",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value",
-      "community": 34,
+      "community": 100,
       "norm_label": "test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value()"
     },
     {
@@ -4493,7 +4493,7 @@
       "source_location": "L133",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_an_unparseable_value_is_rejected",
-      "community": 34,
+      "community": 100,
       "norm_label": "test_an_unparseable_value_is_rejected()"
     },
     {
@@ -4503,7 +4503,7 @@
       "source_location": "L146",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_an_ambiguous_mapping_reaches_canon_as_unusable",
-      "community": 100,
+      "community": 34,
       "norm_label": "test_an_ambiguous_mapping_reaches_canon_as_unusable()"
     },
     {
@@ -4593,7 +4593,7 @@
       "source_location": "L306",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_a_real_but_extreme_value_and_a_mistyped_value_land_in_different_states",
-      "community": 34,
+      "community": 92,
       "norm_label": "test_a_real_but_extreme_value_and_a_mistyped_value_land_in_different_states()"
     },
     {
@@ -4723,7 +4723,7 @@
       "source_location": "L613",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_every_rejection_reason_is_named_when_several_apply",
-      "community": 34,
+      "community": 100,
       "norm_label": "test_every_rejection_reason_is_named_when_several_apply()"
     },
     {
@@ -4743,7 +4743,7 @@
       "source_location": "L637",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_an_absent_reason_capture_has_nothing_to_canonicalise",
-      "community": 34,
+      "community": 100,
       "norm_label": "test_an_absent_reason_capture_has_nothing_to_canonicalise()"
     },
     {
@@ -4763,7 +4763,7 @@
       "source_location": "L668",
       "_origin": "ast",
       "id": "tests_canon_test_pipeline_test_a_code_display_name_is_carried_but_never_required",
-      "community": 100,
+      "community": 34,
       "norm_label": "test_a_code_display_name_is_carried_but_never_required()"
     },
     {
@@ -4823,7 +4823,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_plausibility",
-      "community": 60,
+      "community": 94,
       "norm_label": "test_plausibility.py"
     },
     {
@@ -4833,7 +4833,7 @@
       "source_location": "L36",
       "_origin": "ast",
       "id": "tests_canon_test_plausibility_test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds",
-      "community": 60,
+      "community": 94,
       "norm_label": "test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds()"
     },
     {
@@ -4843,7 +4843,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_canon_test_plausibility_rationale_1",
-      "community": 60,
+      "community": 94,
       "norm_label": "the two envelopes (ssot \u00a76.1 layer 2, \u00a76.4). bounds are inclusive and declared"
     },
     {
@@ -5533,7 +5533,7 @@
       "source_location": "L223",
       "_origin": "ast",
       "id": "tests_canon_test_units_test_reverse_conversion_uses_a_later_matching_registry_declaration",
-      "community": 62,
+      "community": 47,
       "norm_label": "test_reverse_conversion_uses_a_later_matching_registry_declaration()"
     },
     {
@@ -5663,7 +5663,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_conftest",
-      "community": 93,
+      "community": 86,
       "norm_label": "conftest.py"
     },
     {
@@ -5843,7 +5843,7 @@
       "source_location": "L419",
       "_origin": "ast",
       "id": "tests_conftest_make_pins",
-      "community": 85,
+      "community": 86,
       "norm_label": "make_pins()"
     },
     {
@@ -5883,7 +5883,7 @@
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_conftest_rationale_1",
-      "community": 93,
+      "community": 86,
       "norm_label": "shared builders and fixtures (docs/testing-standards.md: factories live here)."
     },
     {
@@ -6053,7 +6053,7 @@
       "source_location": "L420",
       "_origin": "ast",
       "id": "tests_conftest_rationale_420",
-      "community": 85,
+      "community": 86,
       "norm_label": "the \u00a78.2 pins at release level; snapshot_id is stamped per record later."
     },
     {
@@ -6293,7 +6293,7 @@
       "source_location": "L299",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_an_active_goal_wins_over_the_profile_threshold",
-      "community": 86,
+      "community": 97,
       "norm_label": "test_an_active_goal_wins_over_the_profile_threshold()"
     },
     {
@@ -6303,7 +6303,7 @@
       "source_location": "L330",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_a_goal_is_active_exactly_on_the_half_open_window",
-      "community": 86,
+      "community": 97,
       "norm_label": "test_a_goal_is_active_exactly_on_the_half_open_window()"
     },
     {
@@ -6313,7 +6313,7 @@
       "source_location": "L343",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_a_goal_in_a_foreign_unit_is_refused",
-      "community": 86,
+      "community": 97,
       "norm_label": "test_a_goal_in_a_foreign_unit_is_refused()"
     },
     {
@@ -6323,7 +6323,7 @@
       "source_location": "L353",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_two_active_goals_for_one_observable_raise_and_neither_is_chosen",
-      "community": 86,
+      "community": 97,
       "norm_label": "test_two_active_goals_for_one_observable_raise_and_neither_is_chosen()"
     },
     {
@@ -6333,7 +6333,7 @@
       "source_location": "L378",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_a_goal_on_another_observable_does_not_block_resolution",
-      "community": 86,
+      "community": 97,
       "norm_label": "test_a_goal_on_another_observable_does_not_block_resolution()"
     },
     {
@@ -6343,7 +6343,7 @@
       "source_location": "L389",
       "_origin": "ast",
       "id": "tests_engine_test_content_test_pins_carry_the_release_level_values_and_default_to_no_snapshot",
-      "community": 85,
+      "community": 86,
       "norm_label": "test_pins_carry_the_release_level_values_and_default_to_no_snapshot()"
     },
     {
@@ -6433,7 +6433,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "tests_engine_test_degradation_test_claim_34_an_unconfirmed_allergy_degrades_the_finding_never_the_answer",
-      "community": 88,
+      "community": 96,
       "norm_label": "test_claim_34_an_unconfirmed_allergy_degrades_the_finding_never_the_answer()"
     },
     {
@@ -6503,7 +6503,7 @@
       "source_location": "L217",
       "_origin": "ast",
       "id": "tests_engine_test_degradation_test_a_graded_child_inside_a_boolean_parent_propagates_its_grade",
-      "community": 88,
+      "community": 86,
       "norm_label": "test_a_graded_child_inside_a_boolean_parent_propagates_its_grade()"
     },
     {
@@ -7097,14 +7097,14 @@
       "norm_label": "test_a_patient_reported_value_without_the_grade_tripwire_is_not_graded()"
     },
     {
-      "label": "The per-rule evaluator through its one entry point (SSOT SSOT \u00a78.1-\u00a78.3).  Every",
+      "label": "The per-rule evaluator through its one entry point (SSOT \u00a78.1-\u00a78.3).  Every rule",
       "file_type": "rationale",
       "source_file": "tests/engine/test_evaluate.py",
       "source_location": "L1",
       "_origin": "ast",
       "id": "tests_engine_test_evaluate_rationale_1",
       "community": 88,
-      "norm_label": "the per-rule evaluator through its one entry point (ssot ssot \u00a78.1-\u00a78.3).  every"
+      "norm_label": "the per-rule evaluator through its one entry point (ssot \u00a78.1-\u00a78.3).  every rule"
     },
     {
       "label": "A fresh, accepted, context-complete eGFR result; override anything.",
@@ -7513,7 +7513,7 @@
       "source_location": "L100",
       "_origin": "ast",
       "id": "tests_engine_test_properties_branch",
-      "community": 93,
+      "community": 88,
       "norm_label": "_branch()"
     },
     {
@@ -7620,7 +7620,7 @@
       "label": "make_verdict()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L58",
+      "source_location": "L83",
       "_origin": "ast",
       "id": "tests_engine_test_records_make_verdict",
       "community": 85,
@@ -7630,7 +7630,7 @@
       "label": "make_record()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L70",
+      "source_location": "L95",
       "_origin": "ast",
       "id": "tests_engine_test_records_make_record",
       "community": 85,
@@ -7640,7 +7640,7 @@
       "label": "test_the_outcome_vocabulary_holds_exactly_the_six_ssot_members()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L87",
+      "source_location": "L121",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_the_outcome_vocabulary_holds_exactly_the_six_ssot_members",
       "community": 85,
@@ -7650,7 +7650,7 @@
       "label": "test_the_degradation_vocabulary_holds_exactly_the_three_ssot_causes()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L100",
+      "source_location": "L134",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_the_degradation_vocabulary_holds_exactly_the_three_ssot_causes",
       "community": 85,
@@ -7660,7 +7660,7 @@
       "label": "test_the_requirement_reason_vocabulary_holds_exactly_the_eight_ssot_members()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L109",
+      "source_location": "L143",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_the_requirement_reason_vocabulary_holds_exactly_the_eight_ssot_members",
       "community": 85,
@@ -7670,7 +7670,7 @@
       "label": "test_the_verdict_value_vocabulary_holds_usable_and_unusable_only()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L123",
+      "source_location": "L157",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_the_verdict_value_vocabulary_holds_usable_and_unusable_only",
       "community": 85,
@@ -7680,7 +7680,7 @@
       "label": "test_a_record_is_constructible_for_every_outcome()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L132",
+      "source_location": "L166",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_record_is_constructible_for_every_outcome",
       "community": 85,
@@ -7690,57 +7690,87 @@
       "label": "test_a_record_carries_its_pins_through()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L142",
+      "source_location": "L176",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_record_carries_its_pins_through",
       "community": 85,
       "norm_label": "test_a_record_carries_its_pins_through()"
     },
     {
-      "label": "test_each_degradation_cause_is_constructible_on_its_own_outcome()",
+      "label": "test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L163",
+      "source_location": "L190",
       "_origin": "ast",
-      "id": "tests_engine_test_records_test_each_degradation_cause_is_constructible_on_its_own_outcome",
+      "id": "tests_engine_test_records_test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome",
       "community": 85,
-      "norm_label": "test_each_degradation_cause_is_constructible_on_its_own_outcome()"
+      "norm_label": "test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome()"
+    },
+    {
+      "label": "test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name()",
+      "file_type": "code",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L203",
+      "_origin": "ast",
+      "id": "tests_engine_test_records_test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name",
+      "community": 85,
+      "norm_label": "test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name()"
     },
     {
       "label": "test_cap_below_stop_and_review_demotes_only_a_hard_stop()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L187",
+      "source_location": "L221",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_cap_below_stop_and_review_demotes_only_a_hard_stop",
       "community": 85,
       "norm_label": "test_cap_below_stop_and_review_demotes_only_a_hard_stop()"
     },
     {
-      "label": "test_a_degraded_or_failed_record_presents_the_capped_severity()",
+      "label": "test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L207",
+      "source_location": "L230",
       "_origin": "ast",
-      "id": "tests_engine_test_records_test_a_degraded_or_failed_record_presents_the_capped_severity",
+      "id": "tests_engine_test_records_test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity",
       "community": 85,
-      "norm_label": "test_a_degraded_or_failed_record_presents_the_capped_severity()"
+      "norm_label": "test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity()"
     },
     {
-      "label": "test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused()",
+      "label": "test_a_clean_record_presents_its_authored_severity_unchanged()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L233",
+      "source_location": "L249",
       "_origin": "ast",
-      "id": "tests_engine_test_records_test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused",
+      "id": "tests_engine_test_records_test_a_clean_record_presents_its_authored_severity_unchanged",
       "community": 85,
-      "norm_label": "test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused()"
+      "norm_label": "test_a_clean_record_presents_its_authored_severity_unchanged()"
+    },
+    {
+      "label": "test_a_degraded_record_presenting_anything_but_the_cap_is_refused()",
+      "file_type": "code",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L263",
+      "_origin": "ast",
+      "id": "tests_engine_test_records_test_a_degraded_record_presenting_anything_but_the_cap_is_refused",
+      "community": 85,
+      "norm_label": "test_a_degraded_record_presenting_anything_but_the_cap_is_refused()"
+    },
+    {
+      "label": "test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused()",
+      "file_type": "code",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L274",
+      "_origin": "ast",
+      "id": "tests_engine_test_records_test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused",
+      "community": 85,
+      "norm_label": "test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused()"
     },
     {
       "label": "test_an_evaluation_failed_record_requires_a_failure_reason()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L239",
+      "source_location": "L285",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_an_evaluation_failed_record_requires_a_failure_reason",
       "community": 85,
@@ -7750,7 +7780,7 @@
       "label": "test_a_failure_reason_on_any_other_outcome_is_refused()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L251",
+      "source_location": "L297",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_failure_reason_on_any_other_outcome_is_refused",
       "community": 85,
@@ -7760,7 +7790,7 @@
       "label": "test_an_indeterminate_or_failed_record_always_names_why_it_degraded()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L265",
+      "source_location": "L311",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_an_indeterminate_or_failed_record_always_names_why_it_degraded",
       "community": 85,
@@ -7770,7 +7800,7 @@
       "label": "test_an_outcome_that_did_not_degrade_carries_no_degradation_cause()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L278",
+      "source_location": "L324",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_an_outcome_that_did_not_degrade_carries_no_degradation_cause",
       "community": 85,
@@ -7780,7 +7810,7 @@
       "label": "test_a_triggered_record_refuses_a_cause_that_belongs_to_another_outcome()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L289",
+      "source_location": "L335",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_triggered_record_refuses_a_cause_that_belongs_to_another_outcome",
       "community": 85,
@@ -7790,7 +7820,7 @@
       "label": "test_an_outcome_that_never_read_requirements_carries_no_verdicts()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L298",
+      "source_location": "L344",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_an_outcome_that_never_read_requirements_carries_no_verdicts",
       "community": 85,
@@ -7800,7 +7830,7 @@
       "label": "test_an_outcome_that_reached_requirements_may_carry_verdicts()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L315",
+      "source_location": "L361",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_an_outcome_that_reached_requirements_may_carry_verdicts",
       "community": 85,
@@ -7810,7 +7840,7 @@
       "label": "test_a_verdict_requires_a_reason()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L336",
+      "source_location": "L382",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_verdict_requires_a_reason",
       "community": 85,
@@ -7820,7 +7850,7 @@
       "label": "test_a_verdict_refuses_a_reason_outside_the_closed_vocabulary()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L343",
+      "source_location": "L389",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_verdict_refuses_a_reason_outside_the_closed_vocabulary",
       "community": 85,
@@ -7830,7 +7860,7 @@
       "label": "test_a_usable_verdict_still_carries_a_reason_without_a_linking_constraint()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L349",
+      "source_location": "L395",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_a_usable_verdict_still_carries_a_reason_without_a_linking_constraint",
       "community": 85,
@@ -7840,7 +7870,7 @@
       "label": "test_latest_age_days_defaults_to_absent_and_can_be_set()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L359",
+      "source_location": "L405",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_latest_age_days_defaults_to_absent_and_can_be_set",
       "community": 85,
@@ -7850,7 +7880,7 @@
       "label": "test_records_are_frozen()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L369",
+      "source_location": "L415",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_records_are_frozen",
       "community": 85,
@@ -7860,7 +7890,7 @@
       "label": "test_two_identical_records_compare_equal()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L381",
+      "source_location": "L427",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_two_identical_records_compare_equal",
       "community": 85,
@@ -7870,7 +7900,7 @@
       "label": "test_the_record_holds_no_run_header_fields()",
       "file_type": "code",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L390",
+      "source_location": "L436",
       "_origin": "ast",
       "id": "tests_engine_test_records_test_the_record_holds_no_run_header_fields",
       "community": 85,
@@ -7890,9 +7920,9 @@
       "label": "The \u00a78.2 example verdict: egfr unusable because stale; override anything.",
       "file_type": "rationale",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L59",
+      "source_location": "L84",
       "_origin": "ast",
-      "id": "tests_engine_test_records_rationale_59",
+      "id": "tests_engine_test_records_rationale_84",
       "community": 85,
       "norm_label": "the \u00a78.2 example verdict: egfr unusable because stale; override anything."
     },
@@ -7900,9 +7930,9 @@
       "label": "A triggered metformin hard-stop record; override anything.",
       "file_type": "rationale",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L71",
+      "source_location": "L96",
       "_origin": "ast",
-      "id": "tests_engine_test_records_rationale_71",
+      "id": "tests_engine_test_records_rationale_96",
       "community": 85,
       "norm_label": "a triggered metformin hard-stop record; override anything."
     },
@@ -8133,7 +8163,7 @@
       "source_location": "L337",
       "_origin": "ast",
       "id": "tests_engine_test_rules_test_a_block_must_name_the_order_action_it_blocks",
-      "community": 81,
+      "community": 88,
       "norm_label": "test_a_block_must_name_the_order_action_it_blocks()"
     },
     {
@@ -8223,7 +8253,7 @@
       "source_location": "L447",
       "_origin": "ast",
       "id": "tests_engine_test_rules_test_authored_prose_is_required_and_non_empty",
-      "community": 81,
+      "community": 88,
       "norm_label": "test_authored_prose_is_required_and_non_empty()"
     },
     {
@@ -8343,7 +8373,7 @@
       "source_location": "L122",
       "_origin": "ast",
       "id": "tests_engine_test_snapshot_test_a_well_formed_allergy_record_is_accepted",
-      "community": 88,
+      "community": 97,
       "norm_label": "test_a_well_formed_allergy_record_is_accepted()"
     },
     {
@@ -8353,7 +8383,7 @@
       "source_location": "L147",
       "_origin": "ast",
       "id": "tests_engine_test_snapshot_test_an_allergy_enum_rejects_an_unknown_member",
-      "community": 88,
+      "community": 97,
       "norm_label": "test_an_allergy_enum_rejects_an_unknown_member()"
     },
     {
@@ -10015,6 +10045,46 @@
       "id": "superpowers_sdd_task_5_report_report",
       "community": 50,
       "norm_label": "report"
+    },
+    {
+      "label": "Final-review fix",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L127",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_5_report_final_review_fix",
+      "community": 50,
+      "norm_label": "final-review fix"
+    },
+    {
+      "label": "Changes",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L131",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_5_report_changes",
+      "community": 50,
+      "norm_label": "changes"
+    },
+    {
+      "label": "Commands and results",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L167",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_5_report_commands_and_results",
+      "community": 50,
+      "norm_label": "commands and results"
+    },
+    {
+      "label": "Findings addressed",
+      "file_type": "document",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L180",
+      "_origin": "ast",
+      "id": "superpowers_sdd_task_5_report_findings_addressed",
+      "community": 50,
+      "norm_label": "findings addressed"
     },
     {
       "label": "task-6-brief.md",
@@ -16994,7 +17064,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_degradedbecause",
       "target": "src_noor_canon_models_noormodel",
@@ -17004,7 +17074,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_canon_models_noormodel",
@@ -17014,7 +17084,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_outcome",
       "target": "src_noor_canon_models_noormodel",
@@ -17024,7 +17094,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementreason",
       "target": "src_noor_canon_models_noormodel",
@@ -17034,7 +17104,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdict",
       "target": "src_noor_canon_models_noormodel",
@@ -17044,7 +17114,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L18",
+      "source_location": "L20",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdictvalue",
       "target": "src_noor_canon_models_noormodel",
@@ -17598,7 +17668,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L40",
+      "source_location": "L42",
       "weight": 1.0,
       "source": "src_noor_engine_records_degradedbecause",
       "target": "strenum",
@@ -17608,7 +17678,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "src_noor_engine_records_outcome",
       "target": "strenum",
@@ -17618,7 +17688,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "src_noor_engine_records_requirementreason",
       "target": "strenum",
@@ -17628,7 +17698,7 @@
       "relation": "inherits",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L53",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "src_noor_engine_records_requirementverdictvalue",
       "target": "strenum",
@@ -24314,7 +24384,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_degradedbecause",
       "target": "src_noor_engine_content_pins",
@@ -24324,7 +24394,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_engine_content_pins",
@@ -24334,7 +24404,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_outcome",
       "target": "src_noor_engine_content_pins",
@@ -24344,7 +24414,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementreason",
       "target": "src_noor_engine_content_pins",
@@ -24354,7 +24424,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdict",
       "target": "src_noor_engine_content_pins",
@@ -24364,7 +24434,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L19",
+      "source_location": "L21",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdictvalue",
       "target": "src_noor_engine_content_pins",
@@ -26665,7 +26735,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_cap_below_stop_and_review",
@@ -26675,7 +26745,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L40",
+      "source_location": "L42",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_degradedbecause",
@@ -26685,7 +26755,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L130",
+      "source_location": "L131",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_evaluationrecord",
@@ -26695,7 +26765,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L23",
+      "source_location": "L25",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_outcome",
@@ -26705,7 +26775,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L60",
+      "source_location": "L62",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_requirementreason",
@@ -26715,7 +26785,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L77",
+      "source_location": "L79",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_requirementverdict",
@@ -26725,7 +26795,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L53",
+      "source_location": "L55",
       "weight": 1.0,
       "source": "src_noor_engine_records",
       "target": "src_noor_engine_records_requirementverdictvalue",
@@ -26745,7 +26815,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_outcome",
       "target": "src_noor_engine_rules_severity",
@@ -26755,9 +26825,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L24",
+      "source_location": "L26",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_24",
+      "source": "src_noor_engine_records_rationale_26",
       "target": "src_noor_engine_records_outcome",
       "confidence_score": 1.0
     },
@@ -26765,7 +26835,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_degradedbecause",
       "target": "src_noor_engine_rules_severity",
@@ -26775,9 +26845,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L41",
+      "source_location": "L43",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_41",
+      "source": "src_noor_engine_records_rationale_43",
       "target": "src_noor_engine_records_degradedbecause",
       "confidence_score": 1.0
     },
@@ -26785,9 +26855,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L54",
+      "source_location": "L56",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_54",
+      "source": "src_noor_engine_records_rationale_56",
       "target": "src_noor_engine_records_requirementverdictvalue",
       "confidence_score": 1.0
     },
@@ -26795,7 +26865,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdictvalue",
       "target": "src_noor_engine_rules_severity",
@@ -26805,9 +26875,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L61",
+      "source_location": "L63",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_61",
+      "source": "src_noor_engine_records_rationale_63",
       "target": "src_noor_engine_records_requirementreason",
       "confidence_score": 1.0
     },
@@ -26815,7 +26885,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementreason",
       "target": "src_noor_engine_rules_severity",
@@ -26825,9 +26895,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L78",
+      "source_location": "L80",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_78",
+      "source": "src_noor_engine_records_rationale_80",
       "target": "src_noor_engine_records_requirementverdict",
       "confidence_score": 1.0
     },
@@ -26835,7 +26905,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_requirementverdict",
       "target": "src_noor_engine_rules_severity",
@@ -26847,7 +26917,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L67",
+      "source_location": "L92",
       "weight": 1.0,
       "source": "tests_engine_test_records_make_verdict",
       "target": "src_noor_engine_records_requirementverdict"
@@ -26857,7 +26927,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L91",
+      "source_location": "L93",
       "weight": 1.0,
       "source": "src_noor_engine_records_cap_below_stop_and_review",
       "target": "src_noor_engine_rules_severity",
@@ -26868,9 +26938,9 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L200",
+      "source_location": "L191",
       "weight": 1.0,
-      "source": "src_noor_engine_records_evaluationrecord_degraded_and_failed_records_present_the_capped_severity",
+      "source": "src_noor_engine_records_evaluationrecord_effective_severity_is_fixed_by_the_degradation_state",
       "target": "src_noor_engine_records_cap_below_stop_and_review",
       "confidence_score": 1.0
     },
@@ -26878,9 +26948,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L92",
+      "source_location": "L94",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_92",
+      "source": "src_noor_engine_records_rationale_94",
       "target": "src_noor_engine_records_cap_below_stop_and_review",
       "confidence_score": 1.0
     },
@@ -26890,9 +26960,9 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L215",
+      "source_location": "L114",
       "weight": 1.0,
-      "source": "tests_engine_test_records_test_a_degraded_or_failed_record_presents_the_capped_severity",
+      "source": "tests_engine_test_records_make_record",
       "target": "src_noor_engine_records_cap_below_stop_and_review"
     },
     {
@@ -26901,7 +26971,29 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L190",
+      "source_location": "L281",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused",
+      "target": "src_noor_engine_records_cap_below_stop_and_review"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L240",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity",
+      "target": "src_noor_engine_records_cap_below_stop_and_review"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "INFERRED",
+      "confidence_score": 0.8,
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L224",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_cap_below_stop_and_review_demotes_only_a_hard_stop",
       "target": "src_noor_engine_records_cap_below_stop_and_review"
@@ -26910,7 +27002,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L167",
+      "source_location": "L169",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_engine_records_evaluationrecord_degradation_appears_exactly_where_it_happened",
@@ -26920,17 +27012,17 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L193",
+      "source_location": "L183",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord",
-      "target": "src_noor_engine_records_evaluationrecord_degraded_and_failed_records_present_the_capped_severity",
+      "target": "src_noor_engine_records_evaluationrecord_effective_severity_is_fixed_by_the_degradation_state",
       "confidence_score": 1.0
     },
     {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L154",
+      "source_location": "L156",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_engine_records_evaluationrecord_failure_reason_exists_exactly_for_evaluation_failed",
@@ -26940,7 +27032,7 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L208",
+      "source_location": "L203",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_engine_records_evaluationrecord_verdicts_only_where_requirements_were_read",
@@ -26950,7 +27042,7 @@
       "relation": "uses",
       "confidence": "INFERRED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L20",
+      "source_location": "L22",
       "weight": 0.8,
       "source": "src_noor_engine_records_evaluationrecord",
       "target": "src_noor_engine_rules_severity",
@@ -26960,9 +27052,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L131",
+      "source_location": "L132",
       "weight": 1.0,
-      "source": "src_noor_engine_records_rationale_131",
+      "source": "src_noor_engine_records_rationale_132",
       "target": "src_noor_engine_records_evaluationrecord",
       "confidence_score": 1.0
     },
@@ -26972,7 +27064,7 @@
       "confidence": "INFERRED",
       "confidence_score": 0.8,
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L84",
+      "source_location": "L118",
       "weight": 1.0,
       "source": "tests_engine_test_records_make_record",
       "target": "src_noor_engine_records_evaluationrecord"
@@ -26982,7 +27074,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L154",
+      "source_location": "L156",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord_failure_reason_exists_exactly_for_evaluation_failed",
       "target": "src_noor_engine_records_py_self",
@@ -26993,7 +27085,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L167",
+      "source_location": "L169",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord_degradation_appears_exactly_where_it_happened",
       "target": "src_noor_engine_records_py_self",
@@ -27004,9 +27096,9 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L193",
+      "source_location": "L183",
       "weight": 1.0,
-      "source": "src_noor_engine_records_evaluationrecord_degraded_and_failed_records_present_the_capped_severity",
+      "source": "src_noor_engine_records_evaluationrecord_effective_severity_is_fixed_by_the_degradation_state",
       "target": "src_noor_engine_records_py_self",
       "confidence_score": 1.0
     },
@@ -27015,7 +27107,7 @@
       "context": "return_type",
       "confidence": "EXTRACTED",
       "source_file": "src/noor/engine/records.py",
-      "source_location": "L208",
+      "source_location": "L203",
       "weight": 1.0,
       "source": "src_noor_engine_records_evaluationrecord_verdicts_only_where_requirements_were_read",
       "target": "src_noor_engine_records_py_self",
@@ -34021,7 +34113,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_conftest",
@@ -37062,7 +37154,7 @@
       "context": "import",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L25",
+      "source_location": "L26",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_conftest_make_pins",
@@ -37073,7 +37165,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L81",
+      "source_location": "L106",
       "weight": 1.0,
       "source": "tests_engine_test_records_make_record",
       "target": "tests_conftest_make_pins",
@@ -37084,7 +37176,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L144",
+      "source_location": "L178",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_record_carries_its_pins_through",
       "target": "tests_conftest_make_pins",
@@ -41060,7 +41152,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L70",
+      "source_location": "L95",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_make_record",
@@ -41070,7 +41162,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L58",
+      "source_location": "L83",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_make_verdict",
@@ -41080,27 +41172,47 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L233",
+      "source_location": "L274",
       "weight": 1.0,
       "source": "tests_engine_test_records",
-      "target": "tests_engine_test_records_test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused",
+      "target": "tests_engine_test_records_test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L207",
+      "source_location": "L249",
       "weight": 1.0,
       "source": "tests_engine_test_records",
-      "target": "tests_engine_test_records_test_a_degraded_or_failed_record_presents_the_capped_severity",
+      "target": "tests_engine_test_records_test_a_clean_record_presents_its_authored_severity_unchanged",
       "confidence_score": 1.0
     },
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L251",
+      "source_location": "L263",
+      "weight": 1.0,
+      "source": "tests_engine_test_records",
+      "target": "tests_engine_test_records_test_a_degraded_record_presenting_anything_but_the_cap_is_refused",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L230",
+      "weight": 1.0,
+      "source": "tests_engine_test_records",
+      "target": "tests_engine_test_records_test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L297",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_failure_reason_on_any_other_outcome_is_refused",
@@ -41110,7 +41222,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L142",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "tests_engine_test_records",
+      "target": "tests_engine_test_records_test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L176",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_record_carries_its_pins_through",
@@ -41120,7 +41242,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L132",
+      "source_location": "L166",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_record_is_constructible_for_every_outcome",
@@ -41130,7 +41252,17 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L289",
+      "source_location": "L203",
+      "weight": 1.0,
+      "source": "tests_engine_test_records",
+      "target": "tests_engine_test_records_test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L335",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_triggered_record_refuses_a_cause_that_belongs_to_another_outcome",
@@ -41140,7 +41272,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L349",
+      "source_location": "L395",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_usable_verdict_still_carries_a_reason_without_a_linking_constraint",
@@ -41150,7 +41282,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L343",
+      "source_location": "L389",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_verdict_refuses_a_reason_outside_the_closed_vocabulary",
@@ -41160,7 +41292,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L336",
+      "source_location": "L382",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_a_verdict_requires_a_reason",
@@ -41170,7 +41302,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L239",
+      "source_location": "L285",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_an_evaluation_failed_record_requires_a_failure_reason",
@@ -41180,7 +41312,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L265",
+      "source_location": "L311",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_an_indeterminate_or_failed_record_always_names_why_it_degraded",
@@ -41190,7 +41322,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L278",
+      "source_location": "L324",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_an_outcome_that_did_not_degrade_carries_no_degradation_cause",
@@ -41200,7 +41332,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L298",
+      "source_location": "L344",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_an_outcome_that_never_read_requirements_carries_no_verdicts",
@@ -41210,7 +41342,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L315",
+      "source_location": "L361",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_an_outcome_that_reached_requirements_may_carry_verdicts",
@@ -41220,7 +41352,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L187",
+      "source_location": "L221",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_cap_below_stop_and_review_demotes_only_a_hard_stop",
@@ -41230,17 +41362,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L163",
-      "weight": 1.0,
-      "source": "tests_engine_test_records",
-      "target": "tests_engine_test_records_test_each_degradation_cause_is_constructible_on_its_own_outcome",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "contains",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/engine/test_records.py",
-      "source_location": "L359",
+      "source_location": "L405",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_latest_age_days_defaults_to_absent_and_can_be_set",
@@ -41250,7 +41372,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L369",
+      "source_location": "L415",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_records_are_frozen",
@@ -41260,7 +41382,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L100",
+      "source_location": "L134",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_the_degradation_vocabulary_holds_exactly_the_three_ssot_causes",
@@ -41270,7 +41392,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L87",
+      "source_location": "L121",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_the_outcome_vocabulary_holds_exactly_the_six_ssot_members",
@@ -41280,7 +41402,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L390",
+      "source_location": "L436",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_the_record_holds_no_run_header_fields",
@@ -41290,7 +41412,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L109",
+      "source_location": "L143",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_the_requirement_reason_vocabulary_holds_exactly_the_eight_ssot_members",
@@ -41300,7 +41422,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L123",
+      "source_location": "L157",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_the_verdict_value_vocabulary_holds_usable_and_unusable_only",
@@ -41310,7 +41432,7 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L381",
+      "source_location": "L427",
       "weight": 1.0,
       "source": "tests_engine_test_records",
       "target": "tests_engine_test_records_test_two_identical_records_compare_equal",
@@ -41330,9 +41452,9 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L59",
+      "source_location": "L84",
       "weight": 1.0,
-      "source": "tests_engine_test_records_rationale_59",
+      "source": "tests_engine_test_records_rationale_84",
       "target": "tests_engine_test_records_make_verdict",
       "confidence_score": 1.0
     },
@@ -41341,7 +41463,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L352",
+      "source_location": "L398",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_usable_verdict_still_carries_a_reason_without_a_linking_constraint",
       "target": "tests_engine_test_records_make_verdict",
@@ -41352,7 +41474,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L346",
+      "source_location": "L392",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_verdict_refuses_a_reason_outside_the_closed_vocabulary",
       "target": "tests_engine_test_records_make_verdict",
@@ -41363,7 +41485,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L340",
+      "source_location": "L386",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_verdict_requires_a_reason",
       "target": "tests_engine_test_records_make_verdict",
@@ -41374,7 +41496,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L301",
+      "source_location": "L347",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_outcome_that_never_read_requirements_carries_no_verdicts",
       "target": "tests_engine_test_records_make_verdict",
@@ -41385,7 +41507,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L318",
+      "source_location": "L364",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_outcome_that_reached_requirements_may_carry_verdicts",
       "target": "tests_engine_test_records_make_verdict",
@@ -41396,7 +41518,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L361",
+      "source_location": "L407",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_latest_age_days_defaults_to_absent_and_can_be_set",
       "target": "tests_engine_test_records_make_verdict",
@@ -41407,7 +41529,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L372",
+      "source_location": "L418",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_records_are_frozen",
       "target": "tests_engine_test_records_make_verdict",
@@ -41418,7 +41540,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L383",
+      "source_location": "L429",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_two_identical_records_compare_equal",
       "target": "tests_engine_test_records_make_verdict",
@@ -41428,9 +41550,42 @@
       "relation": "rationale_for",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L71",
+      "source_location": "L96",
       "weight": 1.0,
-      "source": "tests_engine_test_records_rationale_71",
+      "source": "tests_engine_test_records_rationale_96",
+      "target": "tests_engine_test_records_make_record",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L278",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused",
+      "target": "tests_engine_test_records_make_record",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L251",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_clean_record_presents_its_authored_severity_unchanged",
+      "target": "tests_engine_test_records_make_record",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L266",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_degraded_record_presenting_anything_but_the_cap_is_refused",
       "target": "tests_engine_test_records_make_record",
       "confidence_score": 1.0
     },
@@ -41441,7 +41596,7 @@
       "source_file": "tests/engine/test_records.py",
       "source_location": "L236",
       "weight": 1.0,
-      "source": "tests_engine_test_records_test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused",
+      "source": "tests_engine_test_records_test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity",
       "target": "tests_engine_test_records_make_record",
       "confidence_score": 1.0
     },
@@ -41450,18 +41605,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L215",
-      "weight": 1.0,
-      "source": "tests_engine_test_records_test_a_degraded_or_failed_record_presents_the_capped_severity",
-      "target": "tests_engine_test_records_make_record",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/engine/test_records.py",
-      "source_location": "L254",
+      "source_location": "L300",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_failure_reason_on_any_other_outcome_is_refused",
       "target": "tests_engine_test_records_make_record",
@@ -41472,7 +41616,18 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L147",
+      "source_location": "L192",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome",
+      "target": "tests_engine_test_records_make_record",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L181",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_record_carries_its_pins_through",
       "target": "tests_engine_test_records_make_record",
@@ -41483,7 +41638,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L134",
+      "source_location": "L168",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_record_is_constructible_for_every_outcome",
       "target": "tests_engine_test_records_make_record",
@@ -41494,7 +41649,18 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L294",
+      "source_location": "L207",
+      "weight": 1.0,
+      "source": "tests_engine_test_records_test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name",
+      "target": "tests_engine_test_records_make_record",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "tests/engine/test_records.py",
+      "source_location": "L340",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_a_triggered_record_refuses_a_cause_that_belongs_to_another_outcome",
       "target": "tests_engine_test_records_make_record",
@@ -41505,7 +41671,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L242",
+      "source_location": "L288",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_evaluation_failed_record_requires_a_failure_reason",
       "target": "tests_engine_test_records_make_record",
@@ -41516,7 +41682,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L268",
+      "source_location": "L314",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_indeterminate_or_failed_record_always_names_why_it_degraded",
       "target": "tests_engine_test_records_make_record",
@@ -41527,7 +41693,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L282",
+      "source_location": "L328",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_outcome_that_did_not_degrade_carries_no_degradation_cause",
       "target": "tests_engine_test_records_make_record",
@@ -41538,7 +41704,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L305",
+      "source_location": "L351",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_outcome_that_never_read_requirements_carries_no_verdicts",
       "target": "tests_engine_test_records_make_record",
@@ -41549,7 +41715,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L327",
+      "source_location": "L373",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_an_outcome_that_reached_requirements_may_carry_verdicts",
       "target": "tests_engine_test_records_make_record",
@@ -41560,18 +41726,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L173",
-      "weight": 1.0,
-      "source": "tests_engine_test_records_test_each_degradation_cause_is_constructible_on_its_own_outcome",
-      "target": "tests_engine_test_records_make_record",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "calls",
-      "context": "call",
-      "confidence": "EXTRACTED",
-      "source_file": "tests/engine/test_records.py",
-      "source_location": "L371",
+      "source_location": "L417",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_records_are_frozen",
       "target": "tests_engine_test_records_make_record",
@@ -41582,7 +41737,7 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "tests/engine/test_records.py",
-      "source_location": "L383",
+      "source_location": "L429",
       "weight": 1.0,
       "source": "tests_engine_test_records_test_two_identical_records_compare_equal",
       "target": "tests_engine_test_records_make_record",
@@ -43561,6 +43716,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_5_report_task_5_report_outcome_and_evaluation_record_contracts",
+      "target": "superpowers_sdd_task_5_report_final_review_fix",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-5-report.md",
       "source_location": "L123",
       "weight": 1.0,
       "source": "superpowers_sdd_task_5_report_task_5_report_outcome_and_evaluation_record_contracts",
@@ -43635,6 +43800,36 @@
       "weight": 1.0,
       "source": "superpowers_sdd_task_5_report_what_was_built",
       "target": "superpowers_sdd_task_5_report_public_surface_exactly_the_brief_resolved_decisions_nothing_more",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L131",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_5_report_final_review_fix",
+      "target": "superpowers_sdd_task_5_report_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L167",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_5_report_final_review_fix",
+      "target": "superpowers_sdd_task_5_report_commands_and_results",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": ".superpowers/sdd/task-5-report.md",
+      "source_location": "L180",
+      "weight": 1.0,
+      "source": "superpowers_sdd_task_5_report_final_review_fix",
+      "target": "superpowers_sdd_task_5_report_findings_addressed",
       "confidence_score": 1.0
     },
     {
@@ -49109,5 +49304,5 @@
     }
   ],
   "hyperedges": [],
-  "built_at_commit": "c4a3cb7c52c039e206090403572ad02f9809eb8b"
+  "built_at_commit": "52a7dc56fd87b6488517255b83efa8b032e557f1"
 }

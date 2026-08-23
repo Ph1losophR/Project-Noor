@@ -1,16 +1,16 @@
 # Graph Report - cds_engine  (2026-08-23)
 
 ## Corpus Check
-- 100 files · ~4,285,231 words
+- 100 files · ~4,285,837 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1576 nodes · 3196 edges · 105 communities (94 shown, 11 thin omitted)
-- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 678 edges (avg confidence: 0.66)
+- 1583 nodes · 3208 edges · 104 communities (93 shown, 11 thin omitted)
+- Extraction: 79% EXTRACTED · 21% INFERRED · 0% AMBIGUOUS · INFERRED: 680 edges (avg confidence: 0.66)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `c4a3cb7c`
+- Built from commit: `52a7dc56`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -104,7 +104,6 @@
 - [[_COMMUNITY_test_degradation.py|test_degradation.py]]
 - [[_COMMUNITY_make_snapshot|make_snapshot]]
 - [[_COMMUNITY_make_allergy|make_allergy]]
-- [[_COMMUNITY_ObservableEntry|ObservableEntry]]
 - [[_COMMUNITY_QualityResolution|QualityResolution]]
 
 ## God Nodes (most connected - your core abstractions)
@@ -122,19 +121,19 @@
 ## Surprising Connections (you probably didn't know these)
 - `test_cap_below_stop_and_review_demotes_only_a_hard_stop()` --calls--> `cap_below_stop_and_review()`  [INFERRED]
   tests/engine/test_records.py → src/noor/engine/records.py
-- `_branch()` --calls--> `Expression`  [INFERRED]
-  tests/engine/test_properties.py → src/noor/engine/rules.py
 - `test_an_empty_scope_is_in_scope()` --calls--> `Scope`  [INFERRED]
   tests/engine/test_rules.py → src/noor/engine/rules.py
 - `test_scope_refuses_data_and_drug_predicates()` --calls--> `Scope`  [INFERRED]
   tests/engine/test_rules.py → src/noor/engine/rules.py
 - `test_a_valid_action_kind_is_accepted()` --calls--> `RequestedAction`  [INFERRED]
   tests/engine/test_snapshot.py → src/noor/engine/snapshot.py
+- `test_an_invalid_action_kind_is_refused()` --calls--> `RequestedAction`  [INFERRED]
+  tests/engine/test_snapshot.py → src/noor/engine/snapshot.py
 
 ## Import Cycles
 - None detected.
 
-## Communities (105 total, 11 thin omitted)
+## Communities (104 total, 11 thin omitted)
 
 ### Community 0 - "Project Noor — CDS Engine Architecture"
 Cohesion: 0.14
@@ -233,16 +232,16 @@ Cohesion: 0.25
 Nodes (8): 12.1 The ladder, 12.2 Release comparison, 12.3 Case selection, 12.4 Synthetic data, 12.5 Calibrated-reliance audit, 12.6 Clinical-operations verification claims, 12.7 Shadow mode, 12. Testing and validation
 
 ### Community 24 - "test_models.py"
-Cohesion: 0.10
-Nodes (34): DeltaVerdict, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolutio, _nested_payload(), The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants., A chain of `levels` nested mappings, innermost empty., test_a_canonical_value_requires_a_resolved_unit() (+26 more)
+Cohesion: 0.09
+Nodes (37): DeltaVerdict, QualityVerdict, What delta review compared, or why it compared nothing (§5, §6.1).      Always, Canon's intrinsic verdict on one observation (SSOT §6.2).      `unit_resolutio, _nested_payload(), The §5 observation model: closed, immutable, UTC, with the §5.4/§5 invariants., A chain of `levels` nested mappings, innermost empty., test_a_canonical_value_requires_a_resolved_unit() (+29 more)
 
 ### Community 25 - "Task 3 Report: The Observation Model and Quality Verdicts"
 Cohesion: 0.22
 Nodes (8): Fix: dead _PAYLOAD_FIELDS, Full gate (CI order), GREEN, RED, Self-review findings, Task 3 Report — Closed expression tree and rule contracts, TDD evidence, What was implemented
 
 ### Community 26 - "models.py"
-Cohesion: 0.08
-Nodes (47): RejectionReason, AbsentObservationError, An absent_reason observation carries no value; there is nothing to     canonica, EnvelopePosition, locate(), Decimal, Layer 2 of canon: the two envelopes (SSOT §6.1, §6.4).  The physiologic envelo, Position of a canonical value against the entry's inclusive envelopes. (+39 more)
+Cohesion: 0.13
+Nodes (33): confirm_repeat(), datetime, Decimal, Quality resolution (SSOT §6.2, §6.5).  Observations are write-once (§5), so a, A named clinician attests that a questioned or envelope-rejected value is real., A resolved value outside the operational envelope is clinically exceptional, Resolve a needs_repeat_or_verification observation against a concordant repeat., _resolved_state() (+25 more)
 
 ### Community 27 - "Task 2 Report: CI and the Import-Direction Seam Test"
 Cohesion: 0.25
@@ -273,24 +272,24 @@ Cohesion: 0.50
 Nodes (4): 16.1 Questions that block business, not behaviour, 16.2 Questions that block behaviour, 16.3 What is genuinely unanswerable here, 16. Open questions
 
 ### Community 34 - "4. Module architecture"
-Cohesion: 0.11
-Nodes (43): canonicalise(), Run the three canon layers over one capture.      `priors` are the patient's e, test_a_capture_without_a_payload_still_holds_a_frozen_one(), test_a_frozen_payload_serialises_to_json(), test_a_naive_datetime_is_refused(), test_capture_collections_are_immutable_in_place(), test_effective_time_is_normalised_to_utc(), test_patient_reported_entry_requires_an_informant() (+35 more)
+Cohesion: 0.12
+Nodes (39): MappingInfo, How the source code became a Noor observable (SSOT §5).      §5 also lists `co, canonicalise(), Run the three canon layers over one capture.      `priors` are the patient's e, test_a_capture_without_a_payload_still_holds_a_frozen_one(), test_a_frozen_payload_serialises_to_json(), test_a_naive_datetime_is_refused(), test_effective_time_is_normalised_to_utc() (+31 more)
 
 ### Community 35 - "9. Findings, alerts, overrides"
 Cohesion: 0.50
 Nodes (4): 9.1 Three severities, 9.2 Overrides, 9.3 Safety surveillance, 9. Findings, alerts, overrides
 
 ### Community 47 - "test_registry.py"
-Cohesion: 0.13
-Nodes (25): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversio, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None e, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is b, No registry declaration covers the requested unit, or a value's recorded     co (+17 more)
+Cohesion: 0.12
+Nodes (26): CanonicalQuantity, ConversionApplied, The conversion that produced a canonical value (SSOT §6.3: "every     conversio, Derived, and it shows its work (§5, §6.3).      `conversion_applied` is None e, from_canonical(), Decimal, Unit resolution and registry-declared conversion (SSOT §6.3).  Resolution is b, No registry declaration covers the requested unit, or a value's recorded     co (+18 more)
 
 ### Community 49 - "Task 4 Implementation Report"
 Cohesion: 0.25
 Nodes (7): Files changed, Gate results, Self-review notes / concerns, Task 4 Report — Threshold, profile, release, and evaluation context, TDD evidence, Test coverage of the brief's Step 1 list, What was implemented
 
 ### Community 50 - "Task 5 Report: Unit Resolution"
-Cohesion: 0.18
-Nodes (10): Cross-field validators (all `model_validator(mode="after")`), Files, Public surface (exactly the brief + resolved decisions, nothing more), Report, Self-review, Task 5 Report — Outcome and evaluation-record contracts, TDD evidence, Test inventory (55 tests) (+2 more)
+Cohesion: 0.13
+Nodes (14): Changes, Commands and results, Cross-field validators (all `model_validator(mode="after")`), Files, Final-review fix, Findings addressed, Public surface (exactly the brief + resolved decisions, nothing more), Report (+6 more)
 
 ### Community 51 - "load_registry"
 Cohesion: 0.13
@@ -321,20 +320,20 @@ Cohesion: 0.40
 Nodes (4): Design, Goal, Verification, Whole-Branch Review Remediation Design
 
 ### Community 60 - "make_entry"
-Cohesion: 0.12
-Nodes (28): Conversion, Envelope, Inclusive bounds in the canonical unit, versioned independently (§6.4)., canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `t, The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and declared, test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds(), The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit() (+20 more)
+Cohesion: 0.13
+Nodes (26): Conversion, Envelope, Inclusive bounds in the canonical unit, versioned independently (§6.4)., canonical = (value + add) * multiply, quantised to `precision` (§6.3).      `t, The registry validates itself at load (SSOT §6.4, §6.6)., test_a_code_unit_map_entry_must_name_an_accepted_unit(), test_a_code_unit_map_key_must_be_a_nonempty_system_pipe_code_pair(), test_a_conversion_from_an_unaccepted_unit_is_rejected() (+18 more)
 
 ### Community 61 - "test_parse.py"
 Cohesion: 0.15
 Nodes (18): _adjacent_digit_swaps(), decimal_shift_suspected(), digit_transposition_suspected(), parse_value(), Decimal, Layer 1 of canon: parsing and the two mistype shapes (SSOT §6.1).  Strict plai, Every distinct text formed by exchanging two digits adjacent in the digit     s, Parse an as-reported value, or return None when it is unparseable.      The pa (+10 more)
 
 ### Community 62 - "test_units.py"
-Cohesion: 0.16
-Nodes (20): What unit resolution concluded (SSOT §6.3).      Every value is an outcome, so, SourceCode, UnitResolution, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a, resolve_unit(), dual_unit_registry(), One observable that accepts both units and maps an observation code to each., Unit resolution is a hard safety control (SSOT §6.3). (+12 more)
+Cohesion: 0.20
+Nodes (17): SourceCode, Resolve the unit a value arrived in (§6.3).      explicit: the source stated a, resolve_unit(), dual_unit_registry(), One observable that accepts both units and maps an observation code to each., Unit resolution is a hard safety control (SSOT §6.3)., test_a_declared_conversion_records_the_provenance_of_its_result(), test_a_reported_accepted_unit_resolves_explicitly() (+9 more)
 
 ### Community 63 - "make_canonical"
-Cohesion: 0.13
-Nodes (13): ObservationCapture, Self, Canon's input: one observation exactly as captured (SSOT §5).      `recorded_a, Without this, dumping a frozen payload emits mappingproxy in Python mode, _thaw_payload(), _missing_required_fields(), The canon pipeline (SSOT §6.1). Every observation captured during a visit passe, §5's two "this record cannot be used at all" conditions.      Both are propert (+5 more)
+Cohesion: 0.09
+Nodes (18): _freeze_mapping(), _freeze_payload(), ObservationCapture, datetime, Self, Canon's input: one observation exactly as captured (SSOT §5).      `recorded_a, Without this, dumping a frozen payload emits mappingproxy in Python mode, Validate one JSON value and return an immutable copy of it.      `active_ids` (+10 more)
 
 ### Community 64 - "ObservableEntry"
 Cohesion: 0.22
@@ -357,8 +356,8 @@ Cohesion: 0.29
 Nodes (6): Commands and Results, Concerns, Files Changed, Self-Review, Task 8 Implementation Report, TDD Evidence
 
 ### Community 72 - "conftest.py"
-Cohesion: 0.12
-Nodes (18): MappingStatus, AllergyOnset, AllergyRecord, AllergyStatus, EvidenceSource, GoalOfCare, datetime, Self (+10 more)
+Cohesion: 0.11
+Nodes (22): MappingStatus, ActionKind, AllergyOnset, AllergyRecord, AllergyStatus, EvidenceSource, GoalOfCare, datetime (+14 more)
 
 ### Community 73 - "Task 12 Report — Fuzzing the boundary"
 Cohesion: 0.14
@@ -385,16 +384,16 @@ Cohesion: 0.50
 Nodes (3): Claims the persistence plan must carry, Exit verification â€” SSOT Â§14 steps 1â€“3, What this plan deliberately does not build
 
 ### Community 81 - "make_capture"
-Cohesion: 0.15
-Nodes (21): make_requirement(), make_then(), The §7.1 eGFR requirement; override anything., A hard stop's `then` without blocks; pass blocks where one is meant., conflicted_hard_stop(), conflicted_snapshot(), conflicting_egfr_goals(), potassium_neighbour() (+13 more)
+Cohesion: 0.17
+Nodes (19): make_requirement(), make_then(), The §7.1 eGFR requirement; override anything., A hard stop's `then` without blocks; pass blocks where one is meant., conflicted_hard_stop(), conflicted_snapshot(), conflicting_egfr_goals(), potassium_neighbour() (+11 more)
 
 ### Community 82 - "Review — fix commits `438d704..HEAD` on `feat/foundation-and-canon`"
 Cohesion: 0.25
 Nodes (7): Cross-checks, Findings table, Gate results (run by reviewer, all pass), New findings, Review — fix commits `438d704..HEAD` on `feat/foundation-and-canon`, Scrutiny answers, Verdict
 
 ### Community 83 - "ReportedValue"
-Cohesion: 0.08
-Nodes (29): Exception, KeyError, ObservableRegistry, The observable registry: per-observable data-validity declarations (SSOT §6.6)., A capture named an observable the registry does not govern., UnknownObservableError, AmbiguousGoalOfCareError, CatalogueRelease (+21 more)
+Cohesion: 0.07
+Nodes (34): Exception, KeyError, ObservableRegistry, The observable registry: per-observable data-validity declarations (SSOT §6.6)., A capture named an observable the registry does not govern., UnknownObservableError, AmbiguousGoalOfCareError, CatalogueRelease (+26 more)
 
 ### Community 84 - "MappingInfo"
 Cohesion: 0.14
@@ -402,73 +401,69 @@ Nodes (13): Definition Of Done, Engine Evaluator Implementation Plan, File Struc
 
 ### Community 85 - "DeltaVerdict"
 Cohesion: 0.11
-Nodes (27): make_pins(), The §8.2 pins at release level; snapshot_id is stamped per record later., test_pins_carry_the_release_level_values_and_default_to_no_snapshot(), make_record(), make_verdict(), The outcome vocabulary and the evaluation-record contract (SSOT §8.2).  The reco, The §8.2 example verdict: egfr unusable because stale; override anything., A triggered metformin hard-stop record; override anything. (+19 more)
+Nodes (27): make_record(), make_verdict(), The outcome vocabulary and the evaluation-record contract (SSOT §8.2).  The reco, The §8.2 example verdict: egfr unusable because stale; override anything., A triggered metformin hard-stop record; override anything., test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused(), test_a_clean_record_presents_its_authored_severity_unchanged(), test_a_degraded_record_presenting_anything_but_the_cap_is_refused() (+19 more)
 
 ### Community 86 - "test_snapshot.py"
-Cohesion: 0.11
-Nodes (39): make_citation(), make_context(), make_disablement(), make_profile(), make_release(), make_threshold(), Any, The §7.3 citation of the ADA/KDIGO consensus report; override anything. (+31 more)
+Cohesion: 0.12
+Nodes (39): make_citation(), make_context(), make_disablement(), make_pins(), make_profile(), make_release(), make_threshold(), Any (+31 more)
 
 ### Community 87 - "MappingInfo"
 Cohesion: 0.14
-Nodes (25): NamedTuple, InformantRole, Pins, The §8.2 pins copied onto every evaluation record.      The snapshot id is unkno, _CannotAssessSafely, _Manifest, A leaf met data the engine refuses to guess about (§5.1, §5.5).      An ambiguou, What reading one rule's requires manifest produced (§7.1(a), §8.2). (+17 more)
+Nodes (30): NamedTuple, Pins, The §8.2 pins copied onto every evaluation record.      The snapshot id is unkno, _CannotAssessSafely, _consider(), _evaluate_rule(), _indeterminate(), _Manifest (+22 more)
 
 ### Community 88 - "GoalOfCare"
 Cohesion: 0.05
-Nodes (97): Expression, One closed recursive expression node (SSOT §4.3.1).      Discriminated by `op`:, CulpritSubstance, The substance behind the record (SSOT §5.5); rules match on `ingredient_id`., make_allergy(), make_rule(), A confirmed severe amoxicillin allergy (§5.5); override anything.      The ons, The §7.1 metformin hard stop, reduced to the smallest complete rule. (+89 more)
+Nodes (98): Expression, One closed recursive expression node (SSOT §4.3.1).      Discriminated by `op`:, CulpritSubstance, The planned action reduced to what the evaluator reads (SSOT §11.6).      Detail, The substance behind the record (SSOT §5.5); rules match on `ingredient_id`., RequestedAction, make_allergy(), make_rule() (+90 more)
 
 ### Community 89 - "_nested_payload"
-Cohesion: 0.14
-Nodes (41): BaseModel, AcceptedVia, EntryMode, NoorModel, QualityState, SourceStatus, ResolutionKind, ClinicalApprover (+33 more)
+Cohesion: 0.09
+Nodes (58): BaseModel, AcceptedVia, Arm, CuffSize, EntryMode, Informant, InformantRole, NoorModel (+50 more)
 
 ### Community 92 - "DeltaVerdict"
-Cohesion: 0.31
-Nodes (13): CaptureContext, MethodContext, Per-observable context (SSOT §6.6). BP needs all of it; the registry says so., bp(), test_a_bp_delta_requires_matching_context(), test_a_bp_delta_with_matching_context_is_recorded(), test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines(), test_a_prior_with_incomplete_context_is_not_comparable() (+5 more)
+Cohesion: 0.27
+Nodes (14): CaptureContext, MethodContext, Per-observable context (SSOT §6.6). BP needs all of it; the registry says so., bp(), test_a_bp_delta_requires_matching_context(), test_a_bp_delta_with_matching_context_is_recorded(), test_a_bp_pair_sharing_one_source_identifier_keeps_both_baselines(), test_a_prior_with_incomplete_context_is_not_comparable() (+6 more)
 
 ### Community 93 - "Informant"
-Cohesion: 0.21
-Nodes (13): make_registry(), Shared builders and fixtures (docs/testing-standards.md: factories live here)., A registry from synthetic entries, keyed by each entry's observable., _branch(), context_for(), Property tests over generated expression trees (SSOT §8.4 invariants 6 and 9)., One gate-free requirement per compared fact, derived from the tree (§7.1)., The generated release: one rule per spec, ids from position. (+5 more)
+Cohesion: 0.27
+Nodes (11): make_registry(), A registry from synthetic entries, keyed by each entry's observable., context_for(), Property tests over generated expression trees (SSOT §8.4 invariants 6 and 9)., One gate-free requirement per compared fact, derived from the tree (§7.1)., The generated release: one rule per spec, ids from position., requirements_for(), rules_from() (+3 more)
 
 ### Community 94 - "Rule"
-Cohesion: 0.29
-Nodes (5): Self, Yield the node and every descendant, depth-first (§4.3.1).      Public because m, One clinical rule, field for field per SSOT §7.1.      The validators below are, Rule, walk_expression()
+Cohesion: 0.15
+Nodes (8): locate(), Decimal, Layer 2 of canon: the two envelopes (SSOT §6.1, §6.4).  The physiologic envelo, Position of a canonical value against the entry's inclusive envelopes., ObservableEntry, One observable's data-validity declaration (SSOT §6.6).      Quantity observab, The two envelopes (SSOT §6.1 layer 2, §6.4). Bounds are inclusive and declared, test_a_value_is_placed_against_both_envelopes_with_inclusive_bounds()
 
 ### Community 95 - "CanonicalObservation"
-Cohesion: 0.14
-Nodes (37): CanonicalObservation, Canon's output: the verbatim capture, its canonical value, its quality verdict., EvaluationContext, The pinned evaluation world: release, registry, and pins (§7.3, §10.5).      Con, _age_within(), _allergy(), _canonical_value(), _compare() (+29 more)
+Cohesion: 0.17
+Nodes (29): CanonicalObservation, Canon's output: the verbatim capture, its canonical value, its quality verdict., EvaluationContext, The pinned evaluation world: release, registry, and pins (§7.3, §10.5).      Con, _age_within(), _allergy(), _canonical_value(), _compare() (+21 more)
 
 ### Community 96 - "test_degradation.py"
 Cohesion: 0.17
-Nodes (21): _absent_case(), evaluate_one(), _graded_case(), hard_stop_allergy_rule(), hyperkalemia_hard_stop(), manager_reported_potassium(), noor_derived_potassium(), The §8.3 degradation invariant, driven through `evaluate`.  Three causes, three (+13 more)
+Nodes (22): _absent_case(), evaluate_one(), _graded_case(), hard_stop_allergy_rule(), hyperkalemia_hard_stop(), manager_reported_potassium(), noor_derived_potassium(), The §8.3 degradation invariant, driven through `evaluate`.  Three causes, three (+14 more)
 
 ### Community 97 - "make_snapshot"
-Cohesion: 0.15
-Nodes (19): One medication-list entry, with canon's mapping verdict attached (§4.2).      An, SnapshotMedication, make_goal(), make_snapshot(), A systolic-BP goal of <150 mmHg, active for a year from T0 (§5.6); override anyt, A well-formed evaluation snapshot; override anything.      Collections default, The §4.2 closed snapshot contract, with the §5.5 allergy record and §5.6 goals., test_a_goal_whose_window_could_never_be_active_is_refused() (+11 more)
+Cohesion: 0.13
+Nodes (24): make_goal(), make_snapshot(), A systolic-BP goal of <150 mmHg, active for a year from T0 (§5.6); override anyt, A well-formed evaluation snapshot; override anything.      Collections default, test_a_goal_in_a_foreign_unit_is_refused(), test_a_goal_is_active_exactly_on_the_half_open_window(), test_a_goal_on_another_observable_does_not_block_resolution(), test_an_active_goal_wins_over_the_profile_threshold() (+16 more)
 
 ### Community 98 - "make_allergy"
-Cohesion: 0.28
-Nodes (15): firing_snapshot(), hard_stop(), potassium_note(), The engine's cross-run invariants as executable claims (SSOT §8.4).  Invariant 5, The metformin hard stop: triggered by this snapshot's eGFR and list., A passive literal comparison over potassium., An interruptive drug_requested rule reading only the planned actions., eGFR 25, potassium 6.5, metformin active — all three rules fire. (+7 more)
-
-### Community 99 - "ObservableEntry"
-Cohesion: 0.12
-Nodes (16): Arm, CuffSize, _freeze_mapping(), _freeze_payload(), Informant, NotComparableReason, Posture, datetime (+8 more)
+Cohesion: 0.25
+Nodes (17): evaluate(), Consider every rule in the release against one snapshot (SSOT §8.1).      Pure:, firing_snapshot(), hard_stop(), potassium_note(), The engine's cross-run invariants as executable claims (SSOT §8.4).  Invariant 5, The metformin hard stop: triggered by this snapshot's eGFR and list., A passive literal comparison over potassium. (+9 more)
 
 ### Community 100 - "QualityResolution"
-Cohesion: 0.18
-Nodes (13): MappingInfo, How the source code became a Noor observable (SSOT §5).      §5 also lists `co, Exactly as captured. The value stays a string until parse validates it., ReportedValue, test_absent_reason_is_set_instead_of_a_value_never_alongside_one(), test_a_code_display_name_is_carried_but_never_required(), test_an_ambiguous_mapping_reaches_canon_as_unusable(), Nothing crosses the boundary uncanonicalised (SSOT §3.1, §6).  A boundary clai (+5 more)
+Cohesion: 0.15
+Nodes (14): Exactly as captured. The value stays a string until parse validates it., ReportedValue, test_absent_reason_is_set_instead_of_a_value_never_alongside_one(), test_a_code_implied_unit_is_recorded_as_inferred(), test_an_absent_reason_capture_has_nothing_to_canonicalise(), test_an_ambiguous_unit_is_a_hard_failure_with_no_canonical_value(), test_an_unparseable_value_is_rejected(), test_every_rejection_reason_is_named_when_several_apply() (+6 more)
 
 ## Knowledge Gaps
-- **527 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+522 more)
+- **530 isolated node(s):** `noor`, `Status`, `Finding 1: Deep Registry Immutability`, `Finding 2: Quality Verdict Contradictions`, `Finding 3: Missing Noncanonical Conversion` (+525 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **11 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `NoorModel` connect `_nested_payload` to `ObservableEntry`, `make_snapshot`, `ObservableEntry`, `QualityResolution`, `conftest.py`, `make_entry`, `test_registry.py`, `ReportedValue`, `MappingInfo`, `CanonicalObservation`, `test_models.py`, `Rule`, `models.py`, `GoalOfCare`, `DeltaVerdict`, `test_units.py`, `make_canonical`?**
-  _High betweenness centrality (0.061) - this node is a cross-community bridge._
+- **Why does `NoorModel` connect `_nested_payload` to `ObservableEntry`, `4. Module architecture`, `QualityResolution`, `conftest.py`, `make_entry`, `test_registry.py`, `ReportedValue`, `MappingInfo`, `CanonicalObservation`, `test_models.py`, `Rule`, `GoalOfCare`, `DeltaVerdict`, `test_units.py`, `make_canonical`?**
+  _High betweenness centrality (0.060) - this node is a cross-community bridge._
 - **Why does `make_canonical()` connect `models.py` to `test_degradation.py`, `make_snapshot`, `4. Module architecture`, `make_allergy`, `review_delta`, `make_capture`, `test_snapshot.py`, `test_models.py`, `_nested_payload`, `GoalOfCare`, `DeltaVerdict`, `Informant`, `CanonicalObservation`?**
   _High betweenness centrality (0.026) - this node is a cross-community bridge._
-- **Why does `make_entry()` connect `make_entry` to `ObservableEntry`, `4. Module architecture`, `test_registry.py`, `test_parse.py`, `test_snapshot.py`, `models.py`, `Informant`, `test_units.py`?**
+- **Why does `make_entry()` connect `make_entry` to `ObservableEntry`, `4. Module architecture`, `test_registry.py`, `Informant`, `test_snapshot.py`, `test_units.py`, `test_parse.py`, `Rule`?**
   _High betweenness centrality (0.022) - this node is a cross-community bridge._
 - **Are the 4 inferred relationships involving `make_rule()` (e.g. with `Expression` and `Monitor`) actually correct?**
   _`make_rule()` has 4 INFERRED edges - model-reasoned connections that need verification._
@@ -477,4 +472,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 55 inferred relationships involving `NoorModel` (e.g. with `Conversion` and `DeltaPolicy`) actually correct?**
   _`NoorModel` has 55 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `noor`, `Project Noor — a clinical decision support engine for supervised home visits.`, `app — FastAPI, persistence, and the clinical workflow (SSOT §11).  Lives OUTSI` to the rest of the system?**
-  _722 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _725 weakly-connected nodes found - possible documentation gaps or missing edges._
