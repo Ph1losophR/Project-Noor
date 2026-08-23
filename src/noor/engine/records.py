@@ -6,8 +6,10 @@ zero-firing surveillance. The shape here is closed on purpose. Run-header
 fields (`correlation_id`, `latency_ms`, `trigger`) are absent by construction:
 they belong to `app/`'s header, and either one inside a per-rule record would
 break invariants 6 and 8 at once (§8.4). Degradation carries exactly §8.3's
-three causes, and one shared cap function keeps every degraded or failed
-record below a hard stop, so evaluate() can never double-demote.
+three causes, each pinned to its one outcome by §8.3's table, and one shared
+cap function fixes every record's effective severity — capped for a degraded
+or failed record, authored for a clean one — so evaluate() can never
+double-demote and a clean record cannot drift.
 """
 
 from enum import StrEnum
@@ -100,18 +102,17 @@ def cap_below_stop_and_review(authored: Severity) -> Severity:
     return Severity.interruptive_review if authored is Severity.stop_and_review else authored
 
 
-# Outcomes that structurally cannot have degraded: scope excluded before any
-# requirement was read, suppression stopped before that, and a clean negative
-# ran to completion on usable data (§8.2).
-_OUTCOMES_WITHOUT_DEGRADATION: frozenset[Outcome] = frozenset(
-    {Outcome.not_triggered, Outcome.out_of_scope, Outcome.suppressed_by_governed_policy}
-)
-
-# Outcomes whose very meaning is degradation (§8.3): indeterminate is reserved
-# for questions a human can close, and evaluation_failed is a defect report.
-_DEGRADED_OUTCOMES: frozenset[Outcome] = frozenset(
-    {Outcome.indeterminate, Outcome.evaluation_failed}
-)
+# §8.3's cause→outcome table, pinned exactly: each outcome admits only the
+# cause the table names it — or no cause at all — so surveillance reads one
+# meaning per value and no cause can migrate between outcomes (§11.9).
+_PINNED_CAUSES: dict[Outcome, frozenset[DegradedBecause | None]] = {
+    Outcome.triggered: frozenset((None, DegradedBecause.evidence_grade)),
+    Outcome.not_triggered: frozenset((None,)),
+    Outcome.indeterminate: frozenset((DegradedBecause.requirements_unmet,)),
+    Outcome.out_of_scope: frozenset((None,)),
+    Outcome.suppressed_by_governed_policy: frozenset((None,)),
+    Outcome.evaluation_failed: frozenset((DegradedBecause.rule_raised,)),
+}
 
 # Outcomes that never reached their requirements manifest, and so have nothing
 # truthful to say about verdicts (§8.2, §8.5): suppression stops before
@@ -135,9 +136,10 @@ class EvaluationRecord(NoorModel):
     break invariant 6 (two runs could never compare equal) or invariant 8
     (minting them needs a clock) (§8.4). The validators pin the cross-field
     contract: failure names its exception exactly for `evaluation_failed`,
-    degradation appears exactly where §8.3 says it happened, every degraded or
-    failed hard stop presents at the capped severity, and outcomes that never
-    read requirements carry no verdicts.
+    degradation carries exactly §8.3's paired cause for its outcome and nothing
+    else, effective severity is fixed — the shared cap for any record carrying
+    a cause, authored severity for a clean one — and outcomes that never read
+    requirements carry no verdicts.
     """
 
     rule_id: str = Field(min_length=1)
@@ -165,42 +167,35 @@ class EvaluationRecord(NoorModel):
 
     @model_validator(mode="after")
     def _degradation_appears_exactly_where_it_happened(self) -> Self:
-        # §8.3 pairs each cause with its outcome: unmet requirements degrade to
-        # indeterminate, evidence grade caps a triggered finding, a raised rule
-        # fails. Nothing else may carry a cause, and the degraded outcomes may
-        # never lack one.
-        if self.outcome in _OUTCOMES_WITHOUT_DEGRADATION:
-            if self.degraded_because is not None:
-                raise ValueError(
-                    f"`{self.outcome}` did not degrade and cannot carry degraded_because (§8.3)"
-                )
-        elif self.outcome in _DEGRADED_OUTCOMES:
-            if self.degraded_because is None:
-                raise ValueError(f"`{self.outcome}` always degrades and must name why (§8.3)")
-        # Only `triggered` remains: evidence grade is the one cause that can sit
-        # on a reached finding, absent otherwise.
-        elif (
-            self.degraded_because is not None
-            and self.degraded_because is not DegradedBecause.evidence_grade
-        ):
+        # §8.3's table is closed, in both directions: unmet requirements degrade
+        # to indeterminate only, evidence grade caps a triggered finding only,
+        # a raised rule fails only — and the three non-degrading outcomes carry
+        # no cause at all. A missing cause on a degrading outcome and a foreign
+        # cause anywhere are both refused.
+        if self.degraded_because not in _PINNED_CAUSES[self.outcome]:
             raise ValueError(
-                f"`{self.degraded_because}` belongs to another outcome — evidence "
-                f"grade is the only cause that can sit on a triggered finding (§8.3)"
+                f"`{self.outcome}` cannot carry `degraded_because="
+                f"{self.degraded_because}` (§8.3 pairs each cause with exactly one outcome)"
             )
         return self
 
     @model_validator(mode="after")
-    def _degraded_and_failed_records_present_the_capped_severity(self) -> Self:
-        # §8.3 / design §7.1: all three causes route through the one shared cap,
-        # so a degraded or failed record can never present a blocking action.
-        capped = self.outcome is Outcome.evaluation_failed or self.degraded_because in (
-            DegradedBecause.requirements_unmet,
-            DegradedBecause.evidence_grade,
+    def _effective_severity_is_fixed_by_the_degradation_state(self) -> Self:
+        # §8.3 / design §7.1: one shared cap fixes effective severity in both
+        # directions. Any record carrying a cause — which for evaluation_failed
+        # is always rule_raised — presents cap_below_stop_and_review of its
+        # authored severity; a clean record presents its authored severity
+        # unchanged. Authors cannot opt out either way.
+        degraded = self.degraded_because is not None or self.outcome is Outcome.evaluation_failed
+        expected = (
+            cap_below_stop_and_review(self.authored_severity)
+            if degraded
+            else self.authored_severity
         )
-        if capped and self.effective_severity != cap_below_stop_and_review(self.authored_severity):
+        if self.effective_severity != expected:
             raise ValueError(
-                "a degraded or failed record presents the capped severity — authors "
-                "cannot opt out, and nothing blocks on degraded input (§8.3)"
+                "effective severity is fixed by §8.3: the shared cap for a "
+                "degraded or failed record, the authored severity for a clean one"
             )
         return self
 

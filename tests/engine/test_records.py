@@ -2,10 +2,11 @@
 
 The record is the unit the rest of the system builds on — the pinned review,
 the obligation ledger, zero-firing surveillance — so its shape is closed here:
-exactly six outcomes, exactly three degradation causes (§8.3), an eight-reason
-verdict vocabulary, no run-header fields (§8.4 invariant 6), a failure reason
-that exists exactly for `evaluation_failed` (§8.5), and one shared severity cap
-so degradation can never leave a hard stop blocking.
+exactly six outcomes, §8.3's cause→outcome table pinned pair by pair, an
+eight-reason verdict vocabulary, no run-header fields (§8.4 invariant 6), a
+failure reason that exists exactly for `evaluation_failed` (§8.5), and one
+shared severity cap fixing effective severity in both directions — capped for
+a degraded or failed record, authored for a clean one.
 """
 
 import pytest
@@ -26,21 +27,19 @@ from tests.conftest import make_pins
 
 # The per-outcome extras that make each of §8.2's six outcomes well-formed:
 # indeterminate degrades as requirements_unmet, evaluation_failed as rule_raised
-# carrying the exception type name only (§8.5), and both are capped below the
-# authored stop_and_review.
+# carrying the exception type name only (§8.5); effective severity is left out —
+# make_record derives it from §8.3 exactly as the model enforces it.
 WELL_FORMED_BY_OUTCOME: dict[Outcome, dict[str, object]] = {
     Outcome.triggered: {},
     Outcome.not_triggered: {},
     Outcome.indeterminate: {
         "degraded_because": DegradedBecause.requirements_unmet,
-        "effective_severity": Severity.interruptive_review,
     },
     Outcome.out_of_scope: {},
     Outcome.suppressed_by_governed_policy: {},
     Outcome.evaluation_failed: {
         "degraded_because": DegradedBecause.rule_raised,
         "failure_reason": "AmbiguousGoalOfCareError",
-        "effective_severity": Severity.interruptive_review,
         "requirement_verdicts": (),
     },
 }
@@ -53,6 +52,32 @@ VERDICTLESS_OUTCOMES = (
     Outcome.suppressed_by_governed_policy,
     Outcome.evaluation_failed,
 )
+
+# §8.3's cause→outcome table, pinned exactly: the seven combinations the SSOT
+# names are the only ones a record may carry.
+LEGAL_PAIRS: tuple[tuple[Outcome, DegradedBecause | None], ...] = (
+    (Outcome.triggered, None),
+    (Outcome.triggered, DegradedBecause.evidence_grade),
+    (Outcome.not_triggered, None),
+    (Outcome.out_of_scope, None),
+    (Outcome.suppressed_by_governed_policy, None),
+    (Outcome.indeterminate, DegradedBecause.requirements_unmet),
+    (Outcome.evaluation_failed, DegradedBecause.rule_raised),
+)
+
+# Every remaining outcome-cause combination is refused outright.
+ILLEGAL_PAIRS: tuple[tuple[Outcome, DegradedBecause | None], ...] = tuple(
+    (outcome, cause)
+    for outcome in Outcome
+    for cause in (*DegradedBecause, None)
+    if (outcome, cause) not in set(LEGAL_PAIRS)
+)
+
+# The legal pairs that degrade: a cause is carried, so the shared cap applies.
+DEGRADED_LEGAL_PAIRS = tuple(pair for pair in LEGAL_PAIRS if pair[1] is not None)
+
+# The outcomes whose only legal state is clean: no cause, authored severity.
+CLEAN_OUTCOMES = tuple(dict.fromkeys(outcome for outcome, cause in LEGAL_PAIRS if cause is None))
 
 
 def make_verdict(**overrides):
@@ -81,6 +106,15 @@ def make_record(**overrides):
         "pins": make_pins(),
     }
     fields.update(overrides)
+    if "effective_severity" not in overrides:
+        degraded = (
+            fields["degraded_because"] is not None or fields["outcome"] is Outcome.evaluation_failed
+        )
+        fields["effective_severity"] = (
+            cap_below_stop_and_review(fields["authored_severity"])
+            if degraded
+            else fields["authored_severity"]
+        )
     return EvaluationRecord(**fields)
 
 
@@ -152,28 +186,28 @@ def test_a_record_carries_its_pins_through():
     assert record.pins.snapshot_id == "SNAP-1"
 
 
-@pytest.mark.parametrize(
-    ("cause", "outcome"),
-    [
-        (DegradedBecause.requirements_unmet, Outcome.indeterminate),
-        (DegradedBecause.evidence_grade, Outcome.triggered),
-        (DegradedBecause.rule_raised, Outcome.evaluation_failed),
-    ],
-)
-def test_each_degradation_cause_is_constructible_on_its_own_outcome(cause, outcome):
-    # Arrange — §8.3 pairs each cause with exactly one outcome; a triggered
-    # finding with a graded evidence base presents the capped severity
-    overrides = dict(WELL_FORMED_BY_OUTCOME[outcome])
-    if cause is not None:
-        overrides["degraded_because"] = cause
-    if cause is DegradedBecause.evidence_grade:
-        overrides["effective_severity"] = Severity.interruptive_review
-
-    # Act
-    record = make_record(outcome=outcome, **overrides)
+@pytest.mark.parametrize(("outcome", "cause"), LEGAL_PAIRS)
+def test_a_record_carries_exactly_the_cause_the_ssot_pairs_with_its_outcome(outcome, cause):
+    # Arrange / Act — every combination §8.3's table names is constructible
+    record = make_record(
+        outcome=outcome,
+        **{**WELL_FORMED_BY_OUTCOME[outcome], "degraded_because": cause},
+    )
 
     # Assert
+    assert record.outcome is outcome
     assert record.degraded_because is cause
+
+
+@pytest.mark.parametrize(("outcome", "cause"), ILLEGAL_PAIRS)
+def test_a_record_refuses_every_cause_outcome_pair_the_ssot_table_does_not_name(outcome, cause):
+    # Arrange / Act / Assert — the table is closed in both directions: a cause
+    # missing where §8.3 requires one, or sitting on any foreign outcome, is refused
+    with pytest.raises(ValidationError):
+        make_record(
+            outcome=outcome,
+            **{**WELL_FORMED_BY_OUTCOME[outcome], "degraded_because": cause},
+        )
 
 
 @pytest.mark.parametrize(
@@ -191,49 +225,61 @@ def test_cap_below_stop_and_review_demotes_only_a_hard_stop(authored, expected):
     assert cap_below_stop_and_review(cap_below_stop_and_review(authored)) is expected
 
 
-@pytest.mark.parametrize(
-    "degraded_context",
-    [
-        {"outcome": Outcome.indeterminate, "degraded_because": DegradedBecause.requirements_unmet},
-        {"outcome": Outcome.triggered, "degraded_because": DegradedBecause.evidence_grade},
-        {
-            "outcome": Outcome.evaluation_failed,
-            "degraded_because": DegradedBecause.rule_raised,
-            "failure_reason": "AmbiguousGoalOfCareError",
-        },
-    ],
-)
+@pytest.mark.parametrize(("outcome", "cause"), DEGRADED_LEGAL_PAIRS)
 @pytest.mark.parametrize("authored", list(Severity))
-def test_a_degraded_or_failed_record_presents_the_capped_severity(
-    degraded_context,
-    authored,
+def test_a_degraded_record_presents_the_shared_cap_of_its_authored_severity(
+    outcome, cause, authored
 ):
-    # Arrange — all three §8.3 causes route through the same single cap
-    context = {**degraded_context, "authored_severity": authored}
+    # Arrange — every cause in §8.3's table routes through the one shared cap
 
     # Act
-    record = make_record(**context, effective_severity=cap_below_stop_and_review(authored))
+    record = make_record(
+        outcome=outcome,
+        **{**WELL_FORMED_BY_OUTCOME[outcome], "degraded_because": cause},
+        authored_severity=authored,
+        effective_severity=cap_below_stop_and_review(authored),
+    )
 
     # Assert — never a blocking action from a degraded or failed record
     assert record.effective_severity is cap_below_stop_and_review(authored)
 
 
-@pytest.mark.parametrize(
-    "degraded_context",
-    [
-        {"outcome": Outcome.indeterminate, "degraded_because": DegradedBecause.requirements_unmet},
-        {"outcome": Outcome.triggered, "degraded_because": DegradedBecause.evidence_grade},
-        {
-            "outcome": Outcome.evaluation_failed,
-            "degraded_because": DegradedBecause.rule_raised,
-            "failure_reason": "AmbiguousGoalOfCareError",
-        },
-    ],
-)
-def test_a_degraded_or_failed_hard_stop_presented_uncapped_is_refused(degraded_context):
+@pytest.mark.parametrize("outcome", CLEAN_OUTCOMES)
+@pytest.mark.parametrize("authored", list(Severity))
+def test_a_clean_record_presents_its_authored_severity_unchanged(outcome, authored):
+    # Arrange / Act — no degradation cause carried
+    record = make_record(
+        outcome=outcome,
+        **WELL_FORMED_BY_OUTCOME[outcome],
+        authored_severity=authored,
+        effective_severity=authored,
+    )
+
+    # Assert — without a cause there is nothing to cap: authored severity stands
+    assert record.effective_severity is authored
+
+
+@pytest.mark.parametrize(("outcome", "cause"), DEGRADED_LEGAL_PAIRS)
+def test_a_degraded_record_presenting_anything_but_the_cap_is_refused(outcome, cause):
     # Arrange / Act / Assert — §8.3: authors cannot opt out of the cap
     with pytest.raises(ValidationError):
-        make_record(**degraded_context, effective_severity=Severity.stop_and_review)
+        make_record(
+            outcome=outcome,
+            **{**WELL_FORMED_BY_OUTCOME[outcome], "degraded_because": cause},
+            effective_severity=Severity.stop_and_review,
+        )
+
+
+@pytest.mark.parametrize("outcome", CLEAN_OUTCOMES)
+def test_a_clean_record_presenting_anything_but_its_authored_severity_is_refused(outcome):
+    # Arrange / Act / Assert — the cap fixes effective severity in both
+    # directions: a clean record may not demote (or promote) itself either
+    with pytest.raises(ValidationError):
+        make_record(
+            outcome=outcome,
+            **WELL_FORMED_BY_OUTCOME[outcome],
+            effective_severity=cap_below_stop_and_review(Severity.stop_and_review),
+        )
 
 
 def test_an_evaluation_failed_record_requires_a_failure_reason():

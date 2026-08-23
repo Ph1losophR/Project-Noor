@@ -1,4 +1,4 @@
-"""The per-rule evaluator through its one entry point (SSOT SSOT §8.1-§8.3).
+"""The per-rule evaluator through its one entry point (SSOT §8.1-§8.3).
 
 Every rule considered writes exactly one record, and the tests drive all six
 outcomes through `evaluate` itself: suppression stops before scope, scope stops
