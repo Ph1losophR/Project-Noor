@@ -118,19 +118,6 @@ _FORBIDDEN_REQUIREMENT_OBSERVABLES: frozenset[str] = frozenset(
     {"visit_state", "encounter_state", "narrative"}
 )
 
-_PAYLOAD_FIELDS: tuple[str, ...] = (
-    "children",
-    "fact",
-    "literal",
-    "threshold_ref",
-    "ingredient_id",
-    "verification_status",
-    "severity",
-    "concept",
-    "minimum",
-    "maximum",
-)
-
 _FIELDS_BY_OPERATOR: Mapping[Operator, frozenset[str]] = (
     {op: frozenset({"children"}) for op in _BOOLEAN_OPERATORS}
     | {op: frozenset({"fact", "literal", "threshold_ref"}) for op in _NUMERIC_OPERATORS}
