@@ -66,6 +66,33 @@ Four scoping decisions, made 2026-08-20 and settled:
    `blocked_by` — so a rule can see *what is proposed* and never *where the
    encounter is*. Two SSOT amendments were needed and are applied (section 9.1).
 
+6. **Expression shape is one closed recursive model.** `when` and `scope` use
+   one expression tree with `all`, `any`, and `not` composition plus operator
+   leaves. The `Operator` enum and operator-specific model validators reject
+   unknown operators, fact keys, and fields. Numeric leaves carry exactly one of
+   a literal or `threshold_ref`; drug leaves carry an ingredient id; allergy
+   leaves carry verification and severity filters. This keeps the evaluator's
+   walk uniform without accepting open dictionaries.
+
+7. **Evidence grade is derived centrally.** The evaluator derives the v1 grade
+   from structured snapshot facts: an unconfirmed allergy, a medicine-manager
+   report from a cognitively impaired patient, or a Noor-derived value where the
+   requirement prefers an interfaced source. These remain `triggered` and carry
+   `degraded_because: evidence_grade`; effective severity is capped below
+   `stop_and_review`. Rules do not configure this policy independently.
+
+8. **Requirement reasons are a closed enum.** `RequirementVerdict.reason` is
+   one of `no_result`, `quality_below_minimum`, `stale`, `wrong_source`,
+   `missing_context`, `withdrawn_source`, `ambiguous_mapping`, or
+   `wrong_observable`. A separate human explanation, if needed, is derived from
+   the structured fields; machine comparisons and surveillance use the enum.
+
+9. **Conflicting patient goals refuse target selection.** If multiple active,
+   unexpired goals apply to one patient and observable, target resolution raises
+   `AmbiguousGoalOfCareError`. The per-rule record is `evaluation_failed`,
+   carries that exception type only, is capped below `stop_and_review`, and never
+   blocks. The engine never chooses by recency or scope narrowness.
+
 ## 4. Module layout
 
 Five modules under `src/noor/engine/`.
@@ -107,7 +134,7 @@ medications: tuple[SnapshotMedication, ...]      # ingredient_id + mapping_statu
 allergies: tuple[AllergyRecord, ...]             # §5.5, full record
 allergy_status: AllergyStatus                    # no_known_allergy | not_asked | recorded
 conditions: frozenset[str]                       # Noor condition concepts
-goals_of_care: tuple[GoalOfCare, ...]            # §5.6
+goals_of_care: tuple[GoalOfCare, ...]            # §5.6, full record + explicit unit
 ```
 
 Rejected observations stay in the snapshot. A requirement's `min_quality` is what
@@ -123,6 +150,28 @@ for a named ingredient makes the requirement unusable, so the rule degrades to
 `AllergyStatus` is a first-class field precisely because §5.5 rule 2 forbids
 inferring "no known allergy" from an empty `allergies` tuple. An unasked patient
 and a cleared patient are opposite facts.
+
+`AllergyRecord` and `GoalOfCare` are **full records, not projections** — the
+opposite call from `SnapshotMedication` and `RequestedAction`, and for a stated
+reason: their models are settled in §5.5 and §5.6, whereas medication identity
+(§3.2) and planned-action encounter state (§11.6) are deferred or off-limits, so
+those two are projected and these two are not. `AllergyRecord` carries the whole
+§5.5 shape — `culprit` (`ingredient_id`, optional `atc`, optional `source_display`),
+`reaction`, `reaction_type`, `severity`, `onset`, `verification_status`,
+`evidence_source`, `recorder`, `recorded_at`. The evaluator reads `culprit.ingredient_id`,
+`verification_status`, and `severity`; the rest carries the finding's clinical
+substance into the card §8.3 already specifies ("Reported anaphylaxis to this
+ingredient — 2019, patient-reported, unverified" names reaction, onset, and
+evidence source), and `reaction_type` is present because §5.5 rule 3 lets a rule
+distinguish a true hypersensitivity from an intolerance. Its closed enums —
+`VerificationStatus`, `AllergySeverity`, `ReactionType`, `EvidenceSource` — live in
+`snapshot.py` and are the single source the allergy operator (section 5.2) filters
+on. `GoalOfCare` is the full §5.6 record with an explicit `unit` (§9.1 amendment 4):
+`observable`, `value`, `unit`, `op`, `reason`, `clinician_id`, `effective_date`,
+`expires_at`. The evaluator reads `observable`, `value`, `unit`, and the validity
+window; `op`, `reason`, and `clinician_id` ride for the card's named accountability
+and conflict display (§6.1) and are never used in the comparison. There is no goal
+`status` field — active means the timestamp lies in `[effective_date, expires_at)`.
 
 `RequestedAction` is a **two-field projection** of §11.6's `planned_action`:
 `kind` (`medication_start | medication_stop | medication_dose_change | lab_order |
@@ -163,7 +212,11 @@ objection answerable by the build rather than by assurance. Version 1:
   exactly as it governs `drug_active`; at v1 that is `ingredient`
 - An allergy predicate carrying `verification_status` and `severity`, so §10.4
   gate 16 has a shape to check at step 5
-- Scope predicates: condition membership, age bounds, boolean patient attributes
+- Scope predicates: condition membership and age bounds. A boolean patient state
+  (`on_dialysis`, a pregnancy flag) is a **condition concept**, matched by the
+  condition predicate against `Snapshot.conditions` — there is no free
+  boolean-attribute field, which keeps the snapshot closed (§4.2). §7.1's scope
+  example reads `{condition: on_dialysis}` for exactly this reason.
 
 `Requirement.observable` holds a **snapshot fact key**, not only a canon
 observable id. §7.1's own example writes `- observable: active_medications`
@@ -173,7 +226,11 @@ where the fact resolves to an observation.
 
 Single-rule §10.4 gates land as model validators here, which is what makes §8.4
 invariants 2, 3, and 4 testable at step 4 — they are load-time refusals, not
-evaluator behaviour. Cross-file gates stay step 5's.
+evaluator behaviour. Cross-file gates stay step 5's. One more validator lives
+here and is medically load-bearing: **every observable a numeric leaf compares is
+declared in `requires`** (§7.1), so no threshold is ever compared against a value
+of undeclared age or grade. Drug, allergy, condition, and age leaves read
+always-present snapshot collections and need no such declaration.
 
 ### 5.3 `EvaluationContext` (§7.3, §10.5)
 
@@ -185,6 +242,12 @@ The pinned release: rules, thresholds keyed by `ref`, the tenant profile, and th
 (`unpopulated | populated | clinician_approved`), the full citation, and
 `fallback_from`. Invariant 3 — no rule loads referencing an `unpopulated`
 threshold — is a context-construction validator.
+
+`RequirementVerdict.reason` is a closed machine enum: `no_result`,
+`quality_below_minimum`, `stale`, `wrong_source`, `missing_context`,
+`withdrawn_source`, `ambiguous_mapping`, or `wrong_observable`. A human-facing
+explanation is derived from the structured verdict fields rather than replacing
+the machine reason.
 
 **No trigger field.** §8.1: a rule cannot ask which trigger invoked it, or
 invariant 5 would not hold. The absence is structural, not conventional.
@@ -272,6 +335,21 @@ accountability; a card showing a frail patient's 150 target without saying whose
 decision that was is worse than showing the guideline number. The engine never
 deduces a goal of care from past readings.
 
+**Units must be commensurable, and the engine never coerces.** The goal's `unit`
+(§5.6, amendment 4), the threshold's unit, and the observation's canonical unit
+must be the same UCUM string before any comparison. A goal or threshold stated in
+a unit other than the observable's canonical unit is a load-time refusal — canon
+already resolved the observation to one canonical unit (§6.3), and the evaluator
+compares numbers in that unit only. It never rescales a target the way canon
+rescales a reading; a mismatched target is an authoring error, not a conversion
+the engine performs silently.
+
+If more than one active, unexpired goal applies to the same patient and
+observable, resolution raises `AmbiguousGoalOfCareError`. The affected rule is
+recorded as `evaluation_failed`, with only the exception type in
+`failure_reason`, and is capped below `stop_and_review`; the engine never picks a
+goal by recency or narrowness.
+
 ## 7. Degradation and failure
 
 ### 7.1 Degradation (§8.3) — three causes, three records
@@ -287,6 +365,14 @@ An unconfirmed allergy is data Noor has, graded — reporting "cannot assess
 safely" about a finding the engine did in fact reach is the more dangerous
 falsehood, because it reads as a defect and invites a clinician to substitute
 judgment for a finding Noor is holding.
+
+**The cap is one function, applied once.** "Capped below `stop_and_review`" means:
+`effective = interruptive_review if authored == stop_and_review else authored`.
+It never raises a `passive_task` to `interruptive_review`, and it is idempotent —
+`requirements_unmet` (which caps a `stop_and_review` to `interruptive_review`),
+`evidence_grade`, and `rule_raised` all route through the same function, so a
+record carries exactly one `degraded_because` and one deterministic
+`effective_severity`. Two degradation causes never stack a double demotion.
 
 Authors cannot opt out. A `stop_and_review` rule whose requirements are unmet
 degrades and never blocks.
@@ -396,12 +482,15 @@ condition did not hold. No new outcome semantics are needed, and the withdrawn
 version would have suppressed the discontinuation advice of a continuation rule
 whose finding was real.
 
-### 9.1 Two SSOT amendments, applied 2026-08-20
+### 9.1 SSOT amendments
 
-Neither invariant is named in §0's list, but §8.4 states that invariant 10 is what
-keeps §11 outside the device boundary, and §0 protects the device boundary's data
-contract (§4.2). Both were therefore treated as protected, put to the user with
-exact wording, and approved before being written.
+Amendments (1) and (2) touch §8.4 invariants. Neither invariant is named in §0's
+list, but §8.4 states that invariant 10 is what keeps §11 outside the device
+boundary, and §0 protects the device boundary's data contract (§4.2). Both were
+therefore treated as protected, put to the user with exact wording, and approved
+before being written. Amendments (3)–(6) were made under the same standing
+approval to upgrade the SSOT where it improves the project medically; each is
+recorded here for the governance PR's audit trail.
 
 **(1) §8.4 invariant 10 — permit the projection.** Added, nothing removed. Visit
 state, trigger, workflow step, and narrative remain unreadable:
@@ -429,6 +518,32 @@ into the `Snapshot`, was rejected: §11.6 assigns the list to the encounter and
 line now carries a comment pointing to `{drug_requested: metformin}` for the
 start-contraindication case, so authors find the operator where they will look for
 it.
+
+**(4) §5.6 — `unit` is required on a goal of care.** The goal's target `value`
+now states its unit explicitly (`target_threshold: {value: 150, op: lt, unit: mmHg}`),
+and §5.6 gains a paragraph making it required and defining goal activity by the
+`[effective_date, expires_at)` window — no `status` flag, an early revocation
+shortens `expires_at`. Without a unit the engine would compare a number against a
+canonical observation of a possibly different unit; the commensurability guard
+(section 6.1) has nothing to check. Medically load-bearing: a 150 target silently
+read as mmol/L instead of mmHg is a wrong-target card.
+
+**(5) §7.1 — every numerically-compared observable is declared in `requires`.**
+Added a paragraph: a numeric `when` leaf naming an observable absent from the
+rule's `requires` manifest is a load failure, and at evaluation the engine reads
+only requirement-validated values. This closes an undefined behaviour — a `when`
+fact with no backing requirement had no freshness or quality gate — and makes the
+freshness/quality gate non-optional. Drug, allergy, condition, and age predicates
+read always-present collections and are exempt, save that `allergy_status:
+not_asked` is `indeterminate` (§5.5).
+
+**(6) §7.1 scope and §11.6 — additive clarifications.** §7.1's scope `exclude`
+example now reads `{condition: on_dialysis}` rather than `{on_dialysis: true}`: a
+boolean patient state is a condition concept, because the closed snapshot (§4.2)
+has no free attribute space. §11.6's `blocked_by` comment now states it is derived
+by `app/` from the triggered `stop_and_review` records — the pure engine returns
+records and writes no encounter state. Neither changes a contract; both remove a
+reading that would have implied one.
 
 If any of these is wrong, correct it before the implementation plan is written.
 
