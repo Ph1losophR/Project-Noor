@@ -1,7 +1,7 @@
 """Shared builders and fixtures (docs/testing-standards.md: factories live here)."""
 
 import os
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, date, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -33,6 +33,34 @@ from noor.canon.registry import (
     ObservableRegistry,
 )
 from noor.catalogue.registry_loader import load_registry
+from noor.engine.content import (
+    ENGINE_VERSION,
+    CatalogueRelease,
+    Citation,
+    EvaluationContext,
+    Pins,
+    Profile,
+    RuleDisablement,
+    Threshold,
+    ThresholdStatus,
+)
+from noor.engine.rules import (
+    ClinicalApprover,
+    DrugScopeLevel,
+    Expression,
+    Governance,
+    Monitor,
+    NamedClinician,
+    OnUnusable,
+    Operator,
+    OrderBlock,
+    ReleaseStatus,
+    Requirement,
+    Rule,
+    Scope,
+    Severity,
+    Then,
+)
 from noor.engine.snapshot import (
     AllergyOnset,
     AllergyRecord,
@@ -250,3 +278,191 @@ def make_snapshot(**overrides: Any) -> Snapshot:
     }
     fields.update(overrides)
     return Snapshot(**fields)
+
+
+def make_requirement(**overrides: Any) -> Requirement:
+    """The §7.1 eGFR requirement; override anything."""
+    fields: dict[str, Any] = {
+        "observable": "egfr",
+        "accepted_status": (SourceStatus.final, SourceStatus.corrected),
+        "min_quality": QualityState.accepted,
+        "max_age_days": 90,
+        "prefer_source": (EntryMode.interfaced, EntryMode.staff_transcribed),
+        "required_context": ("ckd_chronicity_confirmed",),
+        "on_unusable": OnUnusable.indeterminate,
+        "renal_metric": "egfr",
+    }
+    fields.update(overrides)
+    return Requirement(**fields)
+
+
+def make_then(**overrides: Any) -> Then:
+    """A hard stop's `then` without blocks; pass blocks where one is meant."""
+    fields: dict[str, Any] = {
+        "blocks": None,
+        "meaning": "Metformin is contraindicated below this eGFR.",
+        "action": "Discontinue metformin and select an alternative agent.",
+        "uncertainty": "Based on a single eGFR. Confirm CKD chronicity before acting.",
+    }
+    fields.update(overrides)
+    return Then(**fields)
+
+
+def make_governance(**overrides: Any) -> Governance:
+    """Complete §7.1(d) governance; override anything (pass None to omit)."""
+    fields: dict[str, Any] = {
+        "clinical_owner": NamedClinician(name="Dr. Owner", credential="Internal Medicine"),
+        "clinical_approver": ClinicalApprover(
+            name="Dr. Approver", credential="Endocrinology", approved_at=date(2026, 8, 1)
+        ),
+        "role_doubling": False,
+        "effective_from": date(2026, 9, 1),
+        "next_review": date(2027, 9, 1),
+        "change_rationale": "Initial approval against the 2022 ADA/KDIGO consensus.",
+    }
+    fields.update(overrides)
+    return Governance(**fields)
+
+
+def make_rule(**overrides: Any) -> Rule:
+    """The §7.1 metformin hard stop, reduced to the smallest complete rule."""
+    fields: dict[str, Any] = {
+        "id": "metformin-egfr-contraindicated",
+        "version": "1.0.0",
+        "release_status": ReleaseStatus.active,
+        "category": "drug_safety",
+        "severity": Severity.stop_and_review,
+        "scope": Scope(),
+        "drug_scope_level": DrugScopeLevel.ingredient,
+        "requires": (make_requirement(),),
+        "monitors": (
+            Monitor(
+                observable="egfr",
+                due_in_days=90,
+                reason="renal function after a metformin decision",
+            ),
+        ),
+        "when": Expression(
+            op=Operator.all,
+            children=(
+                Expression(
+                    op=Operator.lt,
+                    fact="egfr",
+                    threshold_ref="metformin.egfr_absolute_contraindication",
+                ),
+                Expression(op=Operator.drug_active, ingredient_id="metformin"),
+            ),
+        ),
+        "then": make_then(blocks=OrderBlock(order_of="metformin")),
+        "governance": make_governance(),
+    }
+    fields.update(overrides)
+    return Rule(**fields)
+
+
+def make_citation(**overrides: Any) -> Citation:
+    """The §7.3 citation of the ADA/KDIGO consensus report; override anything."""
+    fields: dict[str, Any] = {
+        "organisation": "ADA / KDIGO",
+        "document": "Consensus Report on Diabetes Management in CKD",
+        "version": "2022",
+        "locator": "Metformin recommendations",
+        "jurisdiction": "international",
+        "evidence_grade": "consensus",
+        "review_date": date(2027, 1, 1),
+    }
+    fields.update(overrides)
+    return Citation(**fields)
+
+
+def make_threshold(**overrides: Any) -> Threshold:
+    """The §7.3 metformin eGFR contraindication threshold, clinician-approved."""
+    fields: dict[str, Any] = {
+        "ref": "metformin.egfr_absolute_contraindication",
+        "value": Decimal("30"),
+        "unit": "mL/min/{1.73_m2}",
+        "source_family": "ada-kdigo",
+        "citation": make_citation(),
+        "status": ThresholdStatus.clinician_approved,
+        "fallback_from": None,
+        "approved_by": "Dr. Approver",
+        "approved_at": date(2026, 8, 1),
+    }
+    fields.update(overrides)
+    return Threshold(**fields)
+
+
+def make_disablement(**overrides: Any) -> RuleDisablement:
+    """A governed disablement with its named accountability (§10.5)."""
+    fields: dict[str, Any] = {
+        "rule_id": "foot-screening-annual",
+        "reason": "Screening already delivered by the provider's own programme",
+        "requested_by": "Dr. Requester",
+        "approved_by": "Dr. Owner",
+    }
+    fields.update(overrides)
+    return RuleDisablement(**fields)
+
+
+def make_profile(**overrides: Any) -> Profile:
+    """The Riyadh home-healthcare profile, pinned to the ada-kdigo family (§10.5)."""
+    fields: dict[str, Any] = {
+        "name": "riyadh-hh",
+        "version": "3",
+        "source_family": "ada-kdigo",
+        "disablements": (),
+    }
+    fields.update(overrides)
+    return Profile(**fields)
+
+
+def make_pins(**overrides: Any) -> Pins:
+    """The §8.2 pins at release level; snapshot_id is stamped per record later."""
+    fields: dict[str, Any] = {
+        "catalogue_release": "rel-2026-09-01",
+        "profile": "riyadh-hh@3",
+        "source_family": "ada-kdigo",
+        "snapshot_id": None,
+        "engine_version": ENGINE_VERSION,
+        "terminology_version": "term-2026-06-01",
+    }
+    fields.update(overrides)
+    return Pins(**fields)
+
+
+def make_registry(*entries: ObservableEntry) -> ObservableRegistry:
+    """A registry from synthetic entries, keyed by each entry's observable."""
+    return ObservableRegistry(entries={entry.observable: entry for entry in entries})
+
+
+def make_release(**overrides: Any) -> CatalogueRelease:
+    """A release holding the metformin hard stop and its §7.3 threshold."""
+    fields: dict[str, Any] = {
+        "release_id": "rel-2026-09-01",
+        "rules": (make_rule(),),
+        "thresholds": (make_threshold(),),
+        "profile": make_profile(),
+    }
+    fields.update(overrides)
+    return CatalogueRelease(**fields)
+
+
+def make_context(**overrides: Any) -> EvaluationContext:
+    """The evaluation context binding the release to a synthetic egfr registry.
+
+    The registry entry carries egfr's canonical UCUM unit, so the default
+    release loads whole and tests vary one piece at a time.
+    """
+    fields: dict[str, Any] = {
+        "release": make_release(),
+        "registry": make_registry(
+            make_entry(
+                observable="egfr",
+                canonical_ucum="mL/min/{1.73_m2}",
+                accepted_units=["mL/min/{1.73_m2}"],
+            )
+        ),
+        "pins": make_pins(),
+    }
+    fields.update(overrides)
+    return EvaluationContext(**fields)
