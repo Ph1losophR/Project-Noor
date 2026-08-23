@@ -228,10 +228,16 @@ class Expression(NoorModel):
             raise ValueError("an age predicate bounds at least one side of the range")
 
 
-def _walk(node: Expression) -> Iterator[Expression]:
+def walk_expression(node: Expression) -> Iterator[Expression]:
+    """Yield the node and every descendant, depth-first (§4.3.1).
+
+    Public because more than one module walks a rule's tree: content validates
+    threshold pairings with it, and the loader gates use it to see through
+    boolean composition.
+    """
     yield node
     for child in node.children:
-        yield from _walk(child)
+        yield from walk_expression(child)
 
 
 class Scope(NoorModel):
@@ -248,7 +254,7 @@ class Scope(NoorModel):
     @model_validator(mode="after")
     def _scope_reads_patient_state_only(self) -> Self:
         for predicate in (*self.include, *self.exclude):
-            for node in _walk(predicate):
+            for node in walk_expression(predicate):
                 if node.op not in _PATIENT_STATE_OPERATORS:
                     raise ValueError(
                         f"scope predicates read patient state only; `{node.op}` compares "
@@ -377,7 +383,7 @@ class Rule(NoorModel):
 
     @model_validator(mode="after")
     def _drug_references_declare_their_scope_level(self) -> Self:
-        for node in _walk(self.when):
+        for node in walk_expression(self.when):
             if (
                 node.op in _DRUG_OPERATORS
                 and self.drug_scope_level is not DrugScopeLevel.ingredient
@@ -391,7 +397,7 @@ class Rule(NoorModel):
     @model_validator(mode="after")
     def _every_compared_observable_is_declared_in_requires(self) -> Self:
         declared = {requirement.observable for requirement in self.requires}
-        for node in _walk(self.when):
+        for node in walk_expression(self.when):
             if node.op in _NUMERIC_OPERATORS and node.fact not in declared:
                 raise ValueError(
                     f"`{node.fact}` is compared numerically but absent from requires — a "

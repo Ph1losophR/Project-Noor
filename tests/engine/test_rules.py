@@ -13,105 +13,18 @@ from decimal import Decimal
 import pytest
 from pydantic import ValidationError
 
-from noor.canon.models import EntryMode, QualityState, SourceStatus
 from noor.engine.rules import (
-    ClinicalApprover,
     DrugScopeLevel,
     Expression,
-    Governance,
-    Monitor,
-    NamedClinician,
     OnUnusable,
     Operator,
     OrderBlock,
     ReleaseStatus,
-    Requirement,
-    Rule,
     Scope,
     Severity,
-    Then,
 )
 from noor.engine.snapshot import AllergySeverity, VerificationStatus
-
-
-def make_requirement(**overrides):
-    """The §7.1 eGFR requirement; override anything."""
-    fields = {
-        "observable": "egfr",
-        "accepted_status": (SourceStatus.final, SourceStatus.corrected),
-        "min_quality": QualityState.accepted,
-        "max_age_days": 90,
-        "prefer_source": (EntryMode.interfaced, EntryMode.staff_transcribed),
-        "required_context": ("ckd_chronicity_confirmed",),
-        "on_unusable": OnUnusable.indeterminate,
-        "renal_metric": "egfr",
-    }
-    fields.update(overrides)
-    return Requirement(**fields)
-
-
-def make_then(**overrides):
-    """A hard stop's `then` without blocks; pass blocks where one is meant."""
-    fields = {
-        "blocks": None,
-        "meaning": "Metformin is contraindicated below this eGFR.",
-        "action": "Discontinue metformin and select an alternative agent.",
-        "uncertainty": "Based on a single eGFR. Confirm CKD chronicity before acting.",
-    }
-    fields.update(overrides)
-    return Then(**fields)
-
-
-def make_governance(**overrides):
-    """Complete §7.1(d) governance; override anything (pass None to omit)."""
-    fields = {
-        "clinical_owner": NamedClinician(name="Dr. Owner", credential="Internal Medicine"),
-        "clinical_approver": ClinicalApprover(
-            name="Dr. Approver", credential="Endocrinology", approved_at=date(2026, 8, 1)
-        ),
-        "role_doubling": False,
-        "effective_from": date(2026, 9, 1),
-        "next_review": date(2027, 9, 1),
-        "change_rationale": "Initial approval against the 2022 ADA/KDIGO consensus.",
-    }
-    fields.update(overrides)
-    return Governance(**fields)
-
-
-def make_rule(**overrides):
-    """The §7.1 metformin hard stop, reduced to the smallest complete rule."""
-    fields = {
-        "id": "metformin-egfr-contraindicated",
-        "version": "1.0.0",
-        "release_status": ReleaseStatus.active,
-        "category": "drug_safety",
-        "severity": Severity.stop_and_review,
-        "scope": Scope(),
-        "drug_scope_level": DrugScopeLevel.ingredient,
-        "requires": (make_requirement(),),
-        "monitors": (
-            Monitor(
-                observable="egfr",
-                due_in_days=90,
-                reason="renal function after a metformin decision",
-            ),
-        ),
-        "when": Expression(
-            op=Operator.all,
-            children=(
-                Expression(
-                    op=Operator.lt,
-                    fact="egfr",
-                    threshold_ref="metformin.egfr_absolute_contraindication",
-                ),
-                Expression(op=Operator.drug_active, ingredient_id="metformin"),
-            ),
-        ),
-        "then": make_then(blocks=OrderBlock(order_of="metformin")),
-        "governance": make_governance(),
-    }
-    fields.update(overrides)
-    return Rule(**fields)
+from tests.conftest import make_governance, make_requirement, make_rule, make_then
 
 
 @pytest.mark.parametrize(

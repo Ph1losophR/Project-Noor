@@ -20,7 +20,7 @@ from pydantic import Field, PrivateAttr, model_validator
 
 from noor.canon.models import NoorModel
 from noor.canon.registry import ObservableRegistry, UnknownObservableError
-from noor.engine.rules import Rule, Severity, _walk
+from noor.engine.rules import Rule, Severity, walk_expression
 from noor.engine.snapshot import Snapshot
 
 ENGINE_VERSION = "0.1.0"
@@ -248,7 +248,7 @@ class EvaluationContext(NoorModel):
     def _every_referenced_threshold_exists_populated_and_commensurable(self) -> Self:
         thresholds = {threshold.ref: threshold for threshold in self.release.thresholds}
         for rule in self.release.rules:
-            for node in _walk(rule.when):
+            for node in walk_expression(rule.when):
                 # A threshold_ref rides only on numeric leaves, and a numeric leaf
                 # always names its fact; every other node carries no pairing.
                 if node.threshold_ref is None or node.fact is None:
