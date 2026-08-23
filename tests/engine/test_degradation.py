@@ -16,9 +16,11 @@ from noor.engine.evaluate import evaluate
 from noor.engine.records import DegradedBecause, Outcome, RequirementReason, RequirementVerdictValue
 from noor.engine.rules import Expression, Operator, Severity
 from noor.engine.snapshot import (
+    ActionKind,
     AllergySeverity,
     AllergyStatus,
     CulpritSubstance,
+    RequestedAction,
     VerificationStatus,
 )
 from tests.conftest import (
@@ -197,6 +199,53 @@ def test_claim_48_the_same_input_absent_leaves_the_question_indeterminate(case):
     # Assert — absence degrades as requirements_unmet, never as evidence_grade
     assert record.outcome is Outcome.indeterminate
     assert record.degraded_because is DegradedBecause.requirements_unmet
+
+
+def test_a_noor_derived_value_is_not_graded_when_interfaced_is_not_preferred():
+    # Arrange — §5.7: the substitution grade keys on interfaced ∈ prefer_source
+    rule = hyperkalemia_hard_stop(prefer_source=(EntryMode.noor_derived,))
+
+    # Act
+    record = evaluate_one(rule, noor_derived_potassium())
+
+    # Assert — an expected derivation, not a substitute: full authored severity
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is None
+    assert record.effective_severity is Severity.stop_and_review
+
+
+def test_a_graded_child_inside_a_boolean_parent_propagates_its_grade():
+    # Arrange — a start guard whose allergy arm matches hearsay data
+    rule = make_rule(
+        id="metformin-start-guard",
+        requires=(),
+        monitors=(),
+        when=Expression(
+            op=Operator.all,
+            children=(
+                Expression(op=Operator.drug_requested, ingredient_id="metformin"),
+                CONFIRMED_SEVERE_PENICILLIN,
+            ),
+        ),
+        then=make_then(blocks=None),
+    )
+    unverified = make_allergy(
+        culprit=CulpritSubstance(ingredient_id="penicillin"),
+        verification_status=VerificationStatus.unconfirmed,
+    )
+    actions = (RequestedAction(kind=ActionKind.medication_start, subject="metformin"),)
+
+    # Act
+    context = make_context(release=make_release(rules=(rule,)))
+    records = evaluate(context, make_snapshot(allergies=(unverified,)), actions)
+
+    # Assert — the graded child caps the composed finding; no double demotion
+    assert len(records) == 1
+    record = records[0]
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is DegradedBecause.evidence_grade
+    assert record.effective_severity is Severity.interruptive_review
+    assert record.authored_severity is Severity.stop_and_review
 
 
 def test_the_cap_is_single_a_graded_passive_task_stays_passive_task():

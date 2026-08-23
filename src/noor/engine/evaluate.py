@@ -301,8 +301,13 @@ def _allergy(node: Expression, snapshot: Snapshot) -> tuple[bool, bool]:
         if record.culprit.ingredient_id == node.ingredient_id
         and record.verification_status not in _NEVER_SURFACING
     ]
-    if any(_leaf_satisfied(record, node) for record in surfaced):
-        return True, False
+    satisfying = [record for record in surfaced if _leaf_satisfied(record, node)]
+    if satisfying:
+        # §5.5 table: an unconfirmed record grades its finding whatever filters
+        # the leaf declares; only a confirmed match answers cleanly.
+        return True, any(
+            record.verification_status is not VerificationStatus.confirmed for record in satisfying
+        )
     # Whatever surfaces but fails the leaf's filters is present data of lower grade.
     return bool(surfaced), bool(surfaced)
 

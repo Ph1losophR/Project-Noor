@@ -662,10 +662,10 @@ def test_a_severity_below_the_leaf_filter_surfaces_graded():
     assert record.degraded_because is DegradedBecause.evidence_grade
 
 
-def test_a_filterless_leaf_takes_any_surfacing_record_as_satisfying_it():
-    # Arrange — no filters means any surfaced record satisfies the leaf cleanly;
-    # grading keys on filters the record fails, not on verification alone
-    rule = allergy_rule()
+def test_an_unconfirmed_record_grades_a_filterless_leaf_unconditionally():
+    # Arrange — §5.5 table: unconfirmed grades the finding whatever filters the
+    # leaf declares (here none); a hard stop proves the cap
+    rule = allergy_rule(severity=Severity.stop_and_review)
     unverified = make_allergy(
         culprit=CulpritSubstance(ingredient_id="penicillin"),
         verification_status=VerificationStatus.unconfirmed,
@@ -674,9 +674,24 @@ def test_a_filterless_leaf_takes_any_surfacing_record_as_satisfying_it():
     # Act
     record = evaluate_one(rule, allergy_snapshot(allergies=(unverified,)))
 
-    # Assert
+    # Assert — the grade attaches to the data, not to a failed filter
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is DegradedBecause.evidence_grade
+    assert record.effective_severity is Severity.interruptive_review
+    assert record.authored_severity is Severity.stop_and_review
+
+
+def test_a_confirmed_record_satisfies_a_filterless_leaf_cleanly():
+    # Arrange — the negative control: same leaf, verified record
+    rule = allergy_rule(severity=Severity.stop_and_review)
+
+    # Act — allergy_snapshot() is a confirmed severe penicillin allergy
+    record = evaluate_one(rule, allergy_snapshot())
+
+    # Assert — clean finding at full authored severity, nothing graded
     assert record.outcome is Outcome.triggered
     assert record.degraded_because is None
+    assert record.effective_severity is Severity.stop_and_review
 
 
 @pytest.mark.parametrize(
