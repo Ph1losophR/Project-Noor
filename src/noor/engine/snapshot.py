@@ -10,9 +10,9 @@ enters as data too: `evaluated_at` is an explicit input, never a clock read.
 from datetime import UTC, datetime
 from decimal import Decimal
 from enum import StrEnum
-from typing import Self
+from typing import Literal, Self
 
-from pydantic import AwareDatetime, field_validator, model_validator
+from pydantic import AwareDatetime, Field, field_validator, model_validator
 
 from noor.canon.models import CanonicalObservation, MappingStatus, NoorModel
 
@@ -142,7 +142,7 @@ class SnapshotMedication(NoorModel):
     requested action against it is a finding, not a construction refusal.
     """
 
-    ingredient_id: str
+    ingredient_id: str = Field(min_length=1)
     mapping_status: MappingStatus
 
 
@@ -153,13 +153,14 @@ class GoalOfCare(NoorModel):
     evaluation timestamp falls in `[effective_date, expires_at)`, and early
     revocation shortens `expires_at`. `op`, `reason`, and `clinician_id` carry
     meaning and accountability into the card; the numeric comparison operator
-    belongs to the rule (§7.1).
+    belongs to the rule (§7.1). The `op` field is constrained to the comparator
+    vocabulary for accountability and to prevent silent inversion.
     """
 
     observable: str
     value: Decimal
     unit: str
-    op: str
+    op: Literal["lt", "le", "gt", "ge", "eq", "ne"]
     reason: str
     clinician_id: str
     effective_date: AwareDatetime
@@ -184,10 +185,10 @@ class Snapshot(NoorModel):
     hiding them would hide a data-quality finding (§8.3).
     """
 
-    snapshot_id: str
+    snapshot_id: str = Field(min_length=1)
     evaluated_at: AwareDatetime
-    patient_id: str
-    age_years: int
+    patient_id: str = Field(min_length=1)
+    age_years: int = Field(ge=0)
     observations: tuple[CanonicalObservation, ...] = ()
     medications: tuple[SnapshotMedication, ...] = ()
     allergies: tuple[AllergyRecord, ...] = ()
@@ -199,3 +200,16 @@ class Snapshot(NoorModel):
     @classmethod
     def _normalise_to_utc(cls, value: datetime) -> datetime:
         return value.astimezone(UTC)
+
+    @model_validator(mode="after")
+    def _allergy_status_consistent_with_allergies(self) -> Self:
+        """§5.5 rule 2: no_known_allergy and recorded allergies are opposite facts."""
+        if self.allergy_status is AllergyStatus.no_known_allergy and self.allergies:
+            raise ValueError(
+                "allergy_status=no_known_allergy contradicts non-empty allergies list (§5.5 rule 2)"
+            )
+        if self.allergy_status is AllergyStatus.recorded and not self.allergies:
+            raise ValueError(
+                "allergy_status=recorded requires at least one allergy record (§5.5 rule 2)"
+            )
+        return self

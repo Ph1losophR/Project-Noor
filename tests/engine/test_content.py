@@ -20,6 +20,7 @@ from noor.engine.content import (
     ENGINE_VERSION,
     AmbiguousGoalOfCareError,
     FallbackFrom,
+    ForeignGoalUnitError,
     ResolvedTarget,
     ThresholdStatus,
 )
@@ -29,9 +30,11 @@ from tests.conftest import (
     make_citation,
     make_context,
     make_disablement,
+    make_entry,
     make_goal,
     make_pins,
     make_profile,
+    make_registry,
     make_release,
     make_requirement,
     make_rule,
@@ -150,6 +153,17 @@ def test_disabling_a_hard_stop_is_refused():
         make_release(profile=make_profile(disablements=(disablement,)))
 
 
+def test_duplicate_rule_ids_are_refused():
+    # Arrange — rule_id is the release's lookup key; two rules with the same id
+    # would make evaluation order-dependent (§8.4 invariant 5)
+    rule1 = make_rule(id="dup-rule")
+    rule2 = make_rule(id="dup-rule", version="2.0.0")
+
+    # Act / Assert
+    with pytest.raises(ValidationError):
+        make_release(rules=(rule1, rule2))
+
+
 def test_disabling_a_soft_rule_carries_named_accountability():
     # Arrange — §10.5: every governed disablement records its reason, requester,
     # and clinical-owner approval; below a hard stop one may stand
@@ -181,7 +195,21 @@ def test_a_context_binds_the_release_registry_and_pins():
     )
 
     # Act
-    context = make_context(release=make_release(rules=(literal_rule,)))
+    context = make_context(
+        release=make_release(rules=(literal_rule,)),
+        registry=make_registry(
+            make_entry(
+                observable="egfr",
+                canonical_ucum="mL/min/{1.73_m2}",
+                accepted_units=["mL/min/{1.73_m2}"],
+            ),
+            make_entry(
+                observable="systolic_bp",
+                canonical_ucum="mmHg",
+                accepted_units=["mmHg"],
+            ),
+        ),
+    )
 
     # Assert
     assert context.release.release_id == "rel-2026-09-01"
@@ -255,6 +283,64 @@ def test_a_comparison_against_a_fact_outside_the_registry_is_refused():
     # Act / Assert
     with pytest.raises(ValidationError):
         make_context(release=make_release(rules=(rule,), thresholds=thresholds))
+
+
+def test_a_literal_comparison_against_unknown_observable_is_refused():
+    # Arrange — literal leaves also validate the fact against the registry
+    rule = make_rule(
+        requires=(make_requirement(observable="unknown_fact"),),
+        when=Expression(op=Operator.gt, fact="unknown_fact", literal=Decimal("10")),
+    )
+
+    # Act / Assert
+    with pytest.raises(ValidationError, match="is not a governed observable"):
+        make_context(release=make_release(rules=(rule,)))
+
+
+def test_threshold_ref_against_unknown_observable_hits_validate_pairing():
+    # Arrange — threshold_ref leaf with unknown fact hits _validate_pairing
+    rule = make_rule(
+        requires=(make_requirement(observable="missing_fact"),),
+        when=Expression(op=Operator.gt, fact="missing_fact", threshold_ref="missing.ref"),
+    )
+    thresholds = (make_threshold(ref="missing.ref", value=Decimal("10"), unit="mmol/L"),)
+
+    # Act / Assert — this exercises the except UnknownObservableError in _validate_pairing
+    with pytest.raises(ValidationError, match="is not a governed observable"):
+        make_context(release=make_release(rules=(rule,), thresholds=thresholds))
+
+
+def test_validate_pairing_unknown_observable_directly():
+    # Arrange — directly test _validate_pairing's UnknownObservableError branch
+    from datetime import date
+    from decimal import Decimal
+
+    from noor.canon.registry import ObservableRegistry
+    from noor.engine.content import Citation, Threshold, ThresholdStatus, _validate_pairing
+
+    thresholds = {
+        "test.ref": Threshold(
+            ref="test.ref",
+            value=Decimal("10"),
+            unit="mmol/L",
+            source_family="test",
+            citation=Citation(
+                organisation="Test",
+                document="Test",
+                version="1",
+                locator="Test",
+                jurisdiction="Test",
+                evidence_grade="Test",
+                review_date=date(2026, 1, 1),
+            ),
+            status=ThresholdStatus.populated,
+        )
+    }
+    registry = ObservableRegistry(entries={})
+
+    # Act / Assert
+    with pytest.raises(ValueError, match="is not a governed observable"):
+        _validate_pairing(thresholds, registry, "unknown_fact", "test.ref")
 
 
 def test_a_context_whose_thresholds_span_two_source_families_is_refused():
@@ -345,8 +431,8 @@ def test_a_goal_in_a_foreign_unit_is_refused():
     # the engine compares targets in one unit and never rescales (design §6.1)
     goal = make_goal(observable="egfr", value=Decimal("25"), unit="mL/min")
 
-    # Act / Assert
-    with pytest.raises(ValueError):
+    # Act / Assert — raises ForeignGoalUnitError (named exception for data fault)
+    with pytest.raises(ForeignGoalUnitError):
         make_context().resolve_threshold(make_snapshot(goals_of_care=(goal,)), "egfr", EGFR_REF)
 
 

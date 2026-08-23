@@ -143,6 +143,7 @@ def test_the_degradation_vocabulary_holds_exactly_the_three_ssot_causes():
 def test_the_requirement_reason_vocabulary_holds_exactly_the_eight_ssot_members():
     # Arrange / Act / Assert — §8.2's closed machine vocabulary for verdicts
     assert tuple(reason.value for reason in RequirementReason) == (
+        "met",
         "no_result",
         "quality_below_minimum",
         "stale",
@@ -150,7 +151,6 @@ def test_the_requirement_reason_vocabulary_holds_exactly_the_eight_ssot_members(
         "missing_context",
         "withdrawn_source",
         "ambiguous_mapping",
-        "wrong_observable",
     )
 
 
@@ -365,7 +365,7 @@ def test_an_outcome_that_reached_requirements_may_carry_verdicts(outcome):
         make_verdict(
             observable="systolic_bp",
             verdict=RequirementVerdictValue.usable,
-            reason=RequirementReason.no_result,
+            reason=RequirementReason.met,
         ),
     )
 

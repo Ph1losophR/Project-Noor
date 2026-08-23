@@ -149,6 +149,7 @@ def allergy_snapshot(**overrides):
     """A recorded severe penicillin allergy; override anything."""
     fields = {
         "allergies": (make_allergy(culprit=CulpritSubstance(ingredient_id="penicillin")),),
+        "allergy_status": AllergyStatus.recorded,
     }
     fields.update(overrides)
     return make_snapshot(**fields)
@@ -174,7 +175,7 @@ def test_a_metformin_hard_stop_triggers_on_fresh_contraindicating_data():
     assert record.rule_version == "1.0.0"
     (verdict,) = record.requirement_verdicts
     assert verdict.verdict is RequirementVerdictValue.usable
-    assert verdict.reason is RequirementReason.no_result
+    assert verdict.reason is RequirementReason.met
     assert verdict.latest_age_days == 0
     assert record.pins.snapshot_id == "SNAP-1"
 
@@ -282,6 +283,23 @@ def test_the_latest_observation_is_selected_whatever_it_compares_to(older, newer
     assert record.requirement_verdicts[0].latest_age_days == 10
 
 
+def test_a_corrected_observation_supersedes_the_original_at_same_effective_time():
+    # Arrange — same effective_time, same source, different source_version.
+    # v1 value 25 (would trigger), v2 value 55 (would not trigger).
+    # The correction (v2) must win per §5 / canon.delta.current_versions.
+    observations = (
+        egfr_observation("25", age_days=10, source_version=1, source_identifier="OBS-1"),
+        egfr_observation("55", age_days=10, source_version=2, source_identifier="OBS-1"),
+    )
+
+    # Act
+    record = evaluate_one(make_rule(), metformin_snapshot(observations=observations))
+
+    # Assert — the corrected value 55 wins, so rule does not trigger
+    assert record.outcome is Outcome.not_triggered
+    assert record.requirement_verdicts[0].latest_age_days == 10
+
+
 def test_an_observation_exactly_max_age_days_old_is_still_usable():
     # Arrange — testing standards: the boundary itself sits inside the window
     observation = egfr_observation("25", age_days=90)
@@ -293,6 +311,43 @@ def test_an_observation_exactly_max_age_days_old_is_still_usable():
     assert record.outcome is Outcome.triggered
     assert record.requirement_verdicts[0].verdict is RequirementVerdictValue.usable
     assert record.requirement_verdicts[0].latest_age_days == 90
+
+
+def test_a_future_dated_observation_is_unusable():
+    # Arrange — an observation with effective_time after evaluated_at is corrupt data
+    future_obs = egfr_observation("25", age_days=-5)  # 5 days in the future
+
+    # Act
+    record = evaluate_one(make_rule(), metformin_snapshot(observations=(future_obs,)))
+
+    # Assert — corrupt timestamp makes the requirement unusable
+    assert record.outcome is Outcome.indeterminate
+    assert record.degraded_because is DegradedBecause.requirements_unmet
+    (verdict,) = record.requirement_verdicts
+    assert verdict.verdict is RequirementVerdictValue.unusable
+    assert verdict.latest_age_days is None  # age_days not computed for future-dated
+
+
+def test_freshness_window_uses_exact_timedelta_comparison():
+    # Arrange — 90 days 12 hours old should be stale (exceeds 90-day window)
+    # The .days truncation bug would have allowed this as 90 days
+    from datetime import timedelta
+    obs = make_canonical(
+        observable="egfr",
+        value="25",
+        effective_time=T0 - timedelta(days=90, hours=12),
+        context_flags=("ckd_chronicity_confirmed",),
+    )
+
+    # Act
+    record = evaluate_one(make_rule(), metformin_snapshot(observations=(obs,)))
+
+    # Assert — timedelta comparison correctly rejects 90d 12h as stale
+    assert record.outcome is Outcome.indeterminate
+    assert record.degraded_because is DegradedBecause.requirements_unmet
+    (verdict,) = record.requirement_verdicts
+    assert verdict.reason is RequirementReason.stale
+    assert verdict.latest_age_days == 90  # days truncation for reporting only
 
 
 def test_an_observation_one_day_past_max_age_is_stale_and_degrades_the_hard_stop():
@@ -392,8 +447,9 @@ def test_a_source_status_outside_accepted_status_is_wrong_source():
     assert record.requirement_verdicts[0].reason is RequirementReason.wrong_source
 
 
-def test_an_entry_mode_outside_the_preferred_sources_is_wrong_source():
-    # Arrange — the requirement wants interfaced results only
+def test_an_entry_mode_outside_the_preferred_sources_is_graded_not_indeterminate():
+    # Arrange — the requirement prefers interfaced results; staff_transcribed is
+    # present data of lower grade (§8.2: prefer_source miss grades, never indeterminate)
     rule = make_rule(
         requires=(
             make_requirement(
@@ -405,9 +461,14 @@ def test_an_entry_mode_outside_the_preferred_sources_is_wrong_source():
     # Act
     record = evaluate_one(rule, metformin_snapshot())  # staff_transcribed by default
 
-    # Assert
-    assert record.outcome is Outcome.indeterminate
-    assert record.requirement_verdicts[0].reason is RequirementReason.wrong_source
+    # Assert — present data grades the finding; it never manufactures indeterminacy
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is DegradedBecause.evidence_grade
+    assert record.effective_severity is Severity.interruptive_review
+    assert record.authored_severity is Severity.stop_and_review
+    (verdict,) = record.requirement_verdicts
+    assert verdict.verdict is RequirementVerdictValue.usable
+    assert verdict.reason is RequirementReason.met
 
 
 def test_a_silently_unusable_fact_makes_its_leaf_false_without_degrading():
@@ -433,6 +494,138 @@ def test_a_silently_unusable_fact_makes_its_leaf_false_without_degrading():
     (verdict,) = record.requirement_verdicts
     assert verdict.verdict is RequirementVerdictValue.unusable
     assert verdict.reason is RequirementReason.no_result
+
+
+def test_a_not_over_a_silent_unusable_fact_raises_cannot_assess():
+    # Arrange — §8.3 A8: not(lt(potassium, 6)) with no potassium and silent
+    # requirement must not manufacture a positive; it raises _CannotAssessSafely
+    # which becomes indeterminate / requirements_unmet
+    rule = potassium_rule(
+        when=Expression(
+            op=Operator.NOT,
+            children=(Expression(op=Operator.gt, fact="potassium", literal=Decimal("6.0")),),
+        ),
+    )
+
+    # Act
+    record = evaluate_one(rule, make_snapshot())
+
+    # Assert — indeterminate with the requirement named, not a fabricated positive
+    assert record.outcome is Outcome.indeterminate
+    assert record.degraded_because is DegradedBecause.requirements_unmet
+    (verdict,) = record.requirement_verdicts
+    assert verdict.observable == "potassium"
+    assert verdict.verdict is RequirementVerdictValue.unusable
+    assert verdict.reason is RequirementReason.no_result
+
+
+def test_cannot_assess_safely_without_observable_still_works():
+    # Arrange — edge case: _CannotAssessSafely raised without an observable
+    # (should not happen in practice, but branch coverage requires it)
+    from noor.engine.evaluate import _indeterminate
+    from noor.engine.records import DegradedBecause, Outcome
+    from noor.engine.rules import Severity
+    from tests.conftest import make_pins
+
+    rule = make_rule(id="test-rule", severity=Severity.stop_and_review)
+    pins = make_pins()
+
+    # Act — raise without observable
+    record = _indeterminate(rule, (), pins)
+
+    # Assert — indeterminate with empty verdicts
+    assert record.outcome is Outcome.indeterminate
+    assert record.degraded_because is DegradedBecause.requirements_unmet
+    assert record.requirement_verdicts == ()
+
+
+def test_cannot_assess_safely_none_observable_in_catch_block():
+    # Arrange — directly test the catch block with observable=None
+    # This covers the branch where e.observable is None
+    from noor.engine.evaluate import _CannotAssessSafely, _consider
+    from noor.engine.records import DegradedBecause, Outcome
+    from noor.engine.rules import (
+        DrugScopeLevel,
+        Expression,
+        Operator,
+        ReleaseStatus,
+        Rule,
+        Severity,
+    )
+    from tests.conftest import (
+        make_context,
+        make_governance,
+        make_pins,
+        make_release,
+        make_snapshot,
+        make_then,
+    )
+
+    # Create a minimal rule with no requirements and a simple when expression
+    rule = Rule(
+        id="test-rule",
+        version="1.0.0",
+        release_status=ReleaseStatus.active,
+        category="test",
+        severity=Severity.stop_and_review,
+        scope=Scope(),
+        drug_scope_level=DrugScopeLevel.ingredient,
+        requires=(),
+        monitors=(),
+        when=Expression(op=Operator.condition, concept="test_condition"),
+        then=make_then(blocks=None),
+        governance=make_governance(),
+    )
+    context = make_context(release=make_release(rules=(rule,)))
+    snapshot = make_snapshot()
+    pins = make_pins()
+
+    # Monkeypatch _decide to raise _CannotAssessSafely without observable
+    import noor.engine.evaluate as evaluate_module
+    original_decide = evaluate_module._decide
+
+    def mock_decide(*args, **kwargs):
+        raise _CannotAssessSafely()  # No observable
+
+    evaluate_module._decide = mock_decide
+    try:
+        # Act
+        record = _consider(rule, context, snapshot, (), pins)
+    finally:
+        evaluate_module._decide = original_decide
+
+    # Assert — indeterminate with empty verdicts (no synthesis)
+    assert record.outcome is Outcome.indeterminate
+    assert record.degraded_because is DegradedBecause.requirements_unmet
+    assert record.requirement_verdicts == ()
+
+
+def test_decide_raises_on_unknown_operator():
+    # Arrange — the _decide function must be exhaustive over the Operator enum.
+    # This test covers the NotImplementedError branch by constructing an
+    # expression with an operator value that doesn't exist in the enum.
+    from noor.engine.evaluate import _decide
+    from tests.conftest import make_context, make_snapshot
+
+    class UnknownOpExpression:
+        op = "unknown_operator"
+        children = ()
+        fact = None
+        literal = None
+        threshold_ref = None
+        ingredient_id = None
+        verification_status = None
+        severity = None
+        reaction_type = None
+        concept = None
+        minimum = None
+        maximum = None
+
+    # Act / Assert
+    context = make_context()
+    snapshot = make_snapshot()
+    with pytest.raises(NotImplementedError, match="no evaluation rule for"):
+        _decide(UnknownOpExpression(), context, snapshot, (), {}, {})
 
 
 @pytest.mark.parametrize(
@@ -541,7 +734,9 @@ def test_an_absent_medication_entry_is_not_active():
 @pytest.mark.parametrize("status", [MappingStatus.ambiguous, MappingStatus.unmapped])
 def test_an_ambiguous_or_unmapped_medication_entry_refuses_to_answer(status):
     # Arrange — design §5.1: guessing identity is never an option; the eGFR half
-    # of the rule was fine, so this indeterminacy comes from the medication fact
+    # of the rule was fine, so this indeterminacy comes from the medication fact.
+    # The rule has an eGFR requirement, so the manifest has an eGFR verdict.
+    # The medication refusal synthesizes a second verdict for metformin.
     rule = make_rule()
     medications = (SnapshotMedication(ingredient_id="metformin", mapping_status=status),)
 
@@ -552,8 +747,49 @@ def test_an_ambiguous_or_unmapped_medication_entry_refuses_to_answer(status):
     assert record.outcome is Outcome.indeterminate
     assert record.degraded_because is DegradedBecause.requirements_unmet
     assert record.effective_severity is Severity.interruptive_review
-    (verdict,) = record.requirement_verdicts
-    assert verdict.verdict is RequirementVerdictValue.usable
+    # Two verdicts: eGFR (from manifest) + metformin (synthesized from refusal)
+    assert len(record.requirement_verdicts) == 2
+    metformin_verdict = next(v for v in record.requirement_verdicts if v.observable == "metformin")
+    assert metformin_verdict.verdict is RequirementVerdictValue.unusable
+    assert metformin_verdict.reason is RequirementReason.no_result
+
+
+def test_mapped_medication_alongside_unrelated_unmapped_entry_is_active():
+    # Arrange — A7 fix: mapped metformin + unrelated ambiguous entry should
+    # return True (known present), not raise. Only same-ingredient unresolved
+    # entries cause refusal.
+    rule = make_rule()
+    medications = (
+        SnapshotMedication(ingredient_id="metformin", mapping_status=MappingStatus.mapped),
+        SnapshotMedication(ingredient_id="other-drug", mapping_status=MappingStatus.ambiguous),
+    )
+
+    # Act
+    record = evaluate_one(rule, metformin_snapshot(medications=medications))
+
+    # Assert — known present answers cleanly
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is None
+    assert record.effective_severity is Severity.stop_and_review
+
+
+def test_mapped_medication_with_same_ingredient_ambiguous_is_active():
+    # Arrange — A7 fix: known-present (mapped) answers True even alongside
+    # same-ingredient ambiguous entries. Only absence needs to worry about
+    # unresolved entries.
+    rule = make_rule()
+    medications = (
+        SnapshotMedication(ingredient_id="metformin", mapping_status=MappingStatus.mapped),
+        SnapshotMedication(ingredient_id="metformin", mapping_status=MappingStatus.ambiguous),
+    )
+
+    # Act
+    record = evaluate_one(rule, metformin_snapshot(medications=medications))
+
+    # Assert — known present answers cleanly
+    assert record.outcome is Outcome.triggered
+    assert record.degraded_because is None
+    assert record.effective_severity is Severity.stop_and_review
 
 
 @pytest.mark.parametrize(
@@ -732,10 +968,15 @@ def test_an_unasked_allergy_history_leaves_the_leaf_unanswerable():
         rule, allergy_snapshot(allergies=(), allergy_status=AllergyStatus.not_asked)
     )
 
-    # Assert
+    # Assert — the rule has no requirements, so the manifest has empty verdicts.
+    # The allergy refusal synthesizes a verdict for penicillin.
     assert record.outcome is Outcome.indeterminate
     assert record.degraded_because is DegradedBecause.requirements_unmet
-    assert record.requirement_verdicts == ()
+    assert len(record.requirement_verdicts) == 1
+    pen_verdict = record.requirement_verdicts[0]
+    assert pen_verdict.observable == "penicillin"
+    assert pen_verdict.verdict is RequirementVerdictValue.unusable
+    assert pen_verdict.reason is RequirementReason.no_result
 
 
 def test_two_active_goals_fail_the_rule_without_silencing_other_rules():

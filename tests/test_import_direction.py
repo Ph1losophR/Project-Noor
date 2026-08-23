@@ -57,6 +57,13 @@ FORBIDDEN_IMPORT_ROOTS_IN_PURE = frozenset(
         "sqlite3",
         "urllib",
         "subprocess",
+        "random",
+        "uuid",
+        "logging",
+        "tempfile",
+        "pickle",
+        "smtplib",
+        "http",
     }
 )
 
@@ -89,8 +96,7 @@ REQUESTED_ACTION_FIELD_SET = frozenset({"kind", "subject"})
 
 def _python_files(package: str) -> list[Path]:
     directory = SRC / package
-    if not directory.exists():
-        return []
+    assert directory.exists(), f"boundary package {package} must exist"
     return sorted(directory.rglob("*.py"))
 
 

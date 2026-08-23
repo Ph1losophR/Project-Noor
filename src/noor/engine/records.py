@@ -66,6 +66,7 @@ class RequirementReason(StrEnum):
     failures through it, so it is an enum, never free text.
     """
 
+    met = "met"
     no_result = "no_result"
     quality_below_minimum = "quality_below_minimum"
     stale = "stale"
@@ -73,7 +74,6 @@ class RequirementReason(StrEnum):
     missing_context = "missing_context"
     withdrawn_source = "withdrawn_source"
     ambiguous_mapping = "ambiguous_mapping"
-    wrong_observable = "wrong_observable"
 
 
 class RequirementVerdict(NoorModel):

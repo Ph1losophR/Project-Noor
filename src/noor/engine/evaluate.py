@@ -10,6 +10,7 @@ raising rule never ends the run (§8.5).
 """
 
 from collections.abc import Callable, Mapping
+from datetime import timedelta
 from decimal import Decimal
 from operator import eq, ge, gt, le, lt, ne
 from typing import NamedTuple
@@ -23,7 +24,10 @@ from noor.canon.models import (
     MappingStatus,
     QualityState,
 )
-from noor.engine.content import EvaluationContext, Pins
+from noor.engine.content import (
+    EvaluationContext,
+    Pins,
+)
 from noor.engine.records import (
     DegradedBecause,
     EvaluationRecord,
@@ -33,20 +37,28 @@ from noor.engine.records import (
     RequirementVerdictValue,
     cap_below_stop_and_review,
 )
-from noor.engine.rules import Expression, OnUnusable, Operator, Requirement, Rule, Severity
+from noor.engine.rules import (
+    BOOLEAN_OPERATORS,
+    NUMERIC_OPERATORS,
+    Expression,
+    OnUnusable,
+    Operator,
+    Requirement,
+    Rule,
+    Severity,
+)
 from noor.engine.snapshot import (
     ActionKind,
     AllergyRecord,
+    AllergySeverity,
     AllergyStatus,
     RequestedAction,
     Snapshot,
     VerificationStatus,
 )
 
-_BOOLEAN_OPS: frozenset[Operator] = frozenset({Operator.all, Operator.any, Operator.NOT})
-_NUMERIC_OPS: frozenset[Operator] = frozenset(
-    {Operator.lt, Operator.le, Operator.gt, Operator.ge, Operator.eq, Operator.ne}
-)
+_BOOL_OPS = BOOLEAN_OPERATORS
+_NUMERIC_OPS = NUMERIC_OPERATORS
 _COMPARATORS: Mapping[Operator, Callable[[Decimal, Decimal], bool]] = {
     Operator.lt: lt,
     Operator.le: le,
@@ -74,7 +86,14 @@ class _CannotAssessSafely(Exception):
     refusals, not defects: they degrade the rule to indeterminate under
     requirements_unmet rather than to the §8.5 failure record, so the per-rule
     handler resolves this class before the generic catch.
+
+    May carry an `observable` name for verdict synthesis when the rule has
+    no declared requirement for the refused leaf (§8.3).
     """
+
+    def __init__(self, observable: str | None = None) -> None:
+        super().__init__()
+        self.observable = observable
 
 
 class _Manifest(NamedTuple):
@@ -82,7 +101,7 @@ class _Manifest(NamedTuple):
 
     verdicts: tuple[RequirementVerdict, ...]
     validated: Mapping[str, Decimal]
-    graded: frozenset[str]
+    graded: Mapping[str, bool]
     degrades: bool
 
 
@@ -142,15 +161,25 @@ def _consider(
         return _indeterminate(rule, manifest.verdicts, pins)
     try:
         matched, graded = _decide(
-            rule.when, context, snapshot, requested_actions, manifest.validated
+            rule.when, context, snapshot, requested_actions, manifest.validated, manifest.graded
         )
-    except _CannotAssessSafely:
-        return _indeterminate(rule, manifest.verdicts, pins)
+    except _CannotAssessSafely as e:
+        verdicts = manifest.verdicts
+        if e.observable is not None and not any(v.observable == e.observable for v in verdicts):
+            # Synthesize a verdict for the refused observable (§8.3)
+            synthesized = _verdict(
+                e.observable,
+                RequirementVerdictValue.unusable,
+                RequirementReason.no_result,
+                None,
+            )
+            verdicts = (synthesized, *verdicts)
+        return _indeterminate(rule, verdicts, pins)
     if not matched:
         return _record(
             rule, Outcome.not_triggered, rule.severity, None, None, manifest.verdicts, pins
         )
-    if graded or manifest.graded:
+    if graded:
         # §8.3: graded evidence caps the finding; it never manufactures indeterminacy
         return _record(
             rule,
@@ -205,8 +234,8 @@ def _disabled_ids(context: EvaluationContext) -> frozenset[str]:
 
 
 def _in_scope(rule: Rule, context: EvaluationContext, snapshot: Snapshot) -> bool:
-    included = all(_decide(p, context, snapshot, (), {})[0] for p in rule.scope.include)
-    excluded = any(_decide(p, context, snapshot, (), {})[0] for p in rule.scope.exclude)
+    included = all(_decide(p, context, snapshot, (), {}, {})[0] for p in rule.scope.include)
+    excluded = any(_decide(p, context, snapshot, (), {}, {})[0] for p in rule.scope.exclude)
     return included and not excluded
 
 
@@ -216,12 +245,23 @@ def _decide(
     snapshot: Snapshot,
     requested_actions: tuple[RequestedAction, ...],
     validated: Mapping[str, Decimal],
+    graded: Mapping[str, bool],
+    *,
+    under_negation: bool = False,
 ) -> tuple[bool, bool]:
     """Evaluate one expression node to (matched, contributed evidence grade)."""
-    if node.op in _BOOLEAN_OPS:
-        return _decide_boolean(node, context, snapshot, requested_actions, validated)
+    if node.op in _BOOL_OPS:
+        return _decide_boolean(
+            node,
+            context,
+            snapshot,
+            requested_actions,
+            validated,
+            graded,
+            under_negation=under_negation,
+        )
     if node.op in _NUMERIC_OPS:
-        return _compare(node, context, snapshot, validated)
+        return _compare(node, context, snapshot, validated, graded, under_negation=under_negation)
     if node.op is Operator.drug_active:
         return _drug_active(node.ingredient_id, snapshot), False
     if node.op is Operator.drug_requested:
@@ -230,7 +270,9 @@ def _decide(
         return _allergy(node, snapshot)
     if node.op is Operator.condition:
         return node.concept in snapshot.conditions, False
-    return _age_within(node, snapshot), False
+    if node.op is Operator.age:
+        return _age_within(node, snapshot), False
+    raise NotImplementedError(f"no evaluation rule for `{node.op}`")
 
 
 def _decide_boolean(
@@ -239,20 +281,41 @@ def _decide_boolean(
     snapshot: Snapshot,
     requested_actions: tuple[RequestedAction, ...],
     validated: Mapping[str, Decimal],
+    graded: Mapping[str, bool],
+    *,
+    under_negation: bool = False,
 ) -> tuple[bool, bool]:
-    outcomes = [
-        _decide(child, context, snapshot, requested_actions, validated) for child in node.children
-    ]
     if node.op is Operator.NOT:
         # A graded leaf is graded only alongside a True match; negated, it
-        # contributed nothing to any finding.
-        only = outcomes[0]
+        # contributed nothing to any finding. Under negation, a silent-unusable
+        # fact cannot manufacture a positive finding (§8.3, A8).
+        only = _decide(
+            node.children[0],
+            context,
+            snapshot,
+            requested_actions,
+            validated,
+            graded,
+            under_negation=True,
+        )
         return not only[0], False
+    outcomes = [
+        _decide(
+            child,
+            context,
+            snapshot,
+            requested_actions,
+            validated,
+            graded,
+            under_negation=under_negation,
+        )
+        for child in node.children
+    ]
     if node.op is Operator.all:
         matched = all(decision for decision, _ in outcomes)
     else:
         matched = any(decision for decision, _ in outcomes)
-    return matched, matched and any(graded for decision, graded in outcomes if decision)
+    return matched, matched and any(g for d, g in outcomes if d)
 
 
 def _compare(
@@ -260,27 +323,42 @@ def _compare(
     context: EvaluationContext,
     snapshot: Snapshot,
     validated: Mapping[str, Decimal],
+    graded: Mapping[str, bool],
+    *,
+    under_negation: bool = False,
 ) -> tuple[bool, bool]:
     fact = node.fact
     assert fact is not None  # a numeric leaf always names its fact (load-time, §7.1)
     observed = validated.get(fact)
     if observed is None:
         # Silent-unusable: the leaf proceeds without the fact, never against raw data.
+        # But under negation, a missing fact cannot manufacture a positive (§8.3, A8).
+        if under_negation:
+            raise _CannotAssessSafely(fact)
         return False, False
     if node.literal is not None:
-        return _COMPARATORS[node.op](observed, node.literal), False
+        return _COMPARATORS[node.op](observed, node.literal), graded.get(fact, False)
     ref = node.threshold_ref
     assert ref is not None  # §4.3.1: exactly one comparison source, validated at load
     target = context.resolve_threshold(snapshot, fact, ref)
-    return _COMPARATORS[node.op](observed, target.value), False
+    return _COMPARATORS[node.op](observed, target.value), graded.get(fact, False)
 
 
 def _drug_active(ingredient_id: str | None, snapshot: Snapshot) -> bool:
-    entries = [entry for entry in snapshot.medications if entry.ingredient_id == ingredient_id]
-    if any(entry.mapping_status is not MappingStatus.mapped for entry in entries):
-        # Design §5.1: an unresolved identity is a refusal, never a guess.
-        raise _CannotAssessSafely()
-    return bool(entries)
+    # Known-present: any mapped entry for this ingredient means the drug is active
+    if any(
+        e.ingredient_id == ingredient_id and e.mapping_status is MappingStatus.mapped
+        for e in snapshot.medications
+    ):
+        return True
+    # Cannot assert absence if there are unresolved entries for this ingredient
+    if any(
+        e.ingredient_id == ingredient_id and e.mapping_status is not MappingStatus.mapped
+        for e in snapshot.medications
+    ):
+        raise _CannotAssessSafely(ingredient_id)
+    # No entries for this ingredient at all
+    return False
 
 
 def _drug_requested(
@@ -294,7 +372,7 @@ def _drug_requested(
 def _allergy(node: Expression, snapshot: Snapshot) -> tuple[bool, bool]:
     if snapshot.allergy_status is AllergyStatus.not_asked:
         # §5.5 rule 2: unanswered is its own fact; "cleared" is never inferred.
-        raise _CannotAssessSafely()
+        raise _CannotAssessSafely(node.ingredient_id)
     surfaced = [
         record
         for record in snapshot.allergies
@@ -303,10 +381,12 @@ def _allergy(node: Expression, snapshot: Snapshot) -> tuple[bool, bool]:
     ]
     satisfying = [record for record in surfaced if _leaf_satisfied(record, node)]
     if satisfying:
-        # §5.5 table: an unconfirmed record grades its finding whatever filters
-        # the leaf declares; only a confirmed match answers cleanly.
+        # §5.5 table: only a confirmed record with severity: severe answers cleanly.
+        # All other satisfying records grade the finding.
         return True, any(
-            record.verification_status is not VerificationStatus.confirmed for record in satisfying
+            record.verification_status is not VerificationStatus.confirmed
+            or record.severity is not AllergySeverity.severe
+            for record in satisfying
         )
     # Whatever surfaces but fails the leaf's filters is present data of lower grade.
     return bool(surfaced), bool(surfaced)
@@ -316,7 +396,9 @@ def _leaf_satisfied(record: AllergyRecord, leaf: Expression) -> bool:
     verified = (
         leaf.verification_status is None or record.verification_status is leaf.verification_status
     )
-    return verified and (leaf.severity is None or record.severity is leaf.severity)
+    severe = leaf.severity is None or record.severity is leaf.severity
+    reaction = leaf.reaction_type is None or record.reaction_type is leaf.reaction_type
+    return verified and severe and reaction
 
 
 def _age_within(node: Expression, snapshot: Snapshot) -> bool:
@@ -328,7 +410,7 @@ def _age_within(node: Expression, snapshot: Snapshot) -> bool:
 def _resolve_manifest(requirements: tuple[Requirement, ...], snapshot: Snapshot) -> _Manifest:
     verdicts: list[RequirementVerdict] = []
     validated: dict[str, Decimal] = {}
-    graded: set[str] = set()
+    graded: dict[str, bool] = {}
     degrades = False
     for requirement in requirements:
         verdict, observation = _resolve_requirement(requirement, snapshot)
@@ -336,11 +418,10 @@ def _resolve_manifest(requirements: tuple[Requirement, ...], snapshot: Snapshot)
         if verdict.verdict is RequirementVerdictValue.usable:
             assert observation is not None  # usable means an observation was selected
             validated[requirement.observable] = _canonical_value(observation)
-            if _evidence_is_graded(observation, requirement, snapshot):
-                graded.add(requirement.observable)
+            graded[requirement.observable] = _evidence_is_graded(observation, requirement, snapshot)
         elif requirement.on_unusable is OnUnusable.indeterminate:
             degrades = True  # silent-unusable verdicts are recorded and proceed (§8.3)
-    return _Manifest(tuple(verdicts), validated, frozenset(graded), degrades)
+    return _Manifest(tuple(verdicts), validated, graded, degrades)
 
 
 def _resolve_requirement(
@@ -354,18 +435,26 @@ def _resolve_requirement(
             RequirementReason.no_result,
             None,
         ), None
-    age_days = (snapshot.evaluated_at - latest.effective_time).days
-    reason = _first_failure(requirement, latest, age_days)
+    elapsed = snapshot.evaluated_at - latest.effective_time
+    if elapsed < timedelta(0):
+        # Future-dated observation: corrupt timestamp, refuse to use it.
+        return _verdict(
+            requirement.observable,
+            RequirementVerdictValue.unusable,
+            RequirementReason.no_result,
+            None,
+        ), latest
+    age_days = elapsed.days
+    reason = _first_failure(requirement, latest, elapsed)
     if reason is not None:
         return _verdict(
             requirement.observable, RequirementVerdictValue.unusable, reason, age_days
         ), latest
-    # A usable verdict still carries the neutral reason: §8.2 links no member
-    # to "met", and the vocabulary exists for failures, not successes.
+    # A usable verdict carries reason=met per §8.2's vocabulary.
     return _verdict(
         requirement.observable,
         RequirementVerdictValue.usable,
-        RequirementReason.no_result,
+        RequirementReason.met,
         age_days,
     ), latest
 
@@ -382,12 +471,19 @@ def _verdict(
 
 
 def _latest_observation(observable: str, snapshot: Snapshot) -> CanonicalObservation | None:
+    from noor.canon.delta import current_versions
+
     matches = [o for o in snapshot.observations if o.observable == observable]
-    return max(matches, key=lambda o: o.effective_time, default=None)
+    if not matches:
+        return None
+    # Use canon's current_versions to get the latest version per source record
+    # (§5), then break cross-source ties by effective_time then source identity.
+    current = current_versions(matches)
+    return max(current, key=lambda o: (o.effective_time, o.source_system, o.source_identifier))
 
 
 def _first_failure(
-    requirement: Requirement, observation: CanonicalObservation, age_days: int
+    requirement: Requirement, observation: CanonicalObservation, elapsed: timedelta
 ) -> RequirementReason | None:
     """The first failed check in §8.2's declared order; first failure wins."""
     if observation.mapping.status is not MappingStatus.mapped:
@@ -398,10 +494,10 @@ def _first_failure(
         return RequirementReason.wrong_source
     if not _quality_usable(requirement, observation):
         return RequirementReason.quality_below_minimum
-    if requirement.max_age_days is not None and age_days > requirement.max_age_days:
+    if requirement.max_age_days is not None and elapsed > timedelta(days=requirement.max_age_days):
         return RequirementReason.stale  # exactly max_age_days stays usable
-    if requirement.prefer_source and observation.entry_mode not in requirement.prefer_source:
-        return RequirementReason.wrong_source
+    # prefer_source is a preference, not a hard filter (§8.2, §8.3). A miss grades
+    # the finding via _evidence_is_graded instead of making it indeterminate.
     if not set(requirement.required_context) <= set(observation.context_flags):
         return RequirementReason.missing_context
     return None
@@ -434,7 +530,11 @@ def _evidence_is_graded(
         observation.entry_mode is EntryMode.noor_derived
         and EntryMode.interfaced in requirement.prefer_source
     )
-    return manager_report or noor_substitute
+    prefer_source_miss = bool(
+        requirement.prefer_source
+        and observation.entry_mode not in requirement.prefer_source
+    )
+    return manager_report or noor_substitute or prefer_source_miss
 
 
 def _canonical_value(observation: CanonicalObservation) -> Decimal:

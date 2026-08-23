@@ -19,7 +19,7 @@ from typing import Literal, Self
 from pydantic import Field, model_validator
 
 from noor.canon.models import EntryMode, NoorModel, QualityState, SourceStatus
-from noor.engine.snapshot import AllergySeverity, VerificationStatus
+from noor.engine.snapshot import AllergySeverity, ReactionType, VerificationStatus
 
 
 class Severity(StrEnum):
@@ -97,34 +97,36 @@ class Operator(StrEnum):
     age = "age"
 
 
-_BOOLEAN_OPERATORS: frozenset[Operator] = frozenset({Operator.all, Operator.any, Operator.NOT})
-_NUMERIC_OPERATORS: frozenset[Operator] = frozenset(
+BOOLEAN_OPERATORS: frozenset[Operator] = frozenset({Operator.all, Operator.any, Operator.NOT})
+NUMERIC_OPERATORS: frozenset[Operator] = frozenset(
     {Operator.lt, Operator.le, Operator.gt, Operator.ge, Operator.eq, Operator.ne}
 )
-_DRUG_OPERATORS: frozenset[Operator] = frozenset({Operator.drug_active, Operator.drug_requested})
-_INGREDIENT_OPERATORS: frozenset[Operator] = _DRUG_OPERATORS | {Operator.allergy}
+DRUG_OPERATORS: frozenset[Operator] = frozenset({Operator.drug_active, Operator.drug_requested})
+INGREDIENT_OPERATORS: frozenset[Operator] = DRUG_OPERATORS | {Operator.allergy}
 
 # Scope reads patient state only: who the patient is, not what was measured or
 # prescribed (§7.1). A numeric, drug, or allergy predicate inside scope is a
 # load refusal.
-_PATIENT_STATE_OPERATORS: frozenset[Operator] = _BOOLEAN_OPERATORS | {
+PATIENT_STATE_OPERATORS: frozenset[Operator] = BOOLEAN_OPERATORS | {
     Operator.condition,
     Operator.age,
 }
 
 # §8.1/§8.4 invariant 10: a rule cannot ask which visit produced a fact or which
 # trigger invoked it. Enforced on Requirement.observable at load (gate 11).
-_FORBIDDEN_REQUIREMENT_OBSERVABLES: frozenset[str] = frozenset(
+FORBIDDEN_REQUIREMENT_OBSERVABLES: frozenset[str] = frozenset(
     {"visit_state", "encounter_state", "narrative"}
 )
 
 _FIELDS_BY_OPERATOR: Mapping[Operator, frozenset[str]] = (
-    {op: frozenset({"children"}) for op in _BOOLEAN_OPERATORS}
-    | {op: frozenset({"fact", "literal", "threshold_ref"}) for op in _NUMERIC_OPERATORS}
+    {op: frozenset({"children"}) for op in BOOLEAN_OPERATORS}
+    | {op: frozenset({"fact", "literal", "threshold_ref"}) for op in NUMERIC_OPERATORS}
     | {
         Operator.drug_active: frozenset({"ingredient_id"}),
         Operator.drug_requested: frozenset({"ingredient_id"}),
-        Operator.allergy: frozenset({"ingredient_id", "verification_status", "severity"}),
+        Operator.allergy: frozenset(
+            {"ingredient_id", "verification_status", "severity", "reaction_type"}
+        ),
         Operator.condition: frozenset({"concept"}),
         Operator.age: frozenset({"minimum", "maximum"}),
     }
@@ -148,6 +150,7 @@ class Expression(NoorModel):
     ingredient_id: str | None = Field(default=None, min_length=1)
     verification_status: VerificationStatus | None = None
     severity: AllergySeverity | None = None
+    reaction_type: ReactionType | None = None
     concept: str | None = Field(default=None, min_length=1)
     minimum: int | None = None
     maximum: int | None = None
@@ -187,6 +190,8 @@ class Expression(NoorModel):
             present.add("verification_status")
         if self.severity is not None:
             present.add("severity")
+        if self.reaction_type is not None:
+            present.add("reaction_type")
         if self.concept is not None:
             present.add("concept")
         if self.minimum is not None:
@@ -196,7 +201,7 @@ class Expression(NoorModel):
         return present
 
     def _require_composition_children(self) -> None:
-        if self.op not in _BOOLEAN_OPERATORS:
+        if self.op not in BOOLEAN_OPERATORS:
             return
         if not self.children:
             raise ValueError(f"`{self.op}` composes at least one child expression")
@@ -204,7 +209,7 @@ class Expression(NoorModel):
             raise ValueError("`not` negates exactly one child expression")
 
     def _require_one_comparison_source(self) -> None:
-        if self.op not in _NUMERIC_OPERATORS:
+        if self.op not in NUMERIC_OPERATORS:
             return
         if self.fact is None:
             raise ValueError(f"a `{self.op}` comparison names the observable it reads (§7.1)")
@@ -216,7 +221,7 @@ class Expression(NoorModel):
             )
 
     def _require_an_ingredient(self) -> None:
-        if self.op in _INGREDIENT_OPERATORS and self.ingredient_id is None:
+        if self.op in INGREDIENT_OPERATORS and self.ingredient_id is None:
             raise ValueError(f"a `{self.op}` predicate names an ingredient (§7.1)")
 
     def _require_a_condition_concept(self) -> None:
@@ -255,7 +260,7 @@ class Scope(NoorModel):
     def _scope_reads_patient_state_only(self) -> Self:
         for predicate in (*self.include, *self.exclude):
             for node in walk_expression(predicate):
-                if node.op not in _PATIENT_STATE_OPERATORS:
+                if node.op not in PATIENT_STATE_OPERATORS:
                     raise ValueError(
                         f"scope predicates read patient state only; `{node.op}` compares "
                         f"data or drugs and belongs in `when` (§7.1)"
@@ -279,6 +284,16 @@ class Requirement(NoorModel):
     required_context: tuple[str, ...] = ()
     on_unusable: OnUnusable
     renal_metric: Literal["egfr", "crcl"] | None = None
+
+    @model_validator(mode="after")
+    def _renal_metric_matches_observable(self) -> Self:
+        # Gate 15: if renal_metric is specified, observable must match it
+        if self.renal_metric is not None and self.observable != self.renal_metric:
+            raise ValueError(
+                f"renal_metric={self.renal_metric} but observable={self.observable} — "
+                f"they must match (§10.4 gate 15)"
+            )
+        return self
 
 
 class Monitor(NoorModel):
@@ -385,7 +400,7 @@ class Rule(NoorModel):
     def _drug_references_declare_their_scope_level(self) -> Self:
         for node in walk_expression(self.when):
             if (
-                node.op in _DRUG_OPERATORS
+                node.op in DRUG_OPERATORS
                 and self.drug_scope_level is not DrugScopeLevel.ingredient
             ):
                 raise ValueError(
@@ -398,7 +413,7 @@ class Rule(NoorModel):
     def _every_compared_observable_is_declared_in_requires(self) -> Self:
         declared = {requirement.observable for requirement in self.requires}
         for node in walk_expression(self.when):
-            if node.op in _NUMERIC_OPERATORS and node.fact not in declared:
+            if node.op in NUMERIC_OPERATORS and node.fact not in declared:
                 raise ValueError(
                     f"`{node.fact}` is compared numerically but absent from requires — a "
                     f"threshold never runs against data of undeclared age and grade "
@@ -410,7 +425,7 @@ class Rule(NoorModel):
     def _requirements_never_name_encounter_or_trigger_state(self) -> Self:
         for requirement in self.requires:
             if (
-                requirement.observable in _FORBIDDEN_REQUIREMENT_OBSERVABLES
+                requirement.observable in FORBIDDEN_REQUIREMENT_OBSERVABLES
                 or "trigger" in requirement.observable
             ):
                 raise ValueError(

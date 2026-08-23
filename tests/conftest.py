@@ -272,7 +272,7 @@ def make_snapshot(**overrides: Any) -> Snapshot:
         "observations": (),
         "medications": (),
         "allergies": (),
-        "allergy_status": AllergyStatus.recorded,
+        "allergy_status": AllergyStatus.not_asked,
         "conditions": frozenset(),
         "goals_of_care": (),
     }
@@ -290,7 +290,7 @@ def make_requirement(**overrides: Any) -> Requirement:
         "prefer_source": (EntryMode.interfaced, EntryMode.staff_transcribed),
         "required_context": ("ckd_chronicity_confirmed",),
         "on_unusable": OnUnusable.indeterminate,
-        "renal_metric": "egfr",
+        "renal_metric": None,
     }
     fields.update(overrides)
     return Requirement(**fields)
@@ -334,7 +334,7 @@ def make_rule(**overrides: Any) -> Rule:
         "severity": Severity.stop_and_review,
         "scope": Scope(),
         "drug_scope_level": DrugScopeLevel.ingredient,
-        "requires": (make_requirement(),),
+        "requires": (make_requirement(renal_metric="egfr"),),
         "monitors": (
             Monitor(
                 observable="egfr",
@@ -460,7 +460,27 @@ def make_context(**overrides: Any) -> EvaluationContext:
                 observable="egfr",
                 canonical_ucum="mL/min/{1.73_m2}",
                 accepted_units=["mL/min/{1.73_m2}"],
-            )
+            ),
+            make_entry(
+                observable="potassium",
+                canonical_ucum="mmol/L",
+                accepted_units=["mmol/L"],
+            ),
+            make_entry(
+                observable="glucose",
+                canonical_ucum="mmol/L",
+                accepted_units=["mmol/L"],
+            ),
+            make_entry(
+                observable="creatinine",
+                canonical_ucum="mg/dL",
+                accepted_units=["mg/dL"],
+            ),
+            make_entry(
+                observable="crcl",
+                canonical_ucum="mL/min",
+                accepted_units=["mL/min"],
+            ),
         ),
         "pins": make_pins(),
     }

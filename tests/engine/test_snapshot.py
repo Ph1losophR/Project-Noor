@@ -19,6 +19,7 @@ from noor.engine.snapshot import (
     ActionKind,
     AllergySeverity,
     AllergyStatus,
+    CulpritSubstance,
     EvidenceSource,
     ReactionType,
     RequestedAction,
@@ -110,6 +111,22 @@ def test_not_asked_is_a_distinct_fact_from_an_empty_allergy_list():
     assert cleared.allergies == ()
     assert not_asked.allergy_status is AllergyStatus.not_asked
     assert cleared.allergy_status is AllergyStatus.no_known_allergy
+
+
+def test_allergy_status_no_known_allergy_contradicts_non_empty_allergies():
+    # Arrange — §5.5 rule 2: no_known_allergy and recorded allergies are opposite facts
+    allergy = make_allergy(culprit=CulpritSubstance(ingredient_id="penicillin"))
+
+    # Act / Assert
+    with pytest.raises(ValidationError, match="no_known_allergy contradicts non-empty allergies"):
+        make_snapshot(allergies=(allergy,), allergy_status=AllergyStatus.no_known_allergy)
+
+
+def test_allergy_status_recorded_requires_at_least_one_allergy():
+    # Arrange — §5.5 rule 2: recorded status requires at least one allergy record
+    # Act / Assert
+    with pytest.raises(ValidationError, match="recorded requires at least one allergy record"):
+        make_snapshot(allergies=(), allergy_status=AllergyStatus.recorded)
 
 
 def test_the_snapshot_refuses_undeclared_fields():

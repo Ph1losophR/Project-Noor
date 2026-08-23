@@ -120,26 +120,43 @@ MEDICATION_POOL = (
     SnapshotMedication(ingredient_id="insulin", mapping_status=MappingStatus.ambiguous),
 )
 
-snapshot_values = st.builds(
-    make_snapshot,
-    age_years=st.integers(30, 95),
-    observations=st.lists(st.tuples(st.sampled_from(FACTS), VALUES), max_size=4).map(
-        lambda specs: tuple(
-            make_canonical(observable=fact, value=str(value)) for fact, value in specs
-        )
-    ),
-    medications=st.lists(st.sampled_from(MEDICATION_POOL), max_size=3).map(tuple),
-    allergies=st.lists(
-        st.builds(
-            make_allergy,
-            culprit=st.builds(CulpritSubstance, ingredient_id=st.sampled_from(INGREDIENTS)),
-            verification_status=st.sampled_from(list(VerificationStatus)),
-            severity=st.sampled_from(list(AllergySeverity)),
+def _consistent_allergy_data():
+    """Generate (allergies, allergy_status) pairs that are consistent per §5.5 rule 2."""
+    return st.one_of(
+        # not_asked: no allergies
+        st.tuples(st.just(()), st.just(AllergyStatus.not_asked)),
+        # no_known_allergy: no allergies
+        st.tuples(st.just(()), st.just(AllergyStatus.no_known_allergy)),
+        # recorded: at least one allergy
+        st.lists(
+            st.builds(
+                make_allergy,
+                culprit=st.builds(CulpritSubstance, ingredient_id=st.sampled_from(INGREDIENTS)),
+                verification_status=st.sampled_from(list(VerificationStatus)),
+                severity=st.sampled_from(list(AllergySeverity)),
+            ),
+            min_size=1,
+            max_size=3,
+        ).map(tuple).flatmap(
+            lambda allergies: st.tuples(st.just(allergies), st.just(AllergyStatus.recorded))
         ),
-        max_size=3,
-    ).map(tuple),
-    allergy_status=st.sampled_from(list(AllergyStatus)),
-    conditions=st.sets(st.sampled_from(CONCEPTS)).map(frozenset),
+    )
+
+
+snapshot_values = _consistent_allergy_data().flatmap(
+    lambda allergy_data: st.builds(
+        make_snapshot,
+        age_years=st.integers(30, 95),
+        observations=st.lists(st.tuples(st.sampled_from(FACTS), VALUES), max_size=4).map(
+            lambda specs: tuple(
+                make_canonical(observable=fact, value=str(value)) for fact, value in specs
+            )
+        ),
+        medications=st.lists(st.sampled_from(MEDICATION_POOL), max_size=3).map(tuple),
+        allergies=st.just(allergy_data[0]),
+        allergy_status=st.just(allergy_data[1]),
+        conditions=st.sets(st.sampled_from(CONCEPTS)).map(frozenset),
+    )
 )
 
 requested_actions = st.lists(

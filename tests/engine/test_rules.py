@@ -23,7 +23,7 @@ from noor.engine.rules import (
     Scope,
     Severity,
 )
-from noor.engine.snapshot import AllergySeverity, VerificationStatus
+from noor.engine.snapshot import AllergySeverity, ReactionType, VerificationStatus
 from tests.conftest import make_governance, make_requirement, make_rule, make_then
 
 
@@ -479,3 +479,49 @@ def test_scope_composition_hides_nothing_from_the_operator_check():
     # Act / Assert
     with pytest.raises(ValidationError):
         Scope(exclude=(smuggled,))
+
+
+def test_an_allergy_leaf_accepts_reaction_type_filter():
+    # Arrange — the leaf may ask for a specific reaction type (§5.5 rule 3)
+    leaf = Expression(
+        op=Operator.allergy,
+        ingredient_id="penicillin",
+        verification_status=VerificationStatus.confirmed,
+        severity=AllergySeverity.severe,
+        reaction_type=ReactionType.immediate_hypersensitivity,
+    )
+
+    # Act / Assert — loads without error, field is present
+    assert leaf.reaction_type is ReactionType.immediate_hypersensitivity
+
+
+def test_requirement_renal_metric_must_match_observable():
+    # Arrange — gate 15: renal_metric must match observable
+    from noor.engine.rules import OnUnusable, Requirement
+
+    # Valid: renal_metric matches observable
+    valid = Requirement(
+        observable="egfr",
+        on_unusable=OnUnusable.indeterminate,
+        renal_metric="egfr",
+    )
+    assert valid.renal_metric == "egfr"
+
+    # Valid: renal_metric is None
+    valid_none = Requirement(
+        observable="potassium",
+        on_unusable=OnUnusable.indeterminate,
+        renal_metric=None,
+    )
+    assert valid_none.renal_metric is None
+
+    # Invalid: renal_metric doesn't match observable
+    with pytest.raises(ValidationError, match="they must match"):
+        Requirement(
+            observable="egfr",
+            on_unusable=OnUnusable.indeterminate,
+            renal_metric="crcl",
+        )
+
+    with pytest.raises(ValidationError, match="they must match"):
+        Requirement(observable="crcl", on_unusable=OnUnusable.indeterminate, renal_metric="egfr")

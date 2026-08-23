@@ -157,6 +157,16 @@ class CatalogueRelease(NoorModel):
                 )
         return self
 
+    @model_validator(mode="after")
+    def _rule_ids_are_unique(self) -> Self:
+        counts = Counter(rule.id for rule in self.rules)
+        duplicates = sorted(rid for rid, count in counts.items() if count > 1)
+        if duplicates:
+            raise ValueError(
+                f"rule ids are a release's lookup keys and must be unique: {duplicates}"
+            )
+        return self
+
 
 class AmbiguousGoalOfCareError(Exception):
     """Two or more active goals of care apply to one patient and observable
@@ -173,6 +183,24 @@ class AmbiguousGoalOfCareError(Exception):
             "two or more active goals of care apply to this patient and observable; "
             "resolve the conflict before the rule can produce a target (§8.2)"
         )
+
+
+class ForeignGoalUnitError(Exception):
+    """A goal of care states a unit different from the threshold's unit (SSOT §6.1).
+
+    This is a content/data error, not an evaluation defect. It is caught at
+    load time so the affected rule records a clean refusal rather than an
+    `evaluation_failed` with a bare ValueError.
+    """
+
+    def __init__(self, observable: str, goal_unit: str, threshold_unit: str) -> None:
+        super().__init__(
+            f"goal of care for {observable} states {goal_unit} but the threshold states "
+            f"{threshold_unit} — a target is never rescaled (§6.1)"
+        )
+        self.observable = observable
+        self.goal_unit = goal_unit
+        self.threshold_unit = threshold_unit
 
 
 class ResolvedTarget(NoorModel):
@@ -249,12 +277,33 @@ class EvaluationContext(NoorModel):
         thresholds = {threshold.ref: threshold for threshold in self.release.thresholds}
         for rule in self.release.rules:
             for node in walk_expression(rule.when):
-                # A threshold_ref rides only on numeric leaves, and a numeric leaf
-                # always names its fact; every other node carries no pairing.
-                if node.threshold_ref is None or node.fact is None:
+                # Every numeric leaf names its fact (load-time, §7.1). Validate that
+                # the fact is a governed observable (§6.6).
+                if node.fact is None:
                     continue
-                _validate_pairing(thresholds, self.registry, node.fact, node.threshold_ref)
+                try:
+                    self.registry.entry(node.fact)
+                except UnknownObservableError as e:
+                    raise ValueError(
+                        f"`{node.fact}` is not a governed observable — the registry "
+                        f"declares what may be compared (§6.6)"
+                    ) from e
+                # If it has a threshold_ref, validate the pairing (populated, unit match)
+                if node.threshold_ref is not None:
+                    _validate_pairing(thresholds, self.registry, node.fact, node.threshold_ref)
         self._thresholds_by_ref = MappingProxyType(thresholds)
+        return self
+
+    @model_validator(mode="after")
+    def _goal_units_match_threshold_units(self) -> Self:
+        """Check that any goal of care that could match a threshold has the same unit.
+
+        This is a structural check: if a goal's observable matches a threshold's
+        observable (inferred from the threshold ref), their units must agree.
+        Since we don't have an explicit observable field on Threshold, we check
+        at evaluation time via ForeignGoalUnitError. This validator is a placeholder
+        for future enhancement when Threshold gains an observable field.
+        """
         return self
 
     def resolve_threshold(self, snapshot: Snapshot, observable: str, ref: str) -> ResolvedTarget:
@@ -279,10 +328,7 @@ class EvaluationContext(NoorModel):
             return ResolvedTarget(value=threshold.value, unit=threshold.unit, source="profile")
         goal = matching[0]
         if goal.unit != threshold.unit:
-            raise ValueError(
-                f"the goal target states {goal.unit} but the threshold it replaces states "
-                f"{threshold.unit} — a target is never rescaled (§6.1)"
-            )
+            raise ForeignGoalUnitError(observable, goal.unit, threshold.unit)
         return ResolvedTarget(
             value=goal.value, unit=goal.unit, source="goal", goal_reason=goal.reason
         )

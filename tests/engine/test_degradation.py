@@ -127,7 +127,10 @@ def test_claim_34_an_unconfirmed_allergy_degrades_the_finding_never_the_answer()
     )
 
     # Act
-    record = evaluate_one(hard_stop_allergy_rule(), make_snapshot(allergies=(unverified,)))
+    record = evaluate_one(
+        hard_stop_allergy_rule(),
+        make_snapshot(allergies=(unverified,), allergy_status=AllergyStatus.recorded),
+    )
 
     # Assert — present data of lower grade: triggered, capped, never indeterminate,
     # and never allowed to block an order on hearsay (§5.5, §8.3)
@@ -161,7 +164,9 @@ def _graded_case(case):
             culprit=CulpritSubstance(ingredient_id="penicillin"),
             verification_status=VerificationStatus.unconfirmed,
         )
-        return hard_stop_allergy_rule(), make_snapshot(allergies=(unverified,))
+        return hard_stop_allergy_rule(), make_snapshot(
+            allergies=(unverified,), allergy_status=AllergyStatus.recorded
+        )
     if case == "manager_report":
         return hyperkalemia_hard_stop(), manager_reported_potassium()
     tolerated = {"prefer_source": (EntryMode.interfaced, EntryMode.noor_derived)}
@@ -237,7 +242,11 @@ def test_a_graded_child_inside_a_boolean_parent_propagates_its_grade():
 
     # Act
     context = make_context(release=make_release(rules=(rule,)))
-    records = evaluate(context, make_snapshot(allergies=(unverified,)), actions)
+    records = evaluate(
+        context,
+        make_snapshot(allergies=(unverified,), allergy_status=AllergyStatus.recorded),
+        actions,
+    )
 
     # Assert — the graded child caps the composed finding; no double demotion
     assert len(records) == 1
