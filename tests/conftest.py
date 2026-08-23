@@ -1,7 +1,7 @@
 """Shared builders and fixtures (docs/testing-standards.md: factories live here)."""
 
 import os
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from decimal import Decimal
 from pathlib import Path
 from typing import Any
@@ -33,6 +33,19 @@ from noor.canon.registry import (
     ObservableRegistry,
 )
 from noor.catalogue.registry_loader import load_registry
+from noor.engine.snapshot import (
+    AllergyOnset,
+    AllergyRecord,
+    AllergySeverity,
+    AllergyStatus,
+    CulpritSubstance,
+    EvidenceSource,
+    GoalOfCare,
+    ReactionType,
+    Recorder,
+    Snapshot,
+    VerificationStatus,
+)
 
 settings.register_profile("ci", derandomize=True)
 if os.environ.get("CI"):
@@ -176,3 +189,64 @@ def make_canonical(
             delta=delta,
         )
     return CanonicalObservation(**capture.model_dump(), canonical=canonical, quality=quality)
+
+
+def make_allergy(**overrides: Any) -> AllergyRecord:
+    """A confirmed severe amoxicillin allergy (§5.5); override anything.
+
+    The onset mirrors the SSOT's example shape: a partial date is a string,
+    because "2019-03" is not a date.
+    """
+    fields: dict[str, Any] = {
+        "culprit": CulpritSubstance(
+            ingredient_id="amoxicillin", atc="J01CA04", source_display="Amoxicillin"
+        ),
+        "reaction": ("anaphylaxis",),
+        "reaction_type": ReactionType.immediate_hypersensitivity,
+        "severity": AllergySeverity.severe,
+        "onset": AllergyOnset(timing="within 1h of first dose", date="2019-03", precision="month"),
+        "verification_status": VerificationStatus.confirmed,
+        "evidence_source": EvidenceSource.clinical_record,
+        "recorder": Recorder(person_id="DR-7", role="physician"),
+        "recorded_at": T0,
+    }
+    fields.update(overrides)
+    return AllergyRecord(**fields)
+
+
+def make_goal(**overrides: Any) -> GoalOfCare:
+    """A systolic-BP goal of <150 mmHg, active for a year from T0 (§5.6); override anything."""
+    fields: dict[str, Any] = {
+        "observable": "systolic_bp",
+        "value": Decimal("150"),
+        "unit": "mmHg",
+        "op": "lt",
+        "reason": "High orthostatic fall risk",
+        "clinician_id": "DR-7",
+        "effective_date": T0,
+        "expires_at": T0 + timedelta(days=365),
+    }
+    fields.update(overrides)
+    return GoalOfCare(**fields)
+
+
+def make_snapshot(**overrides: Any) -> Snapshot:
+    """A well-formed evaluation snapshot; override anything.
+
+    Collections default to empty — say what the test needs via the keyword
+    arguments.
+    """
+    fields: dict[str, Any] = {
+        "snapshot_id": "SNAP-1",
+        "evaluated_at": T0,
+        "patient_id": "PAT-1",
+        "age_years": 67,
+        "observations": (),
+        "medications": (),
+        "allergies": (),
+        "allergy_status": AllergyStatus.recorded,
+        "conditions": frozenset(),
+        "goals_of_care": (),
+    }
+    fields.update(overrides)
+    return Snapshot(**fields)
