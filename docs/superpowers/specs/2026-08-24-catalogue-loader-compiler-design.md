@@ -8,7 +8,9 @@ the SSOT wins — stop and ask.
 coverage).
 
 Throughout, `§N` cites the SSOT and `section N` cites this document. The two
-numbering schemes overlap and the distinction is load-bearing.
+numbering schemes overlap and the distinction is load-bearing. A bare
+"amendment N" is an entry in section 10's list; the SSOT's own numbered
+amendments are always written with their section, as in "§7.1 amendment 5".
 
 ## 1. Goal
 
@@ -20,6 +22,14 @@ to steps 8–12 for the reason section 9.1 gives. It stops short of §10.4 **gat
 (release comparison), which the SSOT itself orders into step 15 because it needs a
 golden set.
 
+The diff is not purely `catalogue`. Closing the authoring spaces forced three
+`engine` changes that closing them without would have made unsafe: one §4.2 field
+(`Snapshot.medications_reconciled_at`, approved as an explicit §0 exception), one
+resolution branch in `evaluate.py` (`active_medications` resolves against that
+stamp, not through `_latest_observation`), and two validator changes in
+`engine/rules.py`. Section 9 is the argument for all three; sections 8 and 10 are
+the inventory.
+
 `catalogue` imports `canon` and `engine`; nothing imports `catalogue` except
 `app`, which does not exist yet (§4.1, §4.2). The compiler performs the one
 filesystem read the boundary permits above `engine` — content load — and no
@@ -28,7 +38,7 @@ other I/O, no clock, and no network.
 ## 2. Scope
 
 **In scope.** Seven modules under `src/noor/catalogue/`; the remaining single-rule
-and cross-file §10.4 gates not already enforced by `engine` models (3, 8, 13,
+and cross-file §10.4 gates not already enforced by `engine` models (3, 8, 12, 13,
 15a, 15b, 16, 17); two closed valueset registries and a terminology charter that
 close the `concept`, `ingredient_id`, and code-system authoring spaces; the
 `content/valuesets/` and `content/terminology/charter.yaml` infrastructure
@@ -46,14 +56,14 @@ or superseded engine code (section 8).
 | The `crcl` registry row and equation provenance | Already committed by the canon plan's assumption 14 to the plan that has a rule needing it |
 | Persistence, the run header, `correlation_id`, `latency_ms` | §14 step 7 |
 | Claim 29's **operational-policy** half — refusing a profile that omits the escalation policy, ageing thresholds, or per-kind obligation defaults (§10.5) | §14 steps 8–12 — those fields are §11 app-layer data the packages that consume them own; see section 9.1 |
-| Closing `Requirement.observable` to non-measured data families (`active_medications`, allergy history) and the `SnapshotMedication` effective time that would make `max_age_days` on them enforceable | Deferred; see section 9 and amendment 5 |
+| Medication metadata beyond the one freshness stamp — dose, route, indication, per-entry assertion times | §14 step 6+ — section 9 adds only `medications_reconciled_at`, the minimum `max_age_days` needs |
 
 ## 3. Decisions taken
 
 Five scoping decisions, made 2026-08-24 and settled with the user:
 
 1. **Loader + compiler + gates on one branch, one PR** — mirroring the canon and
-   engine plans. The design note, plan, code, and the six SSOT amendments
+   engine plans. The design note, plan, code, and the seven SSOT amendments
    (section 10) travel to `main` together, so the §7.5 four-eyes review covers
    the amendments and the code at once.
 2. **`concept` and `ingredient_id` are closed by seeded-on-demand valuesets**
@@ -74,11 +84,12 @@ Five scoping decisions, made 2026-08-24 and settled with the user:
    the `*.cases.yaml` harness are proven entirely against synthetic YAML fixtures
    built under `tmp_path`. `content/` stays clinically clean, and step 6 remains
    "the first real rule" exactly as the SSOT defines it.
-5. **`Requirement.observable` is an allowlist of registered observables only**
-   (section 9). The compiler refuses anything else. §7.1's canonical example rule,
-   which requires `active_medications`, knowingly does not load until the
-   medication list carries an effective time — recorded as amendment 5, so the
-   contradiction is visible at merge rather than silent at evaluation.
+5. **`Requirement.observable` is the registered observables plus
+   `active_medications`** (section 9). The compiler refuses anything else.
+   `active_medications` resolves against a new list-level reconciliation stamp on
+   `Snapshot`, and a `drug_active` leaf must declare it — §7.1's canonical example
+   rule becomes loadable *and* enforceable. Approved as an explicit §0 exception
+   for the §4.2 data contract on 2026-08-24, recorded as amendment 5.
 
 ## 4. Module layout
 
@@ -187,18 +198,65 @@ renal observable **must** declare `renal_metric` (15a); and that `renal_metric`
 eGFR and CrCl diverge by weight — this is the §12.6 claim 36 divergence the gate
 exists to stop — and no substring of a citation is read to catch it.
 
-## 6. What I am deliberately not building
+## 6. Gate 12 — the SSOT's concern is right, its instrument is not
 
-**Gate 12's JSON-Schema field-reference pass (§4.2 point 2).** §4.2 point 2 was
-written before §4.3.1 fixed the expression shape as one closed model. After that,
-a separate pass validating rule field references against the snapshot's exported
-JSON Schema has nothing left to catch: each operator has a Pydantic-fixed field
-set, `fact` is closed by the observable registry, `concept` and `ingredient_id`
-become closed by section 5's valuesets, and `age` reads one declared scalar. The
-pass would be dead code. §12.6 claim 20's second half — "a rule referencing a
-field absent from the snapshot schema is refused" — still gets a named test,
-satisfied by the closed `Expression` plus the three registries rather than by a
-schema walk. This is recorded as amendment 4, not skipped in silence.
+§4.2 point 2 says the compiler validates rule field references against the
+snapshot's exported JSON Schema, and gives its reason: "A name-matching check
+would be defeated by the first author who wrote `encounter.state` instead of
+`encounter_id`."
+
+**The concern is correct, and the first draft of this design was wrong to call it
+subsumed.** A rule that names something which does not exist does not fail loudly.
+It silently never matches, or silently schedules nothing. No alert, no error, no
+one notices — the worst failure mode a CDS engine has.
+
+**The instrument is the wrong one.** A JSON Schema of the snapshot cannot reach the
+values that need closing: `conditions` is `frozenset[str]` and `medications` is
+`tuple[SnapshotMedication, ...]`, so the schema sees the *fields* and never the
+concept ids or ingredient ids inside them. Two of the eight reference sites below
+are not snapshot fields at all — `requested_actions` is a parameter of
+`evaluate()`, not a member of `Snapshot`. The pass would walk a schema and find
+nothing.
+
+**The right instrument is one closure per reference site, against the registry that
+owns that name's space.** Every place a rule names something that must exist:
+
+| Site | Space it names | Closed by |
+|---|---|---|
+| `Expression.fact` | observable | observable registry |
+| `Expression.threshold_ref` | threshold | `EvaluationContext` — already enforced |
+| `Expression.concept` | condition concept | `conditions.yaml` (section 5.1) |
+| `Expression.ingredient_id` | ingredient | `ingredients.yaml` (section 5.1) |
+| `Expression.minimum` / `maximum` | — (ints) | no name to get wrong |
+| `Requirement.observable` | observable | allowlist (section 9) |
+| `Monitor.observable` | observable | observable registry — **was unguarded** |
+| `OrderBlock.order_of` | ingredient | `ingredients.yaml` — **was unguarded** |
+
+The last two were missed when this design was first written; finding them is why
+the verification mattered. Both are authored strings that **no engine code reads
+today** — `evaluate.py` references neither `monitors` nor `order_of`. They are
+declarative, consumed by §11 app code that arrives in steps 8–12. That makes them
+*more* dangerous, not less:
+
+- A rule is approved by four eyes **once**, at step 6. A human reading
+  `observable: creatinin` in a YAML diff will not catch it.
+- The typo then lies dormant until an app consumes it, and surfaces as a renal
+  recheck that is never scheduled (`Monitor`) or a hard stop that blocks nothing
+  (`OrderBlock`) — long after the approver signed, on a time-delayed path no test
+  of the rule's *firing* behaviour covers. Gate 8's boundary rows test firing.
+
+Closing both costs two lines against registries this step already loads.
+
+That `order_of` names an ingredient is verified, not assumed:
+`RequestedAction.subject` is what `order_of` matches (its own docstring says so),
+and `evaluate.py:368` compares `action.subject == ingredient_id`. Same space, same
+valueset.
+
+**Deliberately not added:** a coherence gate requiring a hard stop's blocked
+ingredient to appear in its own `when`. It reads well and it is wrong — a
+cross-allergy rule (`when: allergy penicillin` → `blocks: amoxicillin`)
+legitimately blocks a drug its trigger never names. A gate that refuses correct
+clinical content is its own safety problem, because authors route around it.
 
 ## 7. The compiler
 
@@ -240,9 +298,11 @@ mode: a content tree either compiles whole or is refused.
 | 15b — `renal_metric` vs threshold `states_metric` | `compiler.py` | cross-file |
 | 17 — code system in charter | `terminology.py` + compiler | needs the charter |
 | `concept` / `ingredient_id` / `Requirement.observable` closure | `valuesets.py` + compiler | new (section 5, section 9) |
+| 12 — `drug_active` leaf must declare `active_medications` | `engine/rules.py` validator | extends the existing gate-12 validator (section 9) |
+| 12 — every authored name-reference closed, all eight sites | `valuesets.py` + compiler | section 6 — replaces the JSON-Schema pass |
+| 12 — `Monitor.observable`, `OrderBlock.order_of` closures | compiler | section 6 — previously unguarded |
 | 1, 2, 4, 5, 6, 7, 10, 14 | already in `engine` models | single-rule / single-release; landed in step 4 |
 | 9 — release comparison | **out** — §14 step 15 | needs the golden set |
-| 12 — JSON-Schema field pass | **not built** — section 6 | subsumed by the closed `Expression` |
 
 ## 8. Cleanups this diff touches
 
@@ -265,34 +325,68 @@ Surgical, each traceable to a file this step already edits (CLAUDE.md rule 3):
    exists to govern. It is superseded by the registry marker plus `states_metric`
    (section 5.3), so it is deleted, not kept alongside them.
 
-## 9. `Requirement.observable` — the one SSOT conflict, and its resolution
+## 9. `active_medications` — the SSOT conflict, and its resolution
 
 Closing the `Requirement.observable` string space exposes a genuine contradiction
-in the SSOT, which decision 5 resolves:
+in the SSOT:
 
 - §7.1's canonical example rule declares
   `requires: [{observable: active_medications, max_age_days: 1}]`.
 - `active_medications` is not in the observable registry (ten measured
-  observables), and `engine/evaluate.py` resolves every requirement by searching
-  `snapshot.observations`.
-- `SnapshotMedication` carries only `ingredient_id` and `mapping_status` — **no
-  timestamp** — so `max_age_days: 1` on it is unenforceable in principle, not
-  merely unimplemented.
+  observables), and `_resolve_requirement` resolves every requirement through
+  `_latest_observation`, which searches `snapshot.observations` only.
+- `SnapshotMedication` carries `ingredient_id` and `mapping_status` — **no
+  time** — so `max_age_days: 1` on it was unenforceable in principle, not merely
+  unimplemented.
 
-Today a requirement on `active_medications` therefore resolves `no_result` →
-unusable → the rule is *always* `indeterminate`, silently.
+Today a requirement on `active_medications` resolves `no_result` → unusable → the
+rule is *always* `indeterminate`, silently.
 
-**Resolution (decision 5):** the compiler's allowlist is the registered
-observables only. Anything else is refused at compile time. §7.1's example is not
-loadable as written until `SnapshotMedication` gains an effective time — recorded
-as amendment 5 with a deferred item, so the gap is visible at merge. Widening the
-allowlist to non-measured data families, or adding the medication timestamp now,
-were both considered and declined: the timestamp is a §4.2 device-boundary
-data-contract change, which §0 makes a security-critical constant needing its own
-approval, and it does not belong in an infrastructure step.
+**The problem is larger than §7.1's example.**
+`_every_compared_observable_is_declared_in_requires` walks `when` for **numeric
+operators only**, so a `drug_active: metformin` leaf needs no requirement at all.
+Every medication-safety rule — the whole step-6 domain — reads the medication list
+with no declared freshness posture and no way to declare one. And
+`_drug_active` on an empty `medications` tuple returns `False`: "the patient takes
+nothing." §5.5 rule 2 already ruled on precisely this shape — *"An unasked patient
+and a cleared patient are opposite facts, and neither is ever inferred from an
+empty list"* — and `_allergy` honours it by raising `_CannotAssessSafely` on
+`not_asked`. Medications have no equivalent. That asymmetry is a false negative on
+the safest-sounding path: the rule concludes the patient is not on the drug and
+stays silent.
 
-`drug_active` / `drug_requested` leaves are unaffected — they read
-`ingredient_id` against `snapshot.medications` directly and declare no requirement.
+**Resolution.** Approved 2026-08-24 as an explicit §0 exception for the §4.2 data
+contract:
+
+1. **`Snapshot.medications_reconciled_at: AwareDatetime | None`** — when the
+   medication list was last reconciled or verified, **never** when it was
+   transmitted. If the device stamps send-time, `max_age_days: 1` always passes and
+   the check is worse than absent.
+2. **`active_medications` joins the `Requirement.observable` allowlist** as the one
+   non-registry entry, resolving against that stamp rather than through
+   `_latest_observation`. It produces a verdict and no value — `_resolve_manifest`
+   already tolerates a requirement that populates nothing, and no numeric leaf may
+   name it, since gate 12 constrains compared facts to the registry. `None`
+   resolves `unusable / no_result`; a stamp older than `max_age_days` resolves
+   `unusable / stale` through `_first_failure`'s existing comparison.
+3. **A `drug_active` leaf must declare an `active_medications` requirement**,
+   extending `_every_compared_observable_is_declared_in_requires` to the one drug
+   operator that reads patient state. This is §7.1 amendment 5's own argument — "a
+   threshold never runs against data of undeclared age and grade" — applied to the
+   medication list, and it is what routes the empty-list case through a verdict
+   instead of a silent `False`.
+
+**Why list-level, not per-entry.** A per-medication `asserted_at` was considered
+and is worse on both counts. It cannot express the empty-list case at all — no
+entries, no stamps — which is the highest-risk case. And on a merged feed
+(discharge summary, pharmacy fill, home visit) the oldest entry is some ancient
+discharge medication, so a `min(asserted_at)` freshness test would never be
+satisfiable, making `max_age_days` dead in practice. Reconciliation is an act over
+the list; the stamp belongs where the act is.
+
+`drug_requested` is **not** covered by point 3: it reads the `requested_actions`
+parameter, not the medication list, and the action under consideration is by
+definition current.
 
 ### 9.1 Claim 29 — the second conflict, and its resolution
 
@@ -331,15 +425,25 @@ Each goes through the same §7.5 four-eyes PR as the code:
    authoring spaces; `content/terminology/charter.yaml` is where gate 17's
    attribution obligations are recorded. Explicitly not the `in_valueset`
    operator.
-4. **§4.2 point 2** — the JSON-Schema field-reference pass is reconciled as
-   subsumed by §4.3.1's closed `Expression` plus the three registries. Recorded,
-   not built (section 6).
-5. **§7.1 / §10.4 gate 12** — requirement observables are an allowlist of
-   registered observables; §7.1's `active_medications` example is not loadable
-   until the medication list carries an effective time (deferred, section 9).
+4. **§4.2 point 2** — the snapshot JSON-Schema field-reference pass is replaced by
+   one closure per reference site, against the registry owning that name's space
+   (section 6 enumerates all eight). The schema cannot reach values inside
+   `frozenset[str]` / `tuple[...]` collections, and two sites are not snapshot
+   fields. Gate 12's *concern* is unchanged and now more completely met; only its
+   instrument changes.
+5. **§7.1 / §7.3 / §4.2** — a `drug_active` leaf must declare an
+   `active_medications` requirement, which resolves against a new list-level
+   `Snapshot.medications_reconciled_at` stamp (last reconciled, never
+   transmitted). §7.1's example becomes loadable and enforceable. **This is an
+   explicit §0 approval for the §4.2 data contract**, granted 2026-08-24
+   (section 9).
 6. **§12.6 claim 29 / §14 step 5** — claim 29's operational-policy half moves to
    §14 steps 8–12, with the packages that own those schemas. Step 5 proves the
    refusal pattern on `Profile`'s existing required fields (section 9.1).
+7. **§7.1 amendment 5** — its scope widens from "every numerically compared
+   observable" to "every observable a rule reads as patient state," which adds the
+   `drug_active` leaf. The rationale is unchanged and quoted verbatim from the
+   existing validator: a rule never runs against data of undeclared age and grade.
 
 ## 11. Testing
 
@@ -351,8 +455,10 @@ names, behaviour not implementation, 100% branch coverage with no exclusions.
   exactly one violation into an otherwise-valid tree so the assertion names the
   gate, not an unrelated failure.
 - **Named claim tests:** 18 (compiler refuses a rule referencing visit/trigger
-  state), 20 (closed snapshot contract, both halves — the second via the closed
-  `Expression` and registries), 21 (`!!python/...` tag refused with no object
+  state), 20 (closed snapshot contract, both halves — the second as **one refusal
+  test per reference site in section 6's table**, including a `Monitor.observable`
+  typo and an `OrderBlock.order_of` typo, each of which passes every existing
+  validator today), 21 (`!!python/...` tag refused with no object
   constructed), 29 (a profile omitting a required declared field is refused, not
   defaulted — the refusal pattern on `Profile`'s existing fields; the
   operational-policy fields are steps 8–12, section 9.1), 42 (free text /
@@ -360,6 +466,20 @@ names, behaviour not implementation, 100% branch coverage with no exclusions.
   declares `egfr` against a CrCl-stated threshold → refused).
 - **The real `content/` tree compiles clean** — a test that
   `compile_release` succeeds on the committed infrastructure content.
+- **The medication-freshness path (section 9), four behaviour tests in
+  `tests/engine/`** — this is new evaluator behaviour, so it is tested where
+  `evaluate` is tested, not in the compiler suite:
+  - a `drug_active` rule with no `active_medications` requirement is refused at
+    load (the gate);
+  - `medications_reconciled_at: None` resolves `unusable / no_result`, and the rule
+    degrades to `indeterminate` rather than concluding the patient takes nothing —
+    the §5.5 rule 2 parity test, and the one that would have caught the silent
+    false negative;
+  - a stamp older than `max_age_days` resolves `unusable / stale`; a stamp exactly
+    `max_age_days` old stays usable, matching `_first_failure`'s existing boundary;
+  - an **empty** `medications` tuple with a *fresh* stamp is a usable verdict and
+    `drug_active` correctly returns `False` — reconciled-and-takes-nothing is a
+    real, distinct fact from never-asked, and must not degrade.
 - **The `*.cases.yaml` parametrize harness** is proven against a fixture tree with
   a threshold and its three boundary rows, and against a fixture missing a row
   (refused). It discovers zero cases in the real `content/` tree today, and that
@@ -404,7 +524,7 @@ uv run mypy src/noor/canon src/noor/engine src/noor/catalogue
 uv run pytest --cov --cov-report=term-missing --cov-fail-under=100
 ```
 
-Plus: the six SSOT amendments (section 10) are written into
+Plus: the seven SSOT amendments (section 10) are written into
 `docs/cds-architecture.md`; `content/valuesets/` and
 `content/terminology/charter.yaml` exist and compile; the four cleanups
 (section 8) are done; and the branch reaches `main` through a pull request under
