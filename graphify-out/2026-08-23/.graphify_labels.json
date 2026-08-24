@@ -98,12 +98,10 @@
   "96": "test_degradation.py",
   "97": "make_snapshot",
   "98": "make_allergy",
-  "99": "delta.py",
+  "99": "ObservableEntry",
   "100": "QualityResolution",
   "101": "__init__.py",
   "102": "__init__.py",
   "103": "__init__.py",
-  "104": "__init__.py",
-  "105": "RequestedAction",
-  "106": "potassium_rule"
+  "104": "__init__.py"
 }

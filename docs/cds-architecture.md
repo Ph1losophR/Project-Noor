@@ -754,6 +754,21 @@ evaluator grows into a poor imitation of CQL — answerable by the build rather
 than by assurance: growing the vocabulary requires editing the enum, which is a
 reviewed change to the device, not a rule author's private decision.
 
+#### 4.3.1 Expression shape
+
+Version 1 uses one closed recursive expression model for `when` and `scope`
+predicates. Boolean composition uses `all`, `any`, and `not`; leaf expressions
+use the closed `Operator` enum and only the fields permitted by that operator.
+The model gives the evaluator one expression walk without becoming an open
+dictionary: an unknown operator, fact key, or operator-specific field is refused
+at load time. Numeric leaves carry either a literal or a `threshold_ref`, never
+both; drug leaves carry an ingredient id; and the allergy leaf carries its
+verification and severity filters. The compiler validates every referenced fact
+against the closed snapshot schema.
+
+Adding an operator or a new fact is therefore a reviewed engine/catalogue change,
+not a content author's private extension.
+
 ---
 
 ## 5. The observation model
@@ -952,15 +967,17 @@ A clinician may formally override a guideline-based target (e.g., `<130/80` for 
 
 ```yaml
 goal_of_care:
-  observable: systolic_bp                 # the physiological parameter
-  target_threshold: {value: 150, op: lt}  # the new threshold (e.g., <150)
-  reason: "High orthostatic fall risk"    # free-text or coded reason for override
-  clinician_id: ...                       # named accountability
+  observable: systolic_bp                          # the physiological parameter
+  target_threshold: {value: 150, op: lt, unit: mmHg}  # the new threshold (e.g., <150 mmHg)
+  reason: "High orthostatic fall risk"             # free-text or coded reason for override
+  clinician_id: ...                                # named accountability
   effective_date: 2026-08-13
-  expires_at: 2027-08-13                  # requires periodic re-validation
+  expires_at: 2027-08-13                           # requires periodic re-validation
 ```
 
 This is an explicit override mechanism, recorded with named accountability. The CDS engine **never** deduces or assumes a goal of care autonomously based on a patient's past stable but pathological readings.
+
+`unit` is **required** and is the unit the target `value` is stated in. It exists so the engine compares like with like: a goal substitutes for the profile threshold (§7.3) only when its unit matches the observable's canonical unit, and a mismatch is refused rather than silently compared. In evaluation the engine reads `observable`, `value`, and `unit`; `op`, `reason`, and `clinician_id` carry the target's meaning and its accountability into the card (§7.2, §7.3 "shows the conflict") and are never used to decide the numeric comparison — the comparison operator is the rule's (§7.1 `when`). A goal has no lifecycle status field: it is active when the evaluation timestamp falls in `[effective_date, expires_at)`, and an early revocation is recorded by shortening `expires_at`, never by a flag. Two active, unexpired goals for one patient and observable are a conflict the engine refuses (§8.2 "Conflicting patient goals"), not a state to disambiguate.
 
 ### 5.7 The named medicine-manager
 
@@ -1218,7 +1235,9 @@ severity: stop_and_review     # stop_and_review | interruptive_review | passive_
 
 scope:
   include: [{condition: type_2_diabetes}]
-  exclude: [{age_lt: 18}, {on_dialysis: true}]
+  exclude: [{age_lt: 18}, {condition: on_dialysis}]   # a boolean patient state is a
+                                                      # condition concept: the snapshot
+                                                      # has no free attribute space (§4.2)
 
 # What a drug reference in this rule matches against (§R-4, §3.2)
 drug_scope_level: ingredient   # ingredient | ingredient_route | product |
@@ -1246,7 +1265,10 @@ monitors:
 when:
   all:
     - {fact: egfr, op: lt, threshold_ref: metformin.egfr_absolute_contraindication}
-    - {drug_active: metformin}
+    - {drug_active: metformin}    # current therapy. A start-contraindication rule
+                                  # instead uses {drug_requested: metformin}, which
+                                  # matches §11.6's planned actions (§8.1, §8.4
+                                  # invariant 10). Both obey drug_scope_level.
 
 then:
   blocks: {order_of: metformin}   # a block must NAME the order action it blocks
@@ -1305,6 +1327,18 @@ inhibitor" — and finerenone's four-week and RAAS's two-to-four-week rechecks
 (§R-1) — were inexpressible. A rule's own `monitors` entry pins the product label
 version it was written against (§3.2), because a monitoring interval belongs to a
 label, not to a molecule.
+
+**Every observable a `when` clause compares numerically is declared in `requires`.**
+The freshness and quality gate is not optional: a threshold compared against an
+ungated value is a decision made on data of unknown age and unknown grade, which is
+the failure §5.1 and §8.3 exist to prevent. A numeric leaf naming an observable
+absent from the rule's `requires` manifest is a load failure (§10.4 gate 12
+territory), and at evaluation the engine reads only the requirement-validated value:
+when that requirement is unusable the rule is already `indeterminate` (§8.3) and the
+comparison never runs. Drug, allergy, condition, and age predicates read
+always-present snapshot collections directly and need no such declaration — an
+absent drug or allergy is a usable *false*, not missing data, with the single
+exception that `allergy_status: not_asked` is `indeterminate` (§5.5).
 
 ### 7.2 Authored prose is three fields; the card renders seven
 
@@ -1512,7 +1546,7 @@ evaluation_record:               # one per rule considered, returned by engine/
   requirement_verdicts:
     - observable: egfr
       verdict: unusable
-      reason: no_result_within_90d
+       reason: stale
       latest_age_days: 214
   pins:
     catalogue_release: 2026.09.1
@@ -1544,6 +1578,26 @@ supervisor sees in §11.2. It would also break invariant 8: measuring elapsed ti
 requires a clock, and a time-ordered id *is* a clock reading, so an engine that
 minted either would fail the §4.2 seam test. The run header is where a value that
 belongs to the run rather than to the reasoning lives.
+
+#### Requirement verdict vocabulary
+
+`requirement_verdicts` use a closed machine vocabulary so the data-quality queue
+and zero-firing surveillance can distinguish different failures. A verdict's
+reason is one of: `no_result`, `quality_below_minimum`, `stale`,
+`wrong_source`, `missing_context`, `withdrawn_source`, `ambiguous_mapping`, or
+`wrong_observable`. The record may also carry a short derived explanation for
+the clinician, but the machine reason is stable and is what comparisons and
+surveillance use. An unusable requirement with `on_unusable: indeterminate`
+degrades the rule; `on_unusable: silent` produces no requirement-based
+degradation and remains forbidden for `stop_and_review` rules (§10.4 gate 10).
+
+Evidence grade is derived by the evaluator from structured facts already in the
+snapshot, not configured independently by each rule. Version 1 grades an
+otherwise usable finding when it relies on an unconfirmed allergy, a
+medicine-manager report from a cognitively impaired patient, or a Noor-derived
+value where the requirement prefers an interfaced source. These findings remain
+`triggered`; `degraded_because: evidence_grade` caps effective severity below
+`stop_and_review`. Evidence grade never turns present data into `indeterminate`.
 
 **What is deliberately *not* here: `displayed` and `opened`.** §R-9 wants to know
 whether an alert was seen, not merely computed. Noor records that — in the
@@ -1577,6 +1631,18 @@ patient — the ledger would fill with work nobody owes. Were it folded into
 `not_triggered`, zero-firing surveillance could not distinguish "sixty in-scope
 patients, none matched" from "a profile edit narrowed scope to nobody", which is
 the exact discrimination §8.2 exists to make.
+
+#### Conflicting patient goals
+
+When more than one active, unexpired `goal_of_care` applies to the same patient
+and observable, the engine refuses to choose between them. The rule produces an
+`evaluation_failed` record with the exception type `AmbiguousGoalOfCareError`,
+degrades below `stop_and_review`, and never blocks. The failure is distinct from
+an unusable requirement because the engine has data but cannot identify one
+accountable target. A clinician or workflow owner must resolve the goals before
+the rule can produce a target-based finding. Choosing the newest goal or the
+narrowest goal is explicitly forbidden: both silently convert an unresolved
+clinical conflict into an apparently authoritative recommendation.
 
 **Rationale.** The dominant CDS failure mode is the alert that silently stops
 firing: users reliably notice a spurious alert and reliably fail to notice an
@@ -1672,11 +1738,15 @@ Each is a test.
 3. No rule loads referencing an `unpopulated` threshold.
 4. `stop_and_review` rules cannot be tenant-disabled.
 5. Evaluation order never affects output.
-6. Identical snapshot + identical catalogue release ⇒ byte-identical evaluation
-   *records*. Scoped to the per-rule record of §8.2 — outcome, both severities,
-   `degraded_because`, `requirement_verdicts`, and `pins`. The run header is
-   excluded by construction, because `correlation_id` and `latency_ms` are stamped
-   by `app/` and are not engine output.
+6. Identical snapshot + identical requested actions + identical catalogue release
+   ⇒ byte-identical evaluation *records*. Scoped to the per-rule record of §8.2 —
+   outcome, both severities, `degraded_because`, `requirement_verdicts`, and
+   `pins`. The run header is excluded by construction, because `correlation_id`
+   and `latency_ms` are stamped by `app/` and are not engine output.
+   `requested_actions` is named because invariant 10's projection lets
+   `drug_requested` read it, so it is part of the input a record is a function of
+   (§8.1). Determinism is over the whole input, which is what this invariant has
+   always meant.
 7. No rule reads another rule's output.
 8. The engine performs no I/O and reads no clock (§4.2).
 9. A rule is a pure function of the snapshot and the catalogue — preserving
@@ -1684,6 +1754,19 @@ Each is a test.
 10. No rule reads encounter state or free-text narrative. A rule cannot ask which visit state, trigger,
     or workflow step invoked it, and it cannot see the patient's textual complaint. §11 is a consumer of evaluation, never an input
     to it.
+
+    **One exception, and it is a projection rather than a doorway.** A rule may
+    read the `kind` and `subject` of a planned action passed as `requested_actions`
+    (§8.1, §11.6) — and nothing else from that list: not `encounter_id`, not
+    `state`, not `detail`, not `blocked_by`. That pair is clinical intent and is
+    invariant under any UI change, which is the risk this invariant exists to
+    close, and §8.1 already supplies the list to the evaluator. Without it a
+    contraindicated *start* is inexpressible: §7.1's rule keys on `drug_active`,
+    false for a patient not yet on the drug, so a new order for a contraindicated
+    agent would record `not_triggered` and nothing would block. The remaining
+    fields are encounter state and stay outside. The projection is asserted by
+    field-set equality in the §4.2 seam test, so widening it fails the suite
+    rather than passing quietly.
 11. A raising rule never ends the run, and a failed run never blocks (§8.5).
 
 Invariant 10 is what keeps §11 outside the device boundary. The moment a rule
@@ -2345,7 +2428,10 @@ planned_action:
   subject: metformin           # what `order_of` matches against
   detail: {dose: "500 mg", frequency: "BD"}
   state: draft | final
-  blocked_by: [rule_id, ...]   # set by the evaluator, never authored
+  blocked_by: [rule_id, ...]   # derived from evaluation, never authored: app/ sets it
+                               # by joining the triggered stop_and_review records to
+                               # their rules' then.blocks (§8.2, §8.4 invariant 10). The
+                               # pure engine returns records and writes no encounter state.
 ```
 
 Two consequences:

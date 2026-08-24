@@ -11,12 +11,20 @@ names a treatment threshold: §6.4's three boundary types are separate, and
 `docs/testing-standards.md` requires a test that proves they are not read from
 one another. This test exists from the first commit, before there is anything
 to import (§14 step 1).
+
+The invariant-10 guards close the data half of what the engine may read: no
+engine identifier names visit, encounter, narrative, or trigger state; the
+snapshot and context declare no such field; and `RequestedAction` projects
+exactly `{kind, subject}` (§8.4 invariant 10, design note §8.2).
 """
 
 import ast
 from pathlib import Path
 
 import pytest
+
+from noor.engine.content import EvaluationContext
+from noor.engine.snapshot import RequestedAction, Snapshot
 
 SRC = Path(__file__).resolve().parent.parent / "src" / "noor"
 
@@ -49,6 +57,13 @@ FORBIDDEN_IMPORT_ROOTS_IN_PURE = frozenset(
         "sqlite3",
         "urllib",
         "subprocess",
+        "random",
+        "uuid",
+        "logging",
+        "tempfile",
+        "pickle",
+        "smtplib",
+        "http",
     }
 )
 
@@ -65,11 +80,23 @@ FORBIDDEN_CLOCK_CALLS_IN_PURE = frozenset(
 # identifier naming one inside canon means the two have been wired together.
 FORBIDDEN_SUBSTRINGS_IN_CANON = ("threshold", "target_range")
 
+# §8.4 invariant 10: no rule may ask which visit produced a fact, which trigger
+# invoked it, or read free text. Precise NAMES, matched exactly and
+# case-insensitively: the bare substring "encounter" would outlaw
+# CanonicalObservation.encounter_id, and "trigger" would outlaw §8.2's own
+# outcome vocabulary (`triggered`, `not_triggered`) (design note §8.2).
+FORBIDDEN_STATE_NAMES_IN_ENGINE = frozenset(
+    {"visit_state", "encounter_state", "narrative", "trigger"}
+)
+
+# The projection §8.4 invariant 10 permits a rule to read of a planned action.
+# Asserted as field-set EQUALITY, so widening it fails rather than passing quietly.
+REQUESTED_ACTION_FIELD_SET = frozenset({"kind", "subject"})
+
 
 def _python_files(package: str) -> list[Path]:
     directory = SRC / package
-    if not directory.exists():
-        return []
+    assert directory.exists(), f"boundary package {package} must exist"
     return sorted(directory.rglob("*.py"))
 
 
@@ -230,3 +257,44 @@ def test_canon_never_names_a_treatment_threshold():
 
     # Assert
     assert not offenders, f"canon must never read a treatment threshold (SSOT §6.4): {offenders}"
+
+
+def test_engine_never_names_visit_encounter_narrative_or_trigger_state():
+    # Arrange / Act — invariant 10 read statically off the engine's identifiers,
+    # exactly as the canon guard reads canon's, but on precise names.
+    offenders = [
+        (path, name)
+        for path in _python_files("engine")
+        for name in _identifiers(path)
+        if name.lower() in FORBIDDEN_STATE_NAMES_IN_ENGINE
+    ]
+
+    # Assert
+    assert not offenders, (
+        f"engine must never name visit, encounter, narrative, or trigger state "
+        f"(SSOT §8.4 invariant 10): {offenders}"
+    )
+
+
+def test_the_snapshot_and_context_declare_no_encounter_or_trigger_field():
+    # Arrange / Act — a rule cannot ask what it cannot see (§8.2, design §8.2):
+    # the models the evaluator reads the world through carry no such field.
+    offenders = [
+        (model.__name__, field)
+        for model in (Snapshot, EvaluationContext)
+        for field in model.model_fields
+        if field.lower() in FORBIDDEN_STATE_NAMES_IN_ENGINE
+    ]
+
+    # Assert
+    assert not offenders, (
+        f"the device boundary's models must declare no encounter or trigger field "
+        f"(SSOT §4.2, §8.4 invariant 10): {offenders}"
+    )
+
+
+def test_requested_action_projects_kind_and_subject_exactly():
+    # Arrange / Act / Assert — equality, not subset: adding encounter_id,
+    # state, detail, or blocked_by later fails here rather than passing quietly
+    # (§8.4 invariant 10's amendment, design note §8.2).
+    assert set(RequestedAction.model_fields) == REQUESTED_ACTION_FIELD_SET
