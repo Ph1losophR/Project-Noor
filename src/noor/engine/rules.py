@@ -399,10 +399,7 @@ class Rule(NoorModel):
     @model_validator(mode="after")
     def _drug_references_declare_their_scope_level(self) -> Self:
         for node in walk_expression(self.when):
-            if (
-                node.op in DRUG_OPERATORS
-                and self.drug_scope_level is not DrugScopeLevel.ingredient
-            ):
+            if node.op in DRUG_OPERATORS and self.drug_scope_level is not DrugScopeLevel.ingredient:
                 raise ValueError(
                     f"`{node.op}: {node.ingredient_id}` needs drug_scope_level: ingredient — "
                     f"v1 matches at ingredient level only (§7.1(e), §10.4 gate 14)"

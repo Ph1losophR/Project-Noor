@@ -531,8 +531,7 @@ def _evidence_is_graded(
         and EntryMode.interfaced in requirement.prefer_source
     )
     prefer_source_miss = bool(
-        requirement.prefer_source
-        and observation.entry_mode not in requirement.prefer_source
+        requirement.prefer_source and observation.entry_mode not in requirement.prefer_source
     )
     return manager_report or noor_substitute or prefer_source_miss
 

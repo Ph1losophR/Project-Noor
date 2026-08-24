@@ -120,6 +120,7 @@ MEDICATION_POOL = (
     SnapshotMedication(ingredient_id="insulin", mapping_status=MappingStatus.ambiguous),
 )
 
+
 def _consistent_allergy_data():
     """Generate (allergies, allergy_status) pairs that are consistent per §5.5 rule 2."""
     return st.one_of(
@@ -137,9 +138,9 @@ def _consistent_allergy_data():
             ),
             min_size=1,
             max_size=3,
-        ).map(tuple).flatmap(
-            lambda allergies: st.tuples(st.just(allergies), st.just(AllergyStatus.recorded))
-        ),
+        )
+        .map(tuple)
+        .flatmap(lambda allergies: st.tuples(st.just(allergies), st.just(AllergyStatus.recorded))),
     )
 
 

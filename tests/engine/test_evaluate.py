@@ -332,6 +332,7 @@ def test_freshness_window_uses_exact_timedelta_comparison():
     # Arrange — 90 days 12 hours old should be stale (exceeds 90-day window)
     # The .days truncation bug would have allowed this as 90 days
     from datetime import timedelta
+
     obs = make_canonical(
         observable="egfr",
         value="25",
@@ -582,6 +583,7 @@ def test_cannot_assess_safely_none_observable_in_catch_block():
 
     # Monkeypatch _decide to raise _CannotAssessSafely without observable
     import noor.engine.evaluate as evaluate_module
+
     original_decide = evaluate_module._decide
 
     def mock_decide(*args, **kwargs):
