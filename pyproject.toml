@@ -1,0 +1,13 @@
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+addopts = "--cov=noor --cov-branch --cov-report=term-missing"
+
+[tool.coverage.run]
+branch = true
+source = ["src/noor"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+exclude_lines = []

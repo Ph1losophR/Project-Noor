@@ -1,0 +1,517 @@
+{
+  "AGENTS.md": {
+    "mtime": 1788036480.484322,
+    "ast_hash": "aa0819c2270387575bf96fec7cf1795e",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1788036473.8070543,
+    "ast_hash": "aa0819c2270387575bf96fec7cf1795e",
+    "semantic_hash": ""
+  },
+  "docs/research/how_cds_engines_work.md": {
+    "mtime": 1787828871.434619,
+    "ast_hash": "da89a7ef394d6c7fa37dc1450cfda1e7",
+    "semantic_hash": "da89a7ef394d6c7fa37dc1450cfda1e7"
+  },
+  "docs/research/why_cds_engines_fail.md": {
+    "mtime": 1787829084.8311713,
+    "ast_hash": "11d63265d4e06fc9410de48ffbbbcf5c",
+    "semantic_hash": "11d63265d4e06fc9410de48ffbbbcf5c"
+  },
+  "CONTEXT.md": {
+    "mtime": 1788347753.836244,
+    "ast_hash": "9dd31d60f58a86fbd0f06dddd1455342",
+    "semantic_hash": ""
+  },
+  "docs/adr/0001-time-to-action-not-severity.md": {
+    "mtime": 1787923290.5946412,
+    "ast_hash": "06bec19f207bd5c522c2493cb41a6c51",
+    "semantic_hash": "06bec19f207bd5c522c2493cb41a6c51"
+  },
+  "docs/research/art_of_chronic_disease_management.md": {
+    "mtime": 1787834983.0053778,
+    "ast_hash": "8755156640eb39fa7ad1f9dd9d0e7640",
+    "semantic_hash": "8755156640eb39fa7ad1f9dd9d0e7640"
+  },
+  "project_noor_architecture.md": {
+    "mtime": 1788362761.9098268,
+    "ast_hash": "1203774e65ad2563b26a1d3250996b65",
+    "semantic_hash": ""
+  },
+  "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md": {
+    "mtime": 1787840275.2527936,
+    "ast_hash": "b4181acab4b7145a9be2dc6345353056",
+    "semantic_hash": "b4181acab4b7145a9be2dc6345353056"
+  },
+  "docs/research/medication_technique_and_self_care.md": {
+    "mtime": 1787845622.5228772,
+    "ast_hash": "8f72b93d6c77aeabb0b1702587ea68b5",
+    "semantic_hash": "8f72b93d6c77aeabb0b1702587ea68b5"
+  },
+  "docs/research/individualised_targets_and_goal_setting.md": {
+    "mtime": 1787847756.7356238,
+    "ast_hash": "5406c5e4ed7bbdb6443715bedd24f2c8",
+    "semantic_hash": "5406c5e4ed7bbdb6443715bedd24f2c8"
+  },
+  "docs/adr/0003-completion-is-the-field-teams-act.md": {
+    "mtime": 1787926192.419993,
+    "ast_hash": "c22971dcff6a0f47a94eca6ab7acd25e",
+    "semantic_hash": "c22971dcff6a0f47a94eca6ab7acd25e"
+  },
+  "docs/adr/0004-emergency-is-an-interrupt-state.md": {
+    "mtime": 1787954496.2491903,
+    "ast_hash": "435cdca1382b1eb6b8cd3b254d3da3ed",
+    "semantic_hash": "435cdca1382b1eb6b8cd3b254d3da3ed"
+  },
+  "docs/adr/0005-the-supervisor-reviews-in-noor.md": {
+    "mtime": 1787920370.101268,
+    "ast_hash": "a7a0930c6be726115d53a7c6bcf34bc2",
+    "semantic_hash": "a7a0930c6be726115d53a7c6bcf34bc2"
+  },
+  "docs/adr/0006-offline-by-locality.md": {
+    "mtime": 1787926288.4601583,
+    "ast_hash": "e3254f124b523dc25c1ba64ad5a5bc8c",
+    "semantic_hash": "e3254f124b523dc25c1ba64ad5a5bc8c"
+  },
+  "docs/adr/0007-clinical-content-is-data.md": {
+    "mtime": 1787954641.3838246,
+    "ast_hash": "c3038d957d69caa77a485434bf777f49",
+    "semantic_hash": "c3038d957d69caa77a485434bf777f49"
+  },
+  "docs/clinical-content/interval-events.md": {
+    "mtime": 1788000287.1854124,
+    "ast_hash": "7cfead1f438882e6a2c9d2c7c57007ec",
+    "semantic_hash": "7cfead1f438882e6a2c9d2c7c57007ec"
+  },
+  "docs/clinical-content/reason-lists.md": {
+    "mtime": 1788000287.2024353,
+    "ast_hash": "56cef0de735f8aad421061c3e86ba581",
+    "semantic_hash": "56cef0de735f8aad421061c3e86ba581"
+  },
+  "docs/clinical-content/response-windows.md": {
+    "mtime": 1788000287.2177718,
+    "ast_hash": "3f4598e5e0f36614f10c3147f95f03d7",
+    "semantic_hash": "3f4598e5e0f36614f10c3147f95f03d7"
+  },
+  "docs/testing-standards.md": {
+    "mtime": 1787954542.6118114,
+    "ast_hash": "dc3438146436d8fcb7b7251bae20f496",
+    "semantic_hash": "dc3438146436d8fcb7b7251bae20f496"
+  },
+  "pyproject.toml": {
+    "mtime": 1787996421.7719686,
+    "ast_hash": "00cf03a4db837cb885bb0d08bc1fbef5",
+    "semantic_hash": "00cf03a4db837cb885bb0d08bc1fbef5"
+  },
+  "run.py": {
+    "mtime": 1788290910.0061288,
+    "ast_hash": "9fa572573689b64bde8c80f8f38543e9",
+    "semantic_hash": "9fa572573689b64bde8c80f8f38543e9"
+  },
+  "src/noor/__init__.py": {
+    "mtime": 1787996486.316983,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/noor/domain/__init__.py": {
+    "mtime": 1787996486.6789718,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "src/noor/domain/states.py": {
+    "mtime": 1788008503.3298564,
+    "ast_hash": "3ed10f20e0b8d1750c3fd1a0baf5c859",
+    "semantic_hash": "3ed10f20e0b8d1750c3fd1a0baf5c859"
+  },
+  "tests/test_seam.py": {
+    "mtime": 1787996477.2275226,
+    "ast_hash": "f492f9f44140767df482ca3394a5cc07",
+    "semantic_hash": "f492f9f44140767df482ca3394a5cc07"
+  },
+  "requirements.txt": {
+    "mtime": 1787996420.628275,
+    "ast_hash": "5e4dd9d2adcabb11f0bfb6d6c2640ebf",
+    "semantic_hash": "5e4dd9d2adcabb11f0bfb6d6c2640ebf"
+  },
+  "tests/domain/__init__.py": {
+    "mtime": 1787997538.624339,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": "d41d8cd98f00b204e9800998ecf8427e"
+  },
+  "tests/domain/test_states.py": {
+    "mtime": 1788003200.0239701,
+    "ast_hash": "06b635dbb8f105ead6afdafc0f338b3f",
+    "semantic_hash": "06b635dbb8f105ead6afdafc0f338b3f"
+  },
+  "src/noor/content.py": {
+    "mtime": 1788002036.3947473,
+    "ast_hash": "ff42a8ae6282765063a15db1a124ed65",
+    "semantic_hash": "ff42a8ae6282765063a15db1a124ed65"
+  },
+  "tests/test_content.py": {
+    "mtime": 1788002022.3060272,
+    "ast_hash": "bfefa80b1191e34bfb8b5bdf1282b8fe",
+    "semantic_hash": "bfefa80b1191e34bfb8b5bdf1282b8fe"
+  },
+  "docs/clinical-content/drug-list.md": {
+    "mtime": 1788000164.5272634,
+    "ast_hash": "08fe78e0a11ee5c4f4875b0edb8c6448",
+    "semantic_hash": "08fe78e0a11ee5c4f4875b0edb8c6448"
+  },
+  "docs/clinical-content/physical-examination-elements.md": {
+    "mtime": 1788000141.1468523,
+    "ast_hash": "6261fcfba723cf18831bbdc5f9ab752a",
+    "semantic_hash": "6261fcfba723cf18831bbdc5f9ab752a"
+  },
+  "docs/clinical-content/self-care-items.md": {
+    "mtime": 1788000146.9288564,
+    "ast_hash": "f8af1db961b602a723d4fe5675c96543",
+    "semantic_hash": "f8af1db961b602a723d4fe5675c96543"
+  },
+  "docs/clinical-content/surveillance-intervals.md": {
+    "mtime": 1788000132.1625314,
+    "ast_hash": "7163a78af0814d5e9b496f831a6e6051",
+    "semantic_hash": "7163a78af0814d5e9b496f831a6e6051"
+  },
+  "docs/clinical-content/vitals-by-condition.md": {
+    "mtime": 1788000136.1240816,
+    "ast_hash": "00b71c15b96fddd267e64b5817279b90",
+    "semantic_hash": "00b71c15b96fddd267e64b5817279b90"
+  },
+  "src/noor/domain/records.py": {
+    "mtime": 1788256532.8488207,
+    "ast_hash": "7cb744ee08fa5511c48859d9d7ea5623",
+    "semantic_hash": ""
+  },
+  "tests/domain/test_records.py": {
+    "mtime": 1788251179.529077,
+    "ast_hash": "5826b4a339500a6c2fd87ac2f49bc0ab",
+    "semantic_hash": ""
+  },
+  "src/noor/domain/emergency.py": {
+    "mtime": 1788004948.869841,
+    "ast_hash": "21dd2a5745ef3eae344d24b60c447b2d",
+    "semantic_hash": "21dd2a5745ef3eae344d24b60c447b2d"
+  },
+  "tests/domain/test_emergency.py": {
+    "mtime": 1788005684.6973376,
+    "ast_hash": "e2d2d0f313fba42d5e1faba57801dea3",
+    "semantic_hash": "e2d2d0f313fba42d5e1faba57801dea3"
+  },
+  "src/noor/domain/opinions.py": {
+    "mtime": 1788025422.797944,
+    "ast_hash": "5e8dcba8b3dc231b570ae2d97fa09814",
+    "semantic_hash": "5e8dcba8b3dc231b570ae2d97fa09814"
+  },
+  "tests/domain/test_opinions.py": {
+    "mtime": 1788006456.6775658,
+    "ast_hash": "df34003255d82f0894bcf0fdd1046846",
+    "semantic_hash": "df34003255d82f0894bcf0fdd1046846"
+  },
+  "src/noor/domain/plans.py": {
+    "mtime": 1788007195.3373885,
+    "ast_hash": "87dadd3e83437e771119a5f177370f39",
+    "semantic_hash": "87dadd3e83437e771119a5f177370f39"
+  },
+  "tests/domain/test_plans.py": {
+    "mtime": 1788007725.1889632,
+    "ast_hash": "2810e3570447cff22179693d92a47174",
+    "semantic_hash": "2810e3570447cff22179693d92a47174"
+  },
+  "src/noor/domain/visit.py": {
+    "mtime": 1788362809.5392783,
+    "ast_hash": "596b8a737be81bf6eee2a8796266df26",
+    "semantic_hash": ""
+  },
+  "tests/domain/test_visit.py": {
+    "mtime": 1788009414.199031,
+    "ast_hash": "e09a2040cbe49654113ec12aac631ab7",
+    "semantic_hash": "e09a2040cbe49654113ec12aac631ab7"
+  },
+  "src/noor/serial.py": {
+    "mtime": 1788119994.5495138,
+    "ast_hash": "c120bd2fdeee41c50a1bafd97b1df198",
+    "semantic_hash": ""
+  },
+  "tests/test_serial.py": {
+    "mtime": 1788025422.801542,
+    "ast_hash": "ed55c0d15b36d467673dd1558f40ee4d",
+    "semantic_hash": "ed55c0d15b36d467673dd1558f40ee4d"
+  },
+  "src/noor/schema.sql": {
+    "mtime": 1788119982.6543894,
+    "ast_hash": "5ab8dba49a3ed3a59772350a3cb32a85",
+    "semantic_hash": ""
+  },
+  "src/noor/store.py": {
+    "mtime": 1788257286.2673042,
+    "ast_hash": "d1011798110c1b585e41de07db06e085",
+    "semantic_hash": ""
+  },
+  "tests/test_store.py": {
+    "mtime": 1788286473.6475847,
+    "ast_hash": "2dac0dc52a1f400ae5c11746baccb329",
+    "semantic_hash": ""
+  },
+  "src/noor/domain/reconciliation.py": {
+    "mtime": 1788263668.6983843,
+    "ast_hash": "934dd684509d85d67f8e35d5bbb024e3",
+    "semantic_hash": ""
+  },
+  "tests/domain/test_reconciliation.py": {
+    "mtime": 1788013867.8967037,
+    "ast_hash": "1d599149f16682880ea6ef5b94a6c30f",
+    "semantic_hash": "1d599149f16682880ea6ef5b94a6c30f"
+  },
+  "src/noor/emr.py": {
+    "mtime": 1788014657.612007,
+    "ast_hash": "22f7e84106b36b912ec9d6769289018b",
+    "semantic_hash": "22f7e84106b36b912ec9d6769289018b"
+  },
+  "tests/test_emr.py": {
+    "mtime": 1788015125.448958,
+    "ast_hash": "3fba38bb13980c6f53920350df25f35a",
+    "semantic_hash": "3fba38bb13980c6f53920350df25f35a"
+  },
+  "src/noor/domain/examination.py": {
+    "mtime": 1788018626.7487452,
+    "ast_hash": "a0143f271e1aa415f4238c890269dae5",
+    "semantic_hash": "a0143f271e1aa415f4238c890269dae5"
+  },
+  "tests/domain/test_examination.py": {
+    "mtime": 1788015883.8130877,
+    "ast_hash": "e7ecc0944addf7d7197f3cf7adbd566f",
+    "semantic_hash": "e7ecc0944addf7d7197f3cf7adbd566f"
+  },
+  "src/noor/domain/vitals.py": {
+    "mtime": 1788016661.502491,
+    "ast_hash": "6aa68214cf51417ef34dcaa7c5f81d4c",
+    "semantic_hash": "6aa68214cf51417ef34dcaa7c5f81d4c"
+  },
+  "tests/domain/test_vitals.py": {
+    "mtime": 1788016648.8187933,
+    "ast_hash": "8c481232c64c1e98b5ceea9f0c5b87fb",
+    "semantic_hash": "8c481232c64c1e98b5ceea9f0c5b87fb"
+  },
+  "src/noor/domain/brief.py": {
+    "mtime": 1788018648.550639,
+    "ast_hash": "dafcfa854bde442f8359ac405bcd27e2",
+    "semantic_hash": "dafcfa854bde442f8359ac405bcd27e2"
+  },
+  "tests/domain/test_brief.py": {
+    "mtime": 1788018581.6036205,
+    "ast_hash": "9554a4efdb397ab200678c71ae150187",
+    "semantic_hash": "9554a4efdb397ab200678c71ae150187"
+  },
+  "src/noor/domain/writeback.py": {
+    "mtime": 1788019620.4592092,
+    "ast_hash": "76ac47ec0c502f53d9c1404fad9d2e91",
+    "semantic_hash": "76ac47ec0c502f53d9c1404fad9d2e91"
+  },
+  "tests/domain/test_writeback.py": {
+    "mtime": 1788020595.0612893,
+    "ast_hash": "3a63a2010ef2a8d9ab72ae3b8a253a99",
+    "semantic_hash": "3a63a2010ef2a8d9ab72ae3b8a253a99"
+  },
+  "src/noor/dispatch.py": {
+    "mtime": 1788248759.4003851,
+    "ast_hash": "3517e4a3d7630ec87e9804d2f9cdd042",
+    "semantic_hash": ""
+  },
+  "src/noor/domain/supervisor.py": {
+    "mtime": 1788026527.8871021,
+    "ast_hash": "0d5ff1afdcf08cbec0d73066f02d4a3d",
+    "semantic_hash": "0d5ff1afdcf08cbec0d73066f02d4a3d"
+  },
+  "tests/domain/test_supervisor.py": {
+    "mtime": 1788026483.76019,
+    "ast_hash": "70be14d17f4782978af16862ede6bd72",
+    "semantic_hash": "70be14d17f4782978af16862ede6bd72"
+  },
+  "tests/test_dispatch.py": {
+    "mtime": 1788286478.0087955,
+    "ast_hash": "72338d640bf0b9b1ac615c93e06fa4f7",
+    "semantic_hash": ""
+  },
+  "tests/test_journeys.py": {
+    "mtime": 1788247834.126554,
+    "ast_hash": "406405a0c81f18ae720704c1021bec5f",
+    "semantic_hash": ""
+  },
+  "src/noor/prefetch.py": {
+    "mtime": 1788120060.6376102,
+    "ast_hash": "a992eb11dce5e9f4b88ee656650e5a8a",
+    "semantic_hash": ""
+  },
+  "tests/test_prefetch.py": {
+    "mtime": 1788119963.228681,
+    "ast_hash": "e7c5ca004c3ba28f50a681ace569cc95",
+    "semantic_hash": ""
+  },
+  "docs/frontend_ssot.md": {
+    "mtime": 1788347753.836244,
+    "ast_hash": "325b97a6952a9dc8fdb1df07d52cccad",
+    "semantic_hash": ""
+  },
+  "src/noor/domain/selfcare.py": {
+    "mtime": 1788267861.2457678,
+    "ast_hash": "1b4693ed550369d888cfc9ef8fef27f3",
+    "semantic_hash": ""
+  },
+  "tests/domain/test_selfcare.py": {
+    "mtime": 1788286452.2013454,
+    "ast_hash": "246a97a7240807ae7f73aba5e59904d6",
+    "semantic_hash": ""
+  },
+  "src/noor/web/__init__.py": {
+    "mtime": 1788290783.0883784,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "src/noor/web/app.py": {
+    "mtime": 1788351802.4942155,
+    "ast_hash": "4b59a0e8f69540a15c109f7f44f73c66",
+    "semantic_hash": ""
+  },
+  "src/noor/web/members.py": {
+    "mtime": 1788291035.592659,
+    "ast_hash": "7e8506000e6c7e24ec7a5f7045ab8951",
+    "semantic_hash": ""
+  },
+  "src/noor/web/people.py": {
+    "mtime": 1788290797.20091,
+    "ast_hash": "85a78573625e29a799fff7ff11aabcd5",
+    "semantic_hash": ""
+  },
+  "tests/web/__init__.py": {
+    "mtime": 1788290622.451231,
+    "ast_hash": "d41d8cd98f00b204e9800998ecf8427e",
+    "semantic_hash": ""
+  },
+  "tests/web/conftest.py": {
+    "mtime": 1788351272.6419847,
+    "ast_hash": "56a88208971349f43b3ad3e8e6b2f707",
+    "semantic_hash": ""
+  },
+  "tests/web/test_app.py": {
+    "mtime": 1788290748.247368,
+    "ast_hash": "c49ff19e03ae6532e0eaff33443fcc40",
+    "semantic_hash": ""
+  },
+  "tests/web/test_members.py": {
+    "mtime": 1788290989.7510905,
+    "ast_hash": "5831c3265687d73badf725c39cd79fee",
+    "semantic_hash": ""
+  },
+  "tests/web/test_stylesheet.py": {
+    "mtime": 1788290622.451231,
+    "ast_hash": "fbc3ad2a0f69ece8629528cf524332df",
+    "semantic_hash": ""
+  },
+  "tests/web/test_theme.py": {
+    "mtime": 1788291235.0151856,
+    "ast_hash": "bf153adadf28aa891f0c74a4f969069b",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-09-01-member-selection.md": {
+    "mtime": 1788290352.3037865,
+    "ast_hash": "dbe2507326c88fd24e0eb3c672582a05",
+    "semantic_hash": ""
+  },
+  "src/noor/web/templates/_layout.html": {
+    "mtime": 1788351269.7006545,
+    "ast_hash": "e27dd8af92a1dd4d5fd238cf1e641f1d",
+    "semantic_hash": ""
+  },
+  "src/noor/web/templates/members.html": {
+    "mtime": 1788290837.6249816,
+    "ast_hash": "6e27a04f2e52dbcc5b1c1efb8b2c6ae9",
+    "semantic_hash": ""
+  },
+  "src/noor/web/templates/refusal.html": {
+    "mtime": 1788291007.2035093,
+    "ast_hash": "7a33e8f59545289b22bde260eb775b10",
+    "semantic_hash": ""
+  },
+  "docs/adr/0008-baseline-label-is-a-read-time-planning-indicator.md": {
+    "mtime": 1788347809.4707286,
+    "ast_hash": "a33a5aad20daa16efc9da957a88c3396",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/2026-09-02-visit-list.md": {
+    "mtime": 1788362837.2778072,
+    "ast_hash": "f1dd9caefd1471f11c930b2404704f58",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/plans/phase1_frontend_pages.md": {
+    "mtime": 1788347753.836244,
+    "ast_hash": "16a3936af771788cdeb17ce9d6638e31",
+    "semantic_hash": ""
+  },
+  "src/noor/web/visits.py": {
+    "mtime": 1788362435.42387,
+    "ast_hash": "da1b8ef4d417362fa124bf4ae09d7afe",
+    "semantic_hash": ""
+  },
+  "tests/web/test_visits.py": {
+    "mtime": 1788362889.1998365,
+    "ast_hash": "a1f80e5df1962b96dc3716d9cb71f55e",
+    "semantic_hash": ""
+  },
+  "tests/web/test_wiring.py": {
+    "mtime": 1788351241.7218466,
+    "ast_hash": "c88298d2e1968a077bb6dd4fef823c78",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/progress.md": {
+    "mtime": 1788354372.1993647,
+    "ast_hash": "5fa470a9323b6cf449e62147381fbb66",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-1-brief.md": {
+    "mtime": 1788351198.3431017,
+    "ast_hash": "848413a77c90d1137d918293301d17a3",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-1-report.md": {
+    "mtime": 1788351352.1517863,
+    "ast_hash": "142865422f890aea4807d6d7580ce4ee",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-2-brief.md": {
+    "mtime": 1788351707.3649976,
+    "ast_hash": "01767d73fb23426cc4f64e8e0cb977e4",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-2-report.md": {
+    "mtime": 1788352641.558064,
+    "ast_hash": "445948ac9f0dbfddf039d0ecae5353b6",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-3-brief.md": {
+    "mtime": 1788353040.4901667,
+    "ast_hash": "ba1ff23eb31656308cc748bac37cf1a2",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-3-report.md": {
+    "mtime": 1788353691.9753866,
+    "ast_hash": "f790189c114fe414a480648e021e0297",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-4-brief.md": {
+    "mtime": 1788353981.7092948,
+    "ast_hash": "45eda03490345b11bcdd189a880fea3b",
+    "semantic_hash": ""
+  },
+  "src/noor/web/templates/visits.html": {
+    "mtime": 1788362472.1178973,
+    "ast_hash": "d1726dc656111f26b02c3a239168d93d",
+    "semantic_hash": ""
+  },
+  ".superpowers/sdd/task-4-report.md": {
+    "mtime": 1788354211.3200028,
+    "ast_hash": "a950cd6178e68c230bf8e0a7f1a841e0",
+    "semantic_hash": ""
+  }
+}

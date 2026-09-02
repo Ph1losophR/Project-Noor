@@ -1,0 +1,23 @@
+{
+  "0": "Behavioral Guidelines",
+  "1": "Behavioral Guidelines",
+  "2": "Deep Research: How Healthcare CDS Engines Work & Newest Trends",
+  "3": "Deep Research: Why CDS Engines Fail",
+  "4": "Detailed Analysis",
+  "5": "AGENTS.md — Project Noor",
+  "6": "CLAUDE.md — Project Noor",
+  "7": "Detailed Analysis",
+  "8": "2. The eight non-negotiables",
+  "9": "Project Noor — Architecture (SSOT)",
+  "10": "Language",
+  "11": "Recommendations are routed by time-to-action, not clinical severity",
+  "12": "Deep Research: Individualised Glycaemic & BP Targets in Older/Comorbid Patients — and the Office-to-Home Offset",
+  "13": "Completion is the Field Team's act, and the Supervisor does not gate it",
+  "14": "Emergency is an interrupt state, not a terminal one",
+  "15": "Structured reason lists",
+  "16": "Response windows and the audit rate",
+  "17": "The Supervisor reviews in Noor; the EMR records the outcome",
+  "18": "Offline by locality: one local Python process, one SQLite file",
+  "19": "Clinical content is data; the non-negotiables are code",
+  "20": "Interval events"
+}

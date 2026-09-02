@@ -1,0 +1,97 @@
+{
+  "AGENTS.md": {
+    "mtime": 1787820926.616337,
+    "ast_hash": "e7f731516cf4e4a3636f7f0c8d0e43d4",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1787820911.8887649,
+    "ast_hash": "1114d45dbf894b2cf0916d6c7f67cd94",
+    "semantic_hash": ""
+  },
+  "docs/research/how_cds_engines_work.md": {
+    "mtime": 1787828871.434619,
+    "ast_hash": "da89a7ef394d6c7fa37dc1450cfda1e7",
+    "semantic_hash": ""
+  },
+  "docs/research/why_cds_engines_fail.md": {
+    "mtime": 1787829084.8311713,
+    "ast_hash": "11d63265d4e06fc9410de48ffbbbcf5c",
+    "semantic_hash": ""
+  },
+  "CONTEXT.md": {
+    "mtime": 1787922926.4981463,
+    "ast_hash": "38fe385089591d44591dd38ac3ad107b",
+    "semantic_hash": ""
+  },
+  "docs/adr/0001-time-to-action-not-severity.md": {
+    "mtime": 1787923290.5946412,
+    "ast_hash": "06bec19f207bd5c522c2493cb41a6c51",
+    "semantic_hash": ""
+  },
+  "docs/research/art_of_chronic_disease_management.md": {
+    "mtime": 1787834983.0053778,
+    "ast_hash": "8755156640eb39fa7ad1f9dd9d0e7640",
+    "semantic_hash": ""
+  },
+  "project_noor_architecture.md": {
+    "mtime": 1787923268.976143,
+    "ast_hash": "eac67066710dfbbf7fa23acea530f1fd",
+    "semantic_hash": ""
+  },
+  "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md": {
+    "mtime": 1787840275.2527936,
+    "ast_hash": "b4181acab4b7145a9be2dc6345353056",
+    "semantic_hash": ""
+  },
+  "docs/research/medication_technique_and_self_care.md": {
+    "mtime": 1787845622.5228772,
+    "ast_hash": "8f72b93d6c77aeabb0b1702587ea68b5",
+    "semantic_hash": ""
+  },
+  "docs/research/individualised_targets_and_goal_setting.md": {
+    "mtime": 1787847756.7356238,
+    "ast_hash": "5406c5e4ed7bbdb6443715bedd24f2c8",
+    "semantic_hash": ""
+  },
+  "docs/adr/0003-completion-is-the-field-teams-act.md": {
+    "mtime": 1787869011.2665024,
+    "ast_hash": "d9cecf12a15ad6f2f77b0e821a460588",
+    "semantic_hash": ""
+  },
+  "docs/adr/0004-emergency-is-an-interrupt-state.md": {
+    "mtime": 1787869034.1366463,
+    "ast_hash": "701e3945194064f86e90e350d29a2cdd",
+    "semantic_hash": ""
+  },
+  "docs/adr/0005-the-supervisor-reviews-in-noor.md": {
+    "mtime": 1787920370.101268,
+    "ast_hash": "a7a0930c6be726115d53a7c6bcf34bc2",
+    "semantic_hash": ""
+  },
+  "docs/adr/0006-offline-by-locality.md": {
+    "mtime": 1787920884.8778317,
+    "ast_hash": "d1286439be42e391aa26b4920bee518b",
+    "semantic_hash": ""
+  },
+  "docs/adr/0007-clinical-content-is-data.md": {
+    "mtime": 1787922289.2305808,
+    "ast_hash": "a6c903fe49078ad13428ac5cac7812ce",
+    "semantic_hash": ""
+  },
+  "docs/clinical-content/interval-events.md": {
+    "mtime": 1787922955.1659744,
+    "ast_hash": "4a0fa3cfe5bda7a6c1c904f87b196149",
+    "semantic_hash": ""
+  },
+  "docs/clinical-content/reason-lists.md": {
+    "mtime": 1787921927.2439618,
+    "ast_hash": "2838e5262cca5ac31fab5f6b5a616031",
+    "semantic_hash": ""
+  },
+  "docs/clinical-content/response-windows.md": {
+    "mtime": 1787923253.580294,
+    "ast_hash": "9cb1899eaad4d14112384fb252410ea5",
+    "semantic_hash": ""
+  }
+}

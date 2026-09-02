@@ -1,0 +1,2670 @@
+{
+  "directed": false,
+  "multigraph": false,
+  "graph": {},
+  "nodes": [
+    {
+      "label": "AGENTS.md",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "agents",
+      "community": 0,
+      "norm_label": "agents.md"
+    },
+    {
+      "label": "AGENTS.md \u2014 Project Noor",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "agents_agents_md_project_noor",
+      "community": 0,
+      "norm_label": "agents.md \u2014 project noor"
+    },
+    {
+      "label": "SSOT Integrity Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "agents_ssot_integrity_rules",
+      "community": 0,
+      "norm_label": "ssot integrity rules"
+    },
+    {
+      "label": "Behavioral Guidelines",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "agents_behavioral_guidelines",
+      "community": 0,
+      "norm_label": "behavioral guidelines"
+    },
+    {
+      "label": "1. Think Before Coding",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "agents_1_think_before_coding",
+      "community": 0,
+      "norm_label": "1. think before coding"
+    },
+    {
+      "label": "2. Simplicity First",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "agents_2_simplicity_first",
+      "community": 0,
+      "norm_label": "2. simplicity first"
+    },
+    {
+      "label": "3. Surgical Changes",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "agents_3_surgical_changes",
+      "community": 0,
+      "norm_label": "3. surgical changes"
+    },
+    {
+      "label": "4. Goal-Driven Execution",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "agents_4_goal_driven_execution",
+      "community": 0,
+      "norm_label": "4. goal-driven execution"
+    },
+    {
+      "label": "5. Skill & MCP Use",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "agents_5_skill_mcp_use",
+      "community": 0,
+      "norm_label": "5. skill & mcp use"
+    },
+    {
+      "label": "6. Before Implementing Any Business Logic",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "agents_6_before_implementing_any_business_logic",
+      "community": 0,
+      "norm_label": "6. before implementing any business logic"
+    },
+    {
+      "label": "7. Your Preferred Persona",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "agents_7_your_preferred_persona",
+      "community": 0,
+      "norm_label": "7. your preferred persona"
+    },
+    {
+      "label": "8. About Me",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "agents_8_about_me",
+      "community": 0,
+      "norm_label": "8. about me"
+    },
+    {
+      "label": "Important Commands",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "agents_important_commands",
+      "community": 0,
+      "norm_label": "important commands"
+    },
+    {
+      "label": "Testing",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "agents_testing",
+      "community": 0,
+      "norm_label": "testing"
+    },
+    {
+      "label": "Behavioral Rules",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "agents_behavioral_rules",
+      "community": 0,
+      "norm_label": "behavioral rules"
+    },
+    {
+      "label": "graphify",
+      "file_type": "document",
+      "source_file": "AGENTS.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "agents_graphify",
+      "community": 0,
+      "norm_label": "graphify"
+    },
+    {
+      "label": "CLAUDE.md",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude",
+      "community": 1,
+      "norm_label": "claude.md"
+    },
+    {
+      "label": "CLAUDE.md \u2014 Project Noor",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "claude_claude_md_project_noor",
+      "community": 1,
+      "norm_label": "claude.md \u2014 project noor"
+    },
+    {
+      "label": "SSOT Integrity Rules",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "claude_ssot_integrity_rules",
+      "community": 1,
+      "norm_label": "ssot integrity rules"
+    },
+    {
+      "label": "Behavioral Guidelines",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "claude_behavioral_guidelines",
+      "community": 1,
+      "norm_label": "behavioral guidelines"
+    },
+    {
+      "label": "1. Think Before Coding",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L18",
+      "_origin": "ast",
+      "id": "claude_1_think_before_coding",
+      "community": 1,
+      "norm_label": "1. think before coding"
+    },
+    {
+      "label": "2. Simplicity First",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "claude_2_simplicity_first",
+      "community": 1,
+      "norm_label": "2. simplicity first"
+    },
+    {
+      "label": "3. Surgical Changes",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "claude_3_surgical_changes",
+      "community": 1,
+      "norm_label": "3. surgical changes"
+    },
+    {
+      "label": "4. Goal-Driven Execution",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "claude_4_goal_driven_execution",
+      "community": 1,
+      "norm_label": "4. goal-driven execution"
+    },
+    {
+      "label": "5. Skill & MCP Use",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "claude_5_skill_mcp_use",
+      "community": 1,
+      "norm_label": "5. skill & mcp use"
+    },
+    {
+      "label": "6. Before Implementing Any Business Logic",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L72",
+      "_origin": "ast",
+      "id": "claude_6_before_implementing_any_business_logic",
+      "community": 1,
+      "norm_label": "6. before implementing any business logic"
+    },
+    {
+      "label": "7. Your Preferred Persona",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L76",
+      "_origin": "ast",
+      "id": "claude_7_your_preferred_persona",
+      "community": 1,
+      "norm_label": "7. your preferred persona"
+    },
+    {
+      "label": "8. About Me",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L82",
+      "_origin": "ast",
+      "id": "claude_8_about_me",
+      "community": 1,
+      "norm_label": "8. about me"
+    },
+    {
+      "label": "Important Commands",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L86",
+      "_origin": "ast",
+      "id": "claude_important_commands",
+      "community": 1,
+      "norm_label": "important commands"
+    },
+    {
+      "label": "Testing",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L94",
+      "_origin": "ast",
+      "id": "claude_testing",
+      "community": 1,
+      "norm_label": "testing"
+    },
+    {
+      "label": "Behavioral Rules",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L100",
+      "_origin": "ast",
+      "id": "claude_behavioral_rules",
+      "community": 1,
+      "norm_label": "behavioral rules"
+    },
+    {
+      "label": "graphify",
+      "file_type": "document",
+      "source_file": "CLAUDE.md",
+      "source_location": "L109",
+      "_origin": "ast",
+      "id": "claude_graphify",
+      "community": 1,
+      "norm_label": "graphify"
+    },
+    {
+      "label": "CONTEXT.md",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "context",
+      "community": 10,
+      "norm_label": "context.md"
+    },
+    {
+      "label": "Project Noor",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "context_project_noor",
+      "community": 10,
+      "norm_label": "project noor"
+    },
+    {
+      "label": "Language",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "context_language",
+      "community": 10,
+      "norm_label": "language"
+    },
+    {
+      "label": "People",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "context_people",
+      "community": 10,
+      "norm_label": "people"
+    },
+    {
+      "label": "The visit",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L33",
+      "_origin": "ast",
+      "id": "context_the_visit",
+      "community": 10,
+      "norm_label": "the visit"
+    },
+    {
+      "label": "What Noor produces",
+      "file_type": "document",
+      "source_file": "CONTEXT.md",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "context_what_noor_produces",
+      "community": 10,
+      "norm_label": "what noor produces"
+    },
+    {
+      "label": "0001-time-to-action-not-severity.md",
+      "file_type": "document",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_adr_0001_time_to_action_not_severity",
+      "community": 11,
+      "norm_label": "0001-time-to-action-not-severity.md"
+    },
+    {
+      "label": "Recommendations are routed by time-to-action, not clinical severity",
+      "file_type": "document",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_adr_0001_time_to_action_not_severity_recommendations_are_routed_by_time_to_action_not_clinical_severity",
+      "community": 11,
+      "norm_label": "recommendations are routed by time-to-action, not clinical severity"
+    },
+    {
+      "label": "Considered Options",
+      "file_type": "document",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L5",
+      "_origin": "ast",
+      "id": "docs_adr_0001_time_to_action_not_severity_considered_options",
+      "community": 11,
+      "norm_label": "considered options"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L10",
+      "_origin": "ast",
+      "id": "docs_adr_0001_time_to_action_not_severity_consequences",
+      "community": 11,
+      "norm_label": "consequences"
+    },
+    {
+      "label": "0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "file_type": "document",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines",
+      "community": 9,
+      "norm_label": "0002-self-care-failure-suppresses-the-recommendation-it-undermines.md"
+    },
+    {
+      "label": "A Self-Care Check failure suppresses the Recommendation it undermines",
+      "file_type": "document",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_a_self_care_check_failure_suppresses_the_recommendation_it_undermines",
+      "community": 9,
+      "norm_label": "a self-care check failure suppresses the recommendation it undermines"
+    },
+    {
+      "label": "Considered Options",
+      "file_type": "document",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_considered_options",
+      "community": 9,
+      "norm_label": "considered options"
+    },
+    {
+      "label": "Consequences",
+      "file_type": "document",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_consequences",
+      "community": 9,
+      "norm_label": "consequences"
+    },
+    {
+      "label": "art_of_chronic_disease_management.md",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management",
+      "community": 6,
+      "norm_label": "art_of_chronic_disease_management.md"
+    },
+    {
+      "label": "Deep Research: The Art of Chronic Disease Management \u2014 Diabetes & Hypertension at Home",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "community": 6,
+      "norm_label": "deep research: the art of chronic disease management \u2014 diabetes & hypertension at home"
+    },
+    {
+      "label": "Executive Summary",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_executive_summary",
+      "community": 6,
+      "norm_label": "executive summary"
+    },
+    {
+      "label": "Key Findings",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_key_findings",
+      "community": 6,
+      "norm_label": "key findings"
+    },
+    {
+      "label": "Detailed Analysis",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "community": 7,
+      "norm_label": "detailed analysis"
+    },
+    {
+      "label": "1. First, an honest boundary: what \"near-hospital-level care at home\" can defensibly mean",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L32",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_1_first_an_honest_boundary_what_near_hospital_level_care_at_home_can_defensibly_mean",
+      "community": 7,
+      "norm_label": "1. first, an honest boundary: what \"near-hospital-level care at home\" can defensibly mean"
+    },
+    {
+      "label": "2. The co-intervention principle: why monitors alone fail and bundles win",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_2_the_co_intervention_principle_why_monitors_alone_fail_and_bundles_win",
+      "community": 7,
+      "norm_label": "2. the co-intervention principle: why monitors alone fail and bundles win"
+    },
+    {
+      "label": "3. Hypertension at home: the strongest causal chain in the file",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_3_hypertension_at_home_the_strongest_causal_chain_in_the_file",
+      "community": 7,
+      "norm_label": "3. hypertension at home: the strongest causal chain in the file"
+    },
+    {
+      "label": "4. Diabetes at home: sensing beats messaging; coaching anchors",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L53",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_4_diabetes_at_home_sensing_beats_messaging_coaching_anchors",
+      "community": 7,
+      "norm_label": "4. diabetes at home: sensing beats messaging; coaching anchors"
+    },
+    {
+      "label": "5. Severity boundaries: where home stops \u2014 adoptable codified criteria",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_5_severity_boundaries_where_home_stops_adoptable_codified_criteria",
+      "community": 7,
+      "norm_label": "5. severity boundaries: where home stops \u2014 adoptable codified criteria"
+    },
+    {
+      "label": "6. Operating parameters observed across successful programs",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_6_operating_parameters_observed_across_successful_programs",
+      "community": 7,
+      "norm_label": "6. operating parameters observed across successful programs"
+    },
+    {
+      "label": "7. Saudi Arabia: substrate, gaps, and cultural wiring",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L78",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_7_saudi_arabia_substrate_gaps_and_cultural_wiring",
+      "community": 7,
+      "norm_label": "7. saudi arabia: substrate, gaps, and cultural wiring"
+    },
+    {
+      "label": "8. Failure modes catalog (what kills these programs)",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L87",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_8_failure_modes_catalog_what_kills_these_programs",
+      "community": 7,
+      "norm_label": "8. failure modes catalog (what kills these programs)"
+    },
+    {
+      "label": "Contrarian Views And Risks",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L98",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_contrarian_views_and_risks",
+      "community": 6,
+      "norm_label": "contrarian views and risks"
+    },
+    {
+      "label": "Implications For Project Noor (explicitly labeled inference)",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L108",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_implications_for_project_noor_explicitly_labeled_inference",
+      "community": 6,
+      "norm_label": "implications for project noor (explicitly labeled inference)"
+    },
+    {
+      "label": "Open Questions",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L123",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_open_questions",
+      "community": 6,
+      "norm_label": "open questions"
+    },
+    {
+      "label": "Sources",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L133",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_sources",
+      "community": 6,
+      "norm_label": "sources"
+    },
+    {
+      "label": "Rerun Inputs",
+      "file_type": "document",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L249",
+      "_origin": "ast",
+      "id": "docs_research_art_of_chronic_disease_management_rerun_inputs",
+      "community": 6,
+      "norm_label": "rerun inputs"
+    },
+    {
+      "label": "how_cds_engines_work.md",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work",
+      "community": 2,
+      "norm_label": "how_cds_engines_work.md"
+    },
+    {
+      "label": "Deep Research: How Healthcare CDS Engines Work & Newest Trends",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "community": 2,
+      "norm_label": "deep research: how healthcare cds engines work & newest trends"
+    },
+    {
+      "label": "Executive Summary",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L6",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_executive_summary",
+      "community": 2,
+      "norm_label": "executive summary"
+    },
+    {
+      "label": "Key Findings",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L14",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_key_findings",
+      "community": 2,
+      "norm_label": "key findings"
+    },
+    {
+      "label": "Detailed Analysis",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L27",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_detailed_analysis",
+      "community": 2,
+      "norm_label": "detailed analysis"
+    },
+    {
+      "label": "1. Core architecture: the four canonical components",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L29",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_1_core_architecture_the_four_canonical_components",
+      "community": 2,
+      "norm_label": "1. core architecture: the four canonical components"
+    },
+    {
+      "label": "2. Knowledge representation and rule languages",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L44",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_2_knowledge_representation_and_rule_languages",
+      "community": 2,
+      "norm_label": "2. knowledge representation and rule languages"
+    },
+    {
+      "label": "3. Standards and integration: how engines hook into the EHR",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_3_standards_and_integration_how_engines_hook_into_the_ehr",
+      "community": 2,
+      "norm_label": "3. standards and integration: how engines hook into the ehr"
+    },
+    {
+      "label": "4. Real-world engines and commercial knowledge bases",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L59",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_4_real_world_engines_and_commercial_knowledge_bases",
+      "community": 2,
+      "norm_label": "4. real-world engines and commercial knowledge bases"
+    },
+    {
+      "label": "5. The output layer is where engines succeed or fail",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_5_the_output_layer_is_where_engines_succeed_or_fail",
+      "community": 2,
+      "norm_label": "5. the output layer is where engines succeed or fail"
+    },
+    {
+      "label": "6. Newest trends (2023\u20132026)",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L70",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_6_newest_trends_2023_2026",
+      "community": 2,
+      "norm_label": "6. newest trends (2023\u20132026)"
+    },
+    {
+      "label": "Contrarian Views And Risks",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L84",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_contrarian_views_and_risks",
+      "community": 2,
+      "norm_label": "contrarian views and risks"
+    },
+    {
+      "label": "Open Questions",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_open_questions",
+      "community": 2,
+      "norm_label": "open questions"
+    },
+    {
+      "label": "Sources",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L104",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_sources",
+      "community": 2,
+      "norm_label": "sources"
+    },
+    {
+      "label": "Rerun Inputs",
+      "file_type": "document",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L141",
+      "_origin": "ast",
+      "id": "docs_research_how_cds_engines_work_rerun_inputs",
+      "community": 2,
+      "norm_label": "rerun inputs"
+    },
+    {
+      "label": "medication_technique_and_self_care.md",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care",
+      "community": 4,
+      "norm_label": "medication_technique_and_self_care.md"
+    },
+    {
+      "label": "Deep Research: Medication Technique & Self-Care Execution Failure in Home-Based Diabetes/Hypertension Care",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "community": 4,
+      "norm_label": "deep research: medication technique & self-care execution failure in home-based diabetes/hypertension care"
+    },
+    {
+      "label": "Executive Summary",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_executive_summary",
+      "community": 4,
+      "norm_label": "executive summary"
+    },
+    {
+      "label": "Key Findings",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L17",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_key_findings",
+      "community": 4,
+      "norm_label": "key findings"
+    },
+    {
+      "label": "Detailed Analysis",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L34",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "community": 4,
+      "norm_label": "detailed analysis"
+    },
+    {
+      "label": "Track 1 \u2014 Insulin handling and injection technique",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L36",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_track_1_insulin_handling_and_injection_technique",
+      "community": 4,
+      "norm_label": "track 1 \u2014 insulin handling and injection technique"
+    },
+    {
+      "label": "Track 2 \u2014 Oral medication timing and measurement technique",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L46",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_track_2_oral_medication_timing_and_measurement_technique",
+      "community": 4,
+      "norm_label": "track 2 \u2014 oral medication timing and measurement technique"
+    },
+    {
+      "label": "Track 3 \u2014 Self-report versus observation (the load-bearing question)",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L56",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_track_3_self_report_versus_observation_the_load_bearing_question",
+      "community": 4,
+      "norm_label": "track 3 \u2014 self-report versus observation (the load-bearing question)"
+    },
+    {
+      "label": "Track 4 \u2014 Caregiver execution and the diabetic foot",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L66",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_track_4_caregiver_execution_and_the_diabetic_foot",
+      "community": 4,
+      "norm_label": "track 4 \u2014 caregiver execution and the diabetic foot"
+    },
+    {
+      "label": "The Verdict on the Central Claim",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L74",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_the_verdict_on_the_central_claim",
+      "community": 4,
+      "norm_label": "the verdict on the central claim"
+    },
+    {
+      "label": "Contrarian Views And Risks",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L114",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_contrarian_views_and_risks",
+      "community": 4,
+      "norm_label": "contrarian views and risks"
+    },
+    {
+      "label": "Open Questions",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L124",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_open_questions",
+      "community": 4,
+      "norm_label": "open questions"
+    },
+    {
+      "label": "Sources",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L135",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_sources",
+      "community": 4,
+      "norm_label": "sources"
+    },
+    {
+      "label": "Rerun Inputs",
+      "file_type": "document",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L217",
+      "_origin": "ast",
+      "id": "docs_research_medication_technique_and_self_care_rerun_inputs",
+      "community": 4,
+      "norm_label": "rerun inputs"
+    },
+    {
+      "label": "why_cds_engines_fail.md",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail",
+      "community": 3,
+      "norm_label": "why_cds_engines_fail.md"
+    },
+    {
+      "label": "Deep Research: Why CDS Engines Fail",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "community": 3,
+      "norm_label": "deep research: why cds engines fail"
+    },
+    {
+      "label": "Executive Summary",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L7",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_executive_summary",
+      "community": 3,
+      "norm_label": "executive summary"
+    },
+    {
+      "label": "Key Findings",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L15",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_key_findings",
+      "community": 3,
+      "norm_label": "key findings"
+    },
+    {
+      "label": "Detailed Analysis",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L28",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "community": 3,
+      "norm_label": "detailed analysis"
+    },
+    {
+      "label": "1. Alert fatigue: the measured numbers",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L30",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_1_alert_fatigue_the_measured_numbers",
+      "community": 3,
+      "norm_label": "1. alert fatigue: the measured numbers"
+    },
+    {
+      "label": "2. The determinants-of-success literature, inverted into a failure taxonomy",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L38",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_2_the_determinants_of_success_literature_inverted_into_a_failure_taxonomy",
+      "community": 3,
+      "norm_label": "2. the determinants-of-success literature, inverted into a failure taxonomy"
+    },
+    {
+      "label": "3. Case studies and regulatory hazard listings",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L51",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_3_case_studies_and_regulatory_hazard_listings",
+      "community": 3,
+      "norm_label": "3. case studies and regulatory hazard listings"
+    },
+    {
+      "label": "4. Governance debt and silent malfunction: the failure mode nobody sees",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_4_governance_debt_and_silent_malfunction_the_failure_mode_nobody_sees",
+      "community": 3,
+      "norm_label": "4. governance debt and silent malfunction: the failure mode nobody sees"
+    },
+    {
+      "label": "5. Trust, automation bias, deskilling, and habituation",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L69",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_5_trust_automation_bias_deskilling_and_habituation",
+      "community": 3,
+      "norm_label": "5. trust, automation bias, deskilling, and habituation"
+    },
+    {
+      "label": "6. Data quality, validation, and drift",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L75",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_6_data_quality_validation_and_drift",
+      "community": 3,
+      "norm_label": "6. data quality, validation, and drift"
+    },
+    {
+      "label": "7. The integrating framework",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L81",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_7_the_integrating_framework",
+      "community": 3,
+      "norm_label": "7. the integrating framework"
+    },
+    {
+      "label": "Contrarian Views And Risks",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_contrarian_views_and_risks",
+      "community": 3,
+      "norm_label": "contrarian views and risks"
+    },
+    {
+      "label": "Open Questions",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L95",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_open_questions",
+      "community": 3,
+      "norm_label": "open questions"
+    },
+    {
+      "label": "Sources",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L103",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_sources",
+      "community": 3,
+      "norm_label": "sources"
+    },
+    {
+      "label": "Rerun Inputs",
+      "file_type": "document",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L132",
+      "_origin": "ast",
+      "id": "docs_research_why_cds_engines_fail_rerun_inputs",
+      "community": 3,
+      "norm_label": "rerun inputs"
+    },
+    {
+      "label": "project_noor_architecture.md",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "project_noor_architecture",
+      "community": 8,
+      "norm_label": "project_noor_architecture.md"
+    },
+    {
+      "label": "Project Noor \u2014 Architecture (SSOT)",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L1",
+      "_origin": "ast",
+      "id": "project_noor_architecture_project_noor_architecture_ssot",
+      "community": 8,
+      "norm_label": "project noor \u2014 architecture (ssot)"
+    },
+    {
+      "label": "1. What Noor is",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L9",
+      "_origin": "ast",
+      "id": "project_noor_architecture_1_what_noor_is",
+      "community": 8,
+      "norm_label": "1. what noor is"
+    },
+    {
+      "label": "1.1 The integration boundary",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L19",
+      "_origin": "ast",
+      "id": "project_noor_architecture_1_1_the_integration_boundary",
+      "community": 8,
+      "norm_label": "1.1 the integration boundary"
+    },
+    {
+      "label": "2. The eight non-negotiables",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L39",
+      "_origin": "ast",
+      "id": "project_noor_architecture_2_the_eight_non_negotiables",
+      "community": 8,
+      "norm_label": "2. the eight non-negotiables"
+    },
+    {
+      "label": "N1 \u2014 Fire automatically, inside the visit. Never a \"look it up\" button.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L43",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n1_fire_automatically_inside_the_visit_never_a_look_it_up_button",
+      "community": 8,
+      "norm_label": "n1 \u2014 fire automatically, inside the visit. never a \"look it up\" button."
+    },
+    {
+      "label": "N2 \u2014 One executable action, scoped to whoever is standing in the room.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L49",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n2_one_executable_action_scoped_to_whoever_is_standing_in_the_room",
+      "community": 8,
+      "norm_label": "n2 \u2014 one executable action, scoped to whoever is standing in the room."
+    },
+    {
+      "label": "N3 \u2014 Cap the recommendations per visit.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L55",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n3_cap_the_recommendations_per_visit",
+      "community": 8,
+      "norm_label": "n3 \u2014 cap the recommendations per visit."
+    },
+    {
+      "label": "N4 \u2014 No hard stops. Every dismissal captures a structured reason, and that reason is engine data.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L61",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n4_no_hard_stops_every_dismissal_captures_a_structured_reason_and_that_reason_is_engine_data",
+      "community": 8,
+      "norm_label": "n4 \u2014 no hard stops. every dismissal captures a structured reason, and that reason is engine data."
+    },
+    {
+      "label": "N5 \u2014 Every recommendation shows its provenance and its strength.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L67",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n5_every_recommendation_shows_its_provenance_and_its_strength",
+      "community": 8,
+      "norm_label": "n5 \u2014 every recommendation shows its provenance and its strength."
+    },
+    {
+      "label": "N6 \u2014 Declare missing data. Never silently degrade.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L73",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n6_declare_missing_data_never_silently_degrade",
+      "community": 8,
+      "norm_label": "n6 \u2014 declare missing data. never silently degrade."
+    },
+    {
+      "label": "N7 \u2014 Deterministic rules in the decision path. LLM only outside it.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L79",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n7_deterministic_rules_in_the_decision_path_llm_only_outside_it",
+      "community": 8,
+      "norm_label": "n7 \u2014 deterministic rules in the decision path. llm only outside it."
+    },
+    {
+      "label": "N8 \u2014 Rules are versioned, tested, observable artifacts.",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L85",
+      "_origin": "ast",
+      "id": "project_noor_architecture_n8_rules_are_versioned_tested_observable_artifacts",
+      "community": 8,
+      "norm_label": "n8 \u2014 rules are versioned, tested, observable artifacts."
+    },
+    {
+      "label": "3. Context correction on the failure research",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L91",
+      "_origin": "ast",
+      "id": "project_noor_architecture_3_context_correction_on_the_failure_research",
+      "community": 8,
+      "norm_label": "3. context correction on the failure research"
+    },
+    {
+      "label": "4. The Golden Case \u2014 the routine visit",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L102",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "community": 5,
+      "norm_label": "4. the golden case \u2014 the routine visit"
+    },
+    {
+      "label": "4.1 Why the silent visit is the primary case",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L106",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_1_why_the_silent_visit_is_the_primary_case",
+      "community": 5,
+      "norm_label": "4.1 why the silent visit is the primary case"
+    },
+    {
+      "label": "4.2 The Visit Protocol",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L116",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_2_the_visit_protocol",
+      "community": 5,
+      "norm_label": "4.2 the visit protocol"
+    },
+    {
+      "label": "4.3 The Baseline Visit",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L128",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_3_the_baseline_visit",
+      "community": 5,
+      "norm_label": "4.3 the baseline visit"
+    },
+    {
+      "label": "4.4 The Goal of Care and the ratification gate",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L140",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_4_the_goal_of_care_and_the_ratification_gate",
+      "community": 5,
+      "norm_label": "4.4 the goal of care and the ratification gate"
+    },
+    {
+      "label": "4.5 The Self-Care Check",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L148",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_5_the_self_care_check",
+      "community": 5,
+      "norm_label": "4.5 the self-care check"
+    },
+    {
+      "label": "4.6 Suppression",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L159",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_6_suppression",
+      "community": 5,
+      "norm_label": "4.6 suppression"
+    },
+    {
+      "label": "4.7 The N3 cap is three",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L165",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_7_the_n3_cap_is_three",
+      "community": 5,
+      "norm_label": "4.7 the n3 cap is three"
+    },
+    {
+      "label": "4.8 Closing the loop without new infrastructure",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L181",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_8_closing_the_loop_without_new_infrastructure",
+      "community": 5,
+      "norm_label": "4.8 closing the loop without new infrastructure"
+    },
+    {
+      "label": "4.9 The integration boundary in practice",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L189",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_9_the_integration_boundary_in_practice",
+      "community": 5,
+      "norm_label": "4.9 the integration boundary in practice"
+    },
+    {
+      "label": "4.10 Offline is the default, not the fallback",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L201",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_10_offline_is_the_default_not_the_fallback",
+      "community": 5,
+      "norm_label": "4.10 offline is the default, not the fallback"
+    },
+    {
+      "label": "4.11 The withholding principle",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L222",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_11_the_withholding_principle",
+      "community": 5,
+      "norm_label": "4.11 the withholding principle"
+    },
+    {
+      "label": "4.12 What this section does not validate",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L236",
+      "_origin": "ast",
+      "id": "project_noor_architecture_4_12_what_this_section_does_not_validate",
+      "community": 5,
+      "norm_label": "4.12 what this section does not validate"
+    },
+    {
+      "label": "5. Open items",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L240",
+      "_origin": "ast",
+      "id": "project_noor_architecture_5_open_items",
+      "community": 8,
+      "norm_label": "5. open items"
+    },
+    {
+      "label": "6. Section status",
+      "file_type": "document",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L249",
+      "_origin": "ast",
+      "id": "project_noor_architecture_6_section_status",
+      "community": 8,
+      "norm_label": "6. section status"
+    }
+  ],
+  "links": [
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "agents",
+      "target": "agents_agents_md_project_noor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "agents_agents_md_project_noor",
+      "target": "agents_behavioral_guidelines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "agents_agents_md_project_noor",
+      "target": "agents_graphify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "agents_agents_md_project_noor",
+      "target": "agents_important_commands",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "agents_agents_md_project_noor",
+      "target": "agents_ssot_integrity_rules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "agents_agents_md_project_noor",
+      "target": "agents_testing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_1_think_before_coding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_2_simplicity_first",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_3_surgical_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_4_goal_driven_execution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_5_skill_mcp_use",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_6_before_implementing_any_business_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_7_your_preferred_persona",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "agents_behavioral_guidelines",
+      "target": "agents_8_about_me",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "AGENTS.md",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "agents_testing",
+      "target": "agents_behavioral_rules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "claude",
+      "target": "claude_claude_md_project_noor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "claude_claude_md_project_noor",
+      "target": "claude_behavioral_guidelines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "claude_claude_md_project_noor",
+      "target": "claude_graphify",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "claude_claude_md_project_noor",
+      "target": "claude_important_commands",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "claude_claude_md_project_noor",
+      "target": "claude_ssot_integrity_rules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "claude_claude_md_project_noor",
+      "target": "claude_testing",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_1_think_before_coding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_2_simplicity_first",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_3_surgical_changes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_4_goal_driven_execution",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_5_skill_mcp_use",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_6_before_implementing_any_business_logic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_7_your_preferred_persona",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "claude_behavioral_guidelines",
+      "target": "claude_8_about_me",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CLAUDE.md",
+      "source_location": "L100",
+      "weight": 1.0,
+      "source": "claude_testing",
+      "target": "claude_behavioral_rules",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTEXT.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "context",
+      "target": "context_project_noor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTEXT.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "context_project_noor",
+      "target": "context_language",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTEXT.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "context_language",
+      "target": "context_people",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTEXT.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "context_language",
+      "target": "context_the_visit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "CONTEXT.md",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "context_language",
+      "target": "context_what_noor_produces",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_adr_0001_time_to_action_not_severity",
+      "target": "docs_adr_0001_time_to_action_not_severity_recommendations_are_routed_by_time_to_action_not_clinical_severity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L10",
+      "weight": 1.0,
+      "source": "docs_adr_0001_time_to_action_not_severity_recommendations_are_routed_by_time_to_action_not_clinical_severity",
+      "target": "docs_adr_0001_time_to_action_not_severity_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0001-time-to-action-not-severity.md",
+      "source_location": "L5",
+      "weight": 1.0,
+      "source": "docs_adr_0001_time_to_action_not_severity_recommendations_are_routed_by_time_to_action_not_clinical_severity",
+      "target": "docs_adr_0001_time_to_action_not_severity_considered_options",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines",
+      "target": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_a_self_care_check_failure_suppresses_the_recommendation_it_undermines",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_a_self_care_check_failure_suppresses_the_recommendation_it_undermines",
+      "target": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_consequences",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_a_self_care_check_failure_suppresses_the_recommendation_it_undermines",
+      "target": "docs_adr_0002_self_care_failure_suppresses_the_recommendation_it_undermines_considered_options",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management",
+      "target": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_contrarian_views_and_risks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_executive_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L108",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_implications_for_project_noor_explicitly_labeled_inference",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_key_findings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L123",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_open_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_rerun_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L133",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_deep_research_the_art_of_chronic_disease_management_diabetes_hypertension_at_home",
+      "target": "docs_research_art_of_chronic_disease_management_sources",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L32",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_1_first_an_honest_boundary_what_near_hospital_level_care_at_home_can_defensibly_mean",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_2_the_co_intervention_principle_why_monitors_alone_fail_and_bundles_win",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_3_hypertension_at_home_the_strongest_causal_chain_in_the_file",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L53",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_4_diabetes_at_home_sensing_beats_messaging_coaching_anchors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_5_severity_boundaries_where_home_stops_adoptable_codified_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_6_operating_parameters_observed_across_successful_programs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L78",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_7_saudi_arabia_substrate_gaps_and_cultural_wiring",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/art_of_chronic_disease_management.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "docs_research_art_of_chronic_disease_management_detailed_analysis",
+      "target": "docs_research_art_of_chronic_disease_management_8_failure_modes_catalog_what_kills_these_programs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work",
+      "target": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L84",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_contrarian_views_and_risks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_detailed_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_executive_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_key_findings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_open_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L141",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_rerun_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_deep_research_how_healthcare_cds_engines_work_newest_trends",
+      "target": "docs_research_how_cds_engines_work_sources",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_1_core_architecture_the_four_canonical_components",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_2_knowledge_representation_and_rule_languages",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_3_standards_and_integration_how_engines_hook_into_the_ehr",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_4_real_world_engines_and_commercial_knowledge_bases",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_5_the_output_layer_is_where_engines_succeed_or_fail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/how_cds_engines_work.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "docs_research_how_cds_engines_work_detailed_analysis",
+      "target": "docs_research_how_cds_engines_work_6_newest_trends_2023_2026",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care",
+      "target": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L114",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_contrarian_views_and_risks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L34",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_executive_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_key_findings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L124",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_open_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L217",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_rerun_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_sources",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L74",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_deep_research_medication_technique_self_care_execution_failure_in_home_based_diabetes_hypertension_care",
+      "target": "docs_research_medication_technique_and_self_care_the_verdict_on_the_central_claim",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "target": "docs_research_medication_technique_and_self_care_track_1_insulin_handling_and_injection_technique",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "target": "docs_research_medication_technique_and_self_care_track_2_oral_medication_timing_and_measurement_technique",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "target": "docs_research_medication_technique_and_self_care_track_3_self_report_versus_observation_the_load_bearing_question",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/medication_technique_and_self_care.md",
+      "source_location": "L66",
+      "weight": 1.0,
+      "source": "docs_research_medication_technique_and_self_care_detailed_analysis",
+      "target": "docs_research_medication_technique_and_self_care_track_4_caregiver_execution_and_the_diabetic_foot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_contrarian_views_and_risks",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_executive_summary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_key_findings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L95",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_open_questions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L132",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_rerun_inputs",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L103",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_deep_research_why_cds_engines_fail",
+      "target": "docs_research_why_cds_engines_fail_sources",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L30",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_1_alert_fatigue_the_measured_numbers",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_2_the_determinants_of_success_literature_inverted_into_a_failure_taxonomy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L51",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_3_case_studies_and_regulatory_hazard_listings",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_4_governance_debt_and_silent_malfunction_the_failure_mode_nobody_sees",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L69",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_5_trust_automation_bias_deskilling_and_habituation",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L75",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_6_data_quality_validation_and_drift",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "docs/research/why_cds_engines_fail.md",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "docs_research_why_cds_engines_fail_detailed_analysis",
+      "target": "docs_research_why_cds_engines_fail_7_the_integrating_framework",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "project_noor_architecture",
+      "target": "project_noor_architecture_project_noor_architecture_ssot",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_1_what_noor_is",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_2_the_eight_non_negotiables",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_3_context_correction_on_the_failure_research",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L240",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_5_open_items",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L249",
+      "weight": 1.0,
+      "source": "project_noor_architecture_project_noor_architecture_ssot",
+      "target": "project_noor_architecture_6_section_status",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L19",
+      "weight": 1.0,
+      "source": "project_noor_architecture_1_what_noor_is",
+      "target": "project_noor_architecture_1_1_the_integration_boundary",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n1_fire_automatically_inside_the_visit_never_a_look_it_up_button",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n2_one_executable_action_scoped_to_whoever_is_standing_in_the_room",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L55",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n3_cap_the_recommendations_per_visit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L61",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n4_no_hard_stops_every_dismissal_captures_a_structured_reason_and_that_reason_is_engine_data",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L67",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n5_every_recommendation_shows_its_provenance_and_its_strength",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L73",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n6_declare_missing_data_never_silently_degrade",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L79",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n7_deterministic_rules_in_the_decision_path_llm_only_outside_it",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L85",
+      "weight": 1.0,
+      "source": "project_noor_architecture_2_the_eight_non_negotiables",
+      "target": "project_noor_architecture_n8_rules_are_versioned_tested_observable_artifacts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_10_offline_is_the_default_not_the_fallback",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L222",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_11_the_withholding_principle",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L236",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_12_what_this_section_does_not_validate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_1_why_the_silent_visit_is_the_primary_case",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_2_the_visit_protocol",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_3_the_baseline_visit",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_4_the_goal_of_care_and_the_ratification_gate",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_5_the_self_care_check",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L159",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_6_suppression",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L165",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_7_the_n3_cap_is_three",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_8_closing_the_loop_without_new_infrastructure",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "project_noor_architecture.md",
+      "source_location": "L189",
+      "weight": 1.0,
+      "source": "project_noor_architecture_4_the_golden_case_the_routine_visit",
+      "target": "project_noor_architecture_4_9_the_integration_boundary_in_practice",
+      "confidence_score": 1.0
+    }
+  ],
+  "hyperedges": []
+}

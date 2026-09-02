@@ -1,0 +1,27 @@
+# Offline by locality: one local Python process, one SQLite file
+
+Phase 1 is a single Python application — FastAPI with server-rendered templates — running as one process on the machine in the house, against one SQLite file. The **Field Team**'s capture surface and the **Supervisor**'s review surface (ADR 0005) are routes in that same application. There is no client/server split, no second offline copy, and no synchronisation layer.
+
+**§4.10 requires that a Visit completes with no connectivity. This satisfies it by removing the network from the path rather than by tolerating its absence.** Offline stops being a feature with its own failure modes and becomes a property of where Noor runs. The two obligations §4.10 attaches to it then fall out for free: a **Write-Back** that "queues visibly and survives a device restart" is a table with a status column, durable because the file is on disk and for no other reason; and the **Unreachable** state becomes exactly one thing — the EMR adapter failing — rather than two indistinguishable things, which is precisely the collapse §4.10 already insists on.
+
+**The rejected alternative is not wrong; it is expensive in the wrong place.** A PWA with a service worker and its own local store is the honest deployment shape for this product, and a real service will need it. But its true cost is a synchronisation layer — conflict rules, retry, merge, schema migration across two stores — and that is the largest body of code in any system shaped like this while being no part of what Noor is arguing. §3 names the two-actor handoff as the design's largest unvalidated assumption; not one line of sync tests it. Spending the prototype's budget there buys deployment realism at the price of the workflow itself, with one non-technical owner left maintaining two languages and two test suites.
+
+**One store is also what makes the fixtures work.** §4.9 requires the fixtures to be hostile and §4.1 makes the accuracy of Noor's silence the property the deliverable is judged on. A single file holding the whole clinical record can be copied, inspected, and reset to a known hostile state between runs — so the Golden Case is reproducible in front of an audience, and the **Silence Audit** has something deterministic to sample. Two stores with sync between them turn "what state was the system actually in" into a question with two answers.
+
+**Branch coverage with no exclusions is only survivable if the logic is not in the browser.** Server-rendered HTML keeps the Visit state machine, the withholding principle (§4.11), the N3 cap (§4.7) and every rule in plain Python, testable with no browser driver. What is left in the page is form submission and display.
+
+## Considered Options
+
+- **A React PWA plus a Python API.** Installable, genuinely remote for the Supervisor, and the shape a real deployment eventually takes. Rejected for the prototype because the synchronisation layer it forces is the project's largest piece of non-differentiating code, and it doubles the languages, the test suites and the deployment targets that one non-technical owner has to keep alive.
+- **Streamlit or Reflex.** Fastest route to something on screen. Rejected because the execution model re-runs the script on every interaction with state held in session memory, while Noor's core is a six-state machine with an interrupt state, per-item disposition, a cap and suppression. The framework would be fought on every screen, and its UI resists the coverage standard the project has already committed to.
+- **A terminal interface.** Cheapest of all and perfectly testable. Rejected because §3's audience objection is answered by showing two clinicians using something a nurse would plausibly hold in a house, and a TUI concedes that before the argument begins.
+
+## Consequences
+
+**"Remote" is simulated, and §6 records it as a limit.** The Supervisor's surface is a second window against the same file. ADR 0005's claim is about where the decision is made and what is displayed at the moment it is made, and neither depends on bytes crossing a network. But the prototype cannot show that the handoff survives real latency, real authentication, or two people working at once, and it must not pretend otherwise.
+
+**Locality is not security.** One file on a tablet in someone's home is the exposure §6 already names. This decision neither worsens nor addresses it.
+
+**The reversal cost is a page layer, not a domain layer.** If the deployment shape has to change, the state machine, the rules, the structured reason lists and the versioned clinical content all move unchanged, because none of them were ever in the browser. What gets written is the client and the sync layer this decision declined to write in the first place. That is the cheapest possible place to take the hit, and it is the reason the line is drawn here rather than anywhere else.
+
+**SQLite is a decision about the file, not about scale.** It is chosen because the access pattern is genuinely one household at a time on one device — not as a placeholder for a "real" database to be swapped in later. A service running many Field Teams changes that access pattern; a prototype demonstrating one Visit does not.

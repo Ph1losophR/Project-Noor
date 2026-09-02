@@ -1,0 +1,28 @@
+# Emergency is an interrupt state, not a terminal one
+
+**Emergency** is entered from **In Progress** when the Patient or Caregiver needs an ambulance now, and it exits either back to In Progress or to **Ended Early**. It suspends the **Visit Protocol**, it has a start time and an end time, and it demands nothing of the Field Team at entry.
+
+The reason it cannot be terminal is that calling an ambulance has two outcomes, not one. If the Patient is transported, the Visit ended — but if the crew stands the Patient down, or the Patient declines transport, the Field Team is standing in a house with a Patient who now needs the rest of the Visit *more* than before, not less. A terminal Emergency forces a second Visit object to be created to continue the same attendance, which splits one visit into two records and breaks the rule that the Start timestamp is the attendance record (§5.5).
+
+Having a start *and* an end also preserves something a terminal state throws away: how long the Patient was in that condition before the ambulance arrived. That interval is clinical data, and it is exactly what a receiving hospital and any subsequent review will ask for.
+
+**The Field Team enters Emergency; the engine never does.** No Visit state is ever set by the engine. Recommendations propose actions that a human may accept or override; states are acts. A team knows an ambulance is needed before any measurement Noor holds could establish it.
+
+**Noor demands nothing at entry** — one action, zero required fields, and the **Handover** rendered from data already cached on the device (§4.10). Documentation is retrospective, and closing the Visit is what enforces it: no Visit reaches a terminal state while an Emergency record is unresolved, on either exit — **Completed** by §5.8's gate, and **Ended Early** by the same requirement (§5.7). **Resolved here means an end time *and* at least one timeline entry** — ending alone is not enough, and unlike a section there is no structured reason for having nothing (§5.7). That is stricter than §5.8's bar deliberately: the interval this state exists to preserve is the one a receiving hospital, a later review and any medico-legal enquiry all ask about, so an Emergency with no record of what was observed or done would keep the timestamps and throw away the reason for having them. Noor does not manage the emergency. It documents it and hands over the record.
+
+## Considered Options
+
+- **Emergency as a terminal state.** Rejected on the stand-down case above: the commonest non-transport outcomes leave a Visit that must continue, and a terminal state cannot express that without fragmenting the attendance record.
+- **Emergency as a Visit-level Tier 3.** Rejected because it puts a tier on a Visit, which `0001-time-to-action-not-severity.md` forbids for a reason that bites immediately here: the tier belongs to a Recommendation, and one Visit legitimately produces several tiers at once. A Tier-3 Recommendation can fire in a Visit with no emergency at all — 205/125 in an asymptomatic Patient, insulin found frozen — and a Visit whose state *is* Tier 3 would then have to mean two unrelated things.
+- **Emergency as a Tier 3 Recommendation rather than a state.** Rejected: a Recommendation is a proposal, overridable with a reason (N4). "Stop working through the Visit Protocol, the ambulance is coming" is not a proposal and it is not Noor's observation to make.
+- **Requiring a minimum structured capture at entry** — time of onset, presenting problem, one set of Vitals. Rejected: anything Noor demands during those minutes is taken directly from the Patient. The close already forces the documentation — one timeline entry — later, when it costs nothing clinical.
+
+## Consequences
+
+The Visit Protocol must be **suspendable and resumable**. Emergency is the only re-entrant transition in the state machine, and the only state that can be entered and left more than once within a single Visit.
+
+The **Emergency Protocol** and the Handover must render entirely from cached data, offline. Anything in them that requires a read is a feature that fails in the exact circumstance it was built for.
+
+Because Emergency can exit to In Progress and then to Completed, **a Completed Visit may contain an Emergency**. No report, metric, or Write-Back may treat Completed as a synonym for uneventful.
+
+**The Emergency's exit carries no structured reason of its own.** It is a binary the state machine routes on — resume, or terminate — and where it terminates, **Ended Early**'s reason already covers it (§5.7). What the Emergency records instead is a **timeline**: entries tagged *observed* or *done*, each with a time, free text inside. An emergency cannot be enumerated in advance, and the timeline is never written to the EMR, so it never has to be machine-readable; the start and end times are structured and *are* written back (§4.9). §5.10's four reason lists therefore need no fifth context — and the timeline has no *nothing to record* row either, because at least one entry is what closing the record costs.
