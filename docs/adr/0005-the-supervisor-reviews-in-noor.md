@@ -20,6 +20,8 @@ Supervisor review of a Visit's items — Tier 1-and-above Recommendations, **Goa
 
 **Review remains per item, never per Visit** — ADR 0003, unchanged. The inbox is therefore a list of items drawn from many Visits, not a list of Visits, and "this Visit has items awaiting review" stays derived on read.
 
+**Amended 2026-09-05: the inbox groups those items by Patient** (`docs/web_plan.md` §5.1) — most pressing first under the same three bands, Tier 3 first, then due time, then the Silence Audit — because a Tier 2 item and an unratified Goal of Care for one Patient are one conversation. Grouping changes the arrangement, not the grain: answering stays per item, and only a Review Verdict closes one (ADR 0009).
+
 **The latency of ratification becomes measurable, and must be measured.** §4.4 records that the only analogous evidence — radiology over-read — found *delay*, not error, to be the quantified cost of a ratification safeguard, and that therapeutic inertia is the disease an explicit target exists to treat. A queue Noor hosts is a queue Noor can instrument; a queue in someone else's EMR is not.
 
 **A hospital may hear this as "Noor wants to replace our consultant worklist."** It does not: the Write-Back still lands in the EMR with an owner and a due time, and that entry remains the system of record. What happens in Noor is the review of Noor's own output, in the place where Noor's own reasoning lives. Both are true simultaneously, and the pitch has to say both.

@@ -7,7 +7,7 @@ Home healthcare clinical decision support for chronic disease management — dia
 ### People
 
 **Field Team**:
-The two clinicians physically present in the patient's home for a visit: a Junior Physician and a Nurse, together.
+The two clinicians physically present in the patient's home for a visit: a Junior Physician and a Nurse, together. A standing assignment to the Patient rather than a per-Visit choice — the same pair until someone reassigns them. The Visit records the pair that attended, copied at its Start, so a later reassignment never restates who performed a Visit that has already closed (§5.5, §5.13).
 _Avoid_: care team, home team, visiting team, crew
 
 **Junior Physician**:
@@ -19,7 +19,7 @@ The Field Team member responsible for measurement, patient education, and hands-
 _Avoid_: RN, nursing staff, HCA
 
 **Supervisor**:
-The remote consultant-grade clinician accountable for the Field Team's clinical decisions. Reachable, but not present.
+The remote consultant-grade clinician accountable for the Field Team's clinical decisions. Reachable, but not present. Answers the items routed to them with a Review Verdict, and never edits a Visit or holds one open.
 _Avoid_: supervising physician, senior doctor, consultant, attending, on-call
 
 **Patient**:
@@ -41,7 +41,7 @@ The unit of work Noor orchestrates: one planned attendance by the Field Team at 
 _Avoid_: appointment, encounter, session, call
 
 **Roster**:
-The list of Scheduled Visits Noor reads and does not own. An entry carries the Patient, the date, why the Visit was scheduled, and a Baseline Visit or Routine Visit planning indicator based on the Patient's completed history. Noor records what became of a Visit on it; it never schedules, reschedules, or cancels one.
+The list of Scheduled Visits Noor reads and does not own. An entry carries the Patient, the date, why the Visit was scheduled, and a Baseline Visit or Routine Visit planning indicator based on the Patient's completed history (ADR 0008). Noor records what became of a Visit on it; it never schedules, reschedules, or cancels one.
 _Avoid_: schedule, calendar, diary, worklist
 
 **Visit Protocol**:
@@ -135,8 +135,12 @@ The short sequence that replaces the Visit Protocol for the duration of an Emerg
 _Avoid_: emergency workflow, code protocol, crash protocol
 
 **Addendum**:
-A timestamped, attributed addition to a Visit that has already reached a terminal state. The only way a closed Visit changes, because a Write-Back may already have created work that the original record justified.
+A timestamped, attributed addition to a Visit that has already reached a terminal state. The only way a closed Visit changes, because a Write-Back may already have created work that the original record justified. It sends a Write-Back of its own, after the Visit's, and its author may also flag it to the Supervisor (§5.9).
 _Avoid_: edit, correction, amendment, revision
+
+**Review Verdict**:
+The Supervisor's answer to one item routed to them: agreed or disagreed, with their name, the time, and a note that a disagreement must carry. What lets an item leave the Supervisor's inbox, since nothing there is cleared by being read. It never holds up a Visit, a close, or a Write-Back, and it is not a structured reason — nothing routes on it (§5.12, ADR 0009).
+_Avoid_: approval, acknowledgement, ack, countersignature
 
 ### What Noor produces
 
@@ -161,7 +165,7 @@ A Recommendation Noor generated but did not show, because the per-Visit cap was 
 _Avoid_: dismissed, backlogged, queued, hidden. *Deferral count* is the field's name and stays; the state itself is **Filed**, never "deferred", which in an override reason means something else entirely — that a Field Team sent the decision to the Supervisor.
 
 **Write-Back**:
-What Noor sends to the EMR at the close of a Visit. Every item is structured, and anything requiring a response carries a named owner and a due time from the route that produced it — an Escalation Tier's window for a Recommendation, the ratification window for a proposed Goal of Care. A Write-Back with no owner and no due time is narrative text wearing structure's clothes.
+What Noor sends to the EMR at the close of a Visit. Every item is structured, and anything requiring a response carries a named owner and a due time from the route that produced it — an Escalation Tier's window for a Recommendation, the ratification window for a proposed Goal of Care. A Write-Back with no owner and no due time is narrative text wearing structure's clothes. An Addendum sends one of its own afterwards, which carries neither, because it asks for nothing.
 _Avoid_: sync, push, export, upload, documentation
 
 **Silence Audit**:

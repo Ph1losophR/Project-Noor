@@ -1,6 +1,6 @@
 # Project Noor — Testing Standards
 
-**Status:** Reference, v0.1, 2026-08-28. Subordinate to `project_noor_architecture.md` (the SSOT).
+**Status:** Reference, v0.2, 2026-09-05. Subordinate to `project_noor_architecture.md` (the SSOT).
 
 This document says *how* to test. The SSOT says *what must be true*. Where the two
 disagree, the SSOT wins and this file is wrong — fix it here, not there.
@@ -12,11 +12,12 @@ This is engineering practice, not clinical content. ADR 0007's governance — a 
 owner, a source, a version, a review date, as data — applies to
 `docs/clinical-content/`, not to this file.
 
-**No code exists yet.** Phase 1 is the first build (§8), so nothing below can be
-verified against a source tree today. Where a rung cannot exist until a later
-phase, it says so rather than sitting there looking overdue. Where a name is
-illustrative rather than decided, it says that too — the Phase 1 implementation
-plan fixes the module and function names, not this file.
+**Phase 1 Backend Pass 1 exists** under `src/noor/` — store, domain, EMR seam,
+dispatch, content and serialisation — and the rungs below are verified against
+that tree. The web layer (`src/noor/web/`) is next. Where a rung cannot exist
+until a later phase, it says so rather than sitting there looking overdue. Where
+a name is illustrative rather than decided, it says that too — the module and
+function names are fixed in `src/noor/`, not in this file.
 
 ---
 
@@ -203,12 +204,19 @@ should look scheduled, not forgotten.
    loads, an invalid one raises.
 2. **The six-state machine** — the seven transitions, the twenty-nine refusals, the
    re-entrant Emergency, the terminal-immutability rule and the **Addendum** as its
-   one exception.
+   one exception. Start settles the Visit's kind from completed history (ADR 0008)
+   and copies the attending pair from the Patient's standing assignment (§5.5,
+   §5.13) — copied, not referenced. The inbox is derived on read and only a
+   **Review Verdict** closes a row: agreed or disagreed with author and time, a
+   note required on disagreement, Goal ratification keeping its own record, and a
+   missing verdict blocking nothing (ADR 0009). An **Addendum** sends a Write-Back
+   of its own with no owner and no due time, and its author may also flag it to
+   the Supervisor as a manual flag on Tier 1's window (§5.9).
 3. **The eight sections** — the fixed record order, none absent, **Resolved** in
    both of its forms, and the one place the record's order and the working order
    differ: **Notes** is eighth in the record, and the **Care Plan** is assembled
    after all seven others including Notes (§4.2).
-4. **Structured reasons are engine data, not prose** (§5.10). Every list's every
+4. **Structured reasons are engine data, not prose** (§5.10, `docs/clinical-content/reason-lists.md`). Every list's every
    row round-trips, `Other` carries its free text, and a **Cancelled** or **Ended
    Early** Visit without a reason is refused.
 5. **The Completed gate, with Recommendations built by hand.** Phase 1 has no
@@ -327,13 +335,13 @@ evidence.
 
 ## Layout
 
-Tests mirror the source tree, one test module per source module, plus a small number
+Tests mirror the source tree under `tests/`, one test module per source module, plus a small number
 of end-to-end modules named after the journey they walk rather than the code they
 touch — the Golden Case, the offline Visit, the Emergency. Shared setup lives in
 fixtures; shared *assertions* do not, because a helper that asserts hides which
 property failed.
 
-The Phase 1 implementation plan fixes the directory names. The rule that outlives it:
+The rule that outlives the tree:
 a developer looking for the test that covers a behaviour should find it by guessing.
 
 ---

@@ -5,8 +5,9 @@
 This document governs **how Noor looks and behaves as a surface**: colour, type,
 space, the marks that carry clinical meaning, and how all four are delivered and
 enforced. It does not arrange pages. Page composition, routing and the navigation
-model for the eight **Visit Protocol** sections belong to the web plan, which is
-written against this document.
+model for the eight **Visit Protocol** sections belong to the web plan,
+`docs/web_plan.md`, which is written against this document and yields to it where
+the two disagree.
 
 `project_noor_architecture.md` remains the single source of truth. Where this
 document and the architecture SSOT disagree, **the architecture SSOT wins**, and
@@ -211,8 +212,8 @@ In dark mode the Tier 3 badge is an `#A32F27` fill with a 1px `#BC443A` ring and
 
 - It may not be the sole carrier of any meaning. Ever.
 - It may not encode a **data state**. §7.2.
-- It may not encode tier *level*. A tier is a deadline and an owner, not a severity ([ADR 0001](docs/adr/0001-time-to-action-not-severity.md)), so Tier 1 and Tier 2 share `--status-review` and are separated by their written window.
-- It may not encode Baseline versus Routine. Those Visit-type indicators are words: the Roster shows a read-time planning indicator before Start, and a started Visit shows the settled type.
+- It may not encode tier *level*. A tier is a deadline and an owner, not a severity ([ADR 0001](adr/0001-time-to-action-not-severity.md)), so Tier 1 and Tier 2 share `--status-review` and are separated by their written window.
+- It may not encode Baseline versus Routine. Those Visit-type indicators are words: the Roster shows a read-time planning indicator before Start, and a started Visit shows the settled type (ADR 0008).
 - It may not be introduced. Nine neutrals per mode, three status hues, one accent in dark. A tenth is an edit to this document, not a decision in a template.
 
 ## 5. Typography
@@ -313,7 +314,7 @@ the visible-looking law. It is a mark **plus a word**, never a mark alone.
 The three data states carry **no status colour and no badge**. They are
 typographic and structural.
 
-[CONTEXT.md](CONTEXT.md) forbids the vocabulary a UI would normally reach for —
+[CONTEXT.md](../CONTEXT.md) forbids the vocabulary a UI would normally reach for —
 *"null, missing, unknown, N/A, no data, empty — each of them collapses at least two
 of the three"* — which means **an empty cell, an em dash and "N/A" are all
 prohibited** in every table Noor renders.
@@ -362,6 +363,28 @@ or `☾`, so a glyph would arrive from the OS emoji font in colour. Each half ke
 its word as its accessible name, so the channel is removed from the screen and not
 from the accessibility tree. Nothing else in Noor may cite this exception.
 
+### 7.4 Confirmations
+
+A confirmation is a `popover`: declarative HTML, `popover="manual"` so a stray glove
+cannot dismiss it, a form inside it, no script required. §11 exempts it from the page
+transition because it navigates nowhere.
+
+**Three exist. Two acts are screens instead, and that is not an inconsistency.**
+
+| Action | Guard | Why |
+|---|---|---|
+| **End Early** | popover carrying §5.10's reason list | The reason is required before the state changes, so it is asked where the decision is taken |
+| **Cancelled** | popover carrying §5.10's reason list | §5.4 requires the reason on the same terms as End Early. Only the page differs — the act belongs to a **Scheduled** Visit, which has no action row — and one act asked two ways would be the real inconsistency |
+| **Emergency** | popover, one confirming button, no fields | §5.7 demands nothing at entry; a guard asks about intent, never about content |
+| **Complete Visit** | a screen | §5.8 checks eight sections, every Emergency and every Recommendation's disposition. That does not fit in a top layer, and the Junior Physician should read it rather than dismiss it |
+| **Addendum** | a screen | Nothing but a script can open the top layer without a tap, and §12.1 admits none. §5.9 has the server render this one already carrying text — a write a closed Visit refused, kept rather than dropped — and a render is not a confirmation |
+
+**Three copy rules.** These are §3's seventh rule with teeth:
+
+- **It states what will be true afterwards**, not what the button is called.
+- **It may not claim an irreversibility the state machine does not have.** Emergency exits back to In Progress (§5.1), so *"this cannot be undone"* is false and is forbidden. What is true is the documentation the close will demand: *"Entering the Emergency Protocol suspends the Visit Protocol. This Emergency must be documented — an end time and at least one timeline entry — before this Visit can close."*
+- **The confirming button carries the verb, and the dismissing one says what dismissing does.** Neither may be "OK" or "Cancel": **Cancelled** is one of the six Visit states, and a button meaning *never mind* may not wear the name of a terminal state.
+
 ## 8. Language and direction
 
 Chrome is **English, left-to-right, Western numerals**. Every field that accepts
@@ -377,11 +400,12 @@ Both modes are first-class. Neither is derived from the other, and the type,
 spacing and radius scales are identical in both.
 
 The toggle is a **form POST → cookie → server-side stamp**: the layout writes
-`data-theme` onto `<html>` before the page is sent. No JavaScript, no
-flash-of-wrong-theme, and the behaviour is testable in Python like every other
-route — which matters, because [ADR 0006](docs/adr/0006-offline-by-locality.md)
+`data-theme` onto `<html>` before the page is sent. That stays true now that §12.1
+admits a script file, and for the two reasons it was chosen: a script that sets the
+theme after the document has arrived *is* a flash of the wrong theme, and a route is
+testable in Python where a listener is not — [ADR 0006](adr/0006-offline-by-locality.md)
 puts branch coverage at 100% with no exclusions and coverage cannot see inside a
-`.js` file.
+`.js` file. The toggle is a route.
 
 Both modes' values are declared under **both** scopes — a `prefers-color-scheme`
 media query for the OS setting, and a `[data-theme]` scope for the toggle — with
@@ -397,22 +421,26 @@ party.
 - **On screen:** follows the theme toggle like every other view.
 - **In print:** forced light, always. A dark-mode print is illegible and empties a toner cartridge.
 - **The print path is reachable from the Handover screen**, because most homes have no printer and the realistic delivery is the screen turned around or photographed.
-- **No network dependency of any kind.** [ADR 0004](docs/adr/0004-emergency-is-an-interrupt-state.md): *"Anything in them that requires a read is a feature that fails in the exact circumstance it was built for."* No remote font, no fetched image, no map tile.
+- **No network dependency of any kind.** [ADR 0004](adr/0004-emergency-is-an-interrupt-state.md): *"Anything in them that requires a read is a feature that fails in the exact circumstance it was built for."* No remote font, no fetched image, no map tile.
 - **Legible in greyscale.** A photocopied or faxed Handover is plausible. Tier 3's solid fill and the lightness gaps in §4.3 are what make that hold.
 
 ## 11. Motion
 
 `@view-transition { navigation: auto; }` — 200ms, ease-out, wrapped in a
-`prefers-reduced-motion` guard. One CSS declaration, no JavaScript, no build step;
+`prefers-reduced-motion` guard. One CSS declaration, no build step;
 browsers without support ignore it and the page simply loads.
 
-**Entering the Emergency Protocol is exempt and instant.** §5.7 says Noor demands
-nothing at entry and does not manage the emergency — 200ms of fade between a nurse
-deciding an ambulance is needed and the screen agreeing is 200ms taken from the
-Patient.
+**The Emergency Protocol is exempt from the transition at both steps.** §5.7 says Noor
+demands nothing at entry and does not manage the emergency — 200ms of fade between a
+nurse deciding an ambulance is needed and the screen agreeing is 200ms taken from the
+Patient. Its confirmation (§7.4) appears with no animation, and the Emergency screen
+behind it arrives with none either. Entry is two taps and neither of them fades.
 
-Nothing else animates. Every other interaction is a full page load, and `:hover`,
-`:focus` and `:active` are the only other transitions that exist.
+Nothing else animates, and `:hover`, `:focus` and `:active` are the only other
+transitions that exist. **Every interaction that changes the record is a full page
+load, with two named exceptions**: §12.1's autosave, which changes the record without
+one, and a `popover`, which changes no record at all — a confirmation asked and
+answered in the top layer, then submitted as a form like anything else.
 
 ## 12. Delivery
 
@@ -420,6 +448,7 @@ Nothing else animates. Every other interaction is a full page load, and `:hover`
 |---|---|
 | `static/noor.css` | the whole system; the two `:root` token blocks at the top |
 | `static/print.css` | linked `media="print"`, forced light |
+| `static/noor.js` | §12.1's admitted scope, and nothing else |
 | `EBGaramond-Medium.woff2` | 500 — display and wordmark |
 | `DMSans-Regular.woff2` | 400 |
 | `DMSans-SemiBold.woff2` | 600 |
@@ -438,11 +467,24 @@ A `forced-colors` pass is required before ship: every meaning must survive the O
 replacing the entire palette, which it does here because no meaning is
 colour-alone.
 
+### 12.1 Script
+
+One script file is admitted. This is the whole of what may live in it:
+
+- **The autosave.** A section posts on change, so no typed measurement is lost to a tablet that dies, a closed lid or a mis-tap, and no Save button competes with the three actions in the Visit's action row. It posts to the same route the form posts to, and the server validates it exactly as it validates a button press.
+- **Nothing else, until this document says otherwise.** No routing, no rendering, no clinical logic, and no fetch that a form could have done.
+
+Three rules that do not move:
+
+- **No clinical logic in the browser, ever.** [ADR 0006](adr/0006-offline-by-locality.md) draws this line and it is the load-bearing one. The Visit state machine, the withholding principle (§4.11), the N3 cap and every rule that decides what is true stay in Python where the coverage gate can see them. The script decides *when* to post, never *what is true*.
+- **Self-hosted, no build step, no framework.** §12's reasons apply unchanged: one file of plain browser JavaScript, no bundler, no package, nothing fetched from a network that a house may not have.
+- **The page works with the file deleted.** A script that fails to parse must cost the Field Team the autosave and nothing else. Every section still saves on the submit that navigates away from it, so the record survives without the script — which is also what makes the autosave a convenience rather than a dependency.
+
 ## 13. Enforcement
 
-`tests/web/test_design_tokens.py` reads `noor.css` and every template and fails if
-a hex colour, a `font-size` in px, a `border-radius` or a padding value appears
-anywhere outside the two `:root` token blocks. Stdlib `re` and `pathlib`, no new
+`tests/web/test_design_tokens.py` reads `noor.css`, `noor.js` and every template and
+fails if a hex colour, a `font-size` in px, a `border-radius` or a padding value
+appears anywhere outside the two `:root` token blocks. Stdlib `re` and `pathlib`, no new
 dependency. It lives in `tests/`, so it adds no covered source to the 100%
 branch-coverage gate.
 
@@ -461,6 +503,7 @@ Out of scope deliberately, and named here rather than solved:
 - **No patient or caregiver surface.** §5.13 — they are outside the software.
 - **No authentication, localhost only.** §6. A device-security limit, not a design one, stated here because a design system that implied a login screen would be lying about what exists.
 - **Chromium is the demo target.** The view transition in §11 is progressive enhancement; nothing else depends on it.
+- **§12.1's autosave sits outside the test gate.** It is not Python, so `--cov=noor` cannot see it and `fail_under = 100` says nothing about it. What the *route* does with an autosaved post is covered like every other route; what the browser chose to post is not. That is the price of admitting a script, it is paid knowingly, and it is why §12.1's scope is written as a list of two items rather than as a principle — a principle would grow.
 
 
 

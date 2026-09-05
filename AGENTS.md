@@ -5,18 +5,25 @@ Saudi Arabia, aimed at chronic disease management (diabetes and hypertension). I
 
 ## SSOT Integrity Rules
 
-Two SSOT documents are in force:
+Three documents are in force, ranked:
 
-- **`project_noor_architecture.md`** — the single source of truth. Behaviour, data, the eight Visit Protocol sections, the Escalation Tiers.
-- **`frontend_ssot.md`** — the design system. Colour, type, space, the marks that carry clinical meaning, and how all four are delivered and enforced. It governs the surface only; it does not arrange pages.
+1. **`project_noor_architecture.md`** — the single source of truth. Behaviour, data, the eight Visit Protocol sections, the Escalation Tiers.
+2. **`docs/frontend_ssot.md`** — the design system. Colour, type, space, the marks that carry clinical meaning, and how all four are delivered and enforced. It governs the surface only; it does not arrange pages.
+3. **`docs/web_plan.md`** — the page plan. Which screens exist, who sees each one, and how you get from one to the next. Written against `docs/frontend_ssot.md` §1, which delegates page composition and routing to it.
 
 Rules:
 
-- Read both before writing any code. Do not deviate from either without explicit user approval.
-- **Conflict resolution:** if a user prompt contradicts an SSOT, prioritize the SSOT
-  and ask the user to resolve the conflict. Never silently bypass or override it.
-- Where the two SSOTs disagree, **`project_noor_architecture.md` wins**, and the
-  conflict is raised rather than silently resolved.
+- Read all three, plus `CONTEXT.md` for the vocabulary, before writing any code. Do not deviate from any of them without
+  explicit user approval.
+- **Conflict resolution:** if a user prompt contradicts one of the three, prioritize
+  the document and ask the user to resolve the conflict. Never silently bypass or
+  override it.
+- Where they disagree, **the lower number wins** — architecture over the design system,
+  the design system over the web plan — and the conflict is raised rather than silently
+  resolved.
+- **The web plan is the most volatile of the three**, because it records decisions
+  about screens and navigation that change as the surface gets built. A change there is
+  ordinary; a change to either document above it is not.
 
 ## Behavioral Guidelines
 
@@ -97,15 +104,17 @@ Python process, server-rendered Jinja2, one SQLite file.
 
 - `pytest` — the whole suite. `pyproject.toml` already applies `--cov=noor --cov-branch`.
 - `python run.py` — serves on `127.0.0.1:8000`. Needs `noor.web.app:app`, which does not exist yet.
-- `graphify update .` — refreshes the knowledge graph after a change.
+- `codegraph status` — checks index freshness. Sync is automatic; `codegraph sync` only if the watcher is off.
 
 Coverage is **branch** coverage at `fail_under = 100` with `exclude_lines = []`, so
 one untested branch fails the suite. That gate is why logic stays in Python and not
-in a `.js` file or a Jinja `{% if %}` — coverage cannot see inside either.
+in a `.js` file or a Jinja `{% if %}` — coverage cannot see inside either. One script
+file is admitted, for the section autosave and nothing else (`docs/frontend_ssot.md`
+§12.1): it decides when to post, never what is true.
 
 **Where the build is.** Phase 1 Backend Pass 1 is committed: `src/noor/` holds the
 store, the domain, the EMR seam, dispatch, content and serialisation. The web layer
-(`src/noor/web/`) is next, and is the first thing `frontend_ssot.md` applies to.
+(`src/noor/web/`) is next, and is the first thing `docs/frontend_ssot.md` applies to.
 
 ## Testing
 
@@ -122,19 +131,18 @@ wins**.
 - If a test is hard to write, stop and fix the source code — not the test.
 - No test is left flaky. Fix it or delete it.
 
-## graphify
+## codegraph
 
-This project uses a knowledge graph at `graphify-out/` with god nodes, community
-structure, and cross-file relationships. It is populated (`graph.json`,
-`GRAPH_REPORT.md`) and indexes both the documents — the two SSOTs, the ADRs, the
-clinical content and the archived research — and the Phase 1 source under
-`src/noor/`.
+This project uses CodeGraph, a local knowledge graph at `.codegraph/` with symbols,
+call edges, and cross-file relationships. It indexes the source under `src/noor/`.
+Wired to opencode via `codegraph install` (100% local, SQLite only).
 
 Rules:
-- For codebase questions, first run `graphify query "<question>"` when `graphify-out/graph.json` exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If `graphify-out/wiki/index.md` exists, use it for broad navigation instead of raw source browsing.
-- Read `graphify-out/GRAPH_REPORT.md` only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).
+- For codebase questions, use the CodeGraph MCP tools (`codegraph_explore`,
+  `codegraph_node`) instead of crawling files by hand.
+- Use `codegraph ui` to browse callers, source, and callees in the browser.
+- `codegraph status` checks freshness. Sync is automatic on file change.
+- Run `codegraph init` once per fresh clone; `codegraph sync` only when the watcher is off.
 
 ---
 

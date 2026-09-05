@@ -13,4 +13,4 @@ Tier 3 exists specifically so a genuine emergency does not queue behind a human.
 
 Because the tier is attached to each recommendation rather than to the visit or the patient, one visit can legitimately produce recommendations at several tiers at once. How those combine — and the per-visit cap in N3 — is still open.
 
-*Resolved since: the cap is three, and it is welded into the code rather than configurable (`0007-clinical-content-is-data.md`). Each tier's response window went the other way — service policy, in `docs/clinical-content/response-windows.md`.*
+*Resolved since: the cap is three, and it is welded into the code rather than configurable (`docs/adr/0007-clinical-content-is-data.md`). Each tier's response window went the other way — service policy, in `docs/clinical-content/response-windows.md`.*

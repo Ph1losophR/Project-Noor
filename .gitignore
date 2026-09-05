@@ -5,3 +5,4 @@ __pycache__/
 .pytest_cache/
 noor.sqlite3
 *.db
+.codegraph/

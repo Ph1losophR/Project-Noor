@@ -1,6 +1,8 @@
 # Project Noor — Architecture (SSOT)
 
-> **Status:** Sections 1–8. §1–§3 written 2026-08-27 after Phase 2 research; §4 (the Golden Case) written 2026-08-27 and revised 2026-08-28; §5 (the Visit lifecycle) written 2026-08-28; §6–§8 maintained continuously. Phase 1's documentation closed 2026-08-28 with ADRs 0005–0007 (§7). Audited for internal consistency 2026-08-28.
+> **Status:** Sections 1–8. §1–§3 written 2026-08-27 after Phase 2 research; §4 (the Golden Case) written 2026-08-27 and revised 2026-08-28; §5 (the Visit lifecycle) written 2026-08-28; §6–§8 maintained continuously. Phase 1's documentation closed 2026-08-28 with ADRs 0005–0007 (§7), extended 2026-09-04–2026-09-05 with ADRs 0008–0009. Audited for internal consistency 2026-08-28 and 2026-09-05.
+>
+> Ranked below this document are `docs/frontend_ssot.md` (surface only) and `docs/web_plan.md` (pages only); `docs/testing-standards.md` is subordinate to all three. Ranking and precedence: AGENTS.md.
 >
 > This document is built **incrementally** — one section per phase discussion. It states *what must be true*, not *how* the system is built. Implementation detail is written only after the relevant phase has been grilled.
 >
@@ -141,7 +143,7 @@ A Patient's first Visit runs the same eight sections with three differences:
 **Baseline Visit** or **Routine Visit** planning indicator computed from the
 Patient's completed history. This gives the Field Team the protocol shape to
 expect before leaving the building. It is a read-time indicator, not a stored
-`VisitKind`; the Visit's recorded kind is settled again at Start (§5.5; ADR 0008).
+`VisitKind`; the Visit's recorded kind is settled again at Start (§5.5; ADR 0008, `docs/adr/0008-baseline-label-is-a-read-time-planning-indicator.md`).
 
 That third rule is deliberately narrower than "no Recommendations." Tier 3 is never off, and insulin found in a freezer must fire on the first Visit as readily as the tenth. What the Baseline Visit withholds is comparison, not judgement.
 
@@ -206,7 +208,7 @@ Mechanics:
 
 ### 4.8 Closing the loop without new infrastructure
 
-The **Care Plan** emits a **Between-Visit Plan**: pre-agreed titration steps, a home measurement schedule, and stop rules. Every line is machine-testable — a threshold, a schedule, or a rule — never prose. This is the delegated-titration mechanism that moved outcomes in TASMIN-SR and HyperLink; monitoring without it is inert.
+The **Care Plan** emits a **Between-Visit Plan**: pre-agreed titration steps, a home measurement schedule, and stop rules. Every line is machine-testable — a threshold, a schedule, or a rule — never prose. This is the delegated-titration mechanism that moved outcomes in TASMIN-SR and HyperLink; monitoring without it is inert (mechanism and co-intervention evidence: `docs/research/art_of_chronic_disease_management.md`).
 
 A Routine Visit **opens by scoring the previous Between-Visit Plan.** The Nurse reads the glucose meter's and the BP device's stored memory on arrival, so the plan emitted at Visit N is scored at Visit N+1 entirely inside the Visit. No transmission, no connectivity, no device procurement, no cost.
 
@@ -277,6 +279,7 @@ Also required:
 
 - **Tier 3 fires offline.** 205/125 is a threshold, not a comparison against anything.
 - **Write-Back queues visibly**, survives a device restart, and shows the Field Team that it is still pending. A silently failed Write-Back is worse than none: the Supervisor's task never arrives and nobody knows it did not.
+- **The close attempts the send once; nothing retries by itself.** No background loop, no timer, no polling. A queued Write-Back waits for the Field Team's explicit resend.
 - **One Unreachable state.** "No signal" and "EMR is down" are not distinguished — operationally identical, and two states would mean two code paths and two test sets for one outcome.
 
 ### 4.11 The withholding principle
@@ -324,6 +327,7 @@ Any two-object split has to answer which object owns the **Findings** Noor compu
 - **Write-Back** has its own status — queued, confirmed, rejected (§4.10) — and a rejected Write-Back does not reopen a **Completed** Visit.
 - **Supervisor** review attaches to *items*, never to the Visit. One Visit can have three items in three different review states at once, which is unrepresentable as a Visit state.
 - "This Visit has items awaiting review" is therefore **derived on read, never stored.** A stored flag is a second copy of the truth that goes stale the moment an item is signed.
+- **What the Supervisor answered *is* stored, and the derivation above reads it.** A **Review Verdict** is an event with an author and a time (§5.12); an item awaits review until a verdict names it. Storing the answer is not storing the flag — the answer is the primary record and cannot go stale, whereas the flag is a copy of it and would.
 
 Why the Supervisor does not gate **Completed**: `docs/adr/0003-completion-is-the-field-teams-act.md`.
 
@@ -373,10 +377,11 @@ A Visit becomes **In Progress** when either member of the Field Team performs a 
 
 **Starting freezes the engine's inputs.** The engine reasons over one consistent snapshot for the duration of the Visit; a refresh is an explicit act and is timestamped. N5 requires every Recommendation to show the Patient data that triggered it — and inputs that shift underneath a Visit make "why did it say that?" unanswerable an hour later.
 
-Two things are settled by the Start rather than earlier:
+Three things are settled by the Start rather than earlier:
 
 - **The Physical Examination's required element list is composed at Start** from the cached inputs (§4.2). Composing it while the Visit is still Scheduled would compose it from data that may be refreshed before the team arrives.
 - **The Visit's recorded kind is Baseline if the Patient has no *Completed* Baseline Visit.** The Roster may show a Baseline Visit or Routine Visit planning indicator before this point so the Field Team knows what to expect, but the indicator is not the source of truth and is never persisted as `VisitKind`. Start recomputes the kind from the completed history that exists then. A Baseline Visit that ended without completing left the data floor unestablished, so the next Visit must be a Baseline again.
+- **The attending pair is copied from the Patient's standing assignment** (§5.13). Copied, not referenced: a reassignment later must not restate who attended a Visit that has already closed.
 
 **Every Visit passes through Scheduled.** There is no attendance that creates a Visit at the door. A Visit arranged an hour beforehand is created Scheduled and then started, so the roster stays the complete record of intended attendance — which is what makes planned-versus-happened answerable at all.
 
@@ -428,7 +433,11 @@ Noor can afford to be this strict about the front door only because **Ended Earl
 
 The Write-Back may already have created tasks in the Supervisor's queue carrying owners and due times (§4.9). Editing the record underneath a live task means the task and the record disagree, with no way to tell which one was acted on. An **Addendum** is timestamped, attributed, and additive, so both versions survive.
 
-The addendum interface is out of scope for the prototype; the immutability it depends on is not.
+**An Addendum is the only write a closed Visit accepts.** Everything else is refused, and a refused write is never discarded: its content is offered to the Addendum instead. A correction typed into a Visit that closed a moment earlier genuinely *is* an addition to a closed record, and dropping it to protect immutability would trade a visible gap for an invisible one, which N6 rates as the worse of the two.
+
+**An Addendum produces its own Write-Back, separate from the Visit's.** §4.9's seven items are the envelope sent *at the close*; an Addendum arrives after it, as one item naming the Visit it attaches to, its text, its author and its time. It carries no owner and no due time, and that is §4.9's rule holding rather than bending — owner-and-due-time is a property of anything requiring a *response*, and an Addendum asks for nothing. §4.10 applies unchanged: it queues visibly, survives a device restart, and never fails quietly.
+
+**Its author may send it to the Supervisor as well.** That is §5.11's floor rather than a fifth route: it arrives as a manual flag (§5.12). An Addendum carries no **Escalation Tier**, so it takes **Tier 1's window** on that route's existing reasoning — asking for review of something already done is Tier 1's shape exactly.
 
 ### 5.10 Structured reasons are engine data
 
@@ -453,9 +462,11 @@ All four use the same construction: **a fixed list for that context, plus an add
 
 **Overriding a Recommendation is not the same as acting outside its tier.** The tier still routes: an overridden Tier 2 item still requires the Supervisor to be reached during the Visit, because the override is itself a clinical decision of the kind that tier exists to review.
 
-**A Tier 2 with no connectivity** is shown, marked not executable, and carried as a pending Write-Back item with the Supervisor as named owner and a due time of **immediately, on queueing**. Tier 2's window is zero by definition — the Supervisor was meant to be reached *during* the Visit (ADR 0001) — so the item arrives already overdue, and that is the intended reading rather than a defect to be smoothed away with a grace period. It is the one item class whose lateness is a fact about the house's connectivity, not about the Supervisor's diligence, and flattening it into a 72-hour queue would hide the only Visits where the routing did not work. `docs/clinical-content/response-windows.md` records it. The Visit completes normally — §4.10 does not permit connectivity to hold a Visit open.
+**A Tier 2 with no connectivity** is shown, marked not executable, and carried as a pending Write-Back item with the Supervisor as named owner and a due time of **immediately, on queueing**. Tier 2's window is zero by definition — the Supervisor was meant to be reached *during* the Visit (ADR 0001, `docs/adr/0001-time-to-action-not-severity.md`) — so the item arrives already overdue, and that is the intended reading rather than a defect to be smoothed away with a grace period. It is the one item class whose lateness is a fact about the house's connectivity, not about the Supervisor's diligence, and flattening it into a 72-hour queue would hide the only Visits where the routing did not work. `docs/clinical-content/response-windows.md` records it. The Visit completes normally — §4.10 does not permit connectivity to hold a Visit open.
 
 **The Junior Physician can send anything to the Supervisor at any time.** The engine's routing is a floor, not a ceiling: software may add Supervisor involvement and may never subtract it (ADR 0003).
+
+**The Supervisor's answer arrives after the act, never before it.** A **Review Verdict** (§5.12) that disagrees with an override does not undo the override, reopen the Visit, or make the next Visit conditional on it. Requiring the Supervisor's agreement *first* is the hard stop N4 forbids, in the one place it would bite hardest — a house with no signal, where §5.8 must still be able to close (ADR 0003) and §4.10 must still let the team leave. Recording the answer is what the routing was for; withholding the act until it arrives is a different design, and `docs/adr/0009-the-supervisor-answer-is-recorded-not-enforced.md` records why it was rejected. So a disagreement changes what the record says about the *rule*, never what it says about the Visit — which is the authority N4 already gives it.
 
 ### 5.12 Which Visits reach the Supervisor
 
@@ -465,7 +476,7 @@ Not all of them. Four routes, and no fifth:
 |---|---|---|
 | Tier 1 and above | The item's Escalation Tier (ADR 0001) | Derived from the tier |
 | Goal of Care ratification | A **Baseline Visit** proposed a target (§4.4) | Its own window |
-| Manual flag | The Junior Physician chose to (§5.11) | The flagged item's tier — or **Tier 1's window** where that item is Tier 0, since asking for review of something already done is Tier 1's shape exactly |
+| Manual flag | The Junior Physician chose to (§5.11), an **Addendum** included (§5.9) | The flagged item's tier — or **Tier 1's window** where that item is Tier 0, since asking for review of something already done is Tier 1's shape exactly |
 | **Silence Audit** | Sampling of Completed Visits that produced no Recommendation | A sampling rate, not a deadline |
 
 The **Silence Audit** exists because §4.1 makes the accuracy of Noor's silence the property the deliverable is judged on, and N8 records that failures-to-*fire* are especially hard to detect. Reviewing only the Visits that spoke would measure precision and never once measure recall. Reasoning: ADR 0003.
@@ -473,6 +484,12 @@ The **Silence Audit** exists because §4.1 makes the accuracy of Noor's silence 
 **Every route carries a response obligation, and every one of them is clinical content** (`docs/adr/0007-clinical-content-is-data.md`), recorded in `docs/clinical-content/response-windows.md`. Three routes carry a deadline; the **Silence Audit** carries a percentage *with a floor* instead, because a percentage of a small number is zero, and an audit that never runs measures nothing at all.
 
 **All four routes land in Noor, not in the EMR's task queue.** A task reading *"ratify target 135/85"* has stripped the guideline lineage, the reason that band was chosen, and the Self-Care **Findings** from inside the house that a ratification may depend on — and N5's automation-bias mitigation *is* the display of that reasoning. The **Write-Back** is unchanged and remains the record (§4.9). The Supervisor's surface is read-mostly — review, ratify, return with comment, sign off — and never edits a Visit, so §5.9 holds. Full reasoning and rejected alternatives: `docs/adr/0005-the-supervisor-reviews-in-noor.md`.
+
+**The Supervisor's answer is a record, and it is what lets an item leave the inbox.** Every route above is derived from the Visit each time the inbox is read (§5.1), so no item on it can be cleared by being looked at. A **Review Verdict** closes one: **agreed** or **disagreed**, the Supervisor's name, the time, and a note — required on a disagreement, because a disagreement nobody can read is a mark rather than an answer. It is deliberately not a fifth structured reason (§5.10): nothing routes on it, and those four lists are engine data precisely because something does.
+
+**The four acts named above are one shape with two outcomes.** Review and sign-off are the agreed case; returning with a comment is the disagreed case with its note. Ratification is the exception that needs no second record — agreeing *is* ratifying the target, which the **Goal of Care** already carries with its ratifier and its time (§4.4), and disagreeing leaves the Patient with no ratified target, so that item stays open. Correctly: the clinical question it stands for is still open, and §4.11 is still withholding everything that depends on a target.
+
+**A missing verdict blocks nothing** — not the close (ADR 0003), not the **Write-Back**, not the next Visit. What it does is make the routing measurable. A verdict carries a time, three of the four routes carry a due time, and the difference between the two is the only way to see whether the two-actor handoff — which §4.12 calls the largest unvalidated assumption in the design — actually happens. The **Silence Audit** needs it most: a sampled Visit whose silence nobody recorded an opinion on has measured recall no better than not sampling it at all, and a disagreement there is a bug report about a rule that never fired, which N8 names as the hardest kind of failure to detect.
 
 ### 5.13 Actors, and what carries a name
 
@@ -496,7 +513,11 @@ The **Field Team** shares one tablet. One member examines while the other docume
 
 **Executors are not actors.** §4.5 attributes home tasks to the **Patient** or the **Caregiver**; §4.9 gives every responding Write-Back item a named owner, usually the **Supervisor**. None of the three uses Noor during a Visit. A Recommendation's executor and its author are separate fields, because N2's question — *can the person who must act actually do it?* — is unanswerable if they share one.
 
-Members are chosen from a list, with no credential verification in the prototype (§6).
+**The Field Team is a standing assignment to the Patient, not a choice made per Visit.** A Patient is enrolled with a named **Junior Physician** and a named **Nurse**, and they remain that Patient's team until someone reassigns them. This is what a longitudinal relationship *is*, and it is why no screen asks who is attending at the door — asking would make the pair look like a property of today rather than of the Patient. The assignment is also Noor's own fact: §4.9's roster carries the Patient, the date and the reason for scheduling, and no team, so nothing here is asked of an EMR.
+
+**The Visit records the pair that attended, copied at the Start (§5.5). It never reads the Patient's current assignment back.** A Visit pointing at the live assignment would rewrite the authorship of every closed Visit in that Patient's record on the day the Patient is reassigned — silently, with no **Addendum**, and §5.9 admits corrections only as addenda. Rewriting *who performed the Visit* is the worst available edit, because the record and any later clinical or medico-legal reading of it then disagree with no trace of the change. Reassignment governs tomorrow and nothing behind it.
+
+Members are still chosen from a list, with no credential verification in the prototype (§6). The list is consulted at enrolment and at reassignment rather than at the door.
 
 ### 5.14 What this section does not validate
 
@@ -509,7 +530,7 @@ Members are chosen from a list, with no credential verification in the prototype
 - **Which EMR MOH home-healthcare facilities actually run — unknown.** It determines whether a due-dated, owned task (§4.9) is even accepted. Phase 3 concern, not Phase 1.
 - **The Junior Physician's grade and independent prescribing authority** are not pinned down. Tier 0 and Tier 1 depend on where that line sits.
 - **Whether a consultant countersignature is required on a junior physician's home-visit record in Saudi Arabia — unverified.** ADR 0003 makes **Completed** the Field Team's act inside the house. A countersignature requirement would not overturn that; it would add an obligation *after* the close, on the Write-Back axis (§5.14). Verify before the pitch, because it is a question a hospital will ask.
-- **Device security and clinician authentication — out of scope, and the second question a hospital IT department will ask.** §5.13 chooses members from a list with no credential verification, and the tablet holds Patient data in someone's home. The workflow argument does not depend on this being solved, but the pitch must name it rather than let it be discovered.
+- **Device security and clinician authentication — out of scope, and the second question a hospital IT department will ask.** §5.13 assigns each Patient a named pair with no credential verification behind either name, and the tablet holds Patient data in someone's home. The workflow argument does not depend on this being solved, but the pitch must name it rather than let it be discovered.
 - **The prototype runs as one local process, so "remote" is simulated.** Noor is a single Python application against one local store (`docs/adr/0006-offline-by-locality.md`); the Field Team's surface and the **Supervisor**'s review surface are two roles in the same application, not two devices across a network. This is deliberate — it makes §4.10's offline guarantee a property of where Noor runs rather than a synchronisation layer to be written — and it costs nothing in the workflow argument, because ADR 0005 fixes *where the decision is made*, not how the bytes travel. What the prototype therefore cannot show is that the handoff survives real latency, real authentication, and two people working at once. That is a deployment problem, and it is the one place the demo is not the product.
 - **Whether the glucose meters and BP devices already in these homes store timestamped readings — unverified, and no longer blocking.** §4.8 records the source on every **Home Reading**, so the loop closes on either a storing device or a **Caregiver** paper log, and says which. What remains to verify is which of the two the field actually presents — it changes how much weight the scoring deserves, not whether Noor runs. Transmitting devices or a patient-facing capture surface would remove the question entirely; both are out of scope for the prototype and belong to the scaling argument.
 - **The drug list is a demonstration subset, not a formulary.** §4.2's Medication Reconciliation searches a list bundled with Noor, covering diabetes, hypertension and the common comorbid drugs. It is clinical content under ADR 0007, and it is deliberately incomplete — so *unmatched* will fire more often in the prototype than it would in production. The demonstration should say that plainly rather than curate the fixtures to hide it. Production needs a real registered-products list; whether Saudi Arabia publishes one usable at zero cost is unverified.
@@ -524,8 +545,8 @@ Members are chosen from a list, with no credential verification in the prototype
 |---|---|---|
 | Constraints + integration boundary (§1–§3) | 2 | Written 2026-08-27, §1 boundary widened 2026-08-28 (ADR 0005) |
 | Golden Case — routine visit workflow (§4) | 1 | Grilled and written 2026-08-27, revised 2026-08-28 |
-| Visit lifecycle — roster to terminal state (§5) | 1 | Grilled and written 2026-08-28, §5.6 fourth obligation added 2026-09-02 |
-| Phase 1 blockers — stack, content boundary, section shapes, windows | 1 | Grilled and closed 2026-08-28 (ADRs 0005–0007) |
+| Visit lifecycle — roster to terminal state (§5) | 1 | Grilled and written 2026-08-28, §5.6 fourth obligation added 2026-09-02, §5.5 and §5.13 given the standing Field Team assignment 2026-09-04, §5.1/§5.9/§5.11/§5.12 given the **Review Verdict** and the **Addendum** 2026-09-05 (ADR 0009) |
+| Phase 1 blockers — stack, content boundary, section shapes, windows | 1 | Grilled and closed 2026-08-28 (ADRs 0005–0009) |
 | CDS engine design + clinical rules | 3 | Not yet grilled — Phases 1 and 1.5 build first |
 | Scaling + technical report | 4 | Blocked on Phase 3 |
 
@@ -537,7 +558,7 @@ Members are chosen from a list, with no credential verification in the prototype
 
 | Phase | Delivers | Deliberately excluded |
 |---|---|---|
-| **1 — Workflow shell** | The Visit lifecycle (§5), the eight sections (§4.2), **Findings**, the **Brief** (§5.3), **Write-Back** (§4.9), the **Supervisor** review surface (§5.12, ADR 0005), the four structured reason lists (§5.10), the interval-event list (§4.2), the searchable drug list (§4.2, §6), the versioned clinical content (ADR 0007), the local offline store (ADR 0006), and the hostile fixtures (§4.9). The `Recommendation` type and its disposition lifecycle exist with no producer. | Every rule that produces a Recommendation |
+| **1 — Workflow shell** | The Visit lifecycle (§5), the eight sections (§4.2), **Findings**, the **Brief** (§5.3), **Write-Back** (§4.9), the **Supervisor** review surface with its **Review Verdict** (§5.12, ADRs 0005 and 0009), the **Addendum** (§5.9), the four structured reason lists (§5.10), the interval-event list (§4.2), the searchable drug list (§4.2, §6), the versioned clinical content (ADR 0007), the local offline store (ADR 0006), and the hostile fixtures (§4.9). The `Recommendation` type and its disposition lifecycle exist with no producer. | Every rule that produces a Recommendation |
 | **1.5 — Evaluation harness** | Rule evaluation over that same clinical content, the "evaluated, did not fire" log (N8), and **Tier 3 rules only** — the one class §4.3 and §4.10 both certify as needing neither a target nor a trend | The *logic that assigns* a tier, **Suppression**, the N3 cap |
 | **3 — Full engine** | The complete rule set, tier assignment (ADR 0001), Suppression (§4.6), the N3 cap (§4.7) | — |
 

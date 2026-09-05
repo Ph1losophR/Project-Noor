@@ -12,12 +12,12 @@ The Visit List shows one of these words on every Scheduled row:
 - **Baseline Visit** when the Patient has no Completed Baseline Visit.
 - **Routine Visit** after the Patient has a Completed Baseline Visit.
 
-This is a read-time planning indicator. It is computed from the Patient's current
+This is a read-time planning indicator (§4.3). It is computed from the Patient's current
 completed history so the Field Team can understand the protocol shape before
 departure. It is not a clinical event, it does not change the roster, and it is not
 stored as `Visit.kind`.
 
-When the Field Team performs Start Visit, Noor recomputes the kind from the
+When the Field Team performs Start Visit (§5.5), Noor recomputes the kind from the
 completed history available at that moment and stores the result as `Visit.kind`.
 The Start transition is the source of truth for the Visit record and never trusts
 the display label. If the history changes between two roster reads, the planning
