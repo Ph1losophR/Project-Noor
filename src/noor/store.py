@@ -539,6 +539,19 @@ def scheduled_reason(conn: sqlite3.Connection, visit_id: str) -> str:
     return row["reason"]
 
 
+def visit_day(conn: sqlite3.Connection, visit_id: str) -> date:
+    """Which day's roster this Visit is on, so a page can offer the way back to it.
+
+    Mirrors scheduled_reason(): raises StoreError when the Visit is missing, keeping
+    the failure loud and typed at the seam.
+    """
+    row = conn.execute(
+        "select scheduled_for from visits where id = ?", (visit_id,)).fetchone()
+    if row is None:
+        raise StoreError(f"no Visit {visit_id!r}")
+    return date.fromisoformat(row["scheduled_for"])
+
+
 class InboxRow(NamedTuple):
     """One review row with what §5.3 needs beside the item: the Patient's name and the
     date of the Visit it came from. The date rides here rather than on `Review` because it

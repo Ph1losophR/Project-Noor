@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ day }}{% endblock %}
+{% block up %}<a class="up" href="/">Two doors</a>{% endblock %}
+{% block body %}
+<p class="eyebrow">The day's Visits</p>
+<h1 class="title">{{ day }}</h1>
+<p class="lede">{{ summary }}</p>
+<div class="subject">
+  <ul class="rows">
+    {% for line in lines %}
+    <li class="row">
+      <p class="row-main"><a class="subheading" dir="auto" href="/visits/{{ line.visit_id }}">{{ line.patient_name }}</a></p>
+      <p class="row-aside">{{ line.state }}</p>
+      <p class="row-main" dir="auto">{{ line.reason }}</p>
+      <p class="row-aside">{{ line.kind }}</p>
+      <p class="row-main">{{ line.readiness }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<p class="actions">
+  <a class="button-quiet" href="/visits?day={{ earlier }}">The day before</a>
+  <a class="button-quiet" href="/visits?day={{ later }}">The day after</a>
+</p>
+{% endblock %}

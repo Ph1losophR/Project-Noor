@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Brief — {{ patient }}{% endblock %}
+{% block up %}<a class="up" href="/visits/{{ visit_id }}">The Visit</a>{% endblock %}
+{% block body %}
+<p class="eyebrow">Before the knock</p>
+<h1 class="title" dir="auto">{{ patient }}</h1>
+<div class="subject">
+  <p class="lede">{{ last_visit }}</p>
+  <p class="lede">{{ plan }}</p>
+  <p class="lede">{{ findings_only }}</p>
+</div>
+<h2 class="heading">Vitals across previous Visits</h2>
+<p class="lede">{{ trends }}</p>
+<ul class="tiles">
+  {% for tile in trend_tiles %}
+  <li class="tile">
+    <p class="subheading">{{ tile.name }}</p>
+    <p>{{ tile.detail }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<p class="lede">{{ home_readings | safe }}</p>
+<h2 class="heading">Surveillance overdue</h2>
+<p class="lede">{{ due }}</p>
+<ul class="tiles">
+  {% for tile in due_tiles %}
+  <li class="tile">
+    <p class="subheading">{{ tile.name }}</p>
+    <p>{{ tile.detail }}</p>
+  </li>
+  {% endfor %}
+</ul>
+<h2 class="heading">What Noor could not see</h2>
+<p class="lede">{{ spots }}</p>
+{% for spot in spot_lines %}<p class="note">{{ spot }}</p>{% endfor %}
+{% endblock %}

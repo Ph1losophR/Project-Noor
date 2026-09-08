@@ -1,0 +1,21 @@
+{% extends "visit_base.html" %}
+{% block visit %}
+<p class="subheading">{{ kind }}</p>
+<p class="lede">{{ closed }}</p>
+<p class="lede">{{ reason }}</p>
+<p class="lede">{{ attendance }}</p>
+<div class="subject">
+  <h2 class="heading">The record</h2>
+  <ul class="tiles">
+    {% for section in sections %}
+    <li class="tile">
+      <p class="subheading">{{ section.name }}</p>
+      <p class="{{ section.mark }}">{{ section.word }}</p>
+    </li>
+    {% endfor %}
+  </ul>
+</div>
+<h2 class="heading">The Write-Back</h2>
+<p class="lede">{{ queue }}</p>
+<p class="lede">{{ writeback }}</p>
+{% endblock %}

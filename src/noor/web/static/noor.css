@@ -1,0 +1,591 @@
+/* Project Noor. docs/frontend_ssot.md is the source of every value below.
+   Hexes live above the `end palette` marker and nowhere else (§13). */
+
+/* palette: light — §4.1, plus §4.3's status hues and §6's depth */
+:root {
+  --l-ink: #282825;
+  --l-lede: #66625A;
+  --l-muted: #716E66;
+  --l-pewter: #7E7C75;
+  --l-mushroom: #9A9486;
+  --l-stone: #A6A39A;
+  --l-greige: #B9B4AA;
+  --l-oat: #CFC9BF;
+  --l-sand: #DED9CF;
+  --l-bone: #ECE9E3;
+  --l-surface-raised: #FBFAF8;
+  --l-linen: #F7F5F2;
+  --l-hairline: rgba(40, 40, 37, .13);
+  --l-clear: #2A7A52;
+  --l-now: #8E2A24;
+  --review: #A87F1C;
+  --l-depth: 0 18px 55px rgba(48, 43, 36, .08), 0 2px 8px rgba(48, 43, 36, .05);
+}
+
+/* palette: dark — §4.2, plus §4.3's status hues and §6's depth.
+   `--review` is declared once above: §4.2 maps it to --status-review in both modes. */
+:root {
+  --d-paper: #D8D4C9;
+  --d-muted: #9B968A;
+  --d-soft-greige: #7A7363;
+  --d-aged-bronze: #5B5342;
+  --d-bronze-label: #F1EEE6;
+  --d-sage: #48594B;
+  --d-dark-moss: #3A4336;
+  --d-walnut: #3B342C;
+  --d-pine: #2C3A33;
+  --d-forest: #1F2B24;
+  --d-charcoal: #171B1A;
+  --d-deep-onyx: #0D0F0E;
+  --d-hairline: rgba(216, 212, 201, .12);
+  --d-clear: #4FA36E;
+  --d-now: #A32F27;
+  --d-now-ring: #BC443A;
+  --d-now-label: #F7F5F2;
+  --d-depth: none;
+}
+
+/* end palette */
+
+/* §4.2's eighteen roles, written under all four scopes §9 requires. No comment may
+   appear inside a role block: the lint reads each region up to the next one. */
+
+/* roles: light */
+:root {
+  --page: var(--l-linen);
+  --raised: var(--l-surface-raised);
+  --well: var(--l-bone);
+  --text: var(--l-ink);
+  --text-2: var(--l-lede);
+  --text-3: var(--l-muted);
+  --rule: var(--l-pewter);
+  --hairline: var(--l-hairline);
+  --fill-strong: var(--l-mushroom);
+  --fill-soft: var(--l-sand);
+  --button: var(--l-ink);
+  --button-label: var(--l-linen);
+  --depth: var(--l-depth);
+  --status-clear: var(--l-clear);
+  --status-review: var(--review);
+  --status-now: var(--l-now);
+  --status-now-ring: var(--l-now);
+  --status-now-label: var(--l-linen);
+}
+
+/* roles: dark, under the OS preference */
+@media (prefers-color-scheme: dark) {
+  :root {
+  --page: var(--d-deep-onyx);
+  --raised: var(--d-charcoal);
+  --well: var(--d-forest);
+  --text: var(--d-paper);
+  --text-2: var(--d-muted);
+  --text-3: var(--d-muted);
+  --rule: var(--d-soft-greige);
+  --hairline: var(--d-hairline);
+  --fill-strong: var(--d-sage);
+  --fill-soft: var(--d-walnut);
+  --button: var(--d-aged-bronze);
+  --button-label: var(--d-bronze-label);
+  --depth: var(--d-depth);
+  --status-clear: var(--d-clear);
+  --status-review: var(--review);
+  --status-now: var(--d-now);
+  --status-now-ring: var(--d-now-ring);
+  --status-now-label: var(--d-now-label);
+  }
+}
+
+/* roles: dark, under the toggle */
+:root[data-theme="dark"] {
+  --page: var(--d-deep-onyx);
+  --raised: var(--d-charcoal);
+  --well: var(--d-forest);
+  --text: var(--d-paper);
+  --text-2: var(--d-muted);
+  --text-3: var(--d-muted);
+  --rule: var(--d-soft-greige);
+  --hairline: var(--d-hairline);
+  --fill-strong: var(--d-sage);
+  --fill-soft: var(--d-walnut);
+  --button: var(--d-aged-bronze);
+  --button-label: var(--d-bronze-label);
+  --depth: var(--d-depth);
+  --status-clear: var(--d-clear);
+  --status-review: var(--review);
+  --status-now: var(--d-now);
+  --status-now-ring: var(--d-now-ring);
+  --status-now-label: var(--d-now-label);
+}
+
+/* roles: light, under the toggle */
+:root[data-theme="light"] {
+  --page: var(--l-linen);
+  --raised: var(--l-surface-raised);
+  --well: var(--l-bone);
+  --text: var(--l-ink);
+  --text-2: var(--l-lede);
+  --text-3: var(--l-muted);
+  --rule: var(--l-pewter);
+  --hairline: var(--l-hairline);
+  --fill-strong: var(--l-mushroom);
+  --fill-soft: var(--l-sand);
+  --button: var(--l-ink);
+  --button-label: var(--l-linen);
+  --depth: var(--l-depth);
+  --status-clear: var(--l-clear);
+  --status-review: var(--review);
+  --status-now: var(--l-now);
+  --status-now-ring: var(--l-now);
+  --status-now-label: var(--l-linen);
+}
+
+/* end roles */
+
+/* §5's scale and §6's space and radius. The px literals live here and nowhere else. */
+:root {
+  --serif: "EB Garamond", Georgia, serif;
+  --sans: "DM Sans", "Noto Naskh Arabic", system-ui, sans-serif;
+  --step-7: 49px;
+  --step-6: 39px;
+  --step-5: 31px;
+  --step-4: 25px;
+  --step-3: 20px;
+  --step-2: 16px;
+  --step-1: 13px;
+  --lh-display: 1.0;
+  --lh-body: 1.6;
+  --lh-long: 1.75;
+  --lh-label: 1.4;
+  --track-display: -0.03em;
+  --track-label: 0.16em;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --radius-control: 8px;
+  --radius-container: 16px;
+  --radius-subject: 24px;
+  --radius-pill: 999px;
+  --target: 48px;
+}
+
+/* §12: self-hosted, Latin-subset, `block` — never `swap`. A Tier badge that reflows
+   after paint is a safety defect, so the text waits for the face. */
+@font-face {
+  font-family: "EB Garamond";
+  src: url("fonts/EBGaramond-Medium.woff2") format("woff2");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/DMSans-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("fonts/DMSans-SemiBold.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Noto Naskh Arabic";
+  src: url("fonts/NotoNaskhArabic-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+figure {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+html {
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+body {
+  background: var(--page);
+  color: var(--text);
+  font-family: var(--sans);
+  font-size: var(--step-2);
+  font-weight: 400;
+  line-height: var(--lh-body);
+  -webkit-text-size-adjust: 100%;
+}
+
+/* §5: every number is DM Sans, whatever it sits inside. */
+[lang],
+time,
+data,
+output {
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: var(--text);
+  text-decoration-color: var(--rule);
+  text-underline-offset: 3px;
+}
+
+/* §4.4: the browser draws these three, so each is pointed at a role — a checked
+   radio, a keyboard ring, or selected text in an unnamed hue would be a tenth colour. */
+input[type="radio"] {
+  accent-color: var(--button);
+}
+
+:focus-visible {
+  outline: 2px solid var(--rule);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: var(--fill-soft);
+  color: var(--text);
+}
+
+/* §2: 768px portrait is the reference, and one arrangement serves every width. */
+.shell {
+  margin-inline: auto;
+  max-width: 720px;
+  padding: var(--space-5);
+}
+
+.chrome {
+  align-items: center;
+  border-bottom: 1px solid var(--hairline);
+  display: flex;
+  gap: var(--space-4);
+  padding: var(--space-3) 0 var(--space-4);
+}
+
+/* Every margin is zeroed above, so a page's vertical rhythm is one gap on the one
+   element that holds a page's blocks. Every screen gets the same one (§6). */
+main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  padding: var(--space-6) 0 0;
+}
+
+.wordmark {
+  color: var(--text);
+  font-family: var(--serif);
+  font-size: var(--step-5);
+  font-weight: 500;
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  min-height: var(--target);
+}
+
+.up {
+  color: var(--text-2);
+  font-size: var(--step-1);
+  letter-spacing: var(--track-label);
+  line-height: var(--lh-label);
+  min-height: var(--target);
+  padding: var(--space-4) var(--space-2);
+  text-transform: uppercase;
+}
+
+/* The toggle sits at the far end, whether or not this page has a link up a level. */
+.theme-form {
+  margin-inline-start: auto;
+}
+
+/* §7.3's one exception: the only marks on any page that are drawn, not written —
+   a sliding pill carrying a sun (filled disc) and a moon (disc with a bite). */
+.theme {
+  align-items: center;
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  display: inline-flex;
+  gap: var(--space-2);
+  min-height: var(--target);
+  min-width: var(--target);
+  padding: var(--space-2) var(--space-3);
+}
+
+.theme::before {
+  background: var(--text);
+  border-radius: var(--radius-pill);
+  content: "";
+  height: var(--space-4);
+  width: var(--space-4);
+}
+
+.theme::after {
+  background: radial-gradient(circle at 68% 32%, transparent 0 52%, var(--text) 53% 100%);
+  border-radius: var(--radius-pill);
+  content: "";
+  height: var(--space-4);
+  width: var(--space-4);
+}
+
+.eyebrow {
+  color: var(--text-3);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.title {
+  font-family: var(--serif);
+  font-size: var(--step-7);
+  font-weight: 500;
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+}
+
+.heading {
+  font-family: var(--serif);
+  font-size: var(--step-6);
+  font-weight: 500;
+  letter-spacing: var(--track-display);
+  line-height: var(--lh-display);
+}
+
+.subheading {
+  font-family: var(--serif);
+  font-size: var(--step-4);
+  font-weight: 500;
+  line-height: var(--lh-display);
+}
+
+.readout {
+  font-size: var(--step-3);
+  font-weight: 600;
+}
+
+.lede {
+  color: var(--text-2);
+  line-height: var(--lh-long);
+  max-width: 62ch;
+}
+
+.card {
+  background: var(--raised);
+  border-radius: var(--radius-container);
+  box-shadow: var(--depth);
+  padding: var(--space-5);
+}
+
+/* §6: one per screen, and it is that screen's subject. */
+.subject {
+  background: var(--raised);
+  border-radius: var(--radius-subject);
+  box-shadow: var(--depth);
+  padding: var(--space-6);
+}
+
+.rows {
+  display: flex;
+  flex-direction: column;
+}
+
+.row {
+  align-items: baseline;
+  border-top: 1px solid var(--hairline);
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2) var(--space-4);
+  min-height: var(--target);
+  padding: var(--space-4) 0;
+}
+
+.row-main {
+  flex: 1 1 60%;
+}
+
+.row-aside {
+  color: var(--text-2);
+  flex: 1 1 30%;
+  font-size: var(--step-1);
+  letter-spacing: var(--track-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-3);
+  padding: var(--space-5) 0 0;
+}
+
+.button {
+  background: var(--button);
+  border: 1px solid var(--button);
+  border-radius: var(--radius-pill);
+  color: var(--button-label);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  min-height: var(--target);
+  padding: var(--space-3) var(--space-6);
+}
+
+.button-quiet {
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-pill);
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-weight: 600;
+  min-height: var(--target);
+  padding: var(--space-3) var(--space-6);
+}
+
+.tiles {
+  display: grid;
+  gap: var(--space-3);
+  grid-template-columns: repeat(2, 1fr);
+}
+
+/* A grid rather than a block so stacked children get a gap without a margin — a tile
+   always carries a name and one more line, whether that is a sentence or a mark. */
+.tile {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-container);
+  color: var(--text);
+  display: grid;
+  gap: var(--space-2);
+  min-height: var(--target);
+  padding: var(--space-4);
+  text-decoration: none;
+}
+
+/* §4.3: a status colour never appears without its word, so these carry text only. */
+.mark-clear {
+  color: var(--status-clear);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+.mark-open {
+  color: var(--text-3);
+  font-size: var(--step-1);
+  font-weight: 600;
+  letter-spacing: var(--track-label);
+  line-height: var(--lh-label);
+  text-transform: uppercase;
+}
+
+/* §7.2's Unreachable shape: a hairline-bounded block naming the input and the
+   consequence. Never an empty cell, an em dash, or 'N/A'. */
+.note {
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-container);
+  color: var(--text-2);
+  line-height: var(--lh-long);
+  padding: var(--space-4);
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: var(--space-4) 0 0;
+}
+
+.field input,
+.field textarea,
+.field select {
+  background: var(--page);
+  border: 1px solid var(--rule);
+  border-radius: var(--radius-control);
+  color: var(--text);
+  font: inherit;
+  min-height: var(--target);
+  padding: var(--space-3);
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+.choice {
+  align-items: center;
+  display: flex;
+  gap: var(--space-3);
+  min-height: var(--target);
+  padding: var(--space-2) 0;
+}
+
+/* §7.4's guard. `popover="manual"` in the markup: it closes on its own buttons and
+   never on a stray tap, because a grave act must be dismissed deliberately. */
+.guard {
+  background: var(--raised);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-container);
+  box-shadow: var(--depth);
+  color: var(--text);
+  max-width: 520px;
+  padding: var(--space-6);
+}
+
+.guard::backdrop {
+  background: var(--fill-soft);
+}
+
+/* §11: 200ms, ease-out, and nothing at all where motion is unwelcome. */
+@media (prefers-reduced-motion: no-preference) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-group(root) {
+    animation-duration: 200ms;
+    animation-timing-function: ease-out;
+  }
+}

@@ -507,6 +507,23 @@ def test_scheduled_reason_returns_reason_when_visit_exists(conn):
     assert store.scheduled_reason(conn, "v-1") == "quarterly diabetic review"
 
 
+def test_a_visit_knows_which_days_roster_it_is_on(conn):
+    # Arrange
+    store.schedule(conn, scheduled(), MONDAY, "three months since the last review")
+
+    # Act
+    day = store.visit_day(conn, "v-1")
+
+    # Assert
+    assert day == MONDAY
+
+
+def test_asking_which_day_an_unknown_visit_is_on_is_refused(conn):
+    # Arrange / Act / Assert — keeps the failure loud and typed at the seam
+    with pytest.raises(store.StoreError):
+        store.visit_day(conn, "v-nope")
+
+
 def test_enrolled_returns_all_patient_ids(conn):
     # Arrange — p-1 was added in fixture
     store.add_patient(conn, "p-2", "Sara Al-Harbi", ["hypertension"],

@@ -1,0 +1,49 @@
+{% extends "visit_base.html" %}
+{% block visit %}
+<p class="subheading">{{ kind }}</p>
+<div class="subject">
+  <p class="lede">{{ readiness }}</p>
+  <p class="actions">
+    <a class="button-quiet" href="/visits/{{ visit_id }}/brief">Read the Brief</a>
+  </p>
+</div>
+<div class="actions">
+  <form method="post" action="/visits/{{ visit_id }}/start">
+    <button class="button" type="submit">Start Visit</button>
+  </form>
+  <button class="button-quiet" type="button"
+          popovertarget="cancel-guard" popovertargetaction="show">Cancelled</button>
+</div>
+<div class="guard" id="cancel-guard" popover="manual">
+  <h2 class="heading">Recording this Visit as Cancelled closes it</h2>
+  <p class="lede">A closed Visit does not change afterwards — anything further is added as
+    an Addendum. Nobody's calendar is touched: this records what became of the
+    attendance.</p>
+  <form method="post" action="/visits/{{ visit_id }}/cancel">
+    <ul class="choices">
+      {% for row in reasons %}
+      <li class="choice">
+        <label>
+          <input type="radio" name="reason" value="{{ row.id }}"> {{ row.label }}
+        </label>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="field">
+      <label for="words">What happened, in your own words</label>
+      <textarea id="words" name="words" rows="3" dir="auto"></textarea>
+    </p>
+    <p class="field">
+      <label for="by">Who is recording this</label>
+      <select id="by" name="by">
+        {% for name in team %}<option dir="auto" value="{{ name }}">{{ name }}</option>{% endfor %}
+      </select>
+    </p>
+    <p class="actions">
+      <button class="button" type="submit">Record this Visit as Cancelled</button>
+      <button class="button-quiet" type="button"
+              popovertarget="cancel-guard" popovertargetaction="hide">Keep this Visit on the day</button>
+    </p>
+  </form>
+</div>
+{% endblock %}
