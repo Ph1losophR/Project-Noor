@@ -51,6 +51,59 @@ class Review(NamedTuple):
     due_at: datetime | None
 
 
+class VerdictError(ValueError):
+    """A Review Verdict missing the note a disagreement must carry (§5.12)."""
+
+
+@dataclass(frozen=True)
+class Verdict:
+    """The Supervisor's answer to one routed item (§5.12, ADR 0009): agreed or not, who,
+    when, and the note a disagreement must carry. It removes the inbox row and does nothing
+    else — never reopens a Visit, never gates a close (§5.9)."""
+
+    agreed: bool
+    by: str
+    at: datetime
+    note: str | None = None
+
+    def __post_init__(self) -> None:
+        if not (self.by or "").strip():
+            raise VerdictError("a verdict carries a name (§5.13)")
+        if not self.agreed and not (self.note or "").strip():
+            raise VerdictError(
+                "a disagreement carries a note (§5.12) — an answer nobody can read is a "
+                "mark, not an answer")
+
+
+class VerdictKey(NamedTuple):
+    """What identifies the item a Verdict answers: the Visit, the route, and the subject
+    within it. The same triple the `verdicts` table is keyed on."""
+
+    visit_id: str
+    route: Route
+    subject: str
+
+
+def key(review: Review) -> VerdictKey:
+    """The identity of the item this row raises, so a stored Verdict matches back to it."""
+    return VerdictKey(review.visit_id, review.route, review.subject)
+
+
+def unanswered(
+    rows: Sequence[Review], answered: set[VerdictKey]
+) -> tuple[Review, ...]:
+    """The inbox: the derived rows no Verdict has closed (ADR 0009). A row leaves only when
+    its Verdict is recorded — nothing here clears by being read (§5.1)."""
+    return tuple(row for row in rows if not _closed(row, answered))
+
+
+def _closed(row: Review, answered: set[VerdictKey]) -> bool:
+    """A Ratification row is never closed by a Verdict: agreeing *is* ratifying, and a
+    ratified Goal stops raising the route through `reviews()` itself, so a Verdict on it
+    would be a second copy (ADR 0009). Every other route closes on its Verdict."""
+    return row.route is not Route.RATIFICATION and key(row) in answered
+
+
 def reviews(
     visit: Visit,
     *,
@@ -70,7 +123,7 @@ def reviews(
         if item.tier is not EscalationTier.TIER_0)
     flagged = tuple(
         _review(Route.MANUAL_FLAG, visit, item.subject,
-                response_due(_flag_tier(visit, item), at, windows,
+                response_due(_flag_tier(visit, item), item.at, windows,
                              manually_flagged=True))
         for item in visit.flags)
     return tiered + _ratification(visit, goal, windows) + flagged
@@ -104,6 +157,18 @@ def _review(
     135/85' has stripped the lineage that makes it reviewable, and N5's automation-bias
     mitigation *is* the display of that reasoning."""
     return Review(route, visit.id, visit.patient_id, subject, due_at)
+
+
+def band(review: Review) -> tuple[int, datetime | None]:
+    """§5.2's three bands as a sort key, lowest first: Tier 3 (due now, no due time), then
+    whatever carries a due time soonest-first, then the Silence Audit (a rate, never late).
+    Within a band the second slot is homogeneous — all None in bands 1 and 3, all datetimes
+    in band 2 — so a None due time is never compared against a real one."""
+    if review.route is Route.SILENCE_AUDIT:
+        return (3, None)
+    if review.due_at is None:
+        return (1, None)
+    return (2, review.due_at)
 
 
 SILENT_VISIT = "silent-visit"

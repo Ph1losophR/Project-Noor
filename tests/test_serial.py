@@ -25,6 +25,8 @@ NOON = datetime(2026, 8, 28, 12, 0)
 WEEKLY = MeasurementSchedule(Axis.SYSTOLIC, times_per_week=3)
 STEP = Threshold(Axis.SYSTOLIC, Comparison.ABOVE, 140.0, "add 5mg amlodipine")
 STOP = Threshold(Axis.SYSTOLIC, Comparison.BELOW, 100.0, "hold the evening dose")
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 
 
 def scheduled():
@@ -62,13 +64,28 @@ def test_a_scheduled_visit_comes_back_with_no_kind_rather_than_a_routine_one():
 def test_a_started_visits_kind_round_trips():
     # Arrange
     subject = scheduled()
-    subject.start(NINE, VisitKind.BASELINE)
+    subject.start(NINE, VisitKind.BASELINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Act
     result = reloaded(subject)
 
     # Assert
     assert result.kind is VisitKind.BASELINE
+
+
+def test_the_field_team_round_trips():
+    # Arrange
+    subject = scheduled()
+    subject.start(NINE, VisitKind.BASELINE,
+                  junior_physician="Dr Layla Al-Amri", nurse="Nurse Huda Al-Zahrani")
+
+    # Act
+    result = reloaded(subject)
+
+    # Assert
+    assert (result.junior_physician, result.nurse) == (
+        "Dr Layla Al-Amri", "Nurse Huda Al-Zahrani")
 
 
 def test_a_section_resolved_with_content_round_trips_that_content():
@@ -278,6 +295,8 @@ def test_a_present_previous_plan_round_trips_the_plan_and_the_time_it_was_read()
 def test_a_closed_visit_round_trips_whole():
     # Arrange — every field populated at once; the smaller tests say which one broke
     subject = Visit("v-3", "p-1", VisitKind.ROUTINE)
+    subject.junior_physician = JUNIOR_PHYSICIAN
+    subject.nurse = NURSE
     subject.state = VisitState.ENDED_EARLY
     subject.resolutions[Section.VISIT_REASON] = Resolution(
         Section.VISIT_REASON, content={"reason": "routine review"})

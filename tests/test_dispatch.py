@@ -7,7 +7,7 @@ from noor.domain.plans import Axis, Band, BetweenVisitPlan, GoalOfCare, Measurem
 from noor.domain.records import Reason, Resolution
 from noor.domain.opinions import Disposition, Outcome, Recommendation
 from noor.domain.states import EscalationTier, Section, VisitKind
-from noor.domain.visit import Visit
+from noor.domain.visit import Addendum, Visit
 from noor.domain.writeback import Kind, Windows
 from noor.emr import FixtureEMR, WriteRejected
 from noor import dispatch, store
@@ -19,6 +19,8 @@ EVENING = datetime(2026, 8, 31, 19, 0)
 LATER = datetime(2026, 8, 31, 21, 0)
 WINDOWS = Windows(tier_1_hours=72, tier_2_hours=0, ratification_days=7)
 SUPERVISOR = "Dr Omar Farouk"
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 PROPOSAL = GoalOfCare(
     patient_id="p-001",
     bands=(Band(Axis.SYSTOLIC, 120, 135, "ADA older-adult band"),),
@@ -30,8 +32,10 @@ PROPOSAL = GoalOfCare(
 def conn(tmp_path):
     """Patient ids match the fixture EMR's, so p-005 is the one that rejects writes."""
     connection = store.connect(tmp_path / "noor.sqlite3")
-    store.add_patient(connection, "p-001", "Fatima Ali", ["diabetes"])
-    store.add_patient(connection, "p-005", "Sara Al-Harbi", ["hypertension"])
+    store.add_patient(connection, "p-001", "Fatima Ali", ["diabetes"],
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    store.add_patient(connection, "p-005", "Sara Al-Harbi", ["hypertension"],
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     yield connection
     connection.close()
 
@@ -48,7 +52,7 @@ def completed(visit_id="v-1", patient_id="p-001", kind=VisitKind.ROUTINE) -> Vis
         visit.resolutions[section] = Resolution(section, reason=Reason("patient-declined"))
     visit.plan = BetweenVisitPlan(
         schedule=(MeasurementSchedule(Axis.SYSTOLIC, times_per_week=3),))
-    visit.start(EIGHT, kind)
+    visit.start(EIGHT, kind, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     # A Baseline's close needs a proposal to exist (§5.5). The envelope's copy comes from
     # the store (Task 18), so this one only has to satisfy the gate.
     visit.complete(by="Dr Nada Al-Ghamdi", at=NOON,
@@ -235,7 +239,7 @@ def test_a_cancelled_visit_is_never_queued_for_a_write_back(conn, emr):
 def test_a_visit_still_in_progress_is_not_queued(conn):
     # Arrange — the Field Team is in the house
     visit = Visit("v-1", "p-001")
-    visit.start(EIGHT, VisitKind.ROUTINE)
+    visit.start(EIGHT, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     stored(conn, visit)
 
     # Act / Assert — there is nothing to report about an attendance in progress
@@ -245,7 +249,7 @@ def test_a_visit_still_in_progress_is_not_queued(conn):
 def test_sending_a_visit_that_has_not_closed_is_refused(conn, emr):
     # Arrange
     visit = Visit("v-1", "p-001")
-    visit.start(EIGHT, VisitKind.ROUTINE)
+    visit.start(EIGHT, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     stored(conn, visit)
 
     # Act / Assert — an empty envelope would mark an open Visit as delivered
@@ -268,7 +272,7 @@ def test_the_queue_is_oldest_first_so_the_longest_wait_is_delivered_first(conn):
 def test_a_visit_that_ended_early_is_written_back_like_one_that_completed(conn, emr):
     # Arrange — §5.6: what was captured is not discarded, so it is still reported
     visit = Visit("v-1", "p-001")
-    visit.start(EIGHT, VisitKind.ROUTINE)
+    visit.start(EIGHT, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"),
                     by="Nurse Amal Yousef", at=NOON)
     stored(conn, visit)
@@ -314,4 +318,34 @@ def test_drain_returns_empty_delivery_when_lock_is_held(conn, emr):
 
     # Assert — overlapping drains coalesce without processing
     assert result == dispatch.Delivery((), ())
+
+
+def test_a_queued_addendum_is_delivered_and_marked(conn, emr):
+    # Arrange — a closed Visit with an Addendum queued behind it
+    stored(conn, completed("v-1"))
+    store.add_addendum(conn, Addendum(
+        "a-1", "v-1", "BP rechecked, 128/82",
+        author="Dr Nada Al-Ghamdi", written_at=NOON))
+
+    # Act
+    result = drain(conn, emr)
+
+    # Assert — sent, and no longer queued
+    assert "a-1" in result.sent
+    assert store.queued_addenda(conn) == []
+
+
+def test_a_refused_addendum_is_reported_and_stays_queued(conn):
+    # Arrange — the EMR with no route home (p-005 rejects writes in the fixture)
+    stored(conn, completed("v-2", patient_id="p-005"))
+    store.add_addendum(conn, Addendum(
+        "a-2", "v-2", "note added late",
+        author="Dr Nada Al-Ghamdi", written_at=NOON))
+
+    # Act
+    result = drain(conn, FixtureEMR(now=NOON))
+
+    # Assert — reported with what the EMR said, and still queued for the next drive
+    assert any(addendum_id == "a-2" for addendum_id, _ in result.failed)
+    assert store.queued_addenda(conn) == ["a-2"]
 

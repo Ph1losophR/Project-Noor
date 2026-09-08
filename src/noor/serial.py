@@ -167,6 +167,8 @@ def dump_visit(visit: Visit) -> str:
         "id": visit.id,
         "patient_id": visit.patient_id,
         "kind": _maybe(visit.kind, _value),
+        "junior_physician": visit.junior_physician,
+        "nurse": visit.nurse,
         "state": visit.state.value,
         # Section is an IntEnum, so .name is the key: JSON would stringify the integer
         # and Section("4") does not resolve. The name is also the readable one.
@@ -192,6 +194,8 @@ def load_visit(text: str) -> Visit:
         id=raw["id"],
         patient_id=raw["patient_id"],
         kind=_maybe_read(raw["kind"], VisitKind),
+        junior_physician=raw["junior_physician"],
+        nurse=raw["nurse"],
         state=VisitState(raw["state"]),
         resolutions={Section[key]: _read_resolution(Section[key], value)
                      for key, value in raw["resolutions"].items()},

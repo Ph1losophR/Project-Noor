@@ -30,6 +30,11 @@ class Visit:
     # None until the Start settles it (§5.5). A kind on a Scheduled Visit would be the
     # roster label the SSOT forbids, so the type refuses to hold one.
     kind: VisitKind | None = None
+    # The Field Team that attended, copied off the Patient at the Start (§5.5, §5.13).
+    # None until then, like `kind`: a Scheduled Visit has no attendance record yet, and a
+    # later reassignment must never restate a closed Visit's pair.
+    junior_physician: str | None = None
+    nurse: str | None = None
     state: VisitState = VisitState.SCHEDULED
     resolutions: dict[Section, Resolution] = field(default_factory=dict)
     emergencies: list[EmergencyRecord] = field(default_factory=list)
@@ -54,10 +59,13 @@ class Visit:
     closed_at: datetime | None = None
     closing_reason: Reason | None = None
 
-    def start(self, at: datetime, kind: VisitKind) -> None:
+    def start(self, at: datetime, kind: VisitKind, *,
+              junior_physician: str, nurse: str) -> None:
         check_transition(self.state, VisitState.IN_PROGRESS)
         self.state = VisitState.IN_PROGRESS
         self.kind = kind
+        self.junior_physician = junior_physician
+        self.nurse = nurse
         self.started_at = at
 
     def cancel(self, reason: Reason | None, by: str, at: datetime) -> None:
@@ -129,3 +137,28 @@ def kind_for(history: Sequence[Visit]) -> VisitKind:
         for past in history
     )
     return VisitKind.ROUTINE if settled else VisitKind.BASELINE
+
+
+class AddendumError(ValueError):
+    """An Addendum with no text — an addition to a closed record with nothing to add."""
+
+
+@dataclass(frozen=True)
+class Addendum:
+    """A timestamped, attributed addition to a terminal Visit (§5.9, §6.2). The only way a
+    closed Visit changes, because a Write-Back may already have created work the original
+    record justified. `flagged` is the author also sending it to the Supervisor (§5.12)."""
+
+    id: str
+    visit_id: str
+    text: str
+    author: str
+    written_at: datetime
+    flagged: bool = False
+
+    def __post_init__(self) -> None:
+        if not (self.author or "").strip():
+            raise AddendumError("an Addendum carries an author (§5.13)")
+        if not self.text.strip():
+            raise AddendumError(
+                "an Addendum is an addition to a closed record; there is nothing to add")

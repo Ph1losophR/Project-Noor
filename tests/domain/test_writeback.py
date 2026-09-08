@@ -12,12 +12,14 @@ from noor.domain.plans import (
 )
 from noor.domain.records import Reason, Resolution
 from noor.domain.states import Datum, EscalationTier, Section, VisitKind
-from noor.domain.visit import Visit
+from noor.domain.visit import Addendum, Visit
 from noor.domain.vitals import HomeReading, Source
-from noor.domain.writeback import Kind, Response, assemble, response_due, windows
+from noor.domain.writeback import Kind, Response, addendum_item, assemble, response_due, windows
 
 NOW = datetime(2026, 8, 28, 11, 0)
 SUPERVISOR = "Dr Layla Al-Otaibi"
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 WINDOWS = windows(content.load("response-windows").data["windows"])
 
 
@@ -79,7 +81,8 @@ def completed(kind: VisitKind = VisitKind.ROUTINE, *, interrupted: bool = False)
     visit.plan = BetweenVisitPlan(schedule=(MeasurementSchedule(Axis.SYSTOLIC, times_per_week=3),))
     visit.shown = [recommendation("r-1", EscalationTier.TIER_1)]
     visit.dispositions = [accepted("r-1")]
-    visit.start(NOW - timedelta(hours=1), kind)
+    visit.start(NOW - timedelta(hours=1), kind,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     if interrupted:
         visit.enter_emergency(datetime(2026, 8, 28, 10, 10))
         visit.emergencies[-1].record(
@@ -138,13 +141,13 @@ def test_a_manually_flagged_tier_0_item_borrows_tier_1s_window():
     assert due == NOW + timedelta(hours=72)
 
 
-def test_the_seven_kinds_are_numbered_as_the_ssot_numbers_them():
+def test_the_kinds_are_numbered_as_the_ssot_numbers_them():
     """§4.9's table is the source of the numbering, so the enum is checkable against it."""
     # Arrange / Act / Assert
     assert [(kind.name, kind.value) for kind in Kind] == [
         ("VISIT_OUTCOME", 1), ("OBSERVATIONS", 2), ("SELF_CARE_FINDINGS", 3),
         ("RECONCILIATION", 4), ("RECOMMENDATIONS", 5), ("BETWEEN_VISIT_PLAN", 6),
-        ("PROPOSED_GOAL_OF_CARE", 7)]
+        ("PROPOSED_GOAL_OF_CARE", 7), ("ADDENDUM", 8)]
 
 
 def test_the_handover_is_not_one_of_the_things_noor_writes_back():
@@ -202,7 +205,8 @@ def test_the_visit_outcome_names_the_sections_that_never_ran():
     empty list on a Completed Visit is the other half of the same claim."""
     # Arrange
     visit = worked()
-    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -221,7 +225,8 @@ def test_an_ended_early_visit_says_which_between_visit_plan_remains_in_force():
     visit.previous_plan = Datum.present(
         BetweenVisitPlan(schedule=(MeasurementSchedule(Axis.SYSTOLIC, times_per_week=3),)),
         as_of=datetime(2026, 7, 30, 10, 0))
-    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -253,7 +258,8 @@ def test_an_unreachable_previous_plan_is_declared_rather_than_reported_as_none()
     # Arrange
     visit = worked()
     visit.previous_plan = Datum.unreachable()
-    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -333,7 +339,8 @@ def test_the_reconciliation_write_declares_that_discrepancy_detection_was_unreac
         Section.MEDICATION_RECONCILIATION,
         {"in_house": ["Metformin"], "discrepancies": [],
          "detection": {"state": "unreachable"}})
-    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -489,7 +496,8 @@ def test_a_visit_that_ended_before_anything_was_captured_writes_only_its_outcome
     ran, is the whole truthful write."""
     # Arrange
     visit = Visit("v-1", "p-001")
-    visit.start(NOW - timedelta(minutes=4), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(minutes=4), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("household-unsafe"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -506,7 +514,8 @@ def test_a_recommendation_nobody_answered_is_written_back_as_not_answered():
     # Arrange
     visit = worked()
     visit.shown = [recommendation("r-1", EscalationTier.TIER_1)]
-    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -541,7 +550,8 @@ def test_a_plan_with_titration_and_stop_rules_writes_the_lines_that_make_them_te
 def test_a_baseline_ended_early_with_no_previous_plan_says_so_in_the_same_field():
     # Arrange — §5.6: 'no plan in force' is a sentence the EMR receives, not an omission
     visit = worked()
-    visit.start(NOW - timedelta(hours=1), VisitKind.BASELINE)
+    visit.start(NOW - timedelta(hours=1), VisitKind.BASELINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("transferred-to-hospital"), by="Nurse Huda", at=NOW)
 
     # Act
@@ -550,3 +560,16 @@ def test_a_baseline_ended_early_with_no_previous_plan_says_so_in_the_same_field(
 
     # Assert
     assert outcome["previous_plan_in_force"] == {"state": "absent"}
+
+
+def test_an_addendums_write_back_carries_no_owner_and_no_due_time():
+    # Arrange — §6.2, CONTEXT.md: an Addendum asks for nothing
+    addendum = Addendum("a-1", "v-1", "BP rechecked, 128/82",
+                        author="Dr Layla Al-Amri", written_at=NOW)
+
+    # Act
+    item = addendum_item(addendum)
+
+    # Assert — the eighth kind, and a payload with neither owner nor due_at
+    assert item.kind is Kind.ADDENDUM
+    assert "owner" not in item.payload and "due_at" not in item.payload

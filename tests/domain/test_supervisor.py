@@ -9,14 +9,17 @@ from noor.domain.opinions import Flag, OpinionError, Recommendation
 from noor.domain.plans import Axis, Band, GoalOfCare
 from noor.domain.states import EscalationTier, Section, VisitKind, VisitState
 from noor.domain.supervisor import (
-    GOAL_OF_CARE, Review, Route, SILENT_VISIT, Sampling,
-    reviews, sampling, silence_audit, week_start,
+    GOAL_OF_CARE, Review, Route, SILENT_VISIT, Sampling, Verdict,
+    VerdictError, VerdictKey, band, key, reviews, sampling, silence_audit,
+    unanswered, week_start,
 )
 from noor.domain.visit import Visit
 from noor.domain.writeback import Windows
 
 NOW = datetime(2026, 8, 31, 12, 0)
 WINDOWS = Windows(tier_1_hours=72, tier_2_hours=0, ratification_days=7)
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 
 
 def recommendation(rec_id: str, tier: EscalationTier) -> Recommendation:
@@ -30,7 +33,8 @@ def visit(kind: VisitKind = VisitKind.ROUTINE, *, tiers=(), flags=()) -> Visit:
     """Started, because §5.5 settles the kind at the Start and `_ratification` reads it.
     A Scheduled Visit holding a kind would be the roster label the SSOT forbids."""
     subject = Visit("v-1", "p-1")
-    subject.start(NOW - timedelta(hours=1), kind)
+    subject.start(NOW - timedelta(hours=1), kind,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     subject.shown = [recommendation(f"r-{index}", tier)
                      for index, tier in enumerate(tiers, start=1)]
     subject.flags = list(flags)
@@ -211,7 +215,7 @@ def week(silent: int, noisy: int = 0) -> list[Visit]:
 def _closed(visit_id: str) -> Visit:
     """Closed, and so carrying a kind — this is the shape the store hands back. A kind on a
     Visit that never started would be the roster label §5.5 forbids."""
-    return Visit(visit_id, "p-1", VisitKind.ROUTINE, VisitState.COMPLETED)
+    return Visit(visit_id, "p-1", VisitKind.ROUTINE, state=VisitState.COMPLETED)
 
 
 def _that_produced_something(visit_id: str) -> Visit:
@@ -274,3 +278,103 @@ def test_the_audit_week_starts_on_the_sunday_before_the_day_it_is_asked_about():
 def test_a_sunday_is_the_start_of_its_own_audit_week():
     # Act / Assert — the boundary, from the inside
     assert week_start(date(2026, 8, 23)) == date(2026, 8, 23)
+
+
+def test_a_verdict_without_an_author_is_refused():
+    # Act / Assert — §5.13: a decision carries a name
+    with pytest.raises(VerdictError, match="name"):
+        Verdict(agreed=True, by="   ", at=NOW)
+
+
+def test_a_flagged_item_measures_its_deadline_from_when_it_was_flagged():
+    # Arrange — a Visit evaluated at NOW, but carrying a flag raised earlier
+    flag_time = NOW - timedelta(hours=1)
+    subject = visit(flags=(Flag("v-1", "Dr Layla Al-Amri", flag_time, "please review"),))
+
+    # Act — §5.9, §5.12: Tier 1 window measured from when the flag was raised
+    row = reviews(subject, goal=None, windows=WINDOWS, at=NOW)[0]
+
+    # Assert
+    assert row.due_at == flag_time + timedelta(hours=72)
+
+
+def test_a_disagreement_without_a_note_is_refused():
+    # Act / Assert — §5.12: an answer nobody can read is a mark, not an answer
+    with pytest.raises(VerdictError, match="note"):
+        Verdict(agreed=False, by="Dr Omar Farouk", at=NOW)
+
+
+def test_a_disagreement_with_a_note_is_recorded():
+    # Act
+    result = Verdict(agreed=False, by="Dr Omar Farouk", at=NOW,
+                     note="the office anchor looks wrong")
+
+    # Assert
+    assert result.note == "the office anchor looks wrong"
+
+
+def test_an_agreement_needs_no_note():
+    # Act / Assert — a plain agreement is complete on its own
+    assert Verdict(agreed=True, by="Dr Omar Farouk", at=NOW).note is None
+
+
+def test_an_item_with_a_recorded_verdict_leaves_the_inbox():
+    # Arrange — one Tier 1 review, and the key that answers it
+    subject = visit(tiers=(EscalationTier.TIER_1,))
+    rows = reviews(subject, goal=None, windows=WINDOWS, at=NOW)
+    answered = {key(rows[0])}
+
+    # Act
+    remaining = unanswered(rows, answered)
+
+    # Assert
+    assert remaining == ()
+
+
+def test_an_item_with_no_verdict_stays_in_the_inbox():
+    # Arrange
+    subject = visit(tiers=(EscalationTier.TIER_1,))
+    rows = reviews(subject, goal=None, windows=WINDOWS, at=NOW)
+
+    # Act / Assert — an empty answer set removes nothing
+    assert unanswered(rows, set()) == rows
+
+
+def test_a_ratification_is_never_closed_by_a_verdict():
+    # Arrange — a Baseline with an unratified Goal raises the RATIFICATION route
+    subject = visit(VisitKind.BASELINE)
+    rows = reviews(subject, goal=proposed(), windows=WINDOWS, at=NOW)
+
+    # Act — even with its key marked answered, the row stays (ADR 0009)
+    remaining = unanswered(rows, {key(rows[0])})
+
+    # Assert
+    assert remaining == rows
+
+
+def test_a_tier_three_review_is_in_the_first_band():
+    # Arrange — a Tier 3 item owes an answer now, so it carries no due time (ADR 0001)
+    subject = visit(tiers=(EscalationTier.TIER_3,))
+    row = reviews(subject, goal=None, windows=WINDOWS, at=NOW)[0]
+
+    # Act / Assert
+    assert band(row)[0] == 1
+
+
+def test_a_due_timed_review_is_in_the_second_band():
+    # Arrange
+    subject = visit(tiers=(EscalationTier.TIER_1,))
+    row = reviews(subject, goal=None, windows=WINDOWS, at=NOW)[0]
+
+    # Act / Assert — soonest-first is handled by the due time in the second slot
+    assert band(row)[0] == 2
+
+
+def test_a_silence_audit_review_is_in_the_last_band():
+    # Arrange — one silent Completed Visit, sampled
+    subject = visit()
+    subject.state = VisitState.COMPLETED
+    row = silence_audit([subject], Sampling(silent_visit_rate=0.1, minimum_per_week=1))[0]
+
+    # Act / Assert
+    assert band(row)[0] == 3

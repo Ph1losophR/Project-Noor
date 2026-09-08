@@ -13,12 +13,14 @@ from noor.domain.opinions import Disposition, Recommendation
 from noor.domain.plans import BetweenVisitPlan, GoalOfCare, ratification_due
 from noor.domain.records import Reason
 from noor.domain.states import Datum, EscalationTier, Section, VisitKind, VisitState
-from noor.domain.visit import Visit
+from noor.domain.visit import Addendum, Visit
 from noor.domain.vitals import HomeReading
 
 
 class Kind(IntEnum):
-    """§4.9's seven writes. The integer *is* that table's row number."""
+    """§4.9's seven writes, in that table's order — the integer *is* the row number. The
+    eighth is not one of the seven: it is the Addendum's own Write-Back (§6.2, §5.9), sent
+    after the Visit's and carrying no owner and no due time because it asks for nothing."""
 
     VISIT_OUTCOME = 1
     OBSERVATIONS = 2
@@ -27,6 +29,7 @@ class Kind(IntEnum):
     RECOMMENDATIONS = 5
     BETWEEN_VISIT_PLAN = 6
     PROPOSED_GOAL_OF_CARE = 7
+    ADDENDUM = 8
 
 
 @dataclass(frozen=True)
@@ -288,3 +291,15 @@ def _add(items: list[WriteBack], kind: Kind, payload) -> None:
     each get that decision slightly wrong."""
     if payload is not None:
         items.append(WriteBack(kind, dict(payload)))
+
+
+def addendum_item(addendum: Addendum) -> WriteBack:
+    """The Addendum's own Write-Back item (§6.2). No owner and no due time — it records an
+    addition and asks for nothing (§4.9, CONTEXT.md). `assemble` is untouched: this is a
+    separate send, after the Visit's, not one of the close's seven."""
+    return WriteBack(Kind.ADDENDUM, {
+        "visit_id": addendum.visit_id,
+        "text": addendum.text,
+        "author": addendum.author,
+        "written_at": addendum.written_at.isoformat(),
+    })

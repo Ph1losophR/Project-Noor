@@ -11,12 +11,15 @@ ITEMS = items(content.load("surveillance-intervals").data["intervals"]["rows"])
 PRODUCTS = {product.id: product for product in emr.catalogue()}
 # The short tags `applies()` matches on, which is what `add_patient` stores (test_journeys).
 BOTH = ["diabetes", "hypertension"]
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 
 
 def _enrolled(tmp_path, patient_id, conditions):
     """Arrange only: the store knows the Patient, and nothing has been read yet."""
     conn = store.connect(tmp_path / "noor.db")
-    store.add_patient(conn, patient_id, emr.FIXTURES[patient_id].name, conditions)
+    store.add_patient(conn, patient_id, emr.FIXTURES[patient_id].name, conditions,
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     return conn
 
 

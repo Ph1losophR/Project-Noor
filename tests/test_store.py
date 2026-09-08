@@ -7,19 +7,25 @@ import sqlite3
 
 from noor.domain.plans import Axis, Band, BetweenVisitPlan, GoalOfCare, MeasurementSchedule
 from noor.domain.records import Reason, Resolution
-from noor.domain.states import Datum, Section, VisitKind, VisitState
-from noor.domain.visit import Visit
+from noor.domain.opinions import Recommendation
+from noor.domain.states import Datum, EscalationTier, Section, VisitKind, VisitState
+from noor.domain.supervisor import Route, Sampling, Verdict, VerdictKey, week_start
+from noor.domain.visit import Addendum, Visit
+from noor.domain.writeback import Windows
 from noor import store
 
 MONDAY = date(2026, 8, 31)
 TUESDAY = date(2026, 9, 1)
 NINE = datetime(2026, 8, 31, 9, 0)
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
 
 
 @pytest.fixture
 def conn(tmp_path):
     connection = store.connect(tmp_path / "noor.sqlite3")
-    store.add_patient(connection, "p-1", "Fatima Ali", ["diabetes"])
+    store.add_patient(connection, "p-1", "Fatima Ali", ["diabetes"],
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     yield connection
     connection.close()
 
@@ -52,7 +58,8 @@ def test_saving_a_visit_replaces_what_was_stored(conn):
     # Arrange
     subject = scheduled()
     store.schedule(conn, subject, MONDAY, "three months since the last review")
-    subject.start(NINE, VisitKind.ROUTINE)
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Act
     store.save(conn, subject)
@@ -65,7 +72,8 @@ def test_the_state_column_agrees_with_the_visit_so_the_roster_reads_no_json(conn
     # Arrange
     subject = scheduled()
     store.schedule(conn, subject, MONDAY, "three months since the last review")
-    subject.start(NINE, VisitKind.ROUTINE)
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     store.save(conn, subject)
 
     # Act
@@ -159,7 +167,8 @@ def test_a_stale_scheduled_object_cannot_un_start_a_started_visit(conn):
     subject = scheduled()
     store.schedule(conn, subject, MONDAY, "three months since the last review")
     stale = store.load(conn, "v-1")
-    subject.start(NINE, VisitKind.ROUTINE)
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     store.save(conn, subject)
 
     # Act / Assert — §5.5: the Start is the attendance record; the row says no
@@ -176,7 +185,8 @@ def ended_early(conn, visit_id, day):
     """
     visit = scheduled(visit_id)
     store.schedule(conn, visit, day, "three months since the last review")
-    visit.start(datetime.combine(day, time(9, 0)), VisitKind.ROUTINE)
+    visit.start(datetime.combine(day, time(9, 0)), VisitKind.ROUTINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.end_early(Reason("time-exhausted"), "nurse-1", datetime.combine(day, time(10, 0)))
     store.save(conn, visit)
     return visit
@@ -198,7 +208,8 @@ def test_a_visit_that_is_still_open_is_not_history(conn):
     # Arrange
     subject = scheduled()
     store.schedule(conn, subject, MONDAY, "three months since the last review")
-    subject.start(NINE, VisitKind.ROUTINE)
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     store.save(conn, subject)
 
     # Act
@@ -498,8 +509,299 @@ def test_scheduled_reason_returns_reason_when_visit_exists(conn):
 
 def test_enrolled_returns_all_patient_ids(conn):
     # Arrange — p-1 was added in fixture
-    store.add_patient(conn, "p-2", "Sara Al-Harbi", ["hypertension"])
+    store.add_patient(conn, "p-2", "Sara Al-Harbi", ["hypertension"],
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Act / Assert
     assert store.enrolled(conn) == {"p-1", "p-2"}
+
+
+def test_field_team_returns_the_patients_standing_pair(conn):
+    # Act / Assert — the pair the fixture enrolled p-1 with
+    assert store.field_team(conn, "p-1") == store.FieldTeam(
+        JUNIOR_PHYSICIAN, NURSE)
+
+
+def test_field_team_raises_when_the_patient_is_missing(conn):
+    # Act / Assert — mirrors patient_name(): 400 in the web layer (§4.1), not 500
+    with pytest.raises(store.StoreError, match="no Patient"):
+        store.field_team(conn, "p-unknown")
+
+
+def test_reassigning_a_patient_never_restates_who_performed_a_closed_visit(conn):
+    # Arrange — a closed Visit that recorded its pair, then the Patient is reassigned
+    subject = scheduled()
+    store.schedule(conn, subject, MONDAY, "three months since the last review")
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    subject.state = VisitState.COMPLETED
+    store.save(conn, subject)
+    conn.execute("update patients set junior_physician = ?, nurse = ? where id = ?",
+                 ("Dr Someone Else", "Nurse Someone Else", "p-1"))
+    conn.commit()
+
+    # Act — §5.13: the Visit carries the pair that attended, not today's assignment
+    result = store.load(conn, "v-1")
+
+    # Assert
+    assert (result.junior_physician, result.nurse) == (JUNIOR_PHYSICIAN, NURSE)
+
+
+VERDICT_KEY = VerdictKey("v-1", Route.TIER, "r-1")
+
+
+def test_a_recorded_verdict_comes_back_by_its_key(conn):
+    # Arrange
+    store.schedule(conn, scheduled(), MONDAY, "three months since the last review")
+    answer = Verdict(agreed=True, by="Dr Omar Farouk", at=NINE)
+
+    # Act
+    store.record_verdict(conn, VERDICT_KEY, answer)
+
+    # Assert
+    assert store.verdict(conn, VERDICT_KEY) == answer
+
+
+def test_an_item_with_no_verdict_reads_back_none(conn):
+    # Act / Assert — the ordinary case: nothing answered yet
+    assert store.verdict(conn, VERDICT_KEY) is None
+
+
+def test_answered_returns_the_keys_that_have_a_verdict(conn):
+    # Arrange
+    store.schedule(conn, scheduled(), MONDAY, "three months since the last review")
+    store.record_verdict(conn, VERDICT_KEY,
+                         Verdict(agreed=True, by="Dr Omar Farouk", at=NINE))
+
+    # Act / Assert
+    assert store.answered(conn) == {VERDICT_KEY}
+
+
+def test_re_answering_an_item_replaces_the_earlier_verdict(conn):
+    # Arrange — the Supervisor answers, then answers again before the page reloads
+    store.schedule(conn, scheduled(), MONDAY, "three months since the last review")
+    store.record_verdict(conn, VERDICT_KEY,
+                         Verdict(agreed=True, by="Dr Omar Farouk", at=NINE))
+
+    # Act
+    store.record_verdict(conn, VERDICT_KEY, Verdict(
+        agreed=False, by="Dr Layla Nasser", at=NINE, note="reconsidered"))
+
+    # Assert — one record per item, the last answer standing
+    assert store.verdict(conn, VERDICT_KEY).note == "reconsidered"
+
+
+ADDENDUM = Addendum("a-1", "v-1", "BP rechecked on the doorstep, 128/82",
+                    author="Dr Layla Al-Amri", written_at=datetime(2026, 8, 31, 13, 0))
+
+
+def test_an_addendum_is_accepted_only_after_the_visit_has_closed(conn):
+    # Arrange — the Visit is still Scheduled (open)
+    store.schedule(conn, scheduled(), MONDAY, "three months since the last review")
+
+    # Act / Assert — an addition to an open Visit is the section write, not an Addendum
+    with pytest.raises(store.StoreError):
+        store.add_addendum(conn, ADDENDUM)
+
+
+def test_an_addendum_on_a_closed_visit_is_stored_and_queued(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+
+    # Act
+    store.add_addendum(conn, ADDENDUM)
+
+    # Assert — queued for its own Write-Back, carrying its Patient
+    queued = store.pending_addenda(conn)
+    assert [(row.addendum_id, row.patient_id) for row in queued] == [("a-1", "p-1")]
+
+
+def test_a_flagged_addendum_puts_a_manual_flag_on_the_closed_visit(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+
+    # Act — the author also sends it to the Supervisor (§5.12)
+    store.add_addendum(conn, replace(ADDENDUM, flagged=True))
+
+    # Assert — a Flag on the closed Visit, the existing manual-flag route
+    assert [flag.subject for flag in store.load(conn, "v-1").flags] == ["a-1"]
+
+
+def test_an_unflagged_addendum_leaves_the_closed_visit_untouched(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+
+    # Act
+    store.add_addendum(conn, ADDENDUM)
+
+    # Assert
+    assert store.load(conn, "v-1").flags == []
+
+
+def test_marking_an_addendum_written_back_twice_is_refused(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+    store.add_addendum(conn, ADDENDUM)
+    store.mark_addendum_written_back(conn, "a-1", datetime(2026, 8, 31, 19, 0))
+
+    # Act / Assert — a second acceptance is a delivery nobody made (§4.10)
+    with pytest.raises(store.StoreError):
+        store.mark_addendum_written_back(conn, "a-1", datetime(2026, 8, 31, 21, 0))
+
+
+def test_marking_an_addendum_the_store_does_not_have_is_refused(conn):
+    # Act / Assert
+    with pytest.raises(store.StoreError):
+        store.mark_addendum_written_back(conn, "a-nope", datetime(2026, 8, 31, 19, 0))
+
+
+def test_recording_a_refusal_against_an_addendum_the_store_does_not_have_is_refused(conn):
+    # Act / Assert
+    with pytest.raises(store.StoreError):
+        store.mark_addendum_refused(conn, "a-nope", datetime(2026, 8, 31, 19, 0), "no route")
+
+
+def test_a_refused_addendum_stays_queued(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+    store.add_addendum(conn, ADDENDUM)
+
+    # Act
+    store.mark_addendum_refused(conn, "a-1", datetime(2026, 8, 31, 19, 0), "no route home")
+
+    # Assert — still queued, with what the EMR said
+    row = store.pending_addenda(conn)[0]
+    assert (row.addendum_id, row.said) == ("a-1", "no route home")
+
+
+def test_addenda_returns_all_addenda_for_a_visit_oldest_first(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+    first = Addendum("a-1", "v-1", "first note", author="Dr Layla",
+                     written_at=datetime(2026, 8, 31, 13, 0), flagged=False)
+    second = Addendum("a-2", "v-1", "second note", author="Dr Layla",
+                      written_at=datetime(2026, 8, 31, 14, 0), flagged=True)
+    store.add_addendum(conn, second)
+    store.add_addendum(conn, first)
+
+    # Act / Assert — oldest first regardless of insertion order
+    assert store.addenda(conn, "v-1") == [first, second]
+
+
+def test_a_visit_with_no_addenda_returns_empty_list(conn):
+    # Arrange
+    closed(conn, "v-1", MONDAY)
+
+    # Act / Assert
+    assert store.addenda(conn, "v-1") == []
+
+
+INBOX_WINDOWS = Windows(tier_1_hours=72, tier_2_hours=0, ratification_days=7)
+SAMPLING = Sampling(silent_visit_rate=0.1, minimum_per_week=1)
+WEEK = week_start(MONDAY)  # 2026-08-30: the Sunday of MONDAY's (2026-08-31) week
+
+
+def a_started_visit_with_a_tier_item(conn, visit_id, tier):
+    """A Visit In Progress carrying one shown Recommendation of the given tier — the least
+    Arrange that raises a TIER route. Not closed, so no Silence Audit interferes."""
+    subject = scheduled(visit_id)
+    store.schedule(conn, subject, MONDAY, "three months since the last review")
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    subject.shown = [Recommendation(f"r-{visit_id}", "Increase metformin", tier,
+                                    executor="Junior Physician", provenance="SDGA 2024",
+                                    strength="strong")]
+    store.save(conn, subject)
+    return subject
+
+
+def test_a_visit_with_a_tiered_item_appears_in_the_inbox(conn):
+    # Arrange
+    a_started_visit_with_a_tier_item(conn, "v-1", EscalationTier.TIER_1)
+
+    # Act
+    result = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)
+
+    # Assert — one Patient, one row, carrying the Patient's name and the Visit's date
+    assert len(result) == 1 and len(result[0].rows) == 1
+    row = result[0].rows[0]
+    assert (row.patient_name, row.visit_date) == ("Fatima Ali", MONDAY)
+
+
+def test_an_answered_item_is_absent_from_the_inbox(conn):
+    # Arrange
+    a_started_visit_with_a_tier_item(conn, "v-1", EscalationTier.TIER_1)
+    store.record_verdict(conn, VerdictKey("v-1", Route.TIER, "r-v-1"),
+                         Verdict(agreed=True, by="Dr Omar Farouk", at=NINE))
+
+    # Act
+    result = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)
+
+    # Assert — the Verdict removed the only row, so the Patient is gone too (ADR 0009)
+    assert result == []
+
+
+def test_tier_three_sorts_before_a_due_timed_item_for_one_patient(conn):
+    # Arrange — one Patient, a Tier 3 and a Tier 1 item on two Visits
+    a_started_visit_with_a_tier_item(conn, "v-1", EscalationTier.TIER_1)
+    a_started_visit_with_a_tier_item(conn, "v-2", EscalationTier.TIER_3)
+
+    # Act
+    rows = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)[0].rows
+
+    # Assert — Tier 3 (band 1) first, the due-timed Tier 1 (band 2) second
+    assert [row.review.visit_id for row in rows] == ["v-2", "v-1"]
+
+
+def test_patients_are_ordered_by_their_most_pressing_item(conn):
+    # Arrange — p-2 has a Tier 3 (band 1); p-1 has a Tier 1 (band 2)
+    store.add_patient(conn, "p-2", "Sara Al-Harbi", ["hypertension"],
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    a_started_visit_with_a_tier_item(conn, "v-1", EscalationTier.TIER_1)  # p-1
+    p2 = scheduled("v-2", "p-2")
+    store.schedule(conn, p2, MONDAY, "post-discharge follow-up")
+    p2.start(NINE, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    p2.shown = [Recommendation("r-2", "Call an ambulance", EscalationTier.TIER_3,
+                               executor="Junior Physician", provenance="SDGA 2024",
+                               strength="strong")]
+    store.save(conn, p2)
+
+    # Act
+    result = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)
+
+    # Assert — the Patient with the Tier 3 item comes first
+    assert [patient.patient_id for patient in result] == ["p-2", "p-1"]
+
+
+def test_a_disagreed_ratification_stays_in_the_inbox(conn):
+    # Arrange — a Completed Baseline with an unratified, disagreed Goal of Care
+    store.schedule(conn, scheduled("v-1"), MONDAY, "Enrolment")
+    baseline = Visit("v-1", "p-1", VisitKind.BASELINE, state=VisitState.COMPLETED,
+                     started_at=NINE, closed_at=datetime(2026, 8, 31, 11, 0))
+    store.save(conn, baseline)
+    store.propose_goal(conn, proposed())
+    store.record_verdict(conn, VerdictKey("v-1", Route.RATIFICATION, "goal-of-care"),
+                         Verdict(agreed=False, by="Dr Omar Farouk", at=NINE,
+                                 note="the office anchor looks wrong"))
+
+    # Act
+    result = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)
+
+    # Assert — a disagreed ratification is not closed (§4.11), and the silent baseline is sampled
+    assert len(result) == 1 and [row.review.route for row in result[0].rows] == [
+        Route.RATIFICATION, Route.SILENCE_AUDIT
+    ]
+
+
+def test_a_silent_completed_visit_appears_in_the_inbox_via_silence_audit(conn):
+    # Arrange — a Completed Visit with no shown recommendations within the week
+    closed(conn, "v-1", MONDAY)
+
+    # Act
+    result = store.inbox(conn, windows=INBOX_WINDOWS, policy=SAMPLING, week=WEEK)
+
+    # Assert — sampled into Band 3
+    assert len(result) == 1 and len(result[0].rows) == 1
+    row = result[0].rows[0]
+    assert (row.review.route, row.review.subject) == (Route.SILENCE_AUDIT, "silent-visit")
 

@@ -152,7 +152,8 @@ def enrol(conn, ehr, patient_id: str) -> str:
     and the reason all come off the EMR's line — read in the clinic, before the drive."""
     line = [row for row in ehr.roster(ROSTER_DAY).value
             if row.patient_id == patient_id][0]
-    store.add_patient(conn, patient_id, line.patient_name, CONDITIONS)
+    store.add_patient(conn, patient_id, line.patient_name, CONDITIONS,
+                      junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     store.schedule(conn, Visit(line.visit_id, patient_id), line.scheduled_for, line.reason)
     return line.visit_id
 
@@ -168,7 +169,8 @@ def a_completed_baseline(conn) -> None:
     """
     visit = Visit("v-000", "p-001")
     store.schedule(conn, visit, BASELINE_DAY, "Enrolment — newly referred")
-    visit.start(BASELINE_START, VisitKind.BASELINE)
+    visit.start(BASELINE_START, VisitKind.BASELINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     for section in Section:
         visit.resolutions[section] = Resolution(section, content={"baseline": True})
     visit.resolutions[Section.VITALS] = Resolution(Section.VITALS, content=BASELINE_VITALS)
@@ -238,7 +240,7 @@ def walked(conn, ehr, visit_id: str = "v-001"):
     Start, and `kind_for(past)` is the only thing that decides it.
     """
     visit, past = opened(conn, visit_id)
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     store.save(conn, visit)
     reconciliation, examination = work_through(visit, ehr, reason=REASON, as_of=ROSTER_DAY)
     visit.complete(by=JUNIOR_PHYSICIAN, at=CLOSE)
@@ -366,7 +368,7 @@ complement of the two: a complement would agree with whatever the code did."""
 def in_progress(kind: VisitKind = VisitKind.ROUTINE) -> Visit:
     """A started Visit with no store behind it, for the control walk."""
     visit = Visit("v-001", "p-001")
-    visit.start(KNOCK, kind)
+    visit.start(KNOCK, kind, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     return visit
 
 
@@ -501,7 +503,7 @@ def walked_through_two_emergencies(conn, ehr) -> Visit:
     Completed. Seven of the state machine's seven transitions are not all here, but the
     re-entrant loop is, and it is the one no unit test can walk from a stored Visit."""
     visit, past = opened(conn, "v-001")
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     two_emergencies(visit)
     work_through(visit, ehr, reason=REASON, as_of=ROSTER_DAY)
     visit.complete(by=JUNIOR_PHYSICIAN, at=CLOSE)
@@ -529,7 +531,7 @@ def an_undocumented_emergency(conn, ehr) -> Visit:
     """A Visit whose Emergency ended and was never written down, off the store rather than
     out of memory. Everything else about it is ready to close."""
     visit, past = opened(conn, "v-001")
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     visit.enter_emergency(FIRST_IN)
     visit.leave_emergency(FIRST_OUT)
     work_through(visit, ehr, reason=REASON, as_of=ROSTER_DAY)
@@ -572,7 +574,7 @@ def stopped_at_the_second_emergency(conn, ehr) -> Visit:
     """Four sections in, then the Patient goes to hospital. The remaining four never ran,
     and the Visit's terminal state is the Emergency's other exit (§5.7)."""
     visit, past = opened(conn, "v-001")
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     two_emergencies(visit)
     _resolve(visit, Section.VISIT_REASON, {"reason": REASON})
     _resolve(visit, Section.CONCERNS_AND_INTERVAL_HISTORY, {"events": [], "concerns": []})
@@ -629,7 +631,8 @@ def a_baseline_that_ended_early(conn) -> None:
     Completed Baseline for `kind_for` to find."""
     visit = Visit("v-000", "p-001")
     store.schedule(conn, visit, BASELINE_DAY, "Enrolment — newly referred")
-    visit.start(BASELINE_START, VisitKind.BASELINE)
+    visit.start(BASELINE_START, VisitKind.BASELINE,
+                junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     _resolve(visit, Section.VISIT_REASON, {"reason": "Enrolment — newly referred"})
     visit.end_early(Reason("patient-too-unwell"), by=JUNIOR_PHYSICIAN,
                     at=datetime(2026, 5, 25, 9, 40))
@@ -665,7 +668,7 @@ def test_a_baseline_that_ended_early_makes_the_next_visit_a_baseline_again(conn,
     visit, past = opened(conn, "v-001")
 
     # Act
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Assert
     assert (visit.kind, visit.previous_plan.state) == (
@@ -678,7 +681,7 @@ def test_a_plan_remains_in_force_after_a_visit_that_emitted_none(conn, ehr):
     enrol(conn, ehr, "p-001")
     a_completed_baseline(conn)
     visit, past = opened(conn, "v-001")
-    visit.start(KNOCK, kind_for(past))
+    visit.start(KNOCK, kind_for(past), junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     _resolve(visit, Section.VISIT_REASON, {"reason": REASON})
     visit.end_early(Reason("household-unsafe"), by=JUNIOR_PHYSICIAN, at=CLOSE)
     store.save(conn, visit)

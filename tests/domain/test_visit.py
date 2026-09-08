@@ -13,7 +13,7 @@ from noor.domain.records import Reason, Resolution
 from noor.domain.states import (
     DataState, EscalationTier, IllegalTransition, Section, VisitKind, VisitState,
 )
-from noor.domain.visit import Visit, kind_for
+from noor.domain.visit import Addendum, AddendumError, Visit, kind_for
 
 NINE = datetime(2026, 8, 28, 9, 0)
 TEN = datetime(2026, 8, 28, 10, 0)
@@ -25,12 +25,26 @@ REC = Recommendation("check-potassium", "Take a potassium sample within two week
 GOAL = GoalOfCare("p-1", (Band(Axis.SYSTOLIC, 110.0, 140.0),),
                   "Saudi SHA 2023 treatment row", "140/90 office",
                   proposed_by="Dr Salma", proposed_at=ELEVEN)
+JUNIOR_PHYSICIAN = "Dr Layla Al-Amri"
+NURSE = "Nurse Huda Al-Zahrani"
+
+
+def test_the_start_records_the_field_team_that_attended():
+    # Arrange — §5.13: the pair is copied onto the Visit at its Start
+    subject = Visit("v-1", "p-1")
+
+    # Act
+    subject.start(NINE, VisitKind.ROUTINE,
+                  junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+
+    # Assert
+    assert (subject.junior_physician, subject.nurse) == (JUNIOR_PHYSICIAN, NURSE)
 
 
 def started(kind=VisitKind.ROUTINE):
     """A Visit In Progress with nothing resolved yet."""
     subject = Visit("v-1", "p-1")
-    subject.start(NINE, kind)
+    subject.start(NINE, kind, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
     return subject
 
 
@@ -55,7 +69,7 @@ def test_a_scheduled_visit_becomes_in_progress_when_the_field_team_starts_it():
     subject = Visit("v-1", "p-1")
 
     # Act
-    subject.start(NINE, VisitKind.ROUTINE)
+    subject.start(NINE, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Assert
     assert subject.state is VisitState.IN_PROGRESS
@@ -74,7 +88,7 @@ def test_starting_a_visit_is_what_settles_its_kind():
     subject = Visit("v-1", "p-1")
 
     # Act
-    subject.start(NINE, VisitKind.BASELINE)
+    subject.start(NINE, VisitKind.BASELINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
     # Assert
     assert subject.kind is VisitKind.BASELINE
@@ -120,7 +134,7 @@ def test_a_visit_already_in_progress_cannot_be_started_again():
 
     # Act / Assert — the state machine refuses it; this method holds no flag of its own
     with pytest.raises(IllegalTransition):
-        subject.start(TEN, VisitKind.ROUTINE)
+        subject.start(TEN, VisitKind.ROUTINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
 
 
 def test_cancelling_a_visit_records_the_reason_and_the_individual():
@@ -380,3 +394,24 @@ def test_ending_early_after_an_undocumented_emergency_is_refused():
     with pytest.raises(emergency.UnresolvedEmergency):
         subject.end_early(
             Reason("transferred-to-hospital"), by="Nurse Huda", at=NOON)
+
+
+def test_an_addendum_without_an_author_is_refused():
+    # Act / Assert — §5.13: a decision carries a name
+    with pytest.raises(AddendumError, match="author"):
+        Addendum("a-1", "v-1", "BP rechecked, 128/82", author="   ", written_at=NINE)
+
+
+def test_an_addendum_with_no_text_is_refused():
+    # Act / Assert — §6.2: an addition to a closed record with nothing to add
+    with pytest.raises(AddendumError):
+        Addendum("a-1", "v-1", "   ", author="Dr Layla Al-Amri", written_at=NINE)
+
+
+def test_an_addendum_keeps_its_text_and_author():
+    # Act
+    result = Addendum("a-1", "v-1", "BP rechecked, 128/82",
+                      author="Dr Layla Al-Amri", written_at=NINE)
+
+    # Assert
+    assert (result.text, result.author) == ("BP rechecked, 128/82", "Dr Layla Al-Amri")

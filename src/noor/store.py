@@ -3,13 +3,16 @@ import json
 import sqlite3
 from collections.abc import Sequence
 from dataclasses import replace
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from pathlib import Path
 from typing import NamedTuple
 
+from noor.domain.opinions import Flag
 from noor.domain.plans import GoalOfCare
 from noor.domain.states import Datum, TERMINAL, VisitState
-from noor.domain.visit import Visit
+from noor.domain.supervisor import Review, Route, Sampling, Verdict, VerdictKey, band, reviews, silence_audit, unanswered
+from noor.domain.visit import Addendum, Visit
+from noor.domain.writeback import Windows
 from noor.serial import dump_datum, dump_goal, dump_visit, load_datum, load_goal, load_visit
 
 SCHEMA = Path(__file__).with_name("schema.sql")
@@ -46,6 +49,15 @@ class Pending(NamedTuple):
     said: str | None
 
 
+class FieldTeam(NamedTuple):
+    """The Patient's standing pair (§5.13), read here and stamped onto the Visit at its
+    Start. A NamedTuple rather than a bare (str, str) so nothing between the store and the
+    Start can swap the two."""
+
+    junior_physician: str
+    nurse: str
+
+
 def connect(path: Path | str) -> sqlite3.Connection:
     """Open the one database and make sure the tables are there. The web layer opens
     and closes its connection within one request, so use is sequential, never
@@ -60,10 +72,13 @@ def connect(path: Path | str) -> sqlite3.Connection:
 
 
 def add_patient(
-    conn: sqlite3.Connection, patient_id: str, name: str, conditions: Sequence[str]
+    conn: sqlite3.Connection, patient_id: str, name: str, conditions: Sequence[str],
+    *, junior_physician: str, nurse: str,
 ) -> None:
-    conn.execute("insert into patients (id, name, conditions) values (?, ?, ?)",
-                 (patient_id, name, json.dumps(list(conditions))))
+    conn.execute(
+        "insert into patients (id, name, conditions, junior_physician, nurse) "
+        "values (?, ?, ?, ?, ?)",
+        (patient_id, name, json.dumps(list(conditions)), junior_physician, nurse))
     conn.commit()
 
 
@@ -221,6 +236,42 @@ def _ratified(conn: sqlite3.Connection, patient_id: str) -> bool:
     return row is not None and bool(row["ratified"])
 
 
+def record_verdict(
+    conn: sqlite3.Connection, verdict_key: VerdictKey, verdict: Verdict
+) -> None:
+    """The one record that removes an item from the inbox (ADR 0009). `insert or replace`,
+    because a Supervisor may answer twice before the page reloads — the last answer stands,
+    and there is only ever one per item."""
+    conn.execute(
+        "insert or replace into verdicts "
+        "(visit_id, route, subject, agreed, answered_by, answered_at, note) "
+        "values (?, ?, ?, ?, ?, ?, ?)",
+        (verdict_key.visit_id, verdict_key.route.value, verdict_key.subject,
+         int(verdict.agreed), verdict.by, verdict.at.isoformat(), verdict.note))
+    conn.commit()
+
+
+def answered(conn: sqlite3.Connection) -> set[VerdictKey]:
+    """Every item that has a Verdict, as keys — what `supervisor.unanswered` filters on.
+    One query for the whole inbox, never one per row."""
+    rows = conn.execute("select visit_id, route, subject from verdicts").fetchall()
+    return {VerdictKey(row["visit_id"], Route(row["route"]), row["subject"])
+            for row in rows}
+
+
+def verdict(conn: sqlite3.Connection, verdict_key: VerdictKey) -> Verdict | None:
+    """The recorded answer to one item, or None where none was given. The Patient's page
+    reads this to show a disagreement's note beside the item it answered."""
+    row = conn.execute(
+        "select agreed, answered_by, answered_at, note from verdicts "
+        "where visit_id = ? and route = ? and subject = ?",
+        (verdict_key.visit_id, verdict_key.route.value, verdict_key.subject)).fetchone()
+    if row is None:
+        return None
+    return Verdict(bool(row["agreed"]), row["answered_by"],
+                   datetime.fromisoformat(row["answered_at"]), row["note"])
+
+
 def pending(conn: sqlite3.Connection) -> list[Pending]:
     """Visits whose Write-Back the EMR has not accepted, longest wait first.
 
@@ -289,6 +340,110 @@ def mark_refused(
         (at.isoformat(), said, visit_id))
     if cursor.rowcount == 0:
         raise StoreError(f"no Visit {visit_id!r} to record a refusal against")
+    conn.commit()
+
+
+class PendingAddendum(NamedTuple):
+    """One Addendum the EMR has not accepted (§6.2), mirroring Pending for a Visit."""
+
+    addendum_id: str
+    visit_id: str
+    patient_id: str
+    text: str
+    author: str
+    written_at: datetime
+    refused_at: datetime | None
+    said: str | None
+
+
+def add_addendum(conn: sqlite3.Connection, addendum: Addendum) -> None:
+    """The one write a closed Visit accepts (§5.9, §6.2). Refuses an open Visit — an
+    addition to a Visit not yet closed is the section write, which `save` takes. When
+    `flagged`, the author also sends it to the Supervisor via the existing manual-flag
+    route (Route.MANUAL_FLAG), a Flag appended to the closed Visit with a direct update
+    that bypasses `save`'s terminal refusal — the sanctioned addition §5.9 allows."""
+    visit = load(conn, addendum.visit_id)
+    if visit.state not in TERMINAL:
+        raise StoreError(
+            f"Visit {addendum.visit_id} is {visit.state.value}; an addition to a Visit "
+            f"still open is the section write, not an Addendum (§6.2)")
+    conn.execute(
+        "insert into addenda (id, visit_id, text, author, written_at, flagged) "
+        "values (?, ?, ?, ?, ?, ?)",
+        (addendum.id, addendum.visit_id, addendum.text, addendum.author,
+         addendum.written_at.isoformat(), int(addendum.flagged)))
+    if addendum.flagged:
+        visit.flags.append(Flag(addendum.id, addendum.author,
+                                addendum.written_at, addendum.text))
+        conn.execute("update visits set body = ? where id = ?",
+                     (dump_visit(visit), addendum.visit_id))
+    conn.commit()
+
+
+def addenda(conn: sqlite3.Connection, visit_id: str) -> list[Addendum]:
+    """All addenda recorded against this Visit, oldest first (§5.9, §6.2)."""
+    rows = conn.execute(
+        "select id, visit_id, text, author, written_at, flagged "
+        "from addenda where visit_id = ? order by written_at, id",
+        (visit_id,)).fetchall()
+    return [
+        Addendum(
+            row["id"], row["visit_id"], row["text"], row["author"],
+            datetime.fromisoformat(row["written_at"]),
+            bool(row["flagged"]))
+        for row in rows
+    ]
+
+
+def pending_addenda(conn: sqlite3.Connection) -> list[PendingAddendum]:
+    """Addenda whose Write-Back the EMR has not accepted, oldest first. Derived on read
+    from `written_back_at`, exactly as `pending` derives the Visit queue (§5.1)."""
+    rows = conn.execute(
+        "select a.id, a.visit_id, v.patient_id, a.text, a.author, a.written_at, "
+        "a.last_refused_at, a.last_refusal "
+        "from addenda a join visits v on v.id = a.visit_id "
+        "where a.written_back_at is null "
+        "order by a.written_at, a.id").fetchall()
+    return [
+        PendingAddendum(
+            row["id"], row["visit_id"], row["patient_id"], row["text"], row["author"],
+            datetime.fromisoformat(row["written_at"]),
+            datetime.fromisoformat(row["last_refused_at"]) if row["last_refused_at"] else None,
+            row["last_refusal"])
+        for row in rows
+    ]
+
+
+def queued_addenda(conn: sqlite3.Connection) -> list[str]:
+    """The ids of pending addenda, oldest first. Mirrors `queued` for Visits."""
+    return [row.addendum_id for row in pending_addenda(conn)]
+
+
+def mark_addendum_written_back(
+    conn: sqlite3.Connection, addendum_id: str, at: datetime
+) -> None:
+    """Record that the EMR accepted this Addendum's Write-Back. A second acceptance fails
+    rather than silently overwriting, the same guard `mark_written_back` has (§4.10)."""
+    cursor = conn.execute(
+        "update addenda set written_back_at = ? "
+        "where id = ? and written_back_at is null", (at.isoformat(), addendum_id))
+    if cursor.rowcount == 0:
+        raise StoreError(
+            f"no Addendum {addendum_id!r} awaiting a Write-Back — either it does not "
+            f"exist or the EMR already accepted it")
+    conn.commit()
+
+
+def mark_addendum_refused(
+    conn: sqlite3.Connection, addendum_id: str, at: datetime, said: str
+) -> None:
+    """Record that the EMR refused this Addendum's Write-Back, and what it said (§4.10).
+    Like `mark_refused`: the Addendum stays queued for the next attempt."""
+    cursor = conn.execute(
+        "update addenda set last_refused_at = ?, last_refusal = ? where id = ?",
+        (at.isoformat(), said, addendum_id))
+    if cursor.rowcount == 0:
+        raise StoreError(f"no Addendum {addendum_id!r} to record a refusal against")
     conn.commit()
 
 
@@ -361,6 +516,17 @@ def patient_name(conn: sqlite3.Connection, patient_id: str) -> str:
     return row["name"]
 
 
+def field_team(conn: sqlite3.Connection, patient_id: str) -> FieldTeam:
+    """The pair standing assigned to this Patient (§5.13). Mirrors patient_name(): a
+    missing Patient raises StoreError so the web layer renders 400 (§4.1), not 500."""
+    row = conn.execute(
+        "select junior_physician, nurse from patients where id = ?",
+        (patient_id,)).fetchone()
+    if row is None:
+        raise StoreError(f"no Patient {patient_id!r}")
+    return FieldTeam(row["junior_physician"], row["nurse"])
+
+
 def scheduled_reason(conn: sqlite3.Connection, visit_id: str) -> str:
     """Why the office put this Visit on the day (§4.9), for the Visit Reason section.
 
@@ -371,3 +537,94 @@ def scheduled_reason(conn: sqlite3.Connection, visit_id: str) -> str:
     if row is None:
         raise StoreError(f"no Visit {visit_id!r}")
     return row["reason"]
+
+
+class InboxRow(NamedTuple):
+    """One review row with what §5.3 needs beside the item: the Patient's name and the
+    date of the Visit it came from. The date rides here rather than on `Review` because it
+    is the store's fact, not the domain's (web_plan §9.5)."""
+
+    review: Review
+    patient_name: str
+    visit_date: date
+
+
+class InboxPatient(NamedTuple):
+    """The inbox groups by Patient (web_plan §5.1): a door carrying the name and the rows,
+    the rows already in §5.2's order."""
+
+    patient_id: str
+    patient_name: str
+    rows: tuple[InboxRow, ...]
+
+
+def inbox(
+    conn: sqlite3.Connection,
+    *,
+    windows: Windows,
+    policy: Sampling,
+    week: date,
+) -> list[InboxPatient]:
+    """Every unanswered review, grouped by Patient and ordered by §5.2's three bands.
+
+    Derived on read (§5.1, ADR 0009): the per-Visit routes from `reviews`, the week's
+    Silence Audit, minus the items a Verdict has closed. `week` is the Sunday the audit
+    samples — the caller passes `supervisor.week_start(today)`.
+    """
+    # ponytail: loads every non-Scheduled Visit and reads the goal per Visit on each call.
+    # Correct and fast enough for one clinician against one SQLite file (ADR 0006); if the
+    # store ever holds a year of Visits, index the routes at the close instead.
+    lines = _inbox_lines(conn)
+    closed = answered(conn)
+    derived: list[Review] = [
+        review
+        for visit in _open_and_closed(conn)
+        for review in reviews(visit, goal=goal(conn, visit.patient_id),
+                              windows=windows, at=_obligation_start(visit))
+    ]
+    derived += silence_audit(
+        completed_between(conn, week, week + timedelta(days=7)), policy)
+    rows = [InboxRow(review, *lines[review.visit_id])
+            for review in unanswered(derived, closed)]
+    return _by_patient(rows)
+
+
+def _obligation_start(visit: Visit) -> datetime:
+    """The time a review's due time is measured from: the close where there is one, so the
+    inbox and the EMR's task agree on the deadline; the Start for a flag raised while the
+    Visit is still In Progress, so a deadline never moves between two reads of one inbox."""
+    return visit.closed_at or visit.started_at
+
+
+def _open_and_closed(conn: sqlite3.Connection) -> list[Visit]:
+    """Every Visit past Scheduled — the only ones that can raise a route. A Scheduled Visit
+    has no shown items, no flags and no proposed Goal, so it raises nothing; excluding it
+    keeps the read off a whole roster's worth of empty Visits."""
+    rows = conn.execute(
+        "select body from visits where state != ?",
+        (VisitState.SCHEDULED.value,)).fetchall()
+    return [load_visit(row["body"]) for row in rows]
+
+
+def _inbox_lines(conn: sqlite3.Connection) -> dict[str, tuple[str, date]]:
+    """Per Visit: the Patient's name and the Visit's scheduled date, in one join, so a row
+    is assembled without a query per row."""
+    rows = conn.execute(
+        "select v.id, p.name, v.scheduled_for "
+        "from visits v join patients p on p.id = v.patient_id").fetchall()
+    return {row["id"]: (row["name"], date.fromisoformat(row["scheduled_for"]))
+            for row in rows}
+
+
+def _by_patient(rows: Sequence[InboxRow]) -> list[InboxPatient]:
+    """Group by Patient, each Patient's rows in §5.2's band order, the Patients themselves
+    ordered by their most pressing row (web_plan §5.1, §5.2)."""
+    by_id: dict[str, list[InboxRow]] = {}
+    for row in rows:
+        by_id.setdefault(row.review.patient_id, []).append(row)
+    patients = [
+        InboxPatient(patient_id, group[0].patient_name,
+                     tuple(sorted(group, key=lambda r: band(r.review))))
+        for patient_id, group in by_id.items()
+    ]
+    return sorted(patients, key=lambda p: band(p.rows[0].review))

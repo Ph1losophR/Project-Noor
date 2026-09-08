@@ -27,7 +27,7 @@ TODAY = date(2026, 8, 28)
 def _finished(day, *, vitals=None, no_vitals_because=None,
               state=VisitState.COMPLETED, reason=None):
     """A closed Visit, optionally carrying a Vitals resolution of either shape (§5.8)."""
-    visit = Visit(f"v-{day.isoformat()}", "p-1", VisitKind.ROUTINE, state)
+    visit = Visit(f"v-{day.isoformat()}", "p-1", VisitKind.ROUTINE, state=state)
     visit.started_at = datetime.combine(day, time(9, 0))
     visit.closed_at = datetime.combine(day, time(10, 30))
     visit.closing_reason = reason

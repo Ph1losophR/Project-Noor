@@ -10,8 +10,8 @@ from threading import Lock
 from typing import NamedTuple
 
 from noor import store
-from noor.domain.visit import Visit
-from noor.domain.writeback import WRITTEN_BACK, WriteBack, Windows, assemble
+from noor.domain.visit import Addendum, Visit
+from noor.domain.writeback import WRITTEN_BACK, WriteBack, Windows, addendum_item, assemble
 from noor.emr import EMR, WriteRejected
 
 
@@ -71,6 +71,28 @@ def send(
     store.mark_written_back(conn, visit_id, attempted_at)
 
 
+def send_addendum(
+    conn: sqlite3.Connection,
+    emr: EMR,
+    row: store.PendingAddendum,
+    *,
+    attempted_at: datetime,
+) -> None:
+    """Submit one queued Addendum's Write-Back (§6.2). Its own envelope, built inline: one
+    item, no owner, no due time. A refusal is recorded and re-raised so `drain` alone
+    decides whether to continue, exactly as `send` does for a Visit."""
+    item = addendum_item(Addendum(
+        row.addendum_id, row.visit_id, row.text, row.author, row.written_at))
+    payload = {"addendum_id": row.addendum_id,
+               "items": [{"kind": item.kind.name, "payload": item.payload}]}
+    try:
+        emr.submit(row.patient_id, payload)
+    except WriteRejected as refusal:
+        store.mark_addendum_refused(conn, row.addendum_id, attempted_at, str(refusal))
+        raise
+    store.mark_addendum_written_back(conn, row.addendum_id, attempted_at)
+
+
 def drain(
     conn: sqlite3.Connection,
     emr: EMR,
@@ -97,6 +119,13 @@ def drain(
                 failed.append((visit_id, str(refusal)))
             else:
                 sent.append(visit_id)
+        for addendum in store.pending_addenda(conn):
+            try:
+                send_addendum(conn, emr, addendum, attempted_at=attempted_at)
+            except WriteRejected as refusal:
+                failed.append((addendum.addendum_id, str(refusal)))
+            else:
+                sent.append(addendum.addendum_id)
         return Delivery(tuple(sent), tuple(failed))
     finally:
         _DRAIN_LOCK.release()

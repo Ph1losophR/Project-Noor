@@ -297,7 +297,8 @@ A build list, not a wish list:
 3. The **Addendum** — the one write a closed Visit accepts, its own Write-Back, and its
    optional flag (§5.9).
 4. A store query for Patients with unanswered items. Nothing answers that today.
-5. The Visit's date on a review row, which §5.3 above needs and `Review` does not carry.
+5. **Done as part of item 4:** the Visit's date §5.3 needs rides on the store's inbox row
+   (`InboxRow.visit_date`), not on `Review` — it is the store's fact, not the domain's.
 6. The whole of `src/noor/web/` — routes, templates, view models, and the tests the
    design system §13 and the coverage gate require.
 
