@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block title %}{{ section }} — {{ patient }}'s Visit{% endblock %}
+
+{% block up %}<a class="up" href="/visits/{{ visit_id }}">{{ patient }}'s Visit</a>{% endblock %}
+
+{% block body %}
+<nav aria-label="The eight sections">
+  <ul class="strip">
+    {% for step in steps %}
+    <li><a class="{{ step.css }}" aria-current="{{ step.current }}" href="{{ step.href }}">
+      <span class="{{ step.mark }}">{{ step.word }}</span>
+      <span class="subheading">{{ step.name }}</span>
+    </a></li>
+    {% endfor %}
+  </ul>
+</nav>
+
+<p class="eyebrow">Visit Protocol</p>
+<h1 class="title">{{ section }}</h1>
+<p class="lede">{{ recorded }}</p>
+
+<div class="subject">
+  {% block form %}{% endblock %}
+</div>
+
+{% block guard %}
+<button class="button-quiet" popovertarget="no-content">Nothing to record here</button>
+
+<div class="guard" id="no-content" popover="manual">
+  <h2 class="heading">Nothing recorded in {{ section }}</h2>
+  <p class="note">A section with no content is resolved by saying why, and the reason is
+    engine data rather than prose (§5.10). It counts as resolved either way.</p>
+
+  <form method="post" action="/visits/{{ visit_id }}/sections/{{ slug }}">
+    <ul class="choices">
+      {% for row in reasons %}
+      <li class="choice">
+        <label>
+          <input type="radio" name="reason" value="{{ row.id }}" required>
+          {{ row.label }}
+        </label>
+      </li>
+      {% endfor %}
+    </ul>
+
+    <p class="field">
+      <label for="reason-words">If you chose the last row, write what happened</label>
+      <textarea id="reason-words" name="words" rows="3" dir="auto"></textarea>
+    </p>
+
+    <p class="actions">
+      <button class="button" type="submit">Record this reason</button>
+      <button class="button-quiet" type="button" popovertarget="no-content"
+              popovertargetaction="hide">Go back to the form</button>
+    </p>
+  </form>
+</div>
+{% endblock %}
+<script src="/static/noor.js" defer></script>
+{% endblock %}

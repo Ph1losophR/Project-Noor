@@ -487,6 +487,36 @@ main {
   grid-template-columns: repeat(2, 1fr);
 }
 
+.strip {
+  display: flex;
+  gap: var(--space-2);
+  overflow-x: auto;
+  padding: var(--space-3) var(--space-1);
+  margin: 0;
+  list-style: none;
+  overscroll-behavior-x: contain;
+}
+
+.strip-link {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  align-items: flex-start;
+  justify-content: center;
+  min-height: var(--space-7);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-container);
+  background: var(--raised);
+  color: var(--text);
+  text-decoration: none;
+}
+
+.strip-here {
+  border-color: var(--rule);
+  background: var(--well);
+}
+
 /* A grid rather than a block so stacked children get a gap without a margin — a tile
    always carries a name and one more line, whether that is a sentence or a mark. */
 .tile {
@@ -527,6 +557,13 @@ main {
   color: var(--text-2);
   line-height: var(--lh-long);
   padding: var(--space-4);
+}
+
+.unreachable {
+  padding: var(--space-4);
+  border: 1px solid var(--hairline);
+  border-radius: var(--radius-container);
+  color: var(--text-2);
 }
 
 .field {
@@ -587,5 +624,13 @@ main {
   ::view-transition-group(root) {
     animation-duration: 200ms;
     animation-timing-function: ease-out;
+  }
+}
+
+/* Forced colours: every meaning survives the OS palette because none is colour-alone;
+   this keeps the current step distinct where backgrounds and borders collapse. */
+@media (forced-colors: active) {
+  .strip-here {
+    outline: 2px solid LinkText;
   }
 }

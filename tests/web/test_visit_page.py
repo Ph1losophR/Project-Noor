@@ -66,7 +66,9 @@ def test_an_open_visit_shows_the_eight_sections_and_which_of_them_are_resolved(
     assert "mark-open" in answer.text
     assert "Nothing recorded" in answer.text
     assert "Attended by Dr Layla Al-Amri, with Nurse Huda Al-Zahrani." in answer.text
-    assert "Home Readings collected on arrival: 0." in answer.text
+    assert ("No Home Readings have been collected on this Visit. That is not a series Noor "
+            "could not read — nothing has been entered yet.") in answer.text
+    assert 'href="/visits/v-1/home-readings"' in answer.text
     assert "Emergencies during this Visit: 0." in answer.text
 
 
@@ -148,3 +150,18 @@ def test_an_address_naming_no_visit_is_refused_in_words(client):
     # Assert — §4.1: a screen never looks broken, and a stack trace is the loudest way to
     assert answer.status_code == 404
     assert "No Visit at that address" in answer.text
+
+
+def test_each_of_the_eight_tiles_on_an_open_visit_leads_to_its_own_section_page(
+        client, conn, visit):
+    # Arrange
+    visit.start(KNOCK, VisitKind.BASELINE, junior_physician=JUNIOR_PHYSICIAN, nurse=NURSE)
+    store.save(conn, visit)
+
+    # Act
+    answer = client.get("/visits/v-1")
+
+    # Assert
+    assert 'href="/visits/v-1/sections/visit-reason"' in answer.text
+    assert 'href="/visits/v-1/sections/care-plan"' in answer.text
+    assert 'class="strip"' not in answer.text

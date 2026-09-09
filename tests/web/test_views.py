@@ -6,10 +6,16 @@ is the whole reason they exist as functions rather than as `{% if %}` in the tem
 from datetime import date, datetime
 
 from noor.domain.brief import Due, LastVisit, Point, Trend
-from noor.domain.plans import Axis, BetweenVisitPlan, MeasurementSchedule
+from noor.domain.examination import Composed, Composition, Element
+from noor.domain.plans import (Axis, BetweenVisitPlan, Comparison,
+                              MeasurementSchedule, Threshold)
 from noor.domain.records import Reason, Resolution
-from noor.domain.states import Datum, Section, VisitKind, VisitState
+from noor.domain.reconciliation import (Discrepancy, DiscrepancyKind, Medication,
+                                        Product, Reconciliation)
+from noor.domain.selfcare import SelfCareItem
+from noor.domain.states import DataState, Datum, Section, VisitKind, VisitState
 from noor.domain.visit import Visit
+from noor.domain.vitals import HomeReading, Measurement, Source
 from noor.prefetch import Readiness
 from noor.store import Pending, RosterEntry
 from noor.web import views
@@ -460,3 +466,589 @@ def test_a_brief_that_saw_everything_says_that_rather_than_showing_nothing():
     assert views.spot_summary(()) == (
         "Noor read everything it asked the EMR for, so nothing on this page is missing "
         "because of a failed read.")
+
+
+def test_every_one_of_the_eight_has_an_address_that_is_its_own_name():
+    # Arrange / Act
+    slugs = [views.SLUG_OF[section] for section in Section]
+
+    # Assert — web_plan §4.3's eight, in the record's order
+    assert slugs == ["visit-reason", "concerns-and-interval-history",
+                     "medication-reconciliation", "vitals", "physical-examination",
+                     "self-care-check", "care-plan", "notes"]
+
+
+def test_the_strip_carries_the_eight_in_the_records_order_with_this_page_marked():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.VITALS] = Resolution(Section.VITALS, content={"pulse": "72"})
+
+    # Act
+    steps = views.strip(record, Section.NOTES)
+
+    # Assert
+    assert len(steps) == 8
+    assert steps[3] == views.Step("Vitals", "Resolved", "mark-clear",
+                                  "/visits/v-1/sections/vitals", "strip-link", "false")
+    assert steps[7] == views.Step("Notes", "Nothing recorded", "mark-open",
+                                  "/visits/v-1/sections/notes",
+                                  "strip-link strip-here", "page")
+
+
+def test_a_section_nobody_has_touched_says_so_rather_than_showing_an_empty_region():
+    # Arrange
+    record = Visit("v-1", "p-1")
+
+    # Act
+    sentence = views.recorded_sentence(record, Section.VITALS)
+
+    # Assert
+    assert sentence == "Nothing recorded in this section yet."
+
+
+def test_a_section_resolved_by_content_says_it_was_recorded_in_this_visit():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.NOTES] = Resolution(Section.NOTES, content="Family present.")
+
+    # Act
+    sentence = views.recorded_sentence(record, Section.NOTES)
+
+    # Assert
+    assert sentence == "Recorded in this Visit."
+
+
+def test_a_section_resolved_by_a_reason_says_which_reason_rather_than_only_resolved():
+    """§5.8 makes both a passing Visit, so the Visit page's tile says only *Resolved*.
+    The distinction lives here, on the section's own page (web_plan §4.3)."""
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.VITALS] = Resolution(
+        Section.VITALS, reason=Reason("no-working-device"))
+
+    # Act
+    sentence = views.recorded_sentence(record, Section.VITALS)
+
+    # Assert
+    assert sentence == ("Resolved without content: "
+                        "No working device in the household.")
+
+
+def test_a_section_resolved_by_the_other_row_says_the_words_that_were_typed():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.NOTES] = Resolution(
+        Section.NOTES, reason=Reason("other", "The Caregiver asked us to come back."))
+
+    # Act
+    sentence = views.recorded_sentence(record, Section.NOTES)
+
+    # Assert
+    assert sentence == ("Resolved without content: "
+                        "The Caregiver asked us to come back.")
+
+
+def test_every_section_can_be_resolved_without_content_including_the_two_with_no_rows_of_their_own():
+    """`visit_reason` and `care_plan` are deliberately empty in `reason-lists.md`, so the
+    five shared rows and the Other row are what they offer (§5.10, N6)."""
+    # Arrange / Act
+    counts = {section: len(views.SECTION_REASONS[section]) for section in Section}
+
+    # Assert
+    assert counts[Section.VISIT_REASON] == 6
+    assert counts[Section.CARE_PLAN] == 6
+    assert counts[Section.PHYSICAL_EXAMINATION] == 10
+    assert min(counts.values()) == 6
+
+
+def test_a_section_resolved_by_a_named_reason_keeps_words_typed_beside_it():
+    """`reason_for` keeps words typed beside a named row, so the section's own page keeps
+    them too — the same shape as the closing sentence, without its wrapper."""
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.VITALS] = Resolution(
+        Section.VITALS, reason=Reason("no-working-device", "the clinic lent one later"))
+
+    # Act
+    sentence = views.recorded_sentence(record, Section.VITALS)
+
+    # Assert
+    assert sentence == ("Resolved without content: No working device in the household. "
+                        "In their own words: the clinic lent one later")
+
+
+def test_a_free_text_section_with_something_in_it_hands_that_text_back_to_the_form():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.NOTES] = Resolution(Section.NOTES,
+                                                   content="Daughter interpreted.")
+
+    # Act
+    held = views.held_text(record, Section.NOTES)
+
+    # Assert
+    assert held == "Daughter interpreted."
+
+
+def test_a_free_text_section_resolved_without_content_hands_the_form_an_empty_box():
+    """The box is empty because there is nothing to put in it, and the reason is already
+    on the page in `recorded_sentence` — so nothing is lost and nothing is invented."""
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.VISIT_REASON] = Resolution(
+        Section.VISIT_REASON, reason=Reason("patient-declined"))
+
+    # Act
+    held = views.held_text(record, Section.VISIT_REASON)
+
+    # Assert
+    assert held == ""
+
+
+def test_a_free_text_section_nobody_has_touched_hands_the_form_an_empty_box():
+    # Arrange
+    record = Visit("v-1", "p-1")
+
+    # Act
+    held = views.held_text(record, Section.NOTES)
+
+    # Assert
+    assert held == ""
+
+
+def test_the_interval_history_offers_every_event_a_rule_will_read_and_none_of_these():
+    # Arrange / Act
+    labels = [row["label"] for row in views.EVENT_ROWS]
+
+    # Assert
+    assert labels[0] == "Admitted to hospital"
+    assert labels[-1] == "None of these"
+    assert "A hypoglycaemic episode" in labels
+
+
+def test_the_events_already_ticked_come_back_ticked_rather_than_blank():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.CONCERNS_AND_INTERVAL_HISTORY] = Resolution(
+        Section.CONCERNS_AND_INTERVAL_HISTORY,
+        content={"events": ["a-fall"], "concerns": []})
+
+    # Act
+    ticks = views.event_ticks(record)
+
+    # Assert
+    assert views.Tick("a-fall", "A fall", "checked") in ticks
+    assert views.Tick("none-of-these", "None of these", "") in ticks
+
+
+def test_an_interval_history_nobody_has_answered_offers_eight_unticked_rows():
+    # Arrange
+    record = Visit("v-1", "p-1")
+
+    # Act
+    ticks = views.event_ticks(record)
+
+    # Assert
+    assert len(ticks) == 8
+    assert {tick.checked for tick in ticks} == {""}
+
+
+def test_each_concern_comes_back_in_the_box_of_whoever_raised_it():
+    """Attribution is the point of the two boxes: *his feet burn at night* said by the
+    Caregiver and said by the Patient are different clinical facts (§4.2)."""
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.CONCERNS_AND_INTERVAL_HISTORY] = Resolution(
+        Section.CONCERNS_AND_INTERVAL_HISTORY,
+        content={"events": ["none-of-these"],
+                 "concerns": [{"raised_by": "Patient", "words": "His feet burn at night."},
+                              {"raised_by": "Caregiver", "words": "He sleeps in a chair."},
+                              {"raised_by": "Patient", "words": "Dizzy standing up."}]})
+
+    # Act
+    held = views.concerns_held(record)
+
+    # Assert
+    assert held == {"Patient": "His feet burn at night.\nDizzy standing up.",
+                    "Caregiver": "He sleeps in a chair."}
+
+
+def test_a_section_resolved_without_content_leaves_both_concern_boxes_empty():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.CONCERNS_AND_INTERVAL_HISTORY] = Resolution(
+        Section.CONCERNS_AND_INTERVAL_HISTORY, reason=Reason("cannot-communicate"))
+
+    # Act
+    held = views.concerns_held(record)
+
+    # Assert
+    assert held == {"Patient": "", "Caregiver": ""}
+
+
+def test_each_measurement_asked_for_gets_a_field_carrying_its_unit():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    asked = (Measurement("bp-seated", "Blood pressure, seated", "mmHg", ("hypertension",)),
+             Measurement("pulse", "Pulse", "beats per minute", ()))
+
+    # Act
+    fields = views.vitals_fields(record, asked)
+
+    # Assert
+    assert fields == (views.Field("bp-seated", "Blood pressure, seated", "mmHg", ""),
+                      views.Field("pulse", "Pulse", "beats per minute", ""))
+
+
+def test_a_reading_already_recorded_comes_back_in_its_own_field():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.VITALS] = Resolution(Section.VITALS,
+                                                    content={"pulse": "72"})
+    asked = (Measurement("pulse", "Pulse", "beats per minute", ()),)
+
+    # Act
+    fields = views.vitals_fields(record, asked)
+
+    # Assert
+    assert fields == (views.Field("pulse", "Pulse", "beats per minute", "72"),)
+
+
+def test_a_composed_list_says_it_was_composed_and_carries_no_hairline_block():
+    # Arrange
+    composed = Composed(required=(), basis=Composition.COMPOSED)
+
+    # Act
+    sentence, css = views.composition_block(composed)
+
+    # Assert
+    assert sentence == ("This list was composed from the Patient's conditions and the "
+                        "surveillance that is overdue.")
+    assert css == "note"
+
+
+def test_a_baseline_says_the_examination_is_complete_rather_than_composed():
+    """§4.3's first difference: a Baseline has no surveillance history to compose from,
+    so the whole examination is required and that is a fact, not a degradation."""
+    # Arrange
+    composed = Composed(required=(), basis=Composition.BASELINE)
+
+    # Act
+    sentence, css = views.composition_block(composed)
+
+    # Assert
+    assert sentence == ("This is a Baseline Visit, so the whole examination is required — "
+                        "there is no surveillance history to compose from.")
+    assert css == "note"
+
+
+def test_surveillance_dates_that_could_not_be_read_name_the_input_and_the_consequence():
+    """§7.2's Unreachable: not an empty region and not a badge, but a bounded block
+    saying what could not be read and what follows from that."""
+    # Arrange
+    composed = Composed(required=(), basis=Composition.UNREACHABLE)
+
+    # Act
+    sentence, css = views.composition_block(composed)
+
+    # Assert
+    assert sentence == ("The surveillance dates could not be read. The whole examination "
+                        "is required, and no element is marked overdue.")
+    assert css == "unreachable"
+
+
+def test_an_element_that_is_overdue_says_which_surveillance_made_it_required():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    required = (Element("monofilament", "Monofilament testing", ("diabetes",),
+                        "foot-examination"),
+                Element("general-appearance", "General appearance", ()))
+
+    # Act
+    rows = views.element_rows(record, required)
+
+    # Assert
+    assert rows == (
+        views.Row("monofilament", "Monofilament testing",
+                  "Required because foot-examination surveillance is overdue.", ""),
+        views.Row("general-appearance", "General appearance",
+                  "Required for every Patient.", ""))
+
+
+def test_a_finding_already_recorded_comes_back_beside_its_element():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.PHYSICAL_EXAMINATION] = Resolution(
+        Section.PHYSICAL_EXAMINATION,
+        content={"elements": {"pedal-pulses": "Present, both feet."}, "added": ""})
+    required = (Element("pedal-pulses", "Pedal pulses", ("diabetes",)),)
+
+    # Act
+    rows = views.element_rows(record, required)
+
+    # Assert
+    assert rows[0].held == "Present, both feet."
+
+
+def test_each_self_care_item_offers_the_three_outcomes_of_watching_it():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    items = (SelfCareItem("meter-technique", "Using the glucose meter", "demonstrated",
+                          ("diabetes",), "glucose-meter"),)
+
+    # Act
+    rows = views.self_care_rows(record, items)
+
+    # Assert
+    assert rows == (views.Watched(
+        "meter-technique", "Using the glucose meter", "demonstrated",
+        (views.Choice("correct", "Done correctly", ""),
+         views.Choice("incorrect", "Done, and not correctly", ""),
+         views.Choice("nothing-to-use", "Nothing in the house to do it with", ""))),)
+
+
+def test_an_outcome_already_recorded_comes_back_chosen():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.resolutions[Section.SELF_CARE_CHECK] = Resolution(
+        Section.SELF_CARE_CHECK, content={"foot-routine": "incorrect"})
+    items = (SelfCareItem("foot-routine", "The daily foot routine", "observed",
+                          ("diabetes",)),)
+
+    # Act
+    rows = views.self_care_rows(record, items)
+
+    # Assert
+    assert rows[0].choices[1] == views.Choice("incorrect", "Done, and not correctly",
+                                              "checked")
+    assert rows[0].choices[0].checked == ""
+
+
+METFORMIN = Product("metformin-500", "Metformin", "500 mg", "tablet", "biguanide")
+AMLODIPINE = Product("amlodipine-5", "Amlodipine", "5 mg", "tablet",
+                     "calcium channel blocker")
+
+
+def test_a_search_result_shows_the_strength_and_the_form_it_will_be_recorded_with():
+    """§4.2: name, strength and form come from the list. Showing them at the moment of
+    choosing is what stops the Nurse typing a strength that is not on the box."""
+    # Arrange / Act
+    found = views.search_results([METFORMIN, AMLODIPINE])
+
+    # Assert
+    assert found == (views.Found("metformin-500", "Metformin 500 mg tablet"),
+                     views.Found("amlodipine-5", "Amlodipine 5 mg tablet"))
+
+
+def test_a_matched_box_in_the_house_shows_what_was_typed_against_it():
+    # Arrange
+    house = [Medication("Metformin", METFORMIN, 42, date(2027, 3, 1))]
+
+    # Act
+    boxes = views.house_boxes(house)
+
+    # Assert
+    assert boxes == (views.Box(0, "Metformin 500 mg tablet", "biguanide",
+                               "42 remaining", "expires 2027-03-01"),)
+
+
+def test_a_box_the_drug_list_has_no_row_for_says_noor_cannot_reconcile_it():
+    """§4.2's outcome, not workaround: the free text stands and Noor states the limit."""
+    # Arrange
+    house = [Medication("Cordarone 200 mg (brought from Cairo)")]
+
+    # Act
+    boxes = views.house_boxes(house)
+
+    # Assert
+    assert boxes == (views.Box(0, "Cordarone 200 mg (brought from Cairo)",
+                               "Not on the drug list — Noor cannot reconcile this item",
+                               "no count recorded", "no expiry recorded"),)
+
+
+def test_a_discrepancy_is_one_sentence_naming_the_kind_and_its_subject():
+    # Arrange
+    found = [Discrepancy(DiscrepancyKind.OMISSION, "Gliclazide"),
+             Discrepancy(DiscrepancyKind.EXPIRED, "Amlodipine")]
+
+    # Act
+    lines = views.discrepancy_lines(found)
+
+    # Assert
+    assert lines == ("Gliclazide — prescribed, not in the house",
+                     "Amlodipine — in the house, past its expiry")
+
+
+def test_a_comparison_that_ran_says_so_in_the_flow():
+    # Arrange
+    result = Reconciliation((), (), DataState.PRESENT)
+
+    # Act
+    sentence, css = views.comparison_block(result)
+
+    # Assert
+    assert sentence == ("The house was compared against the prescribed list Noor read "
+                        "before the van left.")
+    assert css == "note"
+
+
+def test_a_prescribed_list_noor_could_not_read_names_what_that_costs():
+    """§7.2 again, and §4.10's rule that a degraded comparison declares itself: the
+    cupboard checks still ran, and the ones needing the list did not."""
+    # Arrange
+    result = Reconciliation((), (), DataState.UNREACHABLE)
+
+    # Act
+    sentence, css = views.comparison_block(result)
+
+    # Assert
+    assert sentence == ("The prescribed list could not be read. What is in the house is "
+                        "recorded in full, and nothing is compared against the list — no "
+                        "omission and no unprescribed item can be found here.")
+    assert css == "unreachable"
+
+
+def test_the_plan_offers_the_four_axes_a_household_can_measure_and_not_the_lab_one():
+    """HbA1c is drawn in a laboratory. A home measurement schedule with HbA1c on it is a
+    line nobody in the house can carry out, and §4.8 says every line is testable."""
+    # Assert
+    assert views.HOME_AXES == (Axis.SYSTOLIC, Axis.DIASTOLIC,
+                               Axis.GLUCOSE_PRE_PRANDIAL, Axis.GLUCOSE_POST_PRANDIAL)
+    assert Axis.HBA1C not in views.HOME_AXES
+
+
+def test_each_axis_gets_a_row_for_its_schedule_and_its_two_stop_thresholds():
+    # Arrange
+    record = Visit("v-1", "p-1")
+
+    # Act
+    rows = views.plan_rows(record)
+
+    # Assert
+    assert rows[0] == views.PlanRow(Axis.SYSTOLIC, "Systolic blood pressure",
+                                     "", "", "")
+    assert len(rows) == 4
+
+
+def test_a_plan_already_emitted_comes_back_line_by_line():
+    # Arrange
+    record = Visit("v-1", "p-1")
+    record.plan = BetweenVisitPlan(
+        schedule=(MeasurementSchedule(Axis.SYSTOLIC, 3),),
+        stop_rules=(Threshold(Axis.SYSTOLIC, Comparison.ABOVE, 180.0,
+                              "call the Supervisor"),))
+
+    # Act
+    rows = views.plan_rows(record)
+
+    # Assert
+    assert rows[0] == views.PlanRow(Axis.SYSTOLIC, "Systolic blood pressure",
+                                     "3", "", "180.0")
+
+
+def test_the_withheld_titration_says_what_is_missing_and_what_follows_from_it():
+    """§4.11: a withheld thing declares itself, names the input, and never looks like a
+    thing that was considered and rejected."""
+    # Assert
+    assert views.TITRATION_WITHHELD == (
+        "No titration step can be set on this Visit. Titration needs a ratified Goal of "
+        "Care, and this Patient has none — the home measurement schedule and the stop "
+        "rules do not, and both are set below.")
+
+
+def test_the_care_plan_names_every_section_it_is_still_waiting_on():
+    # Arrange / Act
+    sentence = views.too_early_sentence([Section.VITALS, Section.NOTES])
+
+    # Assert
+    assert sentence == ("The Care Plan is assembled after the other seven. Still "
+                        "unresolved: Vitals, Notes.")
+
+
+GLUCOSE = Measurement("capillary-glucose", "Capillary blood glucose", "mmol/L",
+                      ("diabetes",))
+SEATED = Measurement("bp-seated", "Blood pressure, seated", "mmHg", ())
+
+
+def test_the_two_sources_are_offered_in_the_words_section_4_8_uses():
+    """§4.8 names both, and web_plan §4.4 requires every reading to record which. The
+    words are the enum's own, so the page and the record cannot disagree."""
+    # Assert
+    assert views.SOURCE_ROWS == (("device memory", "Read off the device's own memory"),
+                                 ("Caregiver paper log", "Copied from a Caregiver's "
+                                                         "paper log"))
+
+
+def test_a_reading_reads_back_with_its_unit_its_time_and_where_it_came_from():
+    # Arrange
+    readings = [HomeReading("capillary-glucose", "7.2",
+                            datetime(2026, 8, 26, 7, 30), Source.DEVICE_MEMORY)]
+
+    # Act
+    lines = views.reading_lines(readings, [GLUCOSE, SEATED])
+
+    # Assert
+    assert lines == (views.Reading("Capillary blood glucose", "7.2 mmol/L",
+                                   "07:30, 26 August", "device memory"),)
+
+
+def test_a_series_reads_back_grouped_by_measurement_and_in_time_order():
+    """A series is only readable as a series. Sorted here rather than in the template,
+    because a template that sorts is a template that decides."""
+    # Arrange
+    readings = [HomeReading("bp-seated", "138/84",
+                            datetime(2026, 8, 27, 8, 0), Source.PAPER_LOG),
+                HomeReading("capillary-glucose", "9.1",
+                            datetime(2026, 8, 27, 7, 15), Source.DEVICE_MEMORY),
+                HomeReading("capillary-glucose", "7.2",
+                            datetime(2026, 8, 26, 7, 30), Source.DEVICE_MEMORY)]
+
+    # Act
+    lines = views.reading_lines(readings, [GLUCOSE, SEATED])
+
+    # Assert
+    assert [line.value for line in lines] == ["138/84 mmHg", "7.2 mmol/L", "9.1 mmol/L"]
+
+
+def test_a_reading_against_a_measurement_this_patient_is_not_asked_for_still_reads_back():
+    """A condition removed from the Patient must not blank a reading already collected. The
+    id stands in for the label, so the row says what it is rather than vanishing."""
+    # Arrange
+    readings = [HomeReading("weight", "81", datetime(2026, 8, 26, 7, 0),
+                            Source.PAPER_LOG)]
+
+    # Act
+    lines = views.reading_lines(readings, [GLUCOSE])
+
+    # Assert
+    assert lines == (views.Reading("weight", "81", "07:00, 26 August",
+                                   "Caregiver paper log"),)
+
+
+def test_the_measurements_offered_are_the_ones_this_patient_is_asked_for():
+    # Arrange / Act
+    options = views.reading_options([GLUCOSE, SEATED])
+
+    # Assert
+    assert options == (views.Found("capillary-glucose",
+                                   "Capillary blood glucose (mmol/L)"),
+                       views.Found("bp-seated", "Blood pressure, seated (mmHg)"))
+
+
+def test_no_readings_yet_is_a_finding_and_says_which_of_the_two_absences_it_is():
+    # Arrange / Act
+    sentence = views.home_readings_sentence([])
+
+    # Assert
+    assert sentence == ("No Home Readings have been collected on this Visit. That is not "
+                        "a series Noor could not read — nothing has been entered yet.")
+
+
+def test_a_collected_series_is_reported_as_a_count():
+    # Arrange
+    readings = [HomeReading("bp-seated", "138/84",
+                            datetime(2026, 8, 27, 8, 0), Source.PAPER_LOG)]
+
+    # Act / Assert
+    assert views.home_readings_sentence(readings) == (
+        "Home Readings collected on this Visit: 1.")

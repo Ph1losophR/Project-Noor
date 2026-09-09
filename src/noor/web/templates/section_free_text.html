@@ -1,0 +1,14 @@
+{% extends "section_base.html" %}
+
+{% block form %}
+<form method="post" action="/visits/{{ visit_id }}/sections/{{ slug }}" data-autosave>
+  <p class="field">
+    <label for="words">{{ prompt }}</label>
+    <textarea id="words" name="words" rows="8" dir="auto">{{ held }}</textarea>
+  </p>
+
+  <p class="actions">
+    <button class="button" type="submit">Save and return</button>
+  </p>
+</form>
+{% endblock %}

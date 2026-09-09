@@ -15,9 +15,15 @@ from typing import NamedTuple
 
 from noor import content
 from noor.domain.brief import Due, LastVisit, Point, Trend
+from noor.domain.examination import Composed, Composition, Element
+from noor.domain.plans import Axis, BetweenVisitPlan, Comparison
 from noor.domain.records import OTHER, Reason, reason_rows
+from noor.domain.reconciliation import (Discrepancy, Medication, Product,
+                                        Reconciliation)
+from noor.domain.selfcare import SelfCareItem
 from noor.domain.states import DataState, Datum, Section, VisitKind, VisitState
 from noor.domain.visit import Visit
+from noor.domain.vitals import HomeReading, Measurement, Source
 from noor.prefetch import Readiness
 from noor.store import Pending, RosterEntry
 
@@ -133,6 +139,21 @@ SECTION_WORDS = {
 """§4.2's eight, as words. `Section`'s integer is the position, so iterating the enum is
 already the record's order and no page sorts."""
 
+SLUGS = {
+    "visit-reason": Section.VISIT_REASON,
+    "concerns-and-interval-history": Section.CONCERNS_AND_INTERVAL_HISTORY,
+    "medication-reconciliation": Section.MEDICATION_RECONCILIATION,
+    "vitals": Section.VITALS,
+    "physical-examination": Section.PHYSICAL_EXAMINATION,
+    "self-care-check": Section.SELF_CARE_CHECK,
+    "care-plan": Section.CARE_PLAN,
+    "notes": Section.NOTES,
+}
+"""web_plan §4.3's eight addresses. The slug is the section's own name, so no address
+invents a synonym CONTEXT.md forbids."""
+
+SLUG_OF = {section: slug for slug, section in SLUGS.items()}
+
 CANCELLED_ROWS = reason_rows(content.load("reason-lists").data["cancelled"]["rows"])
 ENDED_EARLY_ROWS = reason_rows(content.load("reason-lists").data["ended_early"]["rows"])
 """§5.10's two closing lists, each ending in the structural Other row `reason_rows` adds.
@@ -144,6 +165,19 @@ module keeps is that nothing in it touches a connection."""
 CLOSING_LABELS = {row["id"]: row["label"] for row in CANCELLED_ROWS + ENDED_EARLY_ROWS}
 """Row id to the words the Field Team actually chose. The two lists share no ids, and a
 closing reason from either one resolves here without the page having to know which."""
+
+NO_CONTENT = content.load("reason-lists").data["no_content"]
+SECTION_REASONS = {
+    section: reason_rows(NO_CONTENT["shared"],
+                         NO_CONTENT["per_section"][section.name.lower()])
+    for section in Section
+}
+"""§5.10's list for each of the eight: the five shared rows, the section's own, and the
+Other row `reason_rows` appends. All eight keys exist in the file and two hold no rows of
+their own, so every section offers at least six and none has to be special-cased."""
+
+SECTION_LABELS = {row["id"]: row["label"]
+                  for rows in SECTION_REASONS.values() for row in rows}
 
 NO_CLOSING_REASON = ("This Visit finished the Visit Protocol, so it carries no closing "
                      "reason.")
@@ -162,13 +196,13 @@ like it was working on itself would be the thing §4.10 forbids, dressed as reas
 
 
 class SectionMark(NamedTuple):
-    """One of the eight, with its mark. The word and the class travel together because §4.3
-    says a status colour never appears without its word — as one tuple, a template cannot
-    render the colour and forget the word."""
+    """One of the eight, as a tile draws it. The word and the class travel together
+    because §4.3 says a status colour never appears without its word."""
 
     name: str
     word: str
     mark: str
+    slug: str
 
 
 def marks(visit: Visit) -> tuple[SectionMark, ...]:
@@ -178,11 +212,13 @@ def marks(visit: Visit) -> tuple[SectionMark, ...]:
 
 def _mark(section: Section, resolved: bool) -> SectionMark:
     """Resolved by content and resolved by a reason are one mark here (§5.8 makes both a
-    passing Visit). Which of the two it was is on the section's own page, in Web Pass 2 —
-    a tile that tried to say it would be a tile saying two things."""
-    if resolved:
-        return SectionMark(SECTION_WORDS[section], "Resolved", "mark-clear")
-    return SectionMark(SECTION_WORDS[section], "Nothing recorded", "mark-open")
+    passing Visit). Which of the two it was is `recorded_sentence`, on the section's own
+    page — a tile that tried to say it would be a tile saying two things."""
+    word, mark = RESOLVED[resolved]
+    return SectionMark(SECTION_WORDS[section], word, mark, SLUG_OF[section])
+
+
+RESOLVED = {True: ("Resolved", "mark-clear"), False: ("Nothing recorded", "mark-open")}
 
 
 def settled_kind(visit: Visit) -> str:
@@ -210,10 +246,10 @@ def closed_sentence(visit: Visit) -> str:
 def reason_sentence(visit: Visit) -> str:
     """The closing reason on a Visit page. `reason_words` is the same sentence for the
     Brief, which has a `Reason` and no Visit around it."""
-    return reason_words(visit.closing_reason)
+    return reason_words(visit.closing_reason, CLOSING_LABELS)
 
 
-def reason_words(reason: Reason | None) -> str:
+def reason_words(reason: Reason | None, labels: Mapping[str, str]) -> str:
     """§5.10's structured reason, as the words the Field Team chose.
 
     The Other row is answered by its free text alone. Its label is an instruction to whoever
@@ -225,9 +261,63 @@ def reason_words(reason: Reason | None) -> str:
     if reason.row_id == OTHER:
         return f"Reason, in their own words: {reason.free_text}"
     if reason.free_text is None:
-        return f"Reason: {CLOSING_LABELS[reason.row_id]}."
-    return (f"Reason: {CLOSING_LABELS[reason.row_id]}. In their own words: "
+        return f"Reason: {labels[reason.row_id]}."
+    return (f"Reason: {labels[reason.row_id]}. In their own words: "
             f"{reason.free_text}")
+
+
+STRIP_CLASSES = {True: "strip-link strip-here", False: "strip-link"}
+CURRENT = {True: "page", False: "false"}
+"""`aria-current` is how the strip names the page you are on without a template deciding
+anything. `false` is a real ARIA value and means exactly not-this-one, so both arms are a
+lookup rather than an attribute that has to be absent."""
+
+
+class Step(NamedTuple):
+    """One of the eight in the strip: its mark, where it goes, and whether it is here."""
+
+    name: str
+    word: str
+    mark: str
+    href: str
+    css: str
+    current: str
+
+
+def strip(visit: Visit, here: Section) -> tuple[Step, ...]:
+    """The eight in the record's order, each a link, with this page marked (web_plan
+    §4.3). It carries the eight and nothing else: the Brief and Home Readings are §4.4's,
+    and a ninth entry would say Home Readings was one of the eight."""
+    return tuple(
+        _step(visit.id, _mark(section, section in visit.resolutions), section is here)
+        for section in Section)
+
+
+def _step(visit_id: str, mark: SectionMark, here: bool) -> Step:
+    return Step(mark.name, mark.word, mark.mark,
+                f"/visits/{visit_id}/sections/{mark.slug}",
+                STRIP_CLASSES[here], CURRENT[here])
+
+
+NOTHING_YET = "Nothing recorded in this section yet."
+BY_CONTENT = "Recorded in this Visit."
+
+
+def recorded_sentence(visit: Visit, section: Section) -> str:
+    """Which of the two resolutions this section has, or neither — the distinction the
+    Visit page's tiles defer to the section's own page (web_plan §4.3, §5.8)."""
+    held = visit.resolutions.get(section)
+    if held is None:
+        return NOTHING_YET
+    if held.reason is None:
+        return BY_CONTENT
+    if held.reason.row_id == OTHER:
+        return f"Resolved without content: {held.reason.free_text}"
+    words = SECTION_LABELS[held.reason.row_id]
+    if held.reason.free_text is None:
+        return f"Resolved without content: {words}."
+    return (f"Resolved without content: {words}. In their own words: "
+            f"{held.reason.free_text}")
 
 
 def queue_count(queued: Mapping[str, Pending]) -> str:
@@ -347,7 +437,7 @@ def last_visit_sentence(last: LastVisit | None) -> str:
     if last is None:
         return FIRST_VISIT
     return (f"The last Visit was {STATE_WORDS[last.state]} on {last.on:%d %B %Y}. "
-            f"{reason_words(last.reason)}")
+            f"{reason_words(last.reason, CLOSING_LABELS)}")
 
 
 def plan_sentence(plan: Datum) -> str:
@@ -362,3 +452,441 @@ def plan_sentence(plan: Datum) -> str:
         return NO_PLAN_YET
     return (f"A Between-Visit Plan has been standing since {plan.as_of:%d %B %Y}. Its "
             "titration steps, schedule and stop rules are on the Care Plan section.")
+
+
+PROMPTS = {
+    Section.VISIT_REASON: "Why this Visit is happening, in the words the household used.",
+    Section.NOTES: "Anything the other seven sections have no place for.",
+}
+"""The one line above a free-text box. Two entries, because two of the eight are prose."""
+
+
+def held_text(visit: Visit, section: Section) -> str:
+    """What is already in the box.
+
+    A section resolved without content hands back nothing to type over: its reason is
+    already on the page in `recorded_sentence`, and putting a reason's label into a
+    content box would turn a structured reason into prose the engine cannot read (§5.10).
+    """
+    held = visit.resolutions.get(section)
+    if held is None or held.reason is not None:
+        return ""
+    return str(held.content)
+
+
+EVENT_ROWS = tuple(content.load("interval-events").data["events"]["rows"])
+NONE_OF_THESE = "none-of-these"
+RAISERS = ("Patient", "Caregiver")
+"""The two people a concern can be attributed to (§4.2). A concern with no name against it
+is prose, and prose is what Notes is for."""
+
+TICKED = {True: "checked", False: ""}
+"""The attribute or nothing. `checked=""` is a *checked* box in HTML, so the whole
+attribute has to come through the map rather than its value."""
+
+
+class Tick(NamedTuple):
+    id: str
+    label: str
+    checked: str
+
+
+def event_ticks(visit: Visit) -> tuple[Tick, ...]:
+    """The eight rows in the file's order, each remembering whether it is already
+    ticked — so reopening the section shows what was recorded rather than a blank list."""
+    held = _content(visit, Section.CONCERNS_AND_INTERVAL_HISTORY, {"events": []})
+    ticked = set(held["events"])
+    return tuple(Tick(row["id"], row["label"], TICKED[row["id"] in ticked])
+                 for row in EVENT_ROWS)
+
+
+def concerns_held(visit: Visit) -> dict[str, str]:
+    """Each raiser's concerns, one to a line, back in that raiser's own box."""
+    held = _content(visit, Section.CONCERNS_AND_INTERVAL_HISTORY, {"concerns": []})
+    lines: dict[str, list[str]] = {who: [] for who in RAISERS}
+    for item in held["concerns"]:
+        lines[item["raised_by"]].append(item["words"])
+    return {who: "\n".join(said) for who, said in lines.items()}
+
+
+def _content(visit: Visit, section: Section, empty: Mapping[str, object]) -> Mapping:
+    """A section's recorded content, or an empty shape of the same form.
+
+    A section resolved by a reason answers `empty` too: its reason is on the page in
+    `recorded_sentence`, and there is nothing in it to put back in a box (§5.10).
+    """
+    held = visit.resolutions.get(section)
+    if held is None or held.reason is not None:
+        return empty
+    return held.content
+
+
+class Field(NamedTuple):
+    """One numeric box: what it asks for, in what unit, and what is already in it."""
+
+    id: str
+    label: str
+    unit: str
+    held: str
+
+
+def vitals_fields(visit: Visit, asked: Sequence[Measurement]) -> tuple[Field, ...]:
+    """A box per measurement this Visit asks for, in the content file's order — which
+    `asked_for` documents as the form's order, so the form does not reorder it."""
+    held = _content(visit, Section.VITALS, {})
+    return tuple(Field(measure.id, measure.label, measure.unit,
+                       str(held.get(measure.id, "")))
+                 for measure in asked)
+
+
+BASIS_WORDS = {
+    Composition.COMPOSED:
+        "This list was composed from the Patient's conditions and the surveillance that "
+        "is overdue.",
+    Composition.BASELINE:
+        "This is a Baseline Visit, so the whole examination is required — there is no "
+        "surveillance history to compose from.",
+    Composition.UNREACHABLE:
+        "The surveillance dates could not be read. The whole examination is required, "
+        "and no element is marked overdue.",
+}
+"""One sentence per basis. The Unreachable one names the input *and* the consequence,
+because §7.2 says an Unreachable that only names the input leaves the reader to guess what
+it cost them. Noor does not distinguish no signal from a cache that was never filled
+(§4.10), so the sentence says *could not be read* and claims nothing about why."""
+
+UNREACHABLE = frozenset({Composition.UNREACHABLE})
+BASIS_CLASSES = {True: "unreachable", False: "note"}
+"""§7.2: Absent and Unreachable differ by shape, not by colour. The hairline-bounded block
+is the shape, and neither carries a status colour or a badge."""
+
+
+def composition_block(composed: Composed) -> tuple[str, str]:
+    """What the top of the Physical Examination says about its own list, and how it is
+    drawn — a sentence in the flow, or a bounded block when an input was unreachable."""
+    return (BASIS_WORDS[composed.basis],
+            BASIS_CLASSES[composed.basis in UNREACHABLE])
+
+
+EVERY_PATIENT = "Required for every Patient."
+
+
+class Row(NamedTuple):
+    """One required element: what it is, why it is required, and what was found."""
+
+    id: str
+    label: str
+    note: str
+    held: str
+
+
+def element_rows(visit: Visit, required: Sequence[Element]) -> tuple[Row, ...]:
+    """The composed list, each row saying why it is on the list. A row that is there
+    because surveillance is overdue says so, because that is the difference between a list
+    the Field Team trusts and a list it works around."""
+    held = _content(visit, Section.PHYSICAL_EXAMINATION, {"elements": {}})
+    return tuple(Row(element.id, element.label, _why(element),
+                     str(held["elements"].get(element.id, "")))
+                 for element in required)
+
+
+def _why(element: Element) -> str:
+    if element.overdue is None:
+        return EVERY_PATIENT
+    return f"Required because {element.overdue} surveillance is overdue."
+
+
+def added_text(visit: Visit) -> str:
+    """The elements the Field Team added, back in the box they were typed in."""
+    return str(_content(visit, Section.PHYSICAL_EXAMINATION, {"added": ""})["added"])
+
+
+OUTCOMES = (("correct", "Done correctly"),
+            ("incorrect", "Done, and not correctly"),
+            ("nothing-to-use", "Nothing in the house to do it with"))
+"""§4.5: observed, never asked — so the three outcomes are three things somebody watched,
+not three things somebody was told. The third is a Finding in its own right: an item that
+needed a meter, in a house with no meter, is a fact about the house
+(`self-care-items.md`)."""
+
+
+class Choice(NamedTuple):
+    value: str
+    label: str
+    checked: str
+
+
+class Watched(NamedTuple):
+    id: str
+    label: str
+    mode: str
+    choices: tuple[Choice, ...]
+
+
+def self_care_rows(visit: Visit,
+                   items: Sequence[SelfCareItem]) -> tuple[Watched, ...]:
+    """One row per applicable item, in the catalogue's order, each remembering which of
+    the three outcomes is already recorded against it."""
+    held = _content(visit, Section.SELF_CARE_CHECK, {})
+    return tuple(Watched(item.id, item.label, item.mode,
+                         tuple(Choice(value, label,
+                                      TICKED[held.get(item.id) == value])
+                               for value, label in OUTCOMES))
+                  for item in items)
+
+
+class Found(NamedTuple):
+    """One search hit, labelled with everything the list decides so nothing is typed."""
+
+    id: str
+    label: str
+
+
+class Box(NamedTuple):
+    """One item in the house, as it reads back."""
+
+    index: int
+    label: str
+    detail: str
+    quantity: str
+    expiry: str
+
+
+UNMATCHED = "Not on the drug list — Noor cannot reconcile this item"
+NO_COUNT = "no count recorded"
+NO_EXPIRY = "no expiry recorded"
+"""§7.2: Absent is a written finding. A box nobody counted says so in words, because an
+empty cell and a count of nought are different facts and the second is prohibited."""
+
+
+def product_label(product: Product) -> str:
+    return f"{product.generic} {product.strength} {product.form}"
+
+
+def search_results(products: Sequence[Product]) -> tuple[Found, ...]:
+    return tuple(Found(product.id, product_label(product)) for product in products)
+
+
+def house_boxes(house: Sequence[Medication]) -> tuple[Box, ...]:
+    """The house as it reads back. The index is how a row is removed — a label is not
+    unique, because two boxes of the same drug is a discrepancy Noor has to be able to
+    hold long enough to report."""
+    return tuple(Box(index, *_box(item)) for index, item in enumerate(house))
+
+
+def _box(item: Medication) -> tuple[str, str, str, str]:
+    label, detail = _named(item)
+    return (label, detail, _count(item.quantity_remaining), _expiry(item.expiry))
+
+
+def _named(item: Medication) -> tuple[str, str]:
+    if item.product is None:
+        return (item.label, UNMATCHED)
+    return (product_label(item.product), item.product.drug_class)
+
+
+def _count(remaining: int | None) -> str:
+    if remaining is None:
+        return NO_COUNT
+    return f"{remaining} remaining"
+
+
+def _expiry(expiry: date | None) -> str:
+    if expiry is None:
+        return NO_EXPIRY
+    return f"expires {expiry.isoformat()}"
+
+
+def discrepancy_lines(found: Sequence[Discrepancy]) -> tuple[str, ...]:
+    """One sentence each, the kind's own words after the subject. `DiscrepancyKind`'s
+    values are already sentences, so nothing is restated here."""
+    return tuple(f"{item.subject} — {item.kind.value}" for item in found)
+
+
+COMPARISON_WORDS = {
+    DataState.PRESENT:
+        "The house was compared against the prescribed list Noor read before the van "
+        "left.",
+    DataState.UNREACHABLE:
+        "The prescribed list could not be read. What is in the house is recorded in "
+        "full, and nothing is compared against the list — no omission and no "
+        "unprescribed item can be found here.",
+}
+"""`reconcile` answers with these two states and no third: an Absent prescribed list is
+compared as an empty list, which is a real comparison. So there are two rows here, and a
+third state would raise KeyError rather than be drawn as one of the two (ADR 0007)."""
+
+
+def comparison_block(result: Reconciliation) -> tuple[str, str]:
+    """What the section says about its own comparison, and how it is drawn (§7.2)."""
+    return (COMPARISON_WORDS[result.comparison],
+            BASIS_CLASSES[not result.is_complete])
+
+
+NOTHING_MATCHED = ("No product on the drug list matches. Record the item as written on "
+                   "the box instead — Noor keeps it, marked unmatched.")
+SEARCH_PROMPT = "Search the drug list above to add a box."
+NOTHING_FOUND_YET = "Nothing found against the house yet"
+FOUND_SO_FAR = "What the comparison found"
+
+
+def search_heading(query: str, hits: Sequence[Found]) -> str:
+    """Three things the search can be, as three sentences. A search nobody has run and a
+    search that matched nothing are different, and the second is where §4.2's unmatched
+    outcome has to be offered."""
+    if not query.strip():
+        return SEARCH_PROMPT
+    if not hits:
+        return NOTHING_MATCHED
+    return f"Products matching “{query}”"
+
+
+def discrepancy_heading(found: Sequence[Discrepancy]) -> str:
+    return FOUND_SO_FAR if found else NOTHING_FOUND_YET
+
+
+HOME_AXES = (Axis.SYSTOLIC, Axis.DIASTOLIC,
+             Axis.GLUCOSE_PRE_PRANDIAL, Axis.GLUCOSE_POST_PRANDIAL)
+"""The four of `Axis`'s five a household can measure. HbA1c is drawn in a laboratory, and
+§4.8 requires every line of a Between-Visit Plan to be one somebody can carry out."""
+
+AXIS_WORDS = {
+    Axis.SYSTOLIC: "Systolic blood pressure",
+    Axis.DIASTOLIC: "Diastolic blood pressure",
+    Axis.GLUCOSE_PRE_PRANDIAL: "Glucose before a meal",
+    Axis.GLUCOSE_POST_PRANDIAL: "Glucose two hours after a meal",
+}
+
+TITRATION_WITHHELD = (
+    "No titration step can be set on this Visit. Titration needs a ratified Goal of "
+    "Care, and this Patient has none — the home measurement schedule and the stop rules "
+    "do not, and both are set below.")
+"""§4.11's withholding, in §4.8's own terms. The Goal of Care is proposed and ratified in
+Web Pass 5; until then this is a limit Noor states, not a field it offers and refuses."""
+
+
+class PlanRow(NamedTuple):
+    """One axis: how often it is measured at home, and the two thresholds that stop."""
+
+    axis: Axis
+    label: str
+    times: str
+    floor: str
+    ceiling: str
+
+
+def plan_rows(visit: Visit) -> tuple[PlanRow, ...]:
+    """The four axes with whatever the Visit has already emitted against each."""
+    plan = visit.plan
+    weekly = _weekly(plan)
+    below, above = _stops(plan)
+    return tuple(PlanRow(axis, AXIS_WORDS[axis],
+                         weekly.get(axis, ""), below.get(axis, ""), above.get(axis, ""))
+                 for axis in HOME_AXES)
+
+
+def _weekly(plan: BetweenVisitPlan | None) -> dict[Axis, str]:
+    if plan is None:
+        return {}
+    return {line.axis: str(line.times_per_week) for line in plan.schedule}
+
+
+def _stops(plan: BetweenVisitPlan | None) -> tuple[dict[Axis, str], dict[Axis, str]]:
+    """The stop rules split by direction, because a floor and a ceiling are two boxes."""
+    if plan is None:
+        return ({}, {})
+    return ({rule.axis: str(rule.value) for rule in plan.stop_rules
+             if rule.comparison is Comparison.BELOW},
+            {rule.axis: str(rule.value) for rule in plan.stop_rules
+             if rule.comparison is Comparison.ABOVE})
+
+
+def too_early_sentence(outstanding: Sequence[Section]) -> str:
+    """§4.2's rule as the page's own words. The list is named, because *finish the others*
+    with no list is an instruction the Field Team has to go hunting to follow."""
+    return ("The Care Plan is assembled after the other seven. Still unresolved: "
+            + ", ".join(SECTION_WORDS[section] for section in outstanding) + ".")
+
+
+def plan_action(visit: Visit) -> str:
+    """The action already set against the stop rules. One action for all of them, so the
+    first is the answer and an empty plan is an empty box."""
+    plan = visit.plan
+    if plan is None or not plan.stop_rules:
+        return ""
+    return plan.stop_rules[0].action
+
+
+def outstanding_in(message: str) -> tuple[Section, ...]:
+    """The sections `check_care_plan_ready` named, back as sections. The message ends in
+    the enum names, comma-separated; parsing them here keeps the domain's guard the only
+    place that decides which sections are outstanding."""
+    named = message.rsplit(": ", 1)[-1].split(", ")
+    return tuple(Section[name] for name in named)
+
+
+SOURCE_WORDS = {Source.DEVICE_MEMORY: "Read off the device's own memory",
+                Source.PAPER_LOG: "Copied from a Caregiver's paper log"}
+"""§4.8's two sources as the words on the radio. The values stored are the enum's own, so
+this map is the label and never the record."""
+
+SOURCE_ROWS = tuple((source.value, SOURCE_WORDS[source]) for source in Source)
+"""Value and label, in `Source`'s own declaration order, so a third source added to the
+enum reaches the form without this file being edited."""
+
+
+class Reading(NamedTuple):
+    """One Home Reading as it reads back. Every field a string: §4.8's series is read, not
+    computed on, so the page needs no numbers."""
+
+    label: str
+    value: str
+    when: str
+    source: str
+
+
+def reading_lines(readings: Sequence[HomeReading],
+                  asked: Sequence[Measurement]) -> tuple[Reading, ...]:
+    """The series, grouped by measurement and in time order within each.
+
+    Sorted on the label so the grouping is the same one the reader sees, and a measurement
+    the Patient is no longer asked for sorts by its id — which is also what it is labelled
+    with, because a reading already collected must not lose its name to a condition that
+    changed.
+    """
+    labels = {measure.id: measure.label for measure in asked}
+    units = {measure.id: measure.unit for measure in asked}
+    return tuple(Reading(labels.get(reading.measurement, reading.measurement),
+                         _with_unit(reading.value, units.get(reading.measurement)),
+                         f"{reading.taken_at:%H:%M, %d %B}",
+                         reading.source.value)
+                 for reading in sorted(readings, key=lambda r: (
+                     labels.get(r.measurement, r.measurement), r.taken_at)))
+
+
+def _with_unit(value: str, unit: str | None) -> str:
+    """A reading with no unit is one whose measurement is off this Patient's list. The
+    value stands alone rather than acquiring a unit Noor is guessing at."""
+    if unit is None:
+        return value
+    return f"{value} {unit}"
+
+
+def reading_options(asked: Sequence[Measurement]) -> tuple[Found, ...]:
+    """The measurements this Patient's conditions ask for, with the unit on the label so
+    the Nurse knows which one the box wants before typing into it."""
+    return tuple(Found(measure.id, f"{measure.label} ({measure.unit})")
+                 for measure in asked)
+
+
+NO_READINGS_YET = ("No Home Readings have been collected on this Visit. That is not a "
+                   "series Noor could not read — nothing has been entered yet.")
+"""§7.2's two absences, distinguished. An empty series and an unreadable one are different
+facts, and this page can only ever be the first."""
+
+
+def home_readings_sentence(readings: Sequence[HomeReading]) -> str:
+    """The Visit page's line, and the heading on this one. A count, honest at nought."""
+    if not readings:
+        return NO_READINGS_YET
+    return f"Home Readings collected on this Visit: {len(readings)}."

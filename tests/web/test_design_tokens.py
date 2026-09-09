@@ -6,6 +6,7 @@ from pathlib import Path
 WEB = Path(__file__).resolve().parents[2] / "src" / "noor" / "web"
 CSS = WEB / "static" / "noor.css"
 PRINT_CSS = WEB / "static" / "print.css"
+SCRIPT = WEB / "static" / "noor.js"
 TEMPLATES = WEB / "templates"
 
 PALETTE_END = "/* end palette */"
@@ -142,7 +143,7 @@ def test_no_screen_holds_two_subject_containers():
 
 def test_the_words_context_md_forbids_appear_on_no_surface():
     # Arrange
-    surfaces = [*templates(), CSS, PRINT_CSS]
+    surfaces = [*templates(), CSS, PRINT_CSS, SCRIPT]
     found = {}
 
     # Act
@@ -154,3 +155,13 @@ def test_the_words_context_md_forbids_appear_on_no_surface():
 
     # Assert — the ordering word is Escalation Tier and CONTEXT.md forbids the synonyms.
     assert found == {}
+
+
+def test_the_script_declares_no_value_of_its_own():
+    # Arrange / Act
+    text = SCRIPT.read_text(encoding="utf-8")
+
+    # Assert — §13's set, on §12's third delivered file. A colour or a size in the script
+    # would be a style decision in the one place the token layer cannot reach.
+    assert HEX.findall(text) == []
+    assert TOKENISED.findall(text) == []

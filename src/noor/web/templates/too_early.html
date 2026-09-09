@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}{{ heading }}{% endblock %}
+{% block up %}<a class="up" href="/visits/{{ visit_id }}">{{ patient }}'s Visit</a>{% endblock %}
+{% block body %}
+<h1 class="title">{{ heading }}</h1>
+<p class="lede">{{ sentence }}</p>
+<ul class="rows">
+{% for link in links %}<li class="row"><a href="{{ link.href }}">{{ link.name }}</a></li>{% endfor %}
+</ul>
+{% endblock %}

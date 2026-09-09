@@ -13,7 +13,8 @@ from starlette.routing import Mount, Route
 from starlette.staticfiles import StaticFiles
 
 from noor import store
-from noor.domain.records import ResolutionError
+from noor.domain import plans, reconciliation, vitals
+from noor.domain.records import CarePlanTooEarly, ResolutionError
 from noor.domain.states import IllegalTransition
 from noor.web import pages
 
@@ -25,7 +26,7 @@ the package's: `seed.py` writes it and `.gitignore`'s `*.db` keeps it out of the
 
 def create_app(db: Path | str,
                now: Callable[[], datetime] = datetime.now) -> Starlette:
-    """Tasks 7 and 8 each add one line here and nothing else.
+    """Wiring only: web_plan §2's address table, and nothing that decides anything.
 
     `now` is a callable rather than a datetime so the default can be the real clock: a
     datetime default would freeze the application at import time, which is a bug that only
@@ -40,6 +41,12 @@ def create_app(db: Path | str,
             Route("/visits/{visit_id}/start", pages.start, methods=["POST"]),
             Route("/visits/{visit_id}/cancel", pages.cancel, methods=["POST"]),
             Route("/visits/{visit_id}/brief", pages.brief),
+            Route("/visits/{visit_id}/sections/{slug}", pages.section),
+            Route("/visits/{visit_id}/sections/{slug}", pages.resolve,
+                  methods=["POST"]),
+            Route("/visits/{visit_id}/home-readings", pages.home_readings),
+            Route("/visits/{visit_id}/home-readings", pages.add_reading,
+                  methods=["POST"]),
             Mount("/static", StaticFiles(directory=STATIC), name="static"),
         ],
         exception_handlers={404: pages.not_found,
@@ -47,7 +54,11 @@ def create_app(db: Path | str,
                             pages.Suspended: pages.suspended,
                             store.UnknownVisit: pages.unknown_visit,
                             IllegalTransition: pages.illegal,
-                            ResolutionError: pages.not_on_the_list},
+                             ResolutionError: pages.not_on_the_list,
+                             reconciliation.ReconError: pages.bad_box,
+                             CarePlanTooEarly: pages.too_early,
+                             plans.PlanError: pages.not_a_plan,
+                             vitals.VitalsError: pages.not_a_reading},
     )
     application.state.db = db
     application.state.now = now

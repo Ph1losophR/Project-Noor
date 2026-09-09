@@ -1,0 +1,82 @@
+{% extends "section_base.html" %}
+
+{% block form %}
+<p class="{{ comparison_css }}">{{ comparison }}</p>
+
+<form method="get" action="/visits/{{ visit_id }}/sections/{{ slug }}">
+  <p class="field">
+    <label for="q">Search the drug list</label>
+    <input id="q" name="q" value="{{ query }}" autocomplete="off" dir="auto">
+  </p>
+  <p class="actions">
+    <button class="button" type="submit">Search</button>
+  </p>
+</form>
+
+<form method="post" action="/visits/{{ visit_id }}/sections/{{ slug }}">
+  <input type="hidden" name="act" value="add">
+  <fieldset class="card">
+    <legend class="heading">{{ found_heading }}</legend>
+    <ul class="choices">
+      {% for hit in results %}
+      <li class="choice">
+        <label>
+          <input type="radio" name="product" value="{{ hit.id }}">
+          {{ hit.label }}
+        </label>
+      </li>
+      {% endfor %}
+    </ul>
+    <p class="field">
+      <label for="label">Or record it as written on the box</label>
+      <span class="note">Kept as typed and marked unmatched. Noor states that it cannot
+        reconcile that item rather than dropping it.</span>
+      <input id="label" name="label" autocomplete="off" dir="auto">
+    </p>
+    <p class="field">
+      <label for="quantity">Tablets remaining</label>
+      <input id="quantity" name="quantity" inputmode="numeric" autocomplete="off" dir="ltr">
+    </p>
+    <p class="field">
+      <label for="expiry">Expiry</label>
+      <input id="expiry" name="expiry" type="date" dir="ltr">
+    </p>
+    <p class="actions">
+      <button class="button" type="submit">Add to the house</button>
+    </p>
+  </fieldset>
+</form>
+
+<h2 class="heading">In the house</h2>
+<ul class="rows">
+  {% for box in boxes %}
+  <li class="row">
+    <span class="subheading">{{ box.label }}</span>
+    <span class="note">{{ box.detail }}</span>
+    <span class="note">{{ box.quantity }} · {{ box.expiry }}</span>
+    <form method="post" action="/visits/{{ visit_id }}/sections/{{ slug }}">
+      <input type="hidden" name="act" value="remove">
+      <input type="hidden" name="row" value="{{ box.index }}">
+      <button class="button" type="submit">Take this back out</button>
+    </form>
+  </li>
+  {% endfor %}
+</ul>
+
+<h2 class="heading">{{ found_so_far }}</h2>
+<ul class="rows">
+  {% for line in discrepancies %}
+  <li class="row">{{ line }}</li>
+  {% endfor %}
+</ul>
+
+<form method="post" action="/visits/{{ visit_id }}/sections/{{ slug }}">
+  <input type="hidden" name="act" value="done">
+  <p class="choice">
+    <label><input type="checkbox" name="empty"> The cupboard was empty</label>
+  </p>
+  <p class="actions">
+    <button class="button" type="submit">Save and return</button>
+  </p>
+</form>
+{% endblock %}
