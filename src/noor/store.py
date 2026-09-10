@@ -555,7 +555,7 @@ def visit_day(conn: sqlite3.Connection, visit_id: str) -> date:
 class InboxRow(NamedTuple):
     """One review row with what §5.3 needs beside the item: the Patient's name and the
     date of the Visit it came from. The date rides here rather than on `Review` because it
-    is the store's fact, not the domain's (web_plan §9.5)."""
+    is the store's fact, not the domain's (`docs/web_plan.md` removed; see design system §5.2)."""
 
     review: Review
     patient_name: str
@@ -563,8 +563,8 @@ class InboxRow(NamedTuple):
 
 
 class InboxPatient(NamedTuple):
-    """The inbox groups by Patient (web_plan §5.1): a door carrying the name and the rows,
-    the rows already in §5.2's order."""
+    """The inbox groups by Patient (`docs/web_plan.md` removed; see design system): a door carrying the name and the rows,
+    the rows already ordered by the three-band rule (§5.2)."""
 
     patient_id: str
     patient_name: str
@@ -630,8 +630,7 @@ def _inbox_lines(conn: sqlite3.Connection) -> dict[str, tuple[str, date]]:
 
 
 def _by_patient(rows: Sequence[InboxRow]) -> list[InboxPatient]:
-    """Group by Patient, each Patient's rows in §5.2's band order, the Patients themselves
-    ordered by their most pressing row (web_plan §5.1, §5.2)."""
+    """Group by Patient, each Patient's rows in the three-band order (§5.2), the Patients ordered by their most pressing row."""
     by_id: dict[str, list[InboxRow]] = {}
     for row in rows:
         by_id.setdefault(row.review.patient_id, []).append(row)

@@ -56,6 +56,6 @@ a rule that never fired (N8). The Supervisor's surface stays read-mostly and sti
 never edits a Visit, so §5.9 holds unchanged.
 
 What this does not do is demonstrate that a real Supervisor answers. The prototype
-runs as one process with both surfaces in it (§6), so it shows that the question
+runs as one process with both surfaces in it (ADR 0006), so it shows that the question
 arrives, is answerable, and is measured — not that the handoff survives real latency
 and two people working at once. §4.12's limit stands exactly as written.

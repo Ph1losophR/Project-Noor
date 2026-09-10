@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block title %}{{ patient }}{% endblock %}
-{% block up %}<a class="up" href="/visits?day={{ day }}">The day's Visits</a>{% endblock %}
-{% block body %}
-<p class="eyebrow">{{ state }}</p>
-<h1 class="title" dir="auto">{{ patient }}</h1>
-{% block visit %}{% endblock %}
-{% endblock %}

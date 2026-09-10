@@ -14,7 +14,7 @@ owner, a source, a version, a review date, as data — applies to
 
 **Phase 1 Backend Pass 1 exists** under `src/noor/` — store, domain, EMR seam,
 dispatch, content and serialisation — and the rungs below are verified against
-that tree. The web layer (`src/noor/web/`) is next. Where a rung cannot exist
+that tree. The surfaces are next: field and Supervisor surfaces sharing one machine with the Python process, served as a static React SPA over a JSON API (ADR 0006). Where a rung cannot exist
 until a later phase, it says so rather than sitting there looking overdue. Where
 a name is illustrative rather than decided, it says that too — the module and
 function names are fixed in `src/noor/`, not in this file.
@@ -190,7 +190,7 @@ rushed Field Team will find. Two properties deserve their own tests:
 
 ## The rungs, in build order
 
-§8 fixes the build order, so it fixes the order these arrive in. A rung that cannot
+These rungs are the build order. A rung that cannot
 exist yet is named here anyway, with the phase that brings it — an absent rung
 should look scheduled, not forgotten.
 
@@ -221,9 +221,8 @@ should look scheduled, not forgotten.
    Early** Visit without a reason is refused.
 5. **The Completed gate, with Recommendations built by hand.** Phase 1 has no
    producer, so the override and disposition path is exercised by constructing
-   Recommendations in the Arrange block. This is not a workaround; it is what §8
-   means by *"the `Recommendation` type and its disposition lifecycle exist with no
-   producer"*. **An override never blocks (N4)** — the test that proves it is a
+   Recommendations in the Arrange block. This is not a workaround: in this phase
+   the `Recommendation` type and its disposition lifecycle exist with no producer. **An override never blocks (N4)** — the test that proves it is a
    Visit reaching Completed with every Recommendation overridden.
 6. **A whole Visit completes with the EMR unreachable** (§4.10). Not a unit test of
    a fallback — the full path from **Scheduled** to **Completed** with the boundary
@@ -385,11 +384,11 @@ Short enough to check against before committing:
 A green suite means Noor does what this project decided it should do. It is not
 clinical validation, it does not establish that the rules are right, and it says
 nothing about whether the numbers in `docs/clinical-content/` are the correct
-numbers — those need the named owner N8 requires and still does not have (§6).
+numbers — those need the named owner N8 requires and still does not have (N8, §6).
 
 Do not let anyone report it as clinical validation, including in the pitch.
 
-Out of scope by decision rather than omission, each recorded in §6 rather than here:
+Out of scope by decision rather than omission, each recorded here rather than solved:
 authentication and device security; real network latency between the two surfaces;
 performance and load; and anything requiring a purchased service, since the project
 is zero-cost by constraint.

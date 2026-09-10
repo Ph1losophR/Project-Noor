@@ -15,7 +15,7 @@ Clinical judgement that a consultant revises as guidelines change — surveillan
 ## Considered Options
 
 - **Put every number in the clinical content.** Maximum adaptability to local policy, and the right answer for a product with many customers. Rejected because it makes the prototype's central safety claim deniable — and the prototype has no customers, it has one argument to win.
-- **Put almost nothing in content — only the element lists and the intervals §8 already names.** Smallest thing to build. Rejected because the edits a clinician makes most often ("also record weight", "add sick-day rules to the Self-Care Check") would each become a code change and a wait, which is the precise problem N8's owner/version/review-date fields exist to avoid.
+- **Put almost nothing in content — only the element lists and the intervals named in §6.** Smallest thing to build. Rejected because the edits a clinician makes most often ("also record weight", "add sick-day rules to the Self-Care Check") would each become a code change and a wait, which is the precise problem N8's owner/version/review-date fields exist to avoid.
 
 ## Consequences
 

@@ -2,7 +2,7 @@ import ast
 from pathlib import Path
 
 DOMAIN = Path(__file__).resolve().parents[1] / "src" / "noor" / "domain"
-FORBIDDEN = ("noor.store", "noor.emr", "noor.web", "noor.content",
+FORBIDDEN = ("noor.store", "noor.emr", "noor.content",
              "noor.serial", "noor.dispatch",
              "sqlite3", "starlette", "jinja2", "httpx", "uvicorn")
 WALL_CLOCK = ("datetime.now(", "datetime.utcnow(", "date.today(", "time.time(")

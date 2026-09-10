@@ -1,4 +1,4 @@
-"""Fill the database `run.py` serves from. One file, no migration step (ADR 0006).
+"""Fill the database `seed.py` serves. One file, no migration step (ADR 0006)."""
 
     python seed.py 2026-08-28
 
@@ -11,11 +11,12 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
-# `run.py` hands uvicorn `app_dir="src"` and uvicorn does this; there is no uvicorn here.
+# `seed.py` references the database directly; `run.py` no longer exists.
 sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from noor import seed, store
-from noor.web.app import DEFAULT_DB
+
+DEFAULT_DB = Path(__file__).resolve().parent / "noor.db"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Seed Noor's demo database.")

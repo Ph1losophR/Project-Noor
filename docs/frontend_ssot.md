@@ -4,10 +4,8 @@
 
 This document governs **how Noor looks and behaves as a surface**: colour, type,
 space, the marks that carry clinical meaning, and how all four are delivered and
-enforced. It does not arrange pages. Page composition, routing and the navigation
-model for the eight **Visit Protocol** sections belong to the web plan,
-`docs/web_plan.md`, which is written against this document and yields to it where
-the two disagree.
+enforced. Page composition, routing and navigation are part of the React frontend
+(`src/frontend/`), which consumes the JSON API and follows the design tokens here.
 
 `project_noor_architecture.md` remains the single source of truth. Where this
 document and the architecture SSOT disagree, **the architecture SSOT wins**, and
@@ -84,7 +82,7 @@ independent and several steps share a name across them: the light text floor and
 dark mode's second text step are both called *muted* and are not the same colour.
 One custom property cannot hold both, so both are declared, and neither is ever
 referenced by a rule. The **role layer** — `--text`, `--page`, `--rule`,
-`--status-now` — is what every rule and every template actually uses. Switching
+`--status-now` — is what every rule and every component surface actually uses. Switching
 mode remaps the role layer and touches nothing else, which is what makes §9's
 toggle possible in both directions.
 
@@ -148,7 +146,7 @@ Dark mode's one accent is `--d-aged-bronze` on the primary button, with a
 desaturated brown.
 
 **The role layer.** Eighteen roles, remapped per mode and nothing else remapped.
-Every rule in the stylesheet and every class on a template resolves through this
+Every rule in the stylesheet and every component surface resolves through this
 table; §13's lint is what keeps a hex from bypassing it.
 
 | Role | Light | Dark | What it is |
@@ -214,7 +212,7 @@ In dark mode the Tier 3 badge is an `#A32F27` fill with a 1px `#BC443A` ring and
 - It may not encode a **data state**. §7.2.
 - It may not encode tier *level*. A tier is a deadline and an owner, not a severity ([ADR 0001](adr/0001-time-to-action-not-severity.md)), so Tier 1 and Tier 2 share `--status-review` and are separated by their written window.
 - It may not encode Baseline versus Routine. Those Visit-type indicators are words: the Roster shows a read-time planning indicator before Start, and a started Visit shows the settled type (ADR 0008).
-- It may not be introduced. Nine neutrals per mode, three status hues, one accent in dark. A tenth is an edit to this document, not a decision in a template.
+- It may not be introduced. Nine neutrals per mode, three status hues, one accent in dark. A tenth is an edit to this document, not a decision in a component.
 
 ## 5. Typography
 
@@ -444,15 +442,15 @@ answered in the top layer, then submitted as a form like anything else.
 
 ## 12. Delivery
 
+> Planned, not yet built: `src/noor/web/` was removed and `src/frontend/` does not exist yet. This section fixes where each asset lives when the SPA is built.
+
 | Asset | Detail |
 |---|---|
-| `static/noor.css` | the whole system; the two `:root` token blocks at the top |
-| `static/print.css` | linked `media="print"`, forced light |
-| `static/noor.js` | §12.1's admitted scope, and nothing else |
-| `EBGaramond-Medium.woff2` | 500 — display and wordmark |
-| `DMSans-Regular.woff2` | 400 |
-| `DMSans-SemiBold.woff2` | 600 |
-| `NotoNaskhArabic-Regular.woff2` | scoped to `[dir="rtl"]` |
+| Token layer (`src/frontend/`) | CSS custom properties mapped from the design tokens |
+| `src/frontend/index.css` | Tailwind directives + the `:root` token blocks |
+| `src/frontend/components/` | shadcn components and custom clinical components |
+| `public/fonts/*.woff2` | the four self-hosted faces: EB Garamond Medium (500, display and wordmark), DMSans Regular (400), DMSans SemiBold (600), Noto Naskh Arabic Regular (scoped to `[dir="rtl"]`) |
+| `src/frontend/App.tsx` | the SPA root; routing for the app's addresses (Visit, roster, and Supervisor surfaces) |
 
 Latin subset, self-hosted, `font-display: block`.
 
@@ -467,29 +465,25 @@ A `forced-colors` pass is required before ship: every meaning must survive the O
 replacing the entire palette, which it does here because no meaning is
 colour-alone.
 
-### 12.1 Script
+### 12.1 Autosave
 
-One script file is admitted. This is the whole of what may live in it:
-
-- **The autosave.** A section posts on change, so no typed measurement is lost to a tablet that dies, a closed lid or a mis-tap, and no Save button competes with the three actions in the Visit's action row. It posts to the same route the form posts to, and the server validates it exactly as it validates a button press.
-- **Nothing else, until this document says otherwise.** No routing, no rendering, no clinical logic, and no fetch that a form could have done.
+Autosave is handled by the React section component: it posts to the JSON API endpoint
+(`/visits/{id}/sections/{slug}`) on change, so no typed measurement is lost to a tablet
+that dies, a closed lid, or a mis-tap, and no Save button competes with the three actions
+in the Visit's action row. The server validates it exactly as it validates a button press.
 
 Three rules that do not move:
 
-- **No clinical logic in the browser, ever.** [ADR 0006](adr/0006-offline-by-locality.md) draws this line and it is the load-bearing one. The Visit state machine, the withholding principle (§4.11), the N3 cap and every rule that decides what is true stay in Python where the coverage gate can see them. The script decides *when* to post, never *what is true*.
-- **Self-hosted, no build step, no framework.** §12's reasons apply unchanged: one file of plain browser JavaScript, no bundler, no package, nothing fetched from a network that a house may not have.
-- **The page works with the file deleted.** A script that fails to parse must cost the Field Team the autosave and nothing else. Every section still saves on the submit that navigates away from it, so the record survives without the script — which is also what makes the autosave a convenience rather than a dependency.
+- **No clinical logic in the browser, ever.** [ADR 0006 amended](adr/0006-offline-by-locality.md) draws this line and it is the load-bearing one. The Visit state machine, the withholding principle (§4.11), the N3 cap and every rule that decides what is true stay in Python where the coverage gate can see them. The component decides *when* to post, never *what is true*.
+- **Self-hosted, no framework dependency in the browser.** The built SPA is a static bundle; the fonts are self-hosted; nothing is fetched from a network a house may not have.
+- **The form works without autosave.** Every section still saves on the submit that navigates away from it, so the record survives without the component's change listener — which is also what makes autosave a convenience rather than a dependency.
 
 ## 13. Enforcement
 
-`tests/web/test_design_tokens.py` reads `noor.css`, `noor.js` and every template and
-fails if a hex colour, a `font-size` in px, a `border-radius` or a padding value
-appears anywhere outside the two `:root` token blocks. Stdlib `re` and `pathlib`, no new
-dependency. It lives in `tests/`, so it adds no covered source to the 100%
-branch-coverage gate.
+A token lint (stdlib `re` + `pathlib`, no new dependency) will read `src/frontend/index.css` and every component file and fail if a hex colour, a `font-size` in px outside the design scale, a `border-radius`, or a padding/value appears outside the token layer mapped in `docs/frontend_ssot.md` §4. It will live in `tests/`, so it will add no covered source to the 100% branch-coverage gate.
 
 **It enforces the vocabulary, not the grammar.** It can prove nobody wrote
-`#8E2A24` into a template instead of `var(--status-now)`. It cannot prove that a
+`#8E2A24` into a component instead of `var(--status-now)`. It cannot prove that a
 status colour appeared beside its word, or that Tier 3 kept its solid fill — those
 stay human review. Raw-value drift is the failure that actually happens, and it is
 the one a regex catches perfectly.
@@ -501,9 +495,9 @@ Out of scope deliberately, and named here rather than solved:
 - **Full Arabic localisation.** Chrome is English. Arabic free text renders correctly by direction and typeface; it is not translated. Clinical translation needs a bilingual clinician's review, not a string table.
 - **Clinical translation of the Handover.** Same reason, and higher stakes.
 - **No patient or caregiver surface.** §5.13 — they are outside the software.
-- **No authentication, localhost only.** §6. A device-security limit, not a design one, stated here because a design system that implied a login screen would be lying about what exists.
+- **No authentication, localhost only.** A device-security limit, not a design one, stated here because a design system that implied a login screen would be lying about what exists.
 - **Chromium is the demo target.** The view transition in §11 is progressive enhancement; nothing else depends on it.
-- **§12.1's autosave sits outside the test gate.** It is not Python, so `--cov=noor` cannot see it and `fail_under = 100` says nothing about it. What the *route* does with an autosaved post is covered like every other route; what the browser chose to post is not. That is the price of admitting a script, it is paid knowingly, and it is why §12.1's scope is written as a list of two items rather than as a principle — a principle would grow.
+- **Autosave is covered by the Python gate.** The React component calls the JSON API endpoint (`/visits/{id}/sections/{slug}` with `POST`); the endpoint validates the payload exactly like any form submission, and that route is covered by the suite. What the browser chose to post — when it decided to post — is handled by the component, not by a standalone script, so the coverage argument of §12.1 no longer applies.
 
 
 

@@ -1,10 +1,8 @@
 # Project Noor — Architecture (SSOT)
 
-> **Status:** Sections 1–8. §1–§3 written 2026-08-27 after Phase 2 research; §4 (the Golden Case) written 2026-08-27 and revised 2026-08-28; §5 (the Visit lifecycle) written 2026-08-28; §6–§8 maintained continuously. Phase 1's documentation closed 2026-08-28 with ADRs 0005–0007 (§7), extended 2026-09-04–2026-09-05 with ADRs 0008–0009. Audited for internal consistency 2026-08-28 and 2026-09-05.
+> Ranked below this document is `docs/frontend_ssot.md` (surface only); `docs/testing-standards.md` is subordinate to both. Ranking and precedence: AGENTS.md.
 >
-> Ranked below this document are `docs/frontend_ssot.md` (surface only) and `docs/web_plan.md` (pages only); `docs/testing-standards.md` is subordinate to all three. Ranking and precedence: AGENTS.md.
->
-> This document is built **incrementally** — one section per phase discussion. It states *what must be true*, not *how* the system is built. Implementation detail is written only after the relevant phase has been grilled.
+> This document states *what must be true*, not *how* the system is built.
 >
 > **Conflict resolution:** if a prompt contradicts this document, this document wins. Raise the conflict; never silently bypass it.
 
@@ -36,7 +34,7 @@ Three data states must remain distinct at all times. Conflating any two of them 
 
 Write-back to the EMR must be **structured** — an order suggestion, a task, a flagged item. Never narrative text buried in a visit note. Narrative write-back recreates the two-actor handoff problem inside the solution.
 
-**Prototype constraint:** the integration boundary is defined now and backed by fixtures, not by a purchased EMR. Real FHIR calls replace the fixtures later without changing anything above the boundary.
+The integration boundary is defined against fixtures, not against a purchased EMR. Real FHIR calls substitute for the fixtures without changing anything above the boundary.
 
 ## 2. The eight non-negotiables
 
@@ -88,7 +86,7 @@ Each rule is derived from `docs/research/why_cds_engines_fail.md` and `docs/rese
 
 **Evidence:** 93% of CMIOs had experienced at least one CDS malfunction, two-thirds at least annually; failures-to-*fire* are especially hard to detect and existing detection approaches are "inadequate." The governance study is blunt: "In the absence of effective governance practices, implementation of CDS may fail, despite the purchase or development of a sophisticated system" — Cedars-Sinai's system was shut down over usability. Arden Syntax encodes maintenance, library, and knowledge slots per module precisely for change control.
 
-**Workflow consequence:** each rule carries an owner, a source guideline, a version, and a review date — as data, not buried in a function. Each rule has a test proving it fires (per `CLAUDE.md`: new rule = new table-driven test row, written first, must fail). The engine logs **"evaluated, did not fire"**, not only "fired."
+**Workflow consequence:** each rule carries an owner, a source guideline, a version, and a review date — as data, not buried in a function. Each rule has a test proving it fires. The engine logs **"evaluated, did not fire"**, not only "fired."
 
 ## 3. Context correction on the failure research
 
@@ -103,13 +101,13 @@ The corresponding risk has no coverage in the research at all: home healthcare i
 
 ## 4. The Golden Case — the routine visit
 
-> Grilled 2026-08-27. This section states what must be true of a Visit. Bolded terms are used strictly in the sense defined in `CONTEXT.md`.
+> This section states what must be true of a Visit. Bolded terms are used strictly in the sense defined in `CONTEXT.md`.
 
 ### 4.1 Why the silent visit is the primary case
 
-The Golden Case is a **Routine Visit** in which Noor issues **no Recommendation at all**, because nothing in the Patient's data warrants one. This is the common case in chronic disease management — surveillance, not diagnosis — and it is deliberately the case the prototype is built around.
+The Golden Case is a **Routine Visit** in which Noor issues **no Recommendation at all**, because nothing in the Patient's data warrants one. This is the common case in chronic disease management — surveillance, not diagnosis — and it is deliberately the case the design is built around.
 
-Zero is a boundary condition, and boundary conditions are where systems fail invisibly. A Visit producing three Recommendations proves the rules can fire. A Visit producing none proves something harder: that the engine ran, evaluated everything it was meant to evaluate, found nothing, and can demonstrate as much. **"Noor found nothing" and "Noor is broken" must never look alike.** That is N6 promoted from a rule about individual data points to the property the whole deliverable is judged on.
+Zero is a boundary condition, and boundary conditions are where systems fail invisibly. A Visit producing three Recommendations proves the rules can fire. A Visit producing none proves something harder: that the engine ran, evaluated everything it was meant to evaluate, found nothing, and can demonstrate as much. **"Noor found nothing" and "Noor is broken" must never look alike.** That is N6 promoted from a rule about individual data points to the property the whole design is judged on.
 
 The consequence is that a Routine Visit normally produces **many Findings and zero Recommendations**. This is the load-bearing reason the two concepts stay separate: Findings are how Noor shows its work when it has no instruction to give.
 
@@ -125,7 +123,7 @@ Both Visit types run this same spine. There is no separate Baseline form.
 
 **Visit Reason is not a chief complaint.** Chief complaint is an acute-presentation concept; a Routine Visit usually has no complaint at all, so a complaint-led engine systematically misses exactly what surveillance exists to find. Visit Reason records why this Visit is happening — scheduled review, post-discharge follow-up, Patient-initiated concern — and never a symptom.
 
-**Concerns & Interval History has two halves, shaped differently on purpose.** The interval history is a fixed tick-list of the events Noor must be able to reason about — a hospital admission, an emergency department attendance, review by another doctor, medication started or changed elsewhere, a fall, a hypoglycaemic episode, running out of medication. *"Had a bit of a turn last week"* is unusable; a ticked *hypoglycaemic episode* is the **Finding** that stops a sulfonylurea dose being pushed higher. The concerns half is free text, one item per concern, attributed to the **Patient** or the **Caregiver** who raised it — because *"his feet burn at night"* appears on no list and is the sentence that matters. The event list is clinical content (ADR 0007) and lives in `docs/clinical-content/interval-events.md`; the concerns are deliberately not a list at all.
+**Concerns & Interval History has two halves, shaped differently on purpose.** The interval history is a fixed tick-list of the events Noor must be able to reason about — a hospital admission, an emergency department attendance, review by another doctor, medication started or changed elsewhere, a fall, a hypoglycaemic episode, running out of medication. *"Had a bit of a turn last week"* is unusable; a ticked *hypoglycaemic episode* is the **Finding** that stops a sulfonylurea dose being pushed higher. The concerns half is free text, one item per concern, attributed to the **Patient** or the **Caregiver** who raised it — because *"his feet burn at night"* appears on no list and is the sentence that matters. The event list is clinical content and lives in `docs/clinical-content/interval-events.md`; the concerns are deliberately not a list at all.
 
 **Medication Reconciliation records what is physically in the house, product by product, from a searchable local drug list.** The Field Team searches and selects; name, strength and form come from the list, and only the quantity remaining and the expiry are typed, because those differ per box. A drug name is the one field where a typo is dangerous — and free text would make an unrecognised drug indistinguishable from a misspelt one. **A product the list does not contain is an outcome, not a workaround:** it is recorded as free text, marked *unmatched*, and Noor states that it cannot reconcile that item rather than dropping it (N6, and Wright's amiodarone failure). Noor then compares the house against the prescribed list and reports the differences itself — omissions, products nobody prescribed, strength mismatches, duplicates, expired stock. **The quantity remaining is the design's only objective adherence signal:** thirty tablets dispensed a month ago with twenty-six left is a problem you can see, without asking a question the Patient has every reason to answer politely. That is the **Self-Care Check**'s own rule — observed, never asked (§4.5) — applied to the medicine cupboard.
 
@@ -143,7 +141,7 @@ A Patient's first Visit runs the same eight sections with three differences:
 **Baseline Visit** or **Routine Visit** planning indicator computed from the
 Patient's completed history. This gives the Field Team the protocol shape to
 expect before leaving the building. It is a read-time indicator, not a stored
-`VisitKind`; the Visit's recorded kind is settled again at Start (§5.5; ADR 0008, `docs/adr/0008-baseline-label-is-a-read-time-planning-indicator.md`).
+`VisitKind`; the Visit's recorded kind is settled again at Start (§5.5).
 
 That third rule is deliberately narrower than "no Recommendations." Tier 3 is never off, and insulin found in a freezer must fire on the first Visit as readily as the tenth. What the Baseline Visit withholds is comparison, not judgement.
 
@@ -167,9 +165,9 @@ Three rules govern the shape, and each one closes a documented failure:
 
 - **Every axis is a band, never a ceiling.** ACP directs de-intensification below HbA1c 6.5%; Saudi SHA sets DBP floors of 70 with CAD and 60 with LVH. Roughly one million US older adults are potentially overtreated on insulin or a sulfonylurea, and hypoglycaemia hospitalisations in older adults now **exceed** hyperglycaemia ones. A target with no floor makes overtreatment unrepresentable — Noor could only ever say *too high*.
 
-- **"No numeric target" is a value, not an empty field.** ADA's very-complex/poor-health band is literally "avoid reliance on A1C" — a deliberate clinical decision, and not the same thing as *not yet set*, which is the state the ratification gate withholds against. Collapsing the two would silence Noor permanently on the frailest Patients while looking exactly like the malfunction §4.1 forbids.
+- **"No numeric target" is a value, not an empty field.** ADA's very-complex/poor-health band is literally "avoid reliance on A1C" — a deliberate clinical decision, and not the same thing as *unset*, which is the state the ratification gate withholds against. Collapsing the two would silence Noor permanently on the frailest Patients while looking exactly like the malfunction §4.1 forbids.
 
-This is how consultant-grade judgement scales without consultant hours: **one Supervisor decision governs every field decision until the target is revised.** How many Visits that spans depends on the surveillance interval, which is clinical content (ADR 0007) and is not yet set — so the multiplier is real and its size is not yet a number Noor may claim.
+This is how consultant-grade judgement scales without consultant hours: **one Supervisor decision governs every field decision until the target is revised.** How many Visits that spans depends on the surveillance interval, which is clinical content — so the multiplier is real and its size is not a number Noor claims.
 
 The cost of the gate is **latency**, and it is measured rather than hypothetical. Senior ratification of a junior-set target has no evidence base anywhere in the target-setting literature; the closest analogy with data is radiology over-read, where junior major-discrepancy rates were low (1.7%) and the quantified harm of the safeguard was **delay** — 8.6% of management-changing discrepancies delayed care. Since therapeutic inertia is the disease an explicit target exists to treat, a ratification queue that becomes slow reintroduces it in a new costume.
 
@@ -180,13 +178,13 @@ The section that establishes whether the prescribed treatment is reaching the Pa
 - **Every item is observed or demonstrated, never asked.** "Do you rotate your injection sites?" returns *yes* from every patient alive. The Nurse looks at the abdomen, holds the pen, reads the meter, opens the fridge.
 - **Every task is attributed to whoever actually performs it** — Patient or Caregiver. A Recommendation aimed at the wrong executor is an assessment wearing an action's clothes (N2), and between Visits the Caregiver is frequently the only executor present.
 
-This section is the prototype's structural advantage. It captures a class of clinical finding that exists only inside the home and appears in no health record anywhere: insulin stored above range or frozen, lipohypertrophy on palpation, needle reuse, missing resuspension, the pen withdrawn too early, a sulfonylurea taken before a meal that is then skipped, metformin on an empty stomach driving quiet discontinuation, heat-damaged test strips, date residue on the fingers producing falsely high readings, a cuff two sizes too small, decanted unlabelled pill boxes, an over-the-counter NSAID stacked on an ACE inhibitor and a diuretic, bare feet on hot tiles with established neuropathy.
+This section captures a class of clinical finding that exists only inside the home and appears in no health record anywhere: insulin stored above range or frozen, lipohypertrophy on palpation, needle reuse, missing resuspension, the pen withdrawn too early, a sulfonylurea taken before a meal that is then skipped, metformin on an empty stomach driving quiet discontinuation, heat-damaged test strips, date residue on the fingers producing falsely high readings, a cuff two sizes too small, decanted unlabelled pill boxes, an over-the-counter NSAID stacked on an ACE inhibitor and a diuretic, bare feet on hot tiles with established neuropathy.
 
 **Every competitor's data starts at the front door. Noor's starts inside it.**
 
 ### 4.6 Suppression
 
-A Self-Care Check failure suppresses the titration Recommendation it undermines, and Noor issues the correction instead. Full reasoning, rejected alternatives, and testing obligations: `docs/adr/0002-self-care-failure-suppresses-the-recommendation-it-undermines.md`.
+A Self-Care Check failure suppresses the titration Recommendation it undermines, and Noor issues the correction instead.
 
 **Suppression runs before the cap in §4.7.** A suppressed Recommendation never competes for a display slot; the correction that replaced it competes in its place.
 
@@ -200,7 +198,7 @@ Mechanics:
 
 - **Tier 3 sits outside the cap.** An emergency does not queue behind a display limit.
 - Slots fill in one order, and it has three keys: **descending Escalation Tier**, then **what changes today's action**, then **descending deferral count**. Each key breaks ties in the one before it, and nothing else enters the comparison.
-- **Deferral count is the third key, not a promotion.** A Recommendation carries the number of Visits it has been **Filed** across. Between items a tier apart it changes nothing; between items equal on today's action it decides the slot. Without it, an item that never changes today's action starves permanently behind its own peers. Whether a long-deferred item should ever outrank one that changes today's action is a Phase 3 question, left open here on purpose.
+- **Deferral count is the third key, not a promotion.** A Recommendation carries the number of Visits it has been **Filed** across. Between items a tier apart it changes nothing; between items equal on today's action it decides the slot. Without it, an item that never changes today's action starves permanently behind its own peers.
 - The cap counts **decisions, not plan lines.** One titration decision with four steps in the Between-Visit Plan is one Recommendation.
 - The cap is a **display** constraint, not a data constraint. Everything unshown is **Filed** — generated, recorded, written back, still valid — never deleted.
 
@@ -222,7 +220,7 @@ A Routine Visit **opens by scoring the previous Between-Visit Plan.** The Nurse 
 
 So **a Baseline Visit emits a Between-Visit Plan carrying the measurement schedule and the stop rules, with titration resolved by its reason** — *no ratified Goal of Care*. This is §4.11's withholding scoped by §5.8's resolved-not-filled, not a new mechanism. The alternative sends a household home from an enrolment visit holding a glucose meter, with no schedule and no number that means *call someone* — and leaves the first Routine Visit nothing to score, delaying the loop by a full Visit cycle.
 
-**Every Home Reading carries its source.** The devices already in these homes are not verified to store timestamped readings (§6), and the zero-cost fallback is a **Caregiver** paper log. Both produce the same shape — a value and a time — and not the same truth: a log is *self-reported*, which is the one thing §4.5 refuses to accept anywhere else in the Visit. So the source is recorded as data — *device memory* or *Caregiver paper log* — and displayed with every **Finding** derived from it (N5). Noor closes the loop on whichever the household has, and never presents a remembered number as a measured one.
+**Every Home Reading carries its source.** The devices in these homes are not assumed to store timestamped readings, and the fallback is a **Caregiver** paper log. Both produce the same shape — a value and a time — and not the same truth: a log is *self-reported*, which is the one thing §4.5 refuses to accept anywhere else in the Visit. So the source is recorded as data — *device memory* or *Caregiver paper log* — and displayed with every **Finding** derived from it (N5). Noor closes the loop on whichever the household has, and never presents a remembered number as a measured one.
 
 A between-visit runner is therefore a clean upgrade rather than a redesign: it reads the identical artifact and fires earlier. The Between-Visit Plan is the reason that upgrade needs no new data model.
 
@@ -240,7 +238,7 @@ Noor writes seven, all structured:
 | 2 | **Observations taken in the house** — Vitals, the **Home Readings** with their source (§4.8), and the **Physical Examination** against the element list Noor composed |
 | 3 | **Self-Care Findings** |
 | 4 | **Medication Reconciliation outcome** — what is in the house, the discrepancies against the prescribed list, or the declaration that discrepancy detection was **Unreachable** (§4.10) |
-| 5 | **Recommendations — every one generated, with its status.** Accepted; overridden with its structured reason (N4); **suppressed**, with the Self-Care **Finding** that suppressed it (ADR 0002); or **Filed**, with its deferral count (§4.7). Each carries its provenance and strength (N5) |
+| 5 | **Recommendations — every one generated, with its status.** Accepted; overridden with its structured reason (N4); **suppressed**, with the Self-Care **Finding** that suppressed it; or **Filed**, with its deferral count (§4.7). Each carries its provenance and strength (N5) |
 | 6 | **The Between-Visit Plan** — titration steps, measurement schedule, stop rules. Machine-testable lines, never prose (§4.8) |
 | 7 | **The proposed Goal of Care** — **Baseline Visit**s only, and the one write that is itself a request for a response |
 
@@ -248,7 +246,7 @@ Three collapses hold the list at seven, and each is load-bearing:
 
 - **A Supervisor task is not an item on this list.** Owner-and-due-time is a *property* of anything requiring a response, carried by items 5 and 7, not a row beside them.
 - **Shown, suppressed and Filed Recommendations are one item, not three,** because the N3 cap is a display constraint and not a data constraint (§4.7). Everything generated is written back.
-- **The Emergency record folds into item 1.** ADR 0004 makes its duration clinical data, and duration is part of what happened during the attendance.
+- **The Emergency record folds into item 1.** The Emergency's duration is clinical data, and duration is part of what happened during the attendance.
 
 Two things are deliberately not on this list. The **Handover** is rendered locally and handed to the ambulance crew (§5.7), never to the EMR. And a **Cancelled** Visit writes nothing at all (§5.4).
 
@@ -258,7 +256,7 @@ The "evaluated, did not fire" log (N8) stays inside Noor. It is engine telemetry
 
 **The fixtures must be hostile.** A fixture serving only clean patients is a demo prop. The fake patients must misbehave the way real records do: no HbA1c in eighteen months, a free-text allergy, a request that times out, a drug name the system does not recognise (Wright's amiodarone failure), a write the EMR rejects. A fixture that cannot fail cannot demonstrate N6.
 
-The list of what Noor needs from an EMR is itself a pitch asset: it answers the first question any hospital IT department asks.
+The list of what Noor needs from an EMR answers the first question any hospital IT department asks.
 
 ### 4.10 Offline is the default, not the fallback
 
@@ -288,24 +286,24 @@ Four separate decisions have the same shape:
 
 | Trigger | What is withheld |
 |---|---|
-| A Self-Care Finding corrupts the signal (ADR 0002) | The titration it would have justified |
+| A Self-Care Finding corrupts the signal | The titration it would have justified |
 | No ratified Goal of Care yet (§4.4) | Everything depending on a target |
 | An input is Unreachable (§4.10) | Everything depending on that input |
 | A section never ran (§5.6) | Everything depending on it — **including** whatever that section's Findings would have suppressed |
 
 One mechanism, not four: **Noor declines to opine when its inputs do not support an opinion, and names the input that was missing.** Tier 3 is exempt from all four.
 
-The fourth row is the sharpest, and it is why an **Ended Early** Visit is not merely a Visit with less data. A **Self-Care Check** that never ran withholds the titration it never got the chance to veto — the absence of a suppressor is not evidence that the condition it suppresses is absent (ADR 0002).
+The fourth row is the sharpest, and it is why an **Ended Early** Visit is not merely a Visit with less data. A **Self-Care Check** that never ran withholds the titration it never got the chance to veto — the absence of a suppressor is not evidence that the condition it suppresses is absent.
 
 This is the design's thesis. The engine earns trust through the accuracy of its silence, not the volume of its output — which is why the Golden Case is the silent visit.
 
 ### 4.12 What this section does not validate
 
-The two-actor handoff remains the largest unvalidated assumption in the design (§3). A working prototype demonstrates that Noor can produce a due-dated, owned, structured Write-Back. It does not demonstrate that a Supervisor acts on one, and it does not demonstrate that a real EMR accepts one. Both limits must be stated plainly rather than implied, because overclaiming is precisely the failure mode `docs/research/why_cds_engines_fail.md` documents.
+The two-actor handoff is the largest unvalidated assumption in the design (§3). Noor produces a due-dated, owned, structured Write-Back; whether a Supervisor acts on one, and whether a real EMR accepts one, are outside what the design alone establishes. Both limits are stated plainly rather than implied, because overclaiming is precisely the failure mode `docs/research/why_cds_engines_fail.md` documents.
 
 ## 5. The Visit lifecycle
 
-> Grilled 2026-08-28. Where §4 states what must be true *inside* a Visit, this section states what must be true across its whole span — from the roster to a terminal state. Bolded terms are used strictly in the sense defined in `CONTEXT.md`.
+> Where §4 states what must be true *inside* a Visit, this section states what must be true across its whole span — from the roster to a terminal state. Bolded terms are used strictly in the sense defined in `CONTEXT.md`.
 
 ### 5.1 One Visit, six states
 
@@ -328,8 +326,6 @@ Any two-object split has to answer which object owns the **Findings** Noor compu
 - **Supervisor** review attaches to *items*, never to the Visit. One Visit can have three items in three different review states at once, which is unrepresentable as a Visit state.
 - "This Visit has items awaiting review" is therefore **derived on read, never stored.** A stored flag is a second copy of the truth that goes stale the moment an item is signed.
 - **What the Supervisor answered *is* stored, and the derivation above reads it.** A **Review Verdict** is an event with an author and a time (§5.12); an item awaits review until a verdict names it. Storing the answer is not storing the flag — the answer is the primary record and cannot go stale, whereas the flag is a copy of it and would.
-
-Why the Supervisor does not gate **Completed**: `docs/adr/0003-completion-is-the-field-teams-act.md`.
 
 ### 5.2 Scheduled — the state that makes offline possible
 
@@ -400,9 +396,9 @@ Four obligations follow, and they are the reason this state is not merely a Visi
 
 ### 5.7 Emergency — an interrupt, not a terminal
 
-**Emergency** is entered from **In Progress** when the Patient or **Caregiver** needs an ambulance now, and it exits either back to In Progress or to **Ended Early**. It suspends the **Visit Protocol** and it has a start time and an end time. Reasoning and rejected alternatives: `docs/adr/0004-emergency-is-an-interrupt-state.md`.
+**Emergency** is entered from **In Progress** when the Patient or **Caregiver** needs an ambulance now, and it exits either back to In Progress or to **Ended Early**. It suspends the **Visit Protocol** and it has a start time and an end time.
 
-**Noor demands nothing at entry.** One action, zero required fields. The **Handover** the ambulance crew leaves with is rendered from data already on the device, offline (§4.10). Documentation of the Emergency is retrospective, and closing the Visit is what enforces it: **no Visit reaches a terminal state while an Emergency record is unresolved** — **Completed** by §5.8's gate, and **Ended Early** by the same requirement, because Ended Early is the Emergency's *other* exit and a gate on one of the two enforces nothing. **Resolved is stricter here than §5.8's bar for a section: an end time *and* at least one timeline entry.** Ending alone is not enough, and there is no structured-reason path — §5.10's four reason-bearing cases deliberately do not include an Emergency. A section can be honestly empty; the minutes of an ambulance call cannot be, because those minutes are what a receiving hospital, a later clinical review and any medico-legal enquiry all ask about, and *there was nothing to record* is not an answer any of the three can use. The cost is one deliberate act at worst: the start and end times are the state machine's own timestamps and are never typed, so one entry is the whole of what the close demands — and it is demanded after the ambulance has gone rather than during (ADR 0004), so it never stands between a team and the door (N4).
+**Noor demands nothing at entry.** One action, zero required fields. The **Handover** the ambulance crew leaves with is rendered from data already on the device, offline (§4.10). Documentation of the Emergency is retrospective, and closing the Visit is what enforces it: **no Visit reaches a terminal state while an Emergency record is unresolved** — **Completed** by §5.8's gate, and **Ended Early** by the same requirement, because Ended Early is the Emergency's *other* exit and a gate on one of the two enforces nothing. **Resolved is stricter here than §5.8's bar for a section: an end time *and* at least one timeline entry.** Ending alone is not enough, and there is no structured-reason path — §5.10's four reason-bearing cases deliberately do not include an Emergency. A section can be honestly empty; the minutes of an ambulance call cannot be, because those minutes are what a receiving hospital, a later clinical review and any medico-legal enquiry all ask about, and *there was nothing to record* is not an answer any of the three can use. The cost is one deliberate act at worst: the start and end times are the state machine's own timestamps and are never typed, so one entry is the whole of what the close demands — and it is demanded after the ambulance has gone rather than during, so it never stands between a team and the door (N4).
 
 **Noor does not manage the emergency. It documents it and hands over the record.** Anything Noor demanded of a Field Team during those minutes would be taken from the Patient.
 
@@ -425,7 +421,7 @@ Nothing here is an "Other with free text", and that is the point: a disposition 
 
 Noor can afford to be this strict about the front door only because **Ended Early** exists. Strictness with no honest exit is a hard stop, which N4 forbids.
 
-**Completed depends on nothing outside the house** — not the Supervisor, not the EMR, not connectivity (ADR 0003).
+**Completed depends on nothing outside the house** — not the Supervisor, not the EMR, not connectivity.
 
 ### 5.9 Terminal states are immutable
 
@@ -447,7 +443,7 @@ All four use the same construction: **a fixed list for that context, plus an add
 
 **The rate of "Other" per context is a first-class metric with the authority to change the list.** This is N4's shape reused: an override is a bug report about a rule, and an "Other" is a bug report about a reason list.
 
-**The lists are therefore clinical content, versioned the same way as the Physical Examination element lists and the surveillance intervals** (`docs/adr/0007-clinical-content-is-data.md`), and recorded in `docs/clinical-content/reason-lists.md`. A list that a metric has the authority to change cannot be an enumeration in the source code, because changing one needs a release and the release will not happen. N8 applies unchanged: owner, source, version and review date, as data.
+**The lists are therefore clinical content, versioned the same way as the Physical Examination element lists and the surveillance intervals**, and recorded in `docs/clinical-content/reason-lists.md`. A list that a metric has the authority to change cannot be an enumeration in the source code, because changing one needs a release and the release will not happen. N8 applies unchanged: owner, source, version and review date, as data.
 
 **Two of the four are shaped rather than flat.**
 
@@ -462,11 +458,11 @@ All four use the same construction: **a fixed list for that context, plus an add
 
 **Overriding a Recommendation is not the same as acting outside its tier.** The tier still routes: an overridden Tier 2 item still requires the Supervisor to be reached during the Visit, because the override is itself a clinical decision of the kind that tier exists to review.
 
-**A Tier 2 with no connectivity** is shown, marked not executable, and carried as a pending Write-Back item with the Supervisor as named owner and a due time of **immediately, on queueing**. Tier 2's window is zero by definition — the Supervisor was meant to be reached *during* the Visit (ADR 0001, `docs/adr/0001-time-to-action-not-severity.md`) — so the item arrives already overdue, and that is the intended reading rather than a defect to be smoothed away with a grace period. It is the one item class whose lateness is a fact about the house's connectivity, not about the Supervisor's diligence, and flattening it into a 72-hour queue would hide the only Visits where the routing did not work. `docs/clinical-content/response-windows.md` records it. The Visit completes normally — §4.10 does not permit connectivity to hold a Visit open.
+**A Tier 2 with no connectivity** is shown, marked not executable, and carried as a pending Write-Back item with the Supervisor as named owner and a due time of **immediately, on queueing**. Tier 2's window is zero by definition — the Supervisor was meant to be reached *during* the Visit — so the item arrives already overdue, and that is the intended reading rather than a defect to be smoothed away with a grace period. It is the one item class whose lateness is a fact about the house's connectivity, not about the Supervisor's diligence, and flattening it into a 72-hour queue would hide the only Visits where the routing did not work. `docs/clinical-content/response-windows.md` records it. The Visit completes normally — §4.10 does not permit connectivity to hold a Visit open.
 
-**The Junior Physician can send anything to the Supervisor at any time.** The engine's routing is a floor, not a ceiling: software may add Supervisor involvement and may never subtract it (ADR 0003).
+**The Junior Physician can send anything to the Supervisor at any time.** The engine's routing is a floor, not a ceiling: software may add Supervisor involvement and may never subtract it.
 
-**The Supervisor's answer arrives after the act, never before it.** A **Review Verdict** (§5.12) that disagrees with an override does not undo the override, reopen the Visit, or make the next Visit conditional on it. Requiring the Supervisor's agreement *first* is the hard stop N4 forbids, in the one place it would bite hardest — a house with no signal, where §5.8 must still be able to close (ADR 0003) and §4.10 must still let the team leave. Recording the answer is what the routing was for; withholding the act until it arrives is a different design, and `docs/adr/0009-the-supervisor-answer-is-recorded-not-enforced.md` records why it was rejected. So a disagreement changes what the record says about the *rule*, never what it says about the Visit — which is the authority N4 already gives it.
+**The Supervisor's answer arrives after the act, never before it.** A **Review Verdict** (§5.12) that disagrees with an override does not undo the override, reopen the Visit, or make the next Visit conditional on it. Requiring the Supervisor's agreement *first* is the hard stop N4 forbids, in the one place it would bite hardest — a house with no signal, where §5.8 must still be able to close and §4.10 must still let the team leave. Recording the answer is what the routing was for; withholding the act until it arrives is a different design. So a disagreement changes what the record says about the *rule*, never what it says about the Visit — which is the authority N4 already gives it.
 
 ### 5.12 Which Visits reach the Supervisor
 
@@ -474,22 +470,22 @@ Not all of them. Four routes, and no fifth:
 
 | Route | Trigger | Deadline |
 |---|---|---|
-| Tier 1 and above | The item's Escalation Tier (ADR 0001) | Derived from the tier |
+| Tier 1 and above | The item's Escalation Tier | Derived from the tier |
 | Goal of Care ratification | A **Baseline Visit** proposed a target (§4.4) | Its own window |
 | Manual flag | The Junior Physician chose to (§5.11), an **Addendum** included (§5.9) | The flagged item's tier — or **Tier 1's window** where that item is Tier 0, since asking for review of something already done is Tier 1's shape exactly |
 | **Silence Audit** | Sampling of Completed Visits that produced no Recommendation | A sampling rate, not a deadline |
 
-The **Silence Audit** exists because §4.1 makes the accuracy of Noor's silence the property the deliverable is judged on, and N8 records that failures-to-*fire* are especially hard to detect. Reviewing only the Visits that spoke would measure precision and never once measure recall. Reasoning: ADR 0003.
+The **Silence Audit** exists because §4.1 makes the accuracy of Noor's silence the property the design is judged on, and N8 records that failures-to-*fire* are especially hard to detect. Reviewing only the Visits that spoke would measure precision and never once measure recall.
 
-**Every route carries a response obligation, and every one of them is clinical content** (`docs/adr/0007-clinical-content-is-data.md`), recorded in `docs/clinical-content/response-windows.md`. Three routes carry a deadline; the **Silence Audit** carries a percentage *with a floor* instead, because a percentage of a small number is zero, and an audit that never runs measures nothing at all.
+**Every route carries a response obligation, and every one of them is clinical content**, recorded in `docs/clinical-content/response-windows.md`. Three routes carry a deadline; the **Silence Audit** carries a percentage *with a floor* instead, because a percentage of a small number is zero, and an audit that never runs measures nothing at all.
 
-**All four routes land in Noor, not in the EMR's task queue.** A task reading *"ratify target 135/85"* has stripped the guideline lineage, the reason that band was chosen, and the Self-Care **Findings** from inside the house that a ratification may depend on — and N5's automation-bias mitigation *is* the display of that reasoning. The **Write-Back** is unchanged and remains the record (§4.9). The Supervisor's surface is read-mostly — review, ratify, return with comment, sign off — and never edits a Visit, so §5.9 holds. Full reasoning and rejected alternatives: `docs/adr/0005-the-supervisor-reviews-in-noor.md`.
+**All four routes land in Noor, not in the EMR's task queue.** A task reading *"ratify target 135/85"* has stripped the guideline lineage, the reason that band was chosen, and the Self-Care **Findings** from inside the house that a ratification may depend on — and N5's automation-bias mitigation *is* the display of that reasoning. The **Write-Back** is unchanged and remains the record (§4.9). The Supervisor's surface is read-mostly — review, ratify, return with comment, sign off — and never edits a Visit, so §5.9 holds.
 
 **The Supervisor's answer is a record, and it is what lets an item leave the inbox.** Every route above is derived from the Visit each time the inbox is read (§5.1), so no item on it can be cleared by being looked at. A **Review Verdict** closes one: **agreed** or **disagreed**, the Supervisor's name, the time, and a note — required on a disagreement, because a disagreement nobody can read is a mark rather than an answer. It is deliberately not a fifth structured reason (§5.10): nothing routes on it, and those four lists are engine data precisely because something does.
 
 **The four acts named above are one shape with two outcomes.** Review and sign-off are the agreed case; returning with a comment is the disagreed case with its note. Ratification is the exception that needs no second record — agreeing *is* ratifying the target, which the **Goal of Care** already carries with its ratifier and its time (§4.4), and disagreeing leaves the Patient with no ratified target, so that item stays open. Correctly: the clinical question it stands for is still open, and §4.11 is still withholding everything that depends on a target.
 
-**A missing verdict blocks nothing** — not the close (ADR 0003), not the **Write-Back**, not the next Visit. What it does is make the routing measurable. A verdict carries a time, three of the four routes carry a due time, and the difference between the two is the only way to see whether the two-actor handoff — which §4.12 calls the largest unvalidated assumption in the design — actually happens. The **Silence Audit** needs it most: a sampled Visit whose silence nobody recorded an opinion on has measured recall no better than not sampling it at all, and a disagreement there is a bug report about a rule that never fired, which N8 names as the hardest kind of failure to detect.
+**A missing verdict blocks nothing** — not the close, not the **Write-Back**, not the next Visit. What it does is make the routing measurable. A verdict carries a time, three of the four routes carry a due time, and the difference between the two is the only way to see whether the two-actor handoff — which §4.12 calls the largest unvalidated assumption in the design — actually happens. The **Silence Audit** needs it most: a sampled Visit whose silence nobody recorded an opinion on has measured recall no better than not sampling it at all, and a disagreement there is a bug report about a rule that never fired, which N8 names as the hardest kind of failure to detect.
 
 ### 5.13 Actors, and what carries a name
 
@@ -509,7 +505,7 @@ The **Field Team** shares one tablet. One member examines while the other docume
 
 **Decisions are different, and few** — three or four in a Visit, on exactly the acts where authorship carries clinical and medico-legal weight, and where a moment's pause is a feature rather than friction. An override is N4's bug report about a rule, with the authority to retire it; *"the Field Team overrode this"* cannot distinguish a prescriber's considered refusal from a tap-through, and those are opposite facts sharing one field.
 
-**Attribution is not permission.** Noor records who confirmed a decision; it does not withhold the decision from the other member. A **Junior Physician** who has stepped outside to take a call must never be the reason a Visit cannot close — that is N4's shape precisely, software standing between a team and the door. Role restriction, if a service requires it, belongs to that service's governance and not to this prototype.
+**Attribution is not permission.** Noor records who confirmed a decision; it does not withhold the decision from the other member. A **Junior Physician** who has stepped outside to take a call must never be the reason a Visit cannot close — that is N4's shape precisely, software standing between a team and the door. Role restriction, if a service requires it, belongs to that service's governance.
 
 **Executors are not actors.** §4.5 attributes home tasks to the **Patient** or the **Caregiver**; §4.9 gives every responding Write-Back item a named owner, usually the **Supervisor**. None of the three uses Noor during a Visit. A Recommendation's executor and its author are separate fields, because N2's question — *can the person who must act actually do it?* — is unanswerable if they share one.
 
@@ -517,58 +513,15 @@ The **Field Team** shares one tablet. One member examines while the other docume
 
 **The Visit records the pair that attended, copied at the Start (§5.5). It never reads the Patient's current assignment back.** A Visit pointing at the live assignment would rewrite the authorship of every closed Visit in that Patient's record on the day the Patient is reassigned — silently, with no **Addendum**, and §5.9 admits corrections only as addenda. Rewriting *who performed the Visit* is the worst available edit, because the record and any later clinical or medico-legal reading of it then disagree with no trace of the change. Reassignment governs tomorrow and nothing behind it.
 
-Members are still chosen from a list, with no credential verification in the prototype (§6). The list is consulted at enrolment and at reassignment rather than at the door.
+Members are chosen from a list, with no credential verification. The list is consulted at enrolment and at reassignment rather than at the door.
 
 ### 5.14 What this section does not validate
 
 - **That a Field Team will choose Ended Early over pushing through.** Resolved-not-filled (§5.8) is a design bet that an honest exit beats a fabricated field. It is reasoned from N4 and N6, not measured, and only field use settles it.
-- **That the Field Team's close is legally sufficient.** Whether a **Junior Physician** may close a home-visit record in Saudi Arabia without a consultant countersignature is unverified (§6). If a countersignature is required, ADR 0003's clinical argument survives unchanged and a signature obligation is added downstream of **Completed** — on the Write-Back axis, never as a Visit state.
+- **That the Field Team's close is legally sufficient.** If a consultant countersignature is required on a **Junior Physician**'s home-visit record in Saudi Arabia, a signature obligation is added downstream of **Completed** — on the Write-Back axis, never as a Visit state.
 
-## 6. Open items
+## 6. What is content and what is code
 
-- **NPHIES scope — unverified.** Saudi Arabia's national FHIR-based exchange platform exists; whether its scope covers clinical data exchange, or is still mainly claims and eligibility, is not established. This materially shapes the Phase 4 national-scaling argument. Verify before writing Phase 4.
-- **Which EMR MOH home-healthcare facilities actually run — unknown.** It determines whether a due-dated, owned task (§4.9) is even accepted. Phase 3 concern, not Phase 1.
-- **The Junior Physician's grade and independent prescribing authority** are not pinned down. Tier 0 and Tier 1 depend on where that line sits.
-- **Whether a consultant countersignature is required on a junior physician's home-visit record in Saudi Arabia — unverified.** ADR 0003 makes **Completed** the Field Team's act inside the house. A countersignature requirement would not overturn that; it would add an obligation *after* the close, on the Write-Back axis (§5.14). Verify before the pitch, because it is a question a hospital will ask.
-- **Device security and clinician authentication — out of scope, and the second question a hospital IT department will ask.** §5.13 assigns each Patient a named pair with no credential verification behind either name, and the tablet holds Patient data in someone's home. The workflow argument does not depend on this being solved, but the pitch must name it rather than let it be discovered.
-- **The prototype runs as one local process, so "remote" is simulated.** Noor is a single Python application against one local store (`docs/adr/0006-offline-by-locality.md`); the Field Team's surface and the **Supervisor**'s review surface are two roles in the same application, not two devices across a network. This is deliberate — it makes §4.10's offline guarantee a property of where Noor runs rather than a synchronisation layer to be written — and it costs nothing in the workflow argument, because ADR 0005 fixes *where the decision is made*, not how the bytes travel. What the prototype therefore cannot show is that the handoff survives real latency, real authentication, and two people working at once. That is a deployment problem, and it is the one place the demo is not the product.
-- **Whether the glucose meters and BP devices already in these homes store timestamped readings — unverified, and no longer blocking.** §4.8 records the source on every **Home Reading**, so the loop closes on either a storing device or a **Caregiver** paper log, and says which. What remains to verify is which of the two the field actually presents — it changes how much weight the scoring deserves, not whether Noor runs. Transmitting devices or a patient-facing capture surface would remove the question entirely; both are out of scope for the prototype and belong to the scaling argument.
-- **The drug list is a demonstration subset, not a formulary.** §4.2's Medication Reconciliation searches a list bundled with Noor, covering diabetes, hypertension and the common comorbid drugs. It is clinical content under ADR 0007, and it is deliberately incomplete — so *unmatched* will fire more often in the prototype than it would in production. The demonstration should say that plainly rather than curate the fixtures to hide it. Production needs a real registered-products list; whether Saudi Arabia publishes one usable at zero cost is unverified.
-- **No clinical content has a named owner or a review date yet, and N8 requires both before Phase 1 ships.** Every file in `docs/clinical-content/` carries `Owner: Unassigned` and `Review date: Unset`. N8 makes those fields *data*, not documentation, so an unowned list is a rule nobody can retire — the exact condition behind the 93%-of-CMIOs malfunction finding. The mechanism is built in Phase 1 regardless; what is missing is a person, and that is a service decision rather than a design one.
-- **Most clinical content is still unsourced.** The Physical Examination element list per condition, the surveillance intervals, which Vitals are taken for which condition, and the **Self-Care Check** item list now carry unsourced starter values in `docs/clinical-content/` — chosen to make Phase 1 runnable, marked as such in every file, and replaced by the named owner with sourced values in Phase 1.5, each with the guideline it came from (N5, N8). The stop-rule library still exists only as a shape in this document, with no values behind it.
-- **Banked Phase 3 edge cases:** the Suppression demonstration (the Golden Case does not exercise ADR 0002), and a Goal of Care left unratified before the first Routine Visit, which blocks the engine.
-- **Excluded from the pitch as insufficiently sourced:** the 74%/50%/41% agentic-CDS adoption shares (single-source review, flagged for citation sloppiness in our own research file), and anything attributed to the Zymr vendor blog.
-
-## 7. Section status
-
-| Section | Phase | Status |
-|---|---|---|
-| Constraints + integration boundary (§1–§3) | 2 | Written 2026-08-27, §1 boundary widened 2026-08-28 (ADR 0005) |
-| Golden Case — routine visit workflow (§4) | 1 | Grilled and written 2026-08-27, revised 2026-08-28 |
-| Visit lifecycle — roster to terminal state (§5) | 1 | Grilled and written 2026-08-28, §5.6 fourth obligation added 2026-09-02, §5.5 and §5.13 given the standing Field Team assignment 2026-09-04, §5.1/§5.9/§5.11/§5.12 given the **Review Verdict** and the **Addendum** 2026-09-05 (ADR 0009) |
-| Phase 1 blockers — stack, content boundary, section shapes, windows | 1 | Grilled and closed 2026-08-28 (ADRs 0005–0009) |
-| CDS engine design + clinical rules | 3 | Not yet grilled — Phases 1 and 1.5 build first |
-| Scaling + technical report | 4 | Blocked on Phase 3 |
-
-## 8. Implementation phases
-
-> Agreed 2026-08-28. §7 tracks which *sections of this document* are written. This table tracks what gets *built*, and in what order. The seam exists so the workflow can be finished and tested before any rule produces a **Recommendation**.
->
-> **The two axes share their numbers, and they are not the same axis.** A phase number here means a build phase; the same number in §7 means a documentation phase. There is no build **Phase 2** because documentation Phase 2 was the research, which produced no software. Where this document says "Phase 1", "Phase 1.5" or "Phase 3" without qualification, it means this table.
-
-| Phase | Delivers | Deliberately excluded |
-|---|---|---|
-| **1 — Workflow shell** | The Visit lifecycle (§5), the eight sections (§4.2), **Findings**, the **Brief** (§5.3), **Write-Back** (§4.9), the **Supervisor** review surface with its **Review Verdict** (§5.12, ADRs 0005 and 0009), the **Addendum** (§5.9), the four structured reason lists (§5.10), the interval-event list (§4.2), the searchable drug list (§4.2, §6), the versioned clinical content (ADR 0007), the local offline store (ADR 0006), and the hostile fixtures (§4.9). The `Recommendation` type and its disposition lifecycle exist with no producer. | Every rule that produces a Recommendation |
-| **1.5 — Evaluation harness** | Rule evaluation over that same clinical content, the "evaluated, did not fire" log (N8), and **Tier 3 rules only** — the one class §4.3 and §4.10 both certify as needing neither a target nor a trend | The *logic that assigns* a tier, **Suppression**, the N3 cap |
-| **3 — Full engine** | The complete rule set, tier assignment (ADR 0001), Suppression (§4.6), the N3 cap (§4.7) | — |
-
-What Phase 1.5 excludes is the **assignment** of tiers, not the tier itself. Its rules are Tier 3 by definition — a stop-rule threshold is what Tier 3 *means* (§4.10) — so the field is populated, by the rule's own content, and nothing chooses. Deciding a tier from a Patient's circumstances is Phase 3, and so is everything the cap and Suppression need in order to compare two Recommendations against each other.
-
-Four consequences, all load-bearing:
-
-- **Findings are Phase 1, not Phase 1.5.** §4.1 makes Findings the way Noor shows its work when it has no instruction to give, and three Phase 1 deliverables consist of nothing else: the **Brief**, the scoring of the previous **Between-Visit Plan** on arrival (§4.8), and every N6 missing-data declaration. A Finding carries no **Escalation Tier**, so pulling Findings forward drags no Phase 3 decision with them.
-- **Clinical content is versioned from Phase 1.** The **Physical Examination**'s composed element list (§5.5) and every surveillance interval are clinical content with a source guideline, and N8 requires an owner, a source, a version and a review date *as data*. Phase 1.5 therefore adds Tier 3 rows to content that already carries all four, rather than building the versioning mechanism a second time. **What is content and what is welded into the code is a decided line, not a convenience:** clinical judgement a consultant revises is content; the eight non-negotiables and anything derived from them — including the N3 cap of three — are code, where changing them costs a diff and a passing test suite. Reasoning: `docs/adr/0007-clinical-content-is-data.md`.
-- **The Completed gate is tested with hand-built Recommendations.** With no producer in Phase 1, the collection §5.8 gates on is always empty — and a gate tested only against an empty collection passes against an engine that has stopped working. That is ADR 0002's warning about asserting only the non-firing case, applied to the front door.
-- **The Supervisor's surface is Phase 1 because Phase 1 already produces something only a Supervisor can resolve.** A **Baseline Visit** cannot reach **Completed** without a proposed **Goal of Care** (§5.8), and that proposal is the one **Write-Back** item that is itself a request for a response (§4.9). Shipping the emitter without the receiver would leave Phase 1's own output permanently unresolved, and would push the two-actor handoff — the largest unvalidated assumption in §3 — past the phase whose whole purpose is that the workflow is finished and tested. The **Silence Audit** has the same shape: it is a review of Visits that produced nothing, so it needs no engine.
+Clinical judgement a consultant revises is content; the eight non-negotiables and anything derived from them — including the N3 cap of three — are code, where changing them costs a diff and a passing test suite. The **Physical Examination**'s composed element list (§5.5), every surveillance interval, the interval-event list (§4.2), the reason lists (§5.10), and the response windows (§5.12) are clinical content with a source guideline, and N8 requires an owner, a source, a version, and a review date *as data*.
 
 

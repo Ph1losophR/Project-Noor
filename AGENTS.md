@@ -5,25 +5,21 @@ Saudi Arabia, aimed at chronic disease management (diabetes and hypertension). I
 
 ## SSOT Integrity Rules
 
-Three documents are in force, ranked:
+Two documents are in force, ranked:
 
 1. **`project_noor_architecture.md`** — the single source of truth. Behaviour, data, the eight Visit Protocol sections, the Escalation Tiers.
-2. **`docs/frontend_ssot.md`** — the design system. Colour, type, space, the marks that carry clinical meaning, and how all four are delivered and enforced. It governs the surface only; it does not arrange pages.
-3. **`docs/web_plan.md`** — the page plan. Which screens exist, who sees each one, and how you get from one to the next. Written against `docs/frontend_ssot.md` §1, which delegates page composition and routing to it.
+2. **`docs/frontend_ssot.md`** — the design system. Colour, type, space, the marks that carry clinical meaning, and how all four are delivered and enforced. It governs the surface only; page composition and routing are now part of the React frontend (`src/frontend/`).
 
 Rules:
 
-- Read all three, plus `CONTEXT.md` for the vocabulary, before writing any code. Do not deviate from any of them without
+- Read both, plus `CONTEXT.md` for the vocabulary, before writing any code. Do not deviate from either without
   explicit user approval.
-- **Conflict resolution:** if a user prompt contradicts one of the three, prioritize
+- **Conflict resolution:** if a user prompt contradicts one of the two, prioritize
   the document and ask the user to resolve the conflict. Never silently bypass or
   override it.
-- Where they disagree, **the lower number wins** — architecture over the design system,
-  the design system over the web plan — and the conflict is raised rather than silently
+- Where they disagree, **the lower number wins** — architecture over the design system — and the conflict is raised rather than silently
   resolved.
-- **The web plan is the most volatile of the three**, because it records decisions
-  about screens and navigation that change as the surface gets built. A change there is
-  ordinary; a change to either document above it is not.
+- **The design system is the more volatile of the two**, because the surface gets rebuilt (as with the React + shadcn rebuild). A change to it is ordinary; a change to the architecture is not.
 
 ## Behavioral Guidelines
 
@@ -98,33 +94,16 @@ forward with a broken suite.
 - I am bootstrapped: no paid services or resources. I have a GitHub-free tier account. Just me and you
 
 ## Important Commands
-
-No build step, by design ([ADR 0006](docs/adr/0006-offline-by-locality.md)): one
-Python process, server-rendered Jinja2, one SQLite file.
-
 - `pytest` — the whole suite. `pyproject.toml` already applies `--cov=noor --cov-branch`.
 - `python seed.py 2026-08-28` — fills `noor.db` with the demo day. Repeat-safe: a second run adds nothing.
-- `python run.py` — serves on `127.0.0.1:8000`. The seeded day is at `/visits?day=2026-08-28`.
 - `codegraph status` — checks index freshness. Sync is automatic; `codegraph sync` only if the watcher is off.
+- `ruff check src/noor` — linting. Must pass before committing.
+- `mypy --strict src/noor` — strict type check. Must pass before committing.
 
 Coverage is **branch** coverage at `fail_under = 100` with `exclude_lines = []`, so
 one untested branch fails the suite. That gate is why logic stays in Python and not
-in a `.js` file or a Jinja `{% if %}` — coverage cannot see inside either. One script
-file is admitted, for the section autosave and nothing else (`docs/frontend_ssot.md`
-§12.1): it decides when to post, never what is true.
-
-**Where the build is.** Backend Passes 1–2 and Web Pass 1 are committed. `src/noor/` holds
-the store, the domain, the EMR seam, dispatch, content and serialisation, and
-`src/noor/seed.py` builds the demo day. `src/noor/web/` holds the chassis, the token layer,
-the four self-hosted faces, the Visit List, the Visit page in every state, Start, Cancelled
-and the Brief.
-
-**Web Pass 2 is next** — the eight section pages, the section strip, Home Readings. The
-five web passes and what each delivers are named in
-`docs/superpowers/plans/2026-09-08-web-pass-1.md`. One link answers 404 on purpose until the
-pass that builds it: `/supervisor` (Pass 5). The Visit page's eight section tiles are not
-links at all yet — each becomes one in Pass 2, the task that gives it somewhere to go.
-Neither is a defect, and routing around them is not a fix.
+in the React client — the SPA consumes JSON; every decision that affects clinical
+outcome lives in Python where the test suite can see it.
 
 ## Testing
 

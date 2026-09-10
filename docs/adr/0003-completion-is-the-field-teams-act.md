@@ -22,4 +22,4 @@ A Visit reaches **Completed** when the Field Team closes it in the house, before
 
 **The Silence Audit's sample rate is a governance parameter, not a constant in code** — it carries an owner and a review date like any rule (N8). The audit also needs its own check: an audit that never finds a miss is equally consistent with an accurate engine and a broken audit, and only a deliberately seeded miss distinguishes the two.
 
-Whether a consultant countersignature is legally required on a junior physician's home-visit record in Saudi Arabia is unverified (§6). If it is required, nothing in this decision changes: the obligation lands *after* the close, on the Write-Back axis, and never as a Visit state.
+Whether a consultant countersignature is legally required on a junior physician's home-visit record in Saudi Arabia is unverified (§5.14). If it is required, nothing in this decision changes: the obligation lands *after* the close, on the Write-Back axis, and never as a Visit state.
