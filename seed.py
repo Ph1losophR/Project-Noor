@@ -1,4 +1,4 @@
-"""Fill the database `seed.py` serves. One file, no migration step (ADR 0006)."""
+"""Fill the database `seed.py` serves. One file, no migration step (ADR 0006).
 
     python seed.py 2026-08-28
 

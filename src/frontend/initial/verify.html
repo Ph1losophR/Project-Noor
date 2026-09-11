@@ -1,0 +1,607 @@
+<!DOCTYPE html><html class="h-full" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><style>
+  @layer base {
+    html, body { margin: 0; padding: 0; }
+    body { overscroll-behavior: none; }
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+  }
+  ::-webkit-scrollbar { display: none; }
+  .tabular-nums { font-variant-numeric: tabular-nums; }
+  dialog::backdrop {
+    background: rgba(40, 40, 37, 0.45);
+    backdrop-filter: blur(2px);
+  }
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "tertiary-fixed": "#ffdad6",
+        "on-tertiary-container": "#e4695e",
+        "on-secondary-container": "#6a6250",
+        "inverse-on-surface": "#f2f0ed",
+        "surface-container-lowest": "#ffffff",
+        "background": "#fbf9f6",
+        "surface-container": "#efeeeb",
+        "surface-bright": "#fbf9f6",
+        "surface-tint": "#5f5e5b",
+        "primary-container": "#282825",
+        "inverse-primary": "#c8c6c2",
+        "on-tertiary-fixed": "#410002",
+        "on-primary-container": "#908f8b",
+        "secondary": "#665d4c",
+        "on-surface-variant": "#474741",
+        "on-primary": "#ffffff",
+        "outline-variant": "#c8c7be",
+        "on-error-container": "#93000a",
+        "secondary-container": "#ebdec8",
+        "error": "#8E2A24",
+        "secondary-fixed": "#ede1cb",
+        "primary-fixed": "#e5e2dd",
+        "on-tertiary-fixed-variant": "#84231e",
+        "surface": "#fbf9f6",
+        "on-tertiary": "#ffffff",
+        "tertiary": "#310001",
+        "on-error": "#ffffff",
+        "surface-dim": "#dbdad7",
+        "on-secondary-fixed": "#211b0d",
+        "on-primary-fixed": "#1c1c19",
+        "on-secondary": "#ffffff",
+        "secondary-fixed-dim": "#d1c5b0",
+        "tertiary-fixed-dim": "#ffb4ab",
+        "primary-fixed-dim": "#c8c6c2",
+        "surface-container-low": "#f5f3f0",
+        "surface-container-high": "#eae8e5",
+        "on-secondary-fixed-variant": "#4d4636",
+        "tertiary-container": "#580104",
+        "on-primary-fixed-variant": "#474743",
+        "on-surface": "#1b1c1a",
+        "error-container": "#fdf2f1",
+        "primary": "#131411",
+        "outline": "#777770",
+        "surface-container-highest": "#e4e2df",
+        "inverse-surface": "#30312f",
+        "surface-variant": "#e4e2df",
+        "on-background": "#1b1c1a",
+        "status-clear": "#2A7A52",
+        "status-review": "#A87F1C",
+        "status-now": "#8E2A24"
+      },
+      borderRadius: {
+        DEFAULT: "0.25rem",
+        lg: "0.5rem",
+        xl: "0.75rem",
+        full: "9999px"
+      },
+      spacing: {
+        gutter: "1rem",
+        "space-lg": "1rem",
+        "space-md": "0.75rem",
+        margin: "1.5rem",
+        "space-xs": "0.25rem",
+        "space-sm": "0.5rem",
+        "space-xl": "1.5rem"
+      },
+      fontFamily: {
+        "label-md": ["DM Sans", "sans-serif"],
+        "label-lg": ["DM Sans", "sans-serif"],
+        "headline-lg": ["EB Garamond", "serif"],
+        "label-sm": ["DM Sans", "sans-serif"],
+        "body-sm": ["DM Sans", "sans-serif"],
+        "headline-md": ["EB Garamond", "serif"],
+        "data-display": ["28px", "sans-serif"],
+        "headline-sm": ["EB Garamond", "serif"],
+        "body-lg": ["DM Sans", "sans-serif"],
+        "data-metric": ["DM Sans", "sans-serif"],
+        "body-md": ["DM Sans", "sans-serif"]
+      },
+      fontSize: {
+        "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.04em", fontWeight: "600" }],
+        "label-lg": ["15px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }],
+        "headline-lg": ["34px", { lineHeight: "40px", letterSpacing: "-0.01em", fontWeight: "500" }],
+        "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.06em", fontWeight: "600" }],
+        "body-sm": ["13px", { lineHeight: "18px", letterSpacing: "0.01em", fontWeight: "400" }],
+        "headline-md": ["26px", { lineHeight: "32px", letterSpacing: "0em", fontWeight: "500" }],
+        "data-display": ["28px", { lineHeight: "32px", letterSpacing: "-0.02em", fontWeight: "600" }],
+        "headline-sm": ["20px", { lineHeight: "26px", letterSpacing: "0em", fontWeight: "500" }],
+        "body-lg": ["17px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "400" }],
+        "data-metric": ["18px", { lineHeight: "24px", letterSpacing: "0em", fontWeight: "600" }],
+        "body-md": ["15px", { lineHeight: "22px", letterSpacing: "0.005em", fontWeight: "400" }]
+      }
+    }
+  }
+};</script>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&amp;family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;display=swap" rel="stylesheet"></head><body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen antialiased"><div class="min-h-screen bg-surface flex flex-col items-center"><div class="w-full max-w-[768px] min-h-screen flex flex-col bg-surface shadow-[0_4px_20px_rgba(40,35,28,0.04)]"><header class="fixed top-0 w-full max-w-[768px] z-50 bg-surface/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-baseline gap-space-sm"><span class="font-headline-md text-headline-md tracking-tight text-primary">NOOR</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Home Clinical Care</span></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex flex-col items-end"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">GOOD MORNING</span><span class="font-body-sm text-body-sm text-primary font-semibold">Dr. Sara Al-Husseini · Omar Qadi RN</span></div><div class="h-6 w-px bg-outline-variant hidden sm:block"></div><button aria-label="Toggle Light and Dark Mode" class="flex items-center h-8 rounded-full bg-surface-container-high p-0.5 min-w-[56px]" type="button"><span class="px-2 font-label-sm text-label-sm text-on-primary bg-primary rounded-full leading-relaxed flex items-center gap-1 font-semibold uppercase tracking-wider">Day</span><span class="px-2 font-label-sm text-label-sm text-on-surface-variant leading-relaxed flex items-center font-semibold uppercase tracking-wider">Night</span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center font-label-sm text-on-primary font-bold">SH</div></div></div><div class="px-margin py-1.5 bg-surface-container-low flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><span class="font-semibold uppercase tracking-wider text-on-surface">WEDNESDAY 15 OCTOBER 2025</span><span class="text-outline-variant">|</span><span class="">Sync Status: Local DB Ready</span></div><div class="font-semibold uppercase tracking-wider text-on-surface">RIYADH NORTH CLUSTER</div></div><nav class="px-margin py-2 bg-surface flex items-center gap-space-sm overflow-x-auto" data-active-classes="bg-primary text-on-primary font-semibold rounded-full"><a class="min-h-[48px] px-space-lg flex items-center justify-center gap-2 rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="roster" href="#"><span class="">Roster</span><span class="px-1.5 py-0.5 rounded-full text-label-sm bg-surface-container-highest text-on-surface-variant font-semibold tabular-nums">4</span></a><a aria-current="page" class="min-h-[48px] px-space-lg flex items-center justify-center gap-2 uppercase tracking-wider transition-colors whitespace-nowrap bg-primary text-on-primary font-semibold rounded-full font-label-md text-label-md" data-path="active-visit" href="#"><span class="">Active Visit</span><span class="px-1.5 py-0.5 rounded-full text-label-sm bg-surface-container-highest/20 text-on-primary font-semibold tabular-nums">1</span></a><a class="min-h-[48px] px-space-lg flex items-center justify-center gap-2 rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="supervisor-inbox" href="#"><span class="">Supervisor Inbox</span><span class="px-1.5 py-0.5 rounded-full text-label-sm bg-surface-container-highest text-on-surface-variant font-semibold tabular-nums">3</span></a><a class="min-h-[48px] px-space-lg flex items-center justify-center gap-space-sm rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap" data-path="write-back-queue" href="#"><span class="">Write-Back Queue</span><span class="px-1.5 py-0.5 rounded-full text-label-sm bg-surface-container-highest text-on-surface-variant font-semibold tabular-nums">3</span></a></nav></header><main class="w-full pt-36 px-margin pb-space-xl flex-1 bg-surface"><div class="flex flex-col w-full">
+<div class="w-full space-y-space-xl pb-28">
+<!-- AREA 1 - PATIENT & GATE HEADER -->
+<section class="flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Clinical Verification</h1>
+<!-- Patient Overview and Gates Grid -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-space-md items-stretch">
+<!-- Left Box: Patient Overview (wider span) -->
+<div class="md:col-span-7 p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between border border-outline-variant/40">
+<div>
+<div class="flex items-baseline justify-between gap-space-sm">
+<span class="font-headline-md text-headline-md font-bold text-primary">Ibrahim Al-Ghamdi, 68M</span>
+<span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-high text-on-surface font-semibold shrink-0">In Residence</span>
+</div>
+<div class="mt-1 font-body-sm text-body-sm text-on-surface-variant">
+<span class="font-semibold text-primary">MRN 948210</span><div><b>Citizen ID:</b> <span class="tabular-nums">1048829103</span>&nbsp;<div class="">National Unified Medical Record Linked
+        </div></div></div>
+</div>
+<div class="mt-space-md pt-space-sm border-t border-outline-variant/30 grid grid-cols-2 gap-x-space-md gap-y-space-xs text-body-sm text-on-surface-variant">
+<div class=""><span class="font-label-sm uppercase tracking-wider text-on-surface block text-[10px]">Language</span>Arabic (Native)</div>
+<div class=""><span class="font-label-sm uppercase tracking-wider text-on-surface block text-[10px]">Mobility</span>Independent Ambulatory</div>
+<div class=""><span class="font-label-sm uppercase tracking-wider text-on-surface block text-[10px]">Primary Diagnosis</span>Type 2 DM &amp; Essential HTN</div>
+<div class=""><span class="font-label-sm uppercase tracking-wider text-on-surface block text-[10px]">Clinical Acuity</span>Tier 1 Stable Chronic</div>
+</div>
+</div>
+<!-- Right Column: 2 Stacked Boxes -->
+<div class="md:col-span-5 flex flex-col gap-space-md justify-between">
+<!-- Top Box: Gate Status (Red/Alert) -->
+<div class="p-space-lg rounded-xl bg-[#FDF2F1] border border-[#8E2A24]/40 shadow-sm flex flex-col justify-between flex-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#8E2A24] font-bold">Gate Status</span>
+<span class="px-2 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-[#8E2A24] text-on-primary font-bold">
+            1 Missing Required Field
+          </span>
+</div>
+<div class="mt-space-sm">
+<span class="font-data-display text-data-display text-[#8E2A24] font-bold">Not Ready</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-0.5 tabular-nums">
+            3 of 4 verification gates satisfied (Section 06 unresolved)
+          </span>
+</div>
+</div>
+<!-- Bottom Box: Transmission Target -->
+<div class="p-space-lg rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between border border-outline-variant/40 flex-1">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Transmission Target</span>
+<div class="mt-space-sm">
+<span class="font-data-metric text-data-metric text-primary font-semibold">RUH-Central EMR</span>
+<span class="block font-body-sm text-body-sm text-on-surface-variant mt-0.5 tabular-nums">
+            Payload: 38.4 KB (Encrypted) · Awaiting completion
+          </span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- AREA 2 - READ-ONLY VISIT INFORMATION SUMMARY -->
+<section class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm space-y-space-lg border border-outline-variant/30">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/30">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Requirement 1</span>
+<h2 class="font-headline-sm text-headline-sm text-primary">Recorded Visit Info</h2>
+</div>
+<a class="min-h-[48px] px-space-lg rounded-full font-label-md text-label-md uppercase tracking-wider text-on-primary bg-primary hover:bg-primary/90 transition-colors inline-flex items-center justify-center font-semibold shadow-sm self-start sm:self-auto" href="#">
+      Edit Visit
+    </a>
+</div>
+<div class="space-y-space-sm">
+<!-- 01 Visit Reason -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">01</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Visit Reason</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Scheduled review — Type 2 Diabetes &amp; Primary Hypertension</span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+<!-- 02 Concerns & Interval History -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">02</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Concerns &amp; Interval History</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            Hypoglycaemic episode reported: “Mild symptomatic dip last Tuesday, resolved with dates”. Attributed concern from Caregiver Reem: “Complains of burning sensation in soles of feet at night.”
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+<!-- 03 Medication Reconciliation -->
+<div class="p-space-md rounded-lg bg-surface-container-high flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">03</span>
+<div>
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="font-body-md text-body-md font-semibold text-primary">Medication Reconciliation</span>
+<span class="font-label-sm text-label-sm px-2 py-0.5 rounded bg-surface-container-highest text-on-surface-variant font-semibold">Degraded Mode</span>
+</div>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            Physical items in house: Metformin 1000mg (48 left), Amlodipine 5mg (14 left), Glimepiride 2mg (28 left). Unreachable reference list declared. Bedside verbal &amp; blister pack cross-checked.
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-lg font-label-sm text-label-sm uppercase tracking-wider bg-secondary-container text-on-secondary-container font-semibold shrink-0 self-start sm:self-auto">
+        Degraded / Examined · Complete
+      </span>
+</div>
+<!-- 04 Vitals & Home Readings -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">04</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Vitals &amp; Home Readings</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant tabular-nums">
+            BP 136/84 mmHg, HR 72 bpm regular, SpO2 98%, Accu-Chek Guide sync 138 mg/dL 7-day fasting mean.
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+<!-- 05 Physical Examination -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">05</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Physical Examination</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant tabular-nums">
+            Diabetic foot screening completed (Monofilament 10g sensory map intact 8/10 points, Pedal pulses 2+ bilateral).
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+<!-- 06 Self-Care Check - MISSING REQUIRED SECTION (RED ALERT) -->
+<div class="p-space-lg rounded-xl bg-[#FDF2F1] border-2 border-[#8E2A24] space-y-space-sm">
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex items-center gap-space-md">
+<span class="font-label-md text-label-md text-[#8E2A24] font-bold w-5 tabular-nums">06</span>
+<span class="font-body-md text-body-md font-bold text-[#8E2A24]">Self-Care Check</span>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-[#8E2A24] text-on-primary font-bold shrink-0 self-start sm:self-auto">
+          Missing Required Field</span>
+</div>
+<p class="font-body-sm text-body-sm text-[#1B1C1A] pl-0 sm:pl-9 leading-relaxed">
+        Required bedside observation for Insulin Cold-Chain &amp; Storage or Oral Regimen Verification not captured. Section must have verified observation or structured non-resolution reason before visit completion (§5.8, N6).
+      </p>
+<div class="pt-space-xs pl-0 sm:pl-9 flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<a class="inline-flex items-center font-label-md text-label-md font-bold text-[#8E2A24] hover:underline underline-offset-4" href="#">
+          Resolve Section 06 Now →
+        </a>
+</div>
+</div>
+<!-- 07 Notes -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">07</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Attending Clinical Notes</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">
+            Attending clinical evaluation summary by Dr. Sara Al-Husseini recorded and signed bedside.
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+<!-- 08 Care Plan & Between-Visit Plan -->
+<div class="p-space-md rounded-lg bg-surface-container-low flex flex-col sm:flex-row sm:items-center justify-between gap-space-md">
+<div class="flex items-start gap-space-md">
+<span class="font-label-md text-label-md text-on-surface-variant w-5 pt-0.5 tabular-nums">08</span>
+<div>
+<span class="font-body-md text-body-md font-semibold text-primary block">Care Plan &amp; Between-Visit Mandate</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant tabular-nums">
+            Metformin BD, Amlodipine OD, Blood pressure stop rule (&gt;180 or &lt;100 mmHg). 3 machine-testable lines emitted.
+          </span>
+</div>
+</div>
+<span class="px-3 py-1 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-primary font-semibold shrink-0 self-start sm:self-auto">
+        Examined · Complete
+      </span>
+</div>
+</div>
+</section><!-- CLINICAL SNAPSHOT / VITALS AT A GLANCE -->
+<section class="space-y-space-sm pt-space-xs"><div class="pb-1 flex items-baseline justify-between">
+  <div>
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold block">CLINICAL SNAPSHOT</span>
+    <h2 class="font-headline-md text-headline-md text-primary font-medium">Vitals at a glance</h2>
+  </div>
+  <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant">SYNCHRONIZED AT 14:32</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 rounded-2xl bg-surface-container-lowest border border-outline-variant/40 divide-y md:divide-y-0 md:divide-x divide-outline-variant/30 shadow-sm overflow-hidden">
+  <div class="p-space-lg flex flex-col justify-between min-h-[120px]">
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">BLOOD PRESSURE</span>
+    <div class="mt-space-sm">
+      <div class="font-data-display text-[32px] leading-none font-bold text-primary tabular-nums tracking-tight">136/84</div>
+      <span class="font-label-sm text-[12px] uppercase font-semibold text-on-surface-variant mt-1.5 block tracking-wider">mmHg</span>
+    </div>
+  </div>
+  <div class="p-space-lg flex flex-col justify-between min-h-[120px]">
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">HEART RATE</span>
+    <div class="mt-space-sm">
+      <div class="font-data-display text-[32px] leading-none font-bold text-primary tabular-nums tracking-tight">72</div>
+      <span class="font-label-sm text-[12px] uppercase font-semibold text-on-surface-variant mt-1.5 block tracking-wider">bpm · regular</span>
+    </div>
+  </div>
+  <div class="p-space-lg flex flex-col justify-between min-h-[120px]">
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">SPO₂</span>
+    <div class="mt-space-sm">
+      <div class="font-data-display text-[32px] leading-none font-bold text-primary tabular-nums tracking-tight">98%</div>
+      <span class="font-label-sm text-[12px] uppercase font-semibold text-on-surface-variant mt-1.5 block tracking-wider">room air</span>
+    </div>
+  </div>
+  <div class="p-space-lg flex flex-col justify-between min-h-[120px]">
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">FASTING GLUCOSE</span>
+    <div class="mt-space-sm">
+      <div class="font-data-display text-[32px] leading-none font-bold text-primary tabular-nums tracking-tight">138</div>
+      <span class="font-label-sm text-[12px] uppercase font-semibold text-on-surface-variant mt-1.5 block tracking-wider">mg/dL · 7-day mean</span>
+    </div>
+  </div>
+</div></section>
+<!-- REQUIREMENTS 2 & 3 -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-space-lg">
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm space-y-space-md flex flex-col justify-between border border-outline-variant/30">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Requirement 2</span>
+<h2 class="font-headline-sm text-headline-sm text-primary mt-1">Emergency Record Check</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+        No Emergency entered during this visit. (Condition satisfied)
+      </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Tier 3 Red Escalation</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-status-clear font-semibold">Zero Occurrences</span>
+</div>
+</div>
+<div class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm space-y-space-md flex flex-col justify-between border border-outline-variant/30">
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block">Requirement 3</span>
+<h2 class="font-headline-sm text-headline-sm text-primary mt-1">Final Section Verification</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+        Care Plan assembled; Between-Visit Plan emitted with 3 machine-testable lines (schedule, titration, stop rules).
+      </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low flex items-center justify-between">
+<span class="font-label-md text-label-md text-on-surface font-semibold">Parser Verification</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-status-clear font-semibold tabular-nums">3 Rules Compiled</span>
+</div>
+</div>
+</section>
+<!-- AREA 3 - RECOMMENDATION DISPOSITION (HORIZONTAL CARDS WITH CLICKABLE POPOVERS) -->
+<section class="p-space-xl rounded-xl bg-surface-container-lowest shadow-sm space-y-space-lg border border-outline-variant/30"><div class="flex flex-col sm:flex-row sm:items-baseline justify-between gap-space-xs pb-space-sm border-b border-outline-variant/30">
+  <div>
+    <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant block font-semibold">Requirement 4</span>
+    <h2 class="font-headline-sm text-headline-sm text-primary">Recommendation Disposition (§5.8 &amp; §4.7)</h2>
+  </div>
+  <span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">3 Active Records</span>
+</div>
+<!-- Horizontal cards row -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-space-md items-stretch">
+  <!-- Card 1: Accepted -->
+  <button class="w-full text-left p-space-xl rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex flex-col justify-between border border-outline-variant/40 min-h-[170px] focus:outline-none focus:ring-2 focus:ring-primary group" onclick="document.getElementById('rec-modal-1').showModal()" type="button">
+    <div class="space-y-space-sm">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Rec #1 · Tier 1</span>
+        <span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-primary text-on-primary font-bold">
+          Accepted
+        </span>
+      </div>
+      <h3 class="font-headline-md text-[22px] leading-snug text-primary group-hover:text-primary transition-colors font-medium">
+        Dilated Eye Exam Referral
+      </h3>
+
+    </div>
+    <div class="pt-space-md flex items-center justify-between text-on-surface-variant font-label-sm text-[11px] uppercase tracking-wider border-t border-outline-variant/20 mt-space-md">
+      <span class="underline underline-offset-4 group-hover:text-primary font-semibold">View Details →</span>
+    </div>
+  </button>
+  <!-- Card 2: Overridden -->
+  <button class="w-full text-left p-space-xl rounded-xl bg-surface-container-low hover:bg-surface-container transition-all flex flex-col justify-between border border-outline-variant/40 min-h-[170px] focus:outline-none focus:ring-2 focus:ring-primary group" onclick="document.getElementById('rec-modal-2').showModal()" type="button">
+    <div class="space-y-space-sm">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Rec #2 · Tier 0</span>
+        <span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-secondary-container text-on-secondary-container font-bold">
+          Overridden
+        </span>
+      </div>
+      <h3 class="font-headline-md text-[22px] leading-snug text-primary group-hover:text-primary transition-colors font-medium">
+        Gabapentin 100 mg nocte
+      </h3>
+
+    </div>
+    <div class="pt-space-md flex items-center justify-between text-on-surface-variant font-label-sm text-[11px] uppercase tracking-wider border-t border-outline-variant/20 mt-space-md">
+      <span class="underline underline-offset-4 group-hover:text-primary font-semibold">View details →</span>
+    </div>
+  </button>
+  <!-- Card 3: Filed -->
+  <button class="w-full text-left p-space-xl rounded-xl bg-surface-container-high/60 hover:bg-surface-container-high transition-all flex flex-col justify-between border border-outline-variant/40 min-h-[170px] focus:outline-none focus:ring-2 focus:ring-primary group" onclick="document.getElementById('rec-modal-3').showModal()" type="button">
+    <div class="space-y-space-sm">
+      <div class="flex items-center justify-between gap-2">
+        <span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Rec #3 · Engine</span>
+        <span class="px-2.5 py-0.5 rounded-full font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-on-surface-variant font-bold">
+          Filed (Suppressed)
+        </span>
+      </div>
+      <h3 class="font-headline-md text-[22px] leading-snug text-on-surface-variant group-hover:text-primary transition-colors font-medium">
+        Atorvastatin 40 mg Optimization
+      </h3>
+
+    </div>
+    <div class="pt-space-md flex items-center justify-between text-on-surface-variant font-label-sm text-[11px] uppercase tracking-wider border-t border-outline-variant/20 mt-space-md">
+      <span class="underline underline-offset-4 group-hover:text-primary font-semibold">View details →</span>
+    </div>
+  </button>
+</div></section><!-- CLINICAL SNAPSHOT / VITALS AT A GLANCE -->
+
+<!-- MODALS / POPOVERS FOR RECOMMENDATION DETAILS -->
+<!-- Modal 1: Eye Exam -->
+<dialog class="w-[90%] max-w-[560px] p-0 rounded-2xl bg-surface shadow-2xl border border-outline-variant/40 backdrop:bg-primary/40" id="rec-modal-1">
+<div class="p-space-xl space-y-space-md">
+<div class="flex items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/40">
+<div class="flex items-center gap-space-sm">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider bg-primary text-on-primary font-bold">
+          Accepted
+        </span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Recommendation 1 of 3</span>
+</div>
+<button class="min-h-[48px] px-3 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary" onclick="document.getElementById('rec-modal-1').close()" type="button">
+        Close [Esc]
+      </button>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+        Tier 1 · Supervisor Review within 72 Hours
+      </span>
+<h3 class="font-headline-md text-headline-md text-primary">
+        Referral for Comprehensive Dilated Eye Exam
+      </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+        Surveillance overdue by 42 days. Confirmed bedside by Dr. Sara Al-Husseini with patient consent. Queued directly to Optometry Triage at Riyadh North Sector.
+      </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low space-y-1 text-body-sm text-on-surface-variant">
+<div class=""><span class="font-semibold text-primary">Provenance Guideline:</span> ADA 2024 Standards of Care, Section 12 (Retinopathy Screening)</div>
+<div class=""><span class="font-semibold text-primary">Routing Action:</span> Transmission queued for RUH-Optometry Referral Outbox</div>
+<div class=""><span class="font-semibold text-primary">Attending Action:</span> Accepted bedside without modification</div>
+</div>
+<div class="pt-space-sm flex justify-end">
+<button class="min-h-[48px] px-space-xl rounded-full font-label-md text-label-md uppercase tracking-wider bg-primary text-on-primary font-semibold" onclick="document.getElementById('rec-modal-1').close()" type="button">
+        Done
+      </button>
+</div>
+</div>
+</dialog>
+<!-- Modal 2: Gabapentin Override -->
+<dialog class="w-[90%] max-w-[560px] p-0 rounded-2xl bg-surface shadow-2xl border border-outline-variant/40 backdrop:bg-primary/40" id="rec-modal-2">
+<div class="p-space-xl space-y-space-md">
+<div class="flex items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/40">
+<div class="flex items-center gap-space-sm">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider bg-secondary-container text-on-secondary-container font-bold">
+          Overridden
+        </span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Recommendation 2 of 3</span>
+</div>
+<button class="min-h-[48px] px-3 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary" onclick="document.getElementById('rec-modal-2').close()" type="button">
+        Close [Esc]
+      </button>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+        Tier 0 · Field Team Acts Bedside
+      </span>
+<h3 class="font-headline-md text-headline-md text-primary">
+        Prescribe Gabapentin 100mg nocte or topical agent
+      </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+        Triggered by caregiver report of burning sensations in bilateral soles of feet. Overridden bedside with structured two-level clinical justification (§5.10).
+      </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-highest space-y-2">
+<div class="flex items-baseline gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-bold shrink-0">Level 1 Category:</span>
+<span class="font-body-sm text-body-sm text-primary">Right guideline, not executable today</span>
+</div>
+<div class="flex items-baseline gap-2">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-bold shrink-0">Level 2 Clinical Reason:</span>
+<span class="font-body-sm text-body-sm text-primary">Patient requests non-pharmacological foot cooling trial before adding new oral neuroactive medication</span>
+</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant pt-1 border-t border-outline-variant/30">
+        Override authorized by: Dr. Sara Al-Husseini (Junior Physician, License #48102)
+      </div>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low text-body-sm text-on-surface-variant">
+<div class=""><span class="font-semibold text-primary">Provenance:</span> ADA Neuropathy Care Guidelines &amp; Saudi MoH Type 2 DM Pathway</div>
+</div>
+<div class="pt-space-sm flex justify-end">
+<button class="min-h-[48px] px-space-xl rounded-full font-label-md text-label-md uppercase tracking-wider bg-primary text-on-primary font-semibold" onclick="document.getElementById('rec-modal-2').close()" type="button">
+        Done
+      </button>
+</div>
+</div>
+</dialog>
+<!-- Modal 3: Statin Optimization -->
+<dialog class="w-[90%] max-w-[560px] p-0 rounded-2xl bg-surface shadow-2xl border border-outline-variant/40 backdrop:bg-primary/40" id="rec-modal-3">
+<div class="p-space-xl space-y-space-md">
+<div class="flex items-center justify-between gap-space-sm pb-space-sm border-b border-outline-variant/40">
+<div class="flex items-center gap-space-sm">
+<span class="px-2.5 py-0.5 rounded font-label-sm text-label-sm uppercase tracking-wider bg-surface-container-highest text-on-surface-variant font-bold">
+          Filed (Suppressed)
+        </span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Recommendation 3 of 3</span>
+</div>
+<button class="min-h-[48px] px-3 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-primary" onclick="document.getElementById('rec-modal-3').close()" type="button">
+        Close [Esc]
+      </button>
+</div>
+<div>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-1">
+        Tier 0 · Background Engine
+      </span>
+<h3 class="font-headline-md text-headline-md text-primary">
+        Statin Dosage Optimization (Atorvastatin 20mg to 40mg)
+      </h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-space-sm">
+        Filed (unshown under N3 cap of 3 active bedside prompts). Stored in write-back audit data with deferral count 1. Will reappear automatically upon next routine surveillance cycle or following new lipid panel ingest.
+      </p>
+</div>
+<div class="p-space-md rounded-lg bg-surface-container-low space-y-1 text-body-sm text-on-surface-variant">
+<div class=""><span class="font-semibold text-primary">Provenance Guideline:</span> ACC/AHA &amp; Saudi Hypertension/Dyslipidemia Guidelines</div>
+<div class=""><span class="font-semibold text-primary">Engine Action:</span> Filed to local database; no immediate clinician action required today</div>
+</div>
+<div class="pt-space-sm flex justify-end">
+<button class="min-h-[48px] px-space-xl rounded-full font-label-md text-label-md uppercase tracking-wider bg-primary text-on-primary font-semibold" onclick="document.getElementById('rec-modal-3').close()" type="button">
+        Done
+      </button>
+</div>
+</div>
+</dialog>
+<!-- AREA 5 - CLINICIAN ATTESTATION -->
+<section class="p-space-xl rounded-xl bg-surface-container-high space-y-space-md border border-outline-variant/40">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold block">Clinician Attestation</span>
+<p class="font-headline-sm text-headline-sm text-primary italic">
+    “I hereby certify that the clinical observations, degraded reconciliation declarations, and decision overrides recorded during this residence visit accurately reflect the patient state and bedside findings.”
+  </p>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-xs border-t border-outline-variant/30">
+<div>
+<span class="font-data-metric text-data-metric text-primary block font-semibold">Dr. Sara Al-Husseini</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Attending Junior Physician · Saudi Commission for Health Specialties #48102</span>
+</div>
+<div class="text-left sm:text-right">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant block font-semibold">Device Timestamp</span>
+<span class="font-data-metric text-data-metric text-primary tabular-nums">15 Oct 2025 · 14:41 AST</span>
+</div>
+</div>
+</section>
+</div>
+<!-- BOTTOM STICKY ACTION BAR (LOCKED DUE TO UNRESOLVED SECTION) -->
+<div class="fixed bottom-0 left-0 right-0 z-40 bg-surface/95 backdrop-blur-md shadow-[0_-4px_20px_rgba(40,35,28,0.06)] border-t border-outline-variant/40">
+<div class="max-w-[768px] mx-auto px-margin py-space-md flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+<div class="flex items-center gap-2 self-start sm:self-center">
+<span class="w-2.5 h-2.5 rounded-full bg-status-now shrink-0"></span>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-status-now font-bold">Gate Status: 1 Unresolved Requirement</span>
+<span class="font-body-sm text-[12px] text-on-surface-variant">Section 06 (Self-Care Check) required before outbox seal</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto justify-end">
+<button class="min-h-[48px] px-space-lg rounded-full font-label-md text-label-md uppercase tracking-wider text-primary bg-surface-container-high hover:bg-surface-container-highest transition-colors font-semibold" type="button">
+        Return to Workspace
+      </button>
+<button class="min-h-[48px] px-space-xl rounded-full font-label-md text-label-md uppercase tracking-wider text-on-primary bg-primary/40 cursor-not-allowed transition-colors shadow-none font-semibold" disabled="" title="Resolve Section 06 first" type="button">
+        Complete Visit (Locked — Resolve All Sections)
+      </button>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low px-margin py-space-lg shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant"><div class="uppercase tracking-wider">Project Noor · Kingdom of Saudi Arabia MoH Clinical Governance</div><div class="font-mono">STN-RUH-0842 · v4.12-PROD</div></div></footer></div></div>
+
+
+
+
+</body></html>

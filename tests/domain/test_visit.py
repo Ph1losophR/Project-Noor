@@ -207,6 +207,53 @@ def test_a_second_emergency_in_one_visit_opens_a_second_record():
     assert [record.started_at for record in subject.emergencies] == [TEN, NOON]
 
 
+def test_writing_a_timeline_entry_appends_it_to_the_open_emergency():
+    # Arrange
+    subject = started()
+    subject.enter_emergency(TEN)
+
+    # Act
+    subject.record_timeline(EntryKind.DONE, "ambulance called", ELEVEN)
+
+    # Assert
+    assert [entry.text for entry in subject.emergencies[-1].entries] == [
+        "ambulance called"]
+
+
+def test_an_entry_written_after_the_leave_still_lands_on_that_record():
+    # Arrange — §5.7: documentation is retrospective, written after the ambulance
+    subject = started()
+    subject.enter_emergency(TEN)
+    subject.leave_emergency(ELEVEN)
+
+    # Act
+    subject.record_timeline(EntryKind.OBSERVED, "crew took the Handover", NOON)
+
+    # Assert — the late entry is exactly what resolves the record
+    assert subject.emergencies[-1].is_resolved
+
+
+def test_with_no_emergency_at_all_there_is_nowhere_to_write():
+    # Arrange
+    subject = started()
+
+    # Act / Assert
+    with pytest.raises(visit.VisitError):
+        subject.record_timeline(EntryKind.DONE, "ambulance called", TEN)
+
+
+def test_a_resolved_emergency_takes_no_further_entries():
+    # Arrange
+    subject = started()
+    subject.enter_emergency(TEN)
+    subject.record_timeline(EntryKind.DONE, "ambulance called", TEN)
+    subject.leave_emergency(ELEVEN)
+
+    # Act / Assert — ended *and* documented leaves no open record (§5.7)
+    with pytest.raises(visit.VisitError):
+        subject.record_timeline(EntryKind.DONE, "one more line", NOON)
+
+
 def test_a_visit_meeting_every_condition_reaches_completed():
     # Arrange
     subject = ready_to_close()

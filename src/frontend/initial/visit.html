@@ -1,0 +1,383 @@
+<!DOCTYPE html><html class="h-full" lang="en" style=""><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0" name="viewport"><style>@layer base { html, body { margin: 0; padding: 0; } body { overscroll-behavior: none; } main > :first-child { margin-top: 0 !important; } main > :last-child { margin-bottom: 0 !important; } } ::-webkit-scrollbar { display: none; }</style><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "tertiary-fixed-dim": "#ffb4ab", "secondary-fixed-dim": "#d1c5b0", "primary-fixed": "#e5e2dd", "surface": "#fbf9f6", "inverse-primary": "#c8c6c2", "tertiary": "#310001", "inverse-on-surface": "#f2f0ed", "secondary-container": "#ebdec8", "outline": "#777770", "surface-variant": "#e4e2df", "on-tertiary": "#ffffff", "on-secondary-fixed": "#211b0d", "background": "#fbf9f6", "on-surface": "#1b1c1a", "tertiary-container": "#580104", "surface-container": "#efeeeb", "primary-container": "#282825", "on-surface-variant": "#474741", "on-tertiary-fixed": "#410002", "on-tertiary-container": "#e4695e", "on-secondary-container": "#6a6250", "secondary-fixed": "#ede1cb", "on-background": "#1b1c1a", "outline-variant": "#c8c7be", "on-primary-fixed-variant": "#474743", "primary-fixed-dim": "#c8c6c2", "surface-bright": "#fbf9f6", "on-primary": "#ffffff", "error-container": "#ffdad6", "on-primary-fixed": "#1c1c19", "surface-container-highest": "#e4e2df", "surface-container-lowest": "#ffffff", "surface-tint": "#5f5e5b", "secondary": "#665d4c", "surface-container-high": "#eae8e5", "surface-dim": "#dbdad7", "error": "#ba1a1a", "on-error-container": "#93000a", "surface-container-low": "#f5f3f0", "on-error": "#ffffff", "on-secondary-fixed-variant": "#4d4636", "tertiary-fixed": "#ffdad6", "on-primary-container": "#908f8b", "on-tertiary-fixed-variant": "#84231e", "primary": "#131411", "inverse-surface": "#30312f", "on-secondary": "#ffffff" }, "borderRadius": { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" }, "spacing": { "space-xs": "0.25rem", "space-sm": "0.5rem", "space-lg": "1rem", "gutter": "1rem", "space-xl": "1.5rem", "space-md": "0.75rem", "margin": "1.5rem" }, "fontFamily": { "data-display": ["DM Sans"], "label-md": ["DM Sans"], "label-lg": ["DM Sans"], "body-lg": ["DM Sans"], "headline-sm": ["EB Garamond"], "data-metric": ["DM Sans"], "headline-lg": ["EB Garamond"], "body-md": ["DM Sans"], "label-sm": ["DM Sans"], "body-sm": ["DM Sans"], "headline-md": ["EB Garamond"] }, "fontSize": { "data-display": ["28px", { "lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600" }], "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "600" }], "label-lg": ["15px", { "lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "600" }], "body-lg": ["17px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "400" }], "headline-sm": ["20px", { "lineHeight": "26px", "letterSpacing": "0em", "fontWeight": "500" }], "data-metric": ["18px", { "lineHeight": "24px", "letterSpacing": "0em", "fontWeight": "600" }], "headline-lg": ["34px", { "lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "500" }], "body-md": ["15px", { "lineHeight": "22px", "letterSpacing": "0.005em", "fontWeight": "400" }], "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.06em", "fontWeight": "600" }], "body-sm": ["13px", { "lineHeight": "18px", "letterSpacing": "0.01em", "fontWeight": "400" }], "headline-md": ["26px", { "lineHeight": "32px", "letterSpacing": "0em", "fontWeight": "500" }] } } } };</script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@100..900&amp;family=EB+Garamond:wght@100..900&amp;display=swap" rel="stylesheet"></head><body class="bg-surface font-body-md text-body-md text-on-surface min-h-screen"><div class="min-h-screen bg-surface flex flex-col items-center"><div class="w-full max-w-[768px] min-h-screen flex flex-col bg-surface shadow-[0_4px_20px_rgba(40,35,28,0.04)]"><header class="fixed top-0 w-full max-w-[768px] z-50 bg-surface/95 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="h-16 px-margin flex items-center justify-between"><div class="flex items-baseline gap-space-sm"><span class="font-headline-md text-headline-md tracking-tight text-primary">NOOR</span><span class="font-label-sm text-label-sm uppercase tracking-widest text-on-surface-variant font-semibold">Home Clinical Care</span></div><div class="flex items-center gap-space-md"><div class="hidden sm:flex flex-col items-end"><span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">GOOD MORNING</span><span class="font-body-sm text-body-sm text-on-surface font-semibold">Dr. Sara Al-Husseini · Omar Qadi RN</span></div><div class="h-6 w-px bg-outline-variant hidden sm:block"></div><button aria-label="Toggle Light and Dark Mode" class="flex items-center h-8 rounded-full bg-surface-container-high p-0.5 min-w-[56px] justify-between px-1" type="button"><span class="w-6 h-6 rounded-full bg-primary flex items-center justify-center text-on-primary"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"></path></svg></span><span class="w-6 h-6 flex items-center justify-center text-on-surface-variant"><svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg></span></button><div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center"><span class="material-symbols-outlined text-on-primary text-[18px]">person</span></div></div></div><div class="px-margin py-1.5 bg-surface-container-low flex items-center justify-between text-on-surface-variant font-label-sm text-label-sm"><div class="flex items-center gap-space-md"><span class="uppercase tracking-wider font-semibold text-on-surface">WEDNESDAY 15 OCTOBER 2025</span><span class="text-outline-variant">|</span><span class="">Sync Status: Local DB Ready</span></div><div class="font-semibold uppercase tracking-wider text-on-surface">RIYADH NORTH CLUSTER</div></div><nav class="px-margin py-2 bg-surface flex items-center gap-space-sm overflow-x-auto" data-active-classes="bg-primary text-on-primary font-semibold rounded-full"><a class="min-h-[48px] px-space-lg flex items-center justify-center rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap gap-space-xs" data-path="roster" href="#"><span class="">Roster</span><span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-semibold flex items-center justify-center">4</span></a><a aria-current="page" class="min-h-[48px] px-space-lg flex items-center justify-center uppercase tracking-wider transition-colors whitespace-nowrap bg-primary text-on-primary font-semibold rounded-full font-label-md text-label-md gap-space-xs" data-path="active-visit" href="#"><span class="">Active Visit</span><span class="w-5 h-5 rounded-full bg-surface text-primary text-[11px] font-semibold flex items-center justify-center">1</span></a><a class="min-h-[48px] px-space-lg flex items-center justify-center rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap gap-space-xs" data-path="supervisor-inbox" href="#"><span class="">Supervisor Inbox</span><span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-semibold flex items-center justify-center">3</span></a><a class="min-h-[48px] px-space-lg flex items-center justify-center rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors whitespace-nowrap gap-space-xs" data-path="write-back-queue" href="#"><span class="">Write-Back Queue</span><span class="w-5 h-5 rounded-full bg-surface-container-high text-on-surface-variant text-[11px] font-semibold flex items-center justify-center">3</span></a></nav></header><main class="w-full pt-36 px-margin pb-space-xl flex-1 bg-surface"><div class="flex flex-col w-full">
+<!-- Status & Persistence Anchor (ARM's LENGTH BED-SIDE TELEMETRY) -->
+
+<!-- Primary Header Area with Escalation Triggers -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between pb-space-lg mb-space-lg gap-space-md">
+<div>
+<div class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">Bedside Record §4.2–4.5</div>
+<h1 class="font-headline-lg text-headline-lg text-primary tracking-tight">Clinical Encounter Workspace</h1>
+
+</div>
+<!-- Tier-3 Escalation and Early Discharge Triggers (Strict pure typography, no iconography) -->
+<div class="flex items-center gap-space-sm">
+<button class="min-h-[48px] px-space-lg rounded-full font-label-md text-label-md uppercase tracking-wider text-on-surface bg-surface-container-highest hover:bg-surface-dim transition-colors" onclick="document.getElementById('end-early-modal').classList.toggle('hidden')" type="button">
+        End Early
+      </button>
+<button class="min-h-[48px] px-space-lg rounded-lg font-label-md text-label-md uppercase tracking-wider text-on-error bg-error hover:bg-tertiary-container transition-colors shadow-sm" onclick="document.getElementById('emergency-modal').classList.toggle('hidden')" type="button">Escalate</button>
+</div>
+</div>
+<!-- CLINICAL PROTOCOL SECTIONS IN FIXED RECORD SEQUENCE (§4.2) -->
+<div class="flex flex-col gap-space-xl">
+<!-- 1. VISIT REASON -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">01 · Clinical Indication</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Visit Reason</h2>
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<label class="block font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant mb-space-xs font-semibold" for="visit-reason-input">Primary Focus (Editable Dispatch Directive)</label>
+<input class="w-full bg-surface text-on-surface font-body-lg text-body-lg px-space-md py-3 rounded-lg border-0 focus:outline-none focus:bg-surface-bright shadow-inner" id="visit-reason-input" type="text" value="Scheduled review — Type 2 Diabetes &amp; Primary Hypertension">
+</div>
+</section>
+<!-- 2. CONCERNS & INTERVAL HISTORY -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">02 · Interval Surveillance</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Concerns &amp; Interval Events</h2>
+<div class="space-y-space-md">
+<!-- Interval Event Rows -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-space-md">
+<!-- Event 1: Positive finding with expanded explanation -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col justify-between min-h-[96px]">
+<div class="flex items-start justify-between gap-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wide text-primary font-semibold">Hypoglycaemic Episode</span>
+<span class="font-label-sm text-label-sm uppercase px-2 py-0.5 rounded bg-tertiary-container text-on-tertiary font-semibold">Reported</span>
+</div>
+<div class="mt-space-sm bg-surface rounded p-space-sm text-on-surface font-body-sm text-body-sm">
+              “Mild symptomatic dip last Tuesday, resolved with dates.”
+            </div>
+</div>
+<!-- Event 2: Fall -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between min-h-[48px]">
+<span class="font-label-md text-label-md uppercase tracking-wide text-on-surface-variant font-semibold">Fall Event</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">None Observed</span>
+</div>
+<!-- Event 3: Hospital admission -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between min-h-[48px]">
+<span class="font-label-md text-label-md uppercase tracking-wide text-on-surface-variant font-semibold">Hospital Admission</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">None Reported</span>
+</div>
+<!-- Event 4: External Medication Changes -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between min-h-[48px]">
+<span class="font-label-md text-label-md uppercase tracking-wide text-on-surface-variant font-semibold">Medication Changed Elsewhere</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">Zero Discrepancy</span>
+</div>
+</div>
+<!-- Bedside Attributed Free Text Statement -->
+<div class="bg-surface-container-high rounded-lg p-space-md mt-space-md">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-semibold">Attributed Bedside Concern</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Attribution: Primary Household Caregiver</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-lowest p-space-md rounded-md">
+<span class="font-semibold text-primary">Caregiver (daughter Reem):</span> “Complains of burning sensation in soles of feet at night.”
+          </div>
+</div>
+</div>
+</section>
+<!-- 3. MEDICATION RECONCILIATION (§4.10 & §7.2 UNREACHABLE STATE DEMONSTRATION) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">03 · Pharmacotherapy Ledger</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Medication Reconciliation</h2>
+<!-- Mandatory Unreachable Bound Box -->
+<div class="bg-surface-container-high rounded-lg p-space-lg mb-space-lg">
+<div class="font-label-md text-label-md uppercase tracking-wider text-primary font-semibold mb-1">State Paradigm: Unreachable Reference Node (§4.10)</div>
+<p class="font-body-sm text-body-sm text-on-surface">
+          The prescribed medication list could not be read from EMR (Unreachable). Discrepancies against prescribed list are not shown. Recording physical items in household below:
+        </p>
+</div>
+<!-- In-residence physical count table -->
+<div class="space-y-space-sm">
+<div class="text-label-sm font-label-sm uppercase tracking-wider text-on-surface-variant px-space-sm pb-1 flex justify-between">
+<span class="">Physical Household Items Identified</span>
+<span class="">Verified Stock</span>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-data-metric text-data-metric text-on-surface">Metformin 1000mg</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Oral Tablet · Intact blister pack</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="text-right">
+<span class="font-data-metric text-data-metric text-on-surface">48</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">remaining</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wide bg-surface-container-highest px-space-sm py-1 rounded text-on-surface font-semibold">Exp: 11/2026</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-data-metric text-data-metric text-on-surface">Amlodipine 5mg</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Oral Tablet · Original hospital carton</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="text-right">
+<span class="font-data-metric text-data-metric text-on-surface">14</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">remaining</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wide bg-surface-container-highest px-space-sm py-1 rounded text-on-surface font-semibold">Exp: 08/2026</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm">
+<div class="flex flex-col">
+<span class="font-data-metric text-data-metric text-on-surface">Glimepiride 2mg</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Oral Tablet · Dispensed blister</span>
+</div>
+<div class="flex items-center gap-space-lg">
+<div class="text-right">
+<span class="font-data-metric text-data-metric text-on-surface">28</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant ml-1">remaining</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-wide bg-surface-container-highest px-space-sm py-1 rounded text-on-surface font-semibold">Exp: 03/2027</span>
+</div>
+</div>
+</div>
+</section>
+<!-- 4. VITALS & INSTRUMENT TELEMETRY -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">04 · Physiological Telemetry</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-secondary font-semibold">Bedside Measurement</span>
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Physiological Parameters</h2>
+<!-- Standard 4-Parameter Grid -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-space-md mb-space-lg">
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between min-h-[96px]">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Blood Pressure</span>
+<div>
+<span class="font-data-display text-data-display text-primary">136/84</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-1 font-semibold">mmHg</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Manual Sphygmomanometer</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between min-h-[96px]">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Heart Rate</span>
+<div>
+<span class="font-data-display text-data-display text-primary">72</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-1 font-semibold">bpm</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Regular Rhythm</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between min-h-[96px]">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Oxygen Saturation</span>
+<div>
+<span class="font-data-display text-data-display text-primary">98</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-1 font-semibold">%</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Ambient Room Air</span>
+</div>
+<div class="bg-surface-container-low p-space-md rounded-lg flex flex-col justify-between min-h-[96px]">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Random Glucose</span>
+<div>
+<span class="font-data-display text-data-display text-primary">148</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant ml-1 font-semibold">mg/dL</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary">Capillary Bedside Draw</span>
+</div>
+</div>
+<!-- In-Home Device Historical Readout (§4.8) -->
+<div class="bg-surface-container-high rounded-lg p-space-md flex flex-col sm:flex-row items-start sm:items-center justify-between gap-space-md">
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-semibold">Household Meter Memory Readout (§4.8)</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Accu-Chek Guide · Serial SN-883109 · Verified device memory extraction</span>
+</div>
+<div class="flex items-baseline gap-space-md self-end sm:self-auto">
+<div class="text-right">
+<span class="font-data-metric text-data-metric text-primary">138 mg/dL</span>
+<span class="block font-label-sm text-label-sm text-secondary font-semibold">7-Day Fasting Mean</span>
+</div>
+<span class="font-label-sm text-label-sm bg-surface-container-lowest text-on-surface px-space-sm py-1 rounded font-mono">14:15 AST</span>
+</div>
+</div>
+</section>
+<!-- 5. PHYSICAL EXAMINATION -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">05 · Objective Exam</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Physical Examination Findings</h2>
+<div class="space-y-space-md">
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold mb-1">Lower Extremity &amp; Neurological Assessment</div>
+<div class="font-body-md text-body-md text-on-surface">
+            Bilateral monofilament 10g Semmes-Weinstein foot sensation diminished over 1st and 5th metatarsal heads bilaterally. Plantar skin dry without calluses or ulcerations.
+          </div>
+</div>
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between">
+<div>
+<div class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Vascular Status</div>
+<div class="font-body-md text-body-md text-on-surface">Pedal pulses present and symmetrical bilaterally (Dorsalis Pedis 2+, Posterior Tibial 2+).</div>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-primary px-space-sm py-1 rounded bg-surface-container-highest font-semibold shrink-0">Intact</span>
+</div>
+</div>
+</section>
+<!-- 6. SELF-CARE CHECK (§4.5 OBSERVED/DEMONSTRATED) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">06 · Environmental &amp; Regimen Audit</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Self-Care Verification (§4.5)</h2>
+<div class="space-y-space-md">
+<!-- Insulin Check: Natural Language Declaration of Non-Applicability -->
+<div class="bg-surface-container-low rounded-lg p-space-md flex items-center justify-between">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md uppercase tracking-wide text-on-surface font-semibold">Insulin Cold-Chain &amp; Storage</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Patient prescribed oral hypoglycaemics exclusively. No injectable peptides present in household.</span>
+</div>
+<span class="font-label-sm text-label-sm uppercase tracking-widest bg-surface-container-highest text-on-surface-variant px-space-sm py-1 rounded font-semibold shrink-0">Not Applicable</span>
+</div>
+<!-- Pill Organizer Observation Check -->
+<div class="bg-surface-container-high rounded-lg p-space-md">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-label-md text-label-md uppercase tracking-wide text-primary font-semibold">Medication Administration Observation</span>
+<span class="font-label-sm text-label-sm text-secondary font-semibold">Performer: Caregiver (Reem)</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-lowest p-space-md rounded-md">
+            “Pill organizer loaded weekly; morning dose taken with water; no skipped doses observed during inspection.”
+          </div>
+</div>
+</div>
+</section>
+<!-- 7. CLINICAL NOTES (ENTERED BY JUNIOR PHYSICIAN BEFORE FINAL CARE PLAN) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">07 · Provider Assessment Notes</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Attending Clinical Evaluation</h2>
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<div class="flex items-center justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold">Clinical Synthesis · Dr. Sara Al-Husseini</span>
+<span class="font-label-sm text-label-sm text-secondary font-mono">14:40 AST</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface leading-relaxed">
+          Glycaemic control remains within acceptable bounds with mild peripheral neuropathy emerging (burning feet in evening + distal sensory blunting). No active trophic foot lesions or cellulitis. Amlodipine regimen successfully maintaining target MAP below 100. Household safety audit satisfactory; daughter Reem shows disciplined oversight of oral medications.
+        </p>
+</div>
+</section>
+<!-- 8. CARE PLAN (ASSEMBLED LAST) -->
+<section class="bg-surface-container-lowest rounded-xl p-space-xl shadow-sm">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-md text-label-md uppercase tracking-wider text-on-surface-variant font-semibold">08 · Inter-Visit Directive</span>
+
+</div>
+<h2 class="font-headline-sm text-headline-sm text-primary mb-space-md">Care Plan &amp; Between-Visit Mandate</h2>
+<div class="space-y-space-md">
+<div class="bg-surface-container-low rounded-lg p-space-md">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant font-semibold block mb-space-xs">Pharmacotherapy Continuations</span>
+<ul class="space-y-space-xs font-body-md text-body-md text-on-surface">
+<li class="flex items-center justify-between py-1">
+<span class="">Metformin Hydrochloride 1000mg</span>
+<span class="font-semibold text-primary">Continue BD (Twice Daily) with meals</span>
+</li>
+<li class="flex items-center justify-between py-1">
+<span class="">Amlodipine Besylate 5mg</span>
+<span class="font-semibold text-primary">Continue OD (Once Daily) in morning</span>
+</li>
+</ul>
+</div>
+<div class="bg-surface-container-high rounded-lg p-space-md">
+<div class="flex items-baseline justify-between mb-space-xs">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-primary font-semibold">Home Surveillance &amp; Stop Rule Thresholds</span>
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-on-tertiary-container font-semibold">Enforced Rule</span>
+</div>
+<div class="font-body-md text-body-md text-on-surface bg-surface-container-lowest p-space-md rounded-md">
+            Execute blood pressure check twice weekly. <span class="font-semibold text-primary">Stop rule:</span> If Systolic BP &gt; 180 mmHg or &lt; 100 mmHg, immediately halt autonomous adjustments and notify clinical response dispatch.
+          </div>
+</div>
+</div>
+</section>
+</div>
+<!-- PERSISTENT ELEVATED ACTION TRAY (§4.2 & §5.5 SIGN-OFF TRANSITION) -->
+<div class="sticky bottom-0 z-40 bg-surface/95 backdrop-blur-md pt-space-md pb-space-lg mt-space-xl shadow-[0_-4px_20px_rgba(40,35,28,0.06)]">
+<div class="flex flex-col sm:flex-row items-center justify-between gap-space-md">
+<div class="flex items-center gap-space-md">
+<div class="w-3 h-3 rounded-full bg-primary shrink-0"></div>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface font-semibold">All 8 Sections Synchronized</span>
+<span class="font-body-sm text-body-sm text-on-surface-variant">Validated by Attending Pair · Offline Ledger Sealed</span>
+</div>
+</div>
+<div class="flex items-center gap-space-sm w-full sm:w-auto">
+<a class="w-full sm:w-auto min-h-[48px] px-8 flex items-center justify-center rounded-full font-label-md text-label-md uppercase tracking-wider text-on-primary bg-primary hover:bg-primary-container transition-colors text-center font-semibold" data-path="review-complete" href="#">
+          Review &amp; Complete Visit
+        </a>
+</div>
+</div>
+</div>
+<!-- POPOVER MODAL 1: END EARLY REASON SELECTOR (§5.10) -->
+<div class="hidden fixed inset-0 z-50 bg-primary/40 backdrop-blur-sm flex items-center justify-center p-margin" id="end-early-modal">
+<div class="bg-surface-container-lowest w-full max-w-[520px] rounded-xl p-space-xl shadow-2xl">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary font-semibold">Protocol Exception §5.10</span>
+<button class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-primary" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">Close</button>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-primary mb-space-md">Terminate Bedside Encounter Early</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">Select the governing rationale for premature discharge. This disposition will log into the regional clinical write-back ledger.</p>
+<div class="space-y-space-sm mb-space-lg">
+<button class="w-full min-h-[48px] p-space-md rounded-lg text-left bg-surface-container-low hover:bg-surface-container-high transition-colors font-body-md text-body-md text-on-surface flex justify-between items-center" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">
+<span class="">Patient or Household Declined Continuation</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Select</span>
+</button>
+<button class="w-full min-h-[48px] p-space-md rounded-lg text-left bg-surface-container-low hover:bg-surface-container-high transition-colors font-body-md text-body-md text-on-surface flex justify-between items-center" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">
+<span class="">Patient Absent from Residence at Arrival</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Select</span>
+</button>
+<button class="w-full min-h-[48px] p-space-md rounded-lg text-left bg-surface-container-low hover:bg-surface-container-high transition-colors font-body-md text-body-md text-on-surface flex justify-between items-center" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">
+<span class="">Environmental / Practitioner Safety Risk Identified</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Select</span>
+</button>
+<button class="w-full min-h-[48px] p-space-md rounded-lg text-left bg-surface-container-low hover:bg-surface-container-high transition-colors font-body-md text-body-md text-on-surface flex justify-between items-center" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">
+<span class="">Re-routed to Secondary Immediate Emergency</span>
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-secondary">Select</span>
+</button>
+</div>
+<div class="flex justify-end">
+<button class="min-h-[48px] px-space-lg rounded-full font-label-md text-label-md uppercase tracking-wider bg-surface-container text-on-surface" onclick="document.getElementById('end-early-modal').classList.add('hidden')" type="button">
+          Cancel &amp; Retain Workspace
+        </button>
+</div>
+</div>
+</div>
+<!-- POPOVER MODAL 2: TIER 3 EMERGENCY DISPATCH TRIGGER (§5.7) -->
+<div class="fixed inset-0 z-50 bg-tertiary/60 backdrop-blur-sm flex items-center justify-center p-margin hidden" id="emergency-modal">
+<div class="bg-surface-container-lowest w-full max-w-[520px] rounded-xl p-space-xl shadow-2xl">
+<div class="flex items-baseline justify-between mb-space-sm">
+<span class="font-label-sm text-label-sm uppercase tracking-wider text-error font-semibold">triggering emergency protocol</span>
+<button class="font-label-sm text-label-sm uppercase tracking-wider text-on-surface-variant hover:text-primary" onclick="document.getElementById('emergency-modal').classList.add('hidden')" type="button">Dismiss</button>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-error mb-space-md">Initiate 997 Emergency Dispatch</h3>
+<p class="font-body-md text-body-md text-on-surface mb-space-lg">
+        This bedside encounter will transition immediately to <strong class="text-error">Critical Transfer Mode</strong>. Saudi Red Crescent (997) telemetry and Central Regional Supervisor channels will be opened automatically.
+      </p>
+<div class="space-y-space-sm mb-space-xl">
+<div class="p-space-md rounded-lg bg-error-container text-on-error-container font-body-sm text-body-sm">
+          Patient coordinates (Riyadh, Al-Malqa District) and latest physiological telemetry (BP 136/84, HR 72, SPO2 98%) are ready for one-tap dispatch payload.
+        </div>
+</div>
+<div class="flex flex-col sm:flex-row items-center justify-end gap-space-sm">
+<button class="w-full sm:w-auto min-h-[48px] px-space-lg rounded-full font-label-md text-label-md uppercase tracking-wider bg-surface-container text-on-surface" onclick="document.getElementById('emergency-modal').classList.add('hidden')" type="button">
+          Cancel &amp; Return
+        </button>
+<button class="w-full sm:w-auto min-h-[48px] px-space-xl rounded-lg font-label-md text-label-md uppercase tracking-wider bg-error text-on-error font-semibold shadow-md" onclick="alert('Critical 997 Dispatch Payload Sent. Central Command Alerted.'); document.getElementById('emergency-modal').classList.add('hidden');" type="button">
+          Confirm 997 Callout
+        </button>
+</div>
+</div>
+</div>
+</div></main><footer class="w-full bg-surface-container-low px-margin py-space-lg shadow-[0_-1px_8px_rgba(0,0,0,0.02)]"><div class="flex flex-col sm:flex-row items-center justify-between gap-space-sm font-label-sm text-label-sm text-on-surface-variant"><div class="uppercase tracking-wider">Project Noor · Kingdom of Saudi Arabia MoH Clinical Governance</div><div class="font-mono">STN-RUH-0842 · v4.12-PROD</div></div></footer></div></div>
+
+
+
+</body></html>

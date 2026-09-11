@@ -3,7 +3,7 @@ from collections.abc import Sequence
 from dataclasses import dataclass, field
 from datetime import datetime
 
-from noor.domain.emergency import EmergencyRecord, check_all_resolved
+from noor.domain.emergency import EmergencyRecord, EntryKind, check_all_resolved
 from noor.domain.opinions import (
     Disposition, Flag, Recommendation, check_all_dispositioned,
 )
@@ -82,6 +82,14 @@ class Visit:
         check_transition(self.state, VisitState.IN_PROGRESS)
         self.state = VisitState.IN_PROGRESS
         self.emergencies[-1].resolve(at)
+
+    def record_timeline(self, kind: EntryKind, text: str, at: datetime) -> None:
+        """A line on the open Emergency's record (§5.7) — during, or after the
+        leave, since documentation is retrospective. A resolved record takes no
+        further lines; a re-entry opens a new record instead."""
+        if not self.emergencies or self.emergencies[-1].is_resolved:
+            raise VisitError("there is no open Emergency record to write down")
+        self.emergencies[-1].record(kind, text, at)
 
     def complete(self, by: str, at: datetime, goal: GoalOfCare | None = None) -> None:
         check_transition(self.state, VisitState.COMPLETED)

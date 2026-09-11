@@ -14,7 +14,7 @@ owner, a source, a version, a review date, as data — applies to
 
 **Phase 1 Backend Pass 1 exists** under `src/noor/` — store, domain, EMR seam,
 dispatch, content and serialisation — and the rungs below are verified against
-that tree. The surfaces are next: field and Supervisor surfaces sharing one machine with the Python process, served as a static React SPA over a JSON API (ADR 0006). Where a rung cannot exist
+that tree. The surfaces are next: field and Supervisor surfaces sharing one machine with the Python process, served as a static Next.js SPA (static export) over a JSON API (ADR 0006). Where a rung cannot exist
 until a later phase, it says so rather than sitting there looking overdue. Where
 a name is illustrative rather than decided, it says that too — the module and
 function names are fixed in `src/noor/`, not in this file.

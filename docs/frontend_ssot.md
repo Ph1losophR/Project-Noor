@@ -65,8 +65,8 @@ Seven rules follow from the brief:
 
 Excluded by name, because each is how "luxury" usually goes wrong: gradients as
 decoration, gold and metallics, glass blur, more than one accent, shadows on
-everything, an icon on any row, more than two type families, and any logo beyond
-the wordmark. Ambient washes below 8% opacity are not gradients and are
+everything, more than two type families, and any logo beyond
+the wordmark. Icons are allowed only under §7.3 — never decoration, never alone. Ambient washes below 8% opacity are not gradients and are
 permitted.
 
 **"Addicting" means satisfying, not engaging.** No streaks, no badges, no
@@ -198,7 +198,9 @@ The light triad passes every gate:
 
 Three rules keep it that way:
 
-- **A status colour never appears without its word.** Noor has no icons (§7.3), so the word is the only non-colour channel there is. A bare coloured dot is a defect.
+- **A status colour never appears without its word.** Type is the primary
+non-colour channel; an icon may repeat the word under §7.3, never replace it.
+A bare coloured dot is a defect.
 - **Tier 3's solid fill is a safety channel, not styling.** With hue removed — photocopied, faxed, or read by a deuteranopic clinician — the fill weight and the L 0.520 / 0.438 lightness gap between clear and now are what remain.
 - **Status never sits on `--d-forest`, `--d-pine`, `--d-dark-moss` or `--d-walnut`.** Those surfaces are themselves green and brown; a status mark on them reads as part of the card. Status lives on the page or on `--d-charcoal`.
 
@@ -332,25 +334,36 @@ Only **Medication Reconciliation** and **Physical Examination** can ever be
 Unreachable (§4.10), and Noor does not distinguish "no signal" from "EMR is down".
 It is a rare state, so it must be unmistakable when it appears rather than quiet.
 
-### 7.3 No icons
+### 7.3 Icons
 
-Noor has no icon set. Every mark is type, rule, fill or shape.
+Noor has a small icon set. Every icon is inline, self-hosted SVG — never an
+icon font, never a Unicode symbol, never fetched from a network.
 
-This removes a channel deliberately, which is why §4.3's word rule and Tier 3's
-solid fill are load-bearing rather than stylistic. It also removes two failure
-modes: an icon font renders a tofu box on a missing glyph — the "Noor is broken"
-appearance §4.1 forbids — and Unicode `✓` and `⚠` are in neither DM Sans's nor
-EB Garamond's charset, so they fall through to the OS emoji font, where on Windows
-`⚠` arrives in full colour and breaks both the colour budget and greyscale
-legibility.
+The restriction is failure modes, not taste: an icon font renders a tofu box
+on a missing glyph — the "Noor is broken" appearance §4.1 forbids — and
+Unicode `✓` and `⚠` are in neither DM Sans's nor EB Garamond's charset, so
+they fall through to the OS emoji font, where on Windows `⚠` arrives in full
+colour and breaks both the colour budget and greyscale legibility.
+
+Five rules keep the set safe:
+
+1. Inline SVG stored beside the component. No font, no symbol, no URL.
+2. Always beside its word, never instead of it — §4.3's word rule extends
+from colour to shape. An icon that carries meaning alone is a defect.
+3. 3:1 contrast against its surface (§2's floor), legible in greyscale and
+under `forced-colors`, like every other mark.
+4. One stroke weight and one size step per context; Tier 3's solid fill and
+the status words in §7.1–§7.2 are unchanged by any icon beside them.
+5. A new icon is an edit to this document, not a decision in a component —
+the same standing as §4.4's tenth colour.
 
 Consequences to build to:
 
-- The **Write-Back queue** indicator, which §4.10 requires be visible and survive a device restart, is a count and a word — "3 Write-Backs pending" — not a glyph with a number on it.
-- The **theme switch** is the one granted exception, and it is drawn rather than set in type — see below.
-- A sort direction, a disclosure state and a validation error are all words or shapes.
+- The **Write-Back queue** indicator, which §4.10 requires be visible and survive a device restart, is a count and a word — "3 Write-Backs pending". An icon may stand beside the words, never instead of them.
+- The **theme switch** keeps drawn marks rather than joining the icon set — see below.
+- A sort direction, a disclosure state and a validation error are words first; an icon may repeat them.
 
-**The one granted exception — the theme switch.** A sliding pill carrying a sun and
+**The drawn exception — the theme switch.** A sliding pill carrying a sun and
 a moon, top right of the chrome. It is exempt because the theme is the only control
 in Noor that carries no clinical meaning: reading it wrong changes the brightness of
 the screen and nothing else, so §4.4's "never the sole carrier" has nothing to
@@ -442,15 +455,21 @@ answered in the top layer, then submitted as a form like anything else.
 
 ## 12. Delivery
 
-> Planned, not yet built: `src/noor/web/` was removed and `src/frontend/` does not exist yet. This section fixes where each asset lives when the SPA is built.
+> `src/noor/web/` was removed. `src/frontend/` holds the Next.js SPA;
+> `src/frontend/initial/` is the Roster throwaway — demo only, carrying
+> documented violations (see its README), never the pattern to copy.
+> This section fixes where each asset lives.
 
 | Asset | Detail |
 |---|---|
 | Token layer (`src/frontend/`) | CSS custom properties mapped from the design tokens |
-| `src/frontend/index.css` | Tailwind directives + the `:root` token blocks |
-| `src/frontend/components/` | shadcn components and custom clinical components |
+| `src/frontend/src/app/globals.css` | Tailwind v4 import + the `:root` token blocks + shadcn theme |
+| `src/frontend/src/components/` | shadcn components and custom clinical components |
+| `src/frontend/src/lib/` | shadcn helpers (no clinical logic — ADR 0006) |
 | `public/fonts/*.woff2` | the four self-hosted faces: EB Garamond Medium (500, display and wordmark), DMSans Regular (400), DMSans SemiBold (600), Noto Naskh Arabic Regular (scoped to `[dir="rtl"]`) |
-| `src/frontend/App.tsx` | the SPA root; routing for the app's addresses (Visit, roster, and Supervisor surfaces) |
+| `src/frontend/src/app/` | App Router routes: roster, Visit, and Supervisor surfaces (`initial/` is the throwaway roster) |
+| `src/frontend/next.config.ts` | dev proxy `/api/*` → `http://localhost:8000`; production is a static export served by the same Python process (ADR 0006) |
+| Icons | inline self-hosted SVG beside the component, per §7.3 — no font, no symbol, no URL |
 
 Latin subset, self-hosted, `font-display: block`.
 
@@ -480,7 +499,7 @@ Three rules that do not move:
 
 ## 13. Enforcement
 
-A token lint (stdlib `re` + `pathlib`, no new dependency) will read `src/frontend/index.css` and every component file and fail if a hex colour, a `font-size` in px outside the design scale, a `border-radius`, or a padding/value appears outside the token layer mapped in `docs/frontend_ssot.md` §4. It will live in `tests/`, so it will add no covered source to the 100% branch-coverage gate.
+A token lint (stdlib `re` + `pathlib`, no new dependency) will read `src/frontend/src/app/globals.css` and every component file and fail if a hex colour, a `font-size` in px outside the design scale, a `border-radius`, or a padding/value appears outside the token layer mapped in `docs/frontend_ssot.md` §4. It will live in `tests/`, so it will add no covered source to the 100% branch-coverage gate. It also fails on an icon font, a Unicode symbol standing in for an icon, or any icon fetched from a network (§7.3) — anywhere outside `src/frontend/initial/`, which is grandfathered as the throwaway.
 
 **It enforces the vocabulary, not the grammar.** It can prove nobody wrote
 `#8E2A24` into a component instead of `var(--status-now)`. It cannot prove that a

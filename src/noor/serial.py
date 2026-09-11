@@ -250,6 +250,11 @@ def load_goal(text: str) -> GoalOfCare:
     )
 
 
+def read_plan(raw: dict[str, object]) -> BetweenVisitPlan:
+    """A Between-Visit Plan posted by a form, decoded the way stored ones are."""
+    return _read_plan(raw)
+
+
 def dump_datum(datum: Datum) -> str:
     """A Datum whose value is already JSON-safe, as stored text (§5.2's cache).
 
